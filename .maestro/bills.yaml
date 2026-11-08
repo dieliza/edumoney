@@ -74,6 +74,14 @@ appId: com.edumoney.app
     direction: UP
     centerElement: true
     timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - swipe:
+          start: 85%, 75%
+          end: 85%, 40%
+          duration: 500
 - scrollUntilVisible:
     element: '.*Pendiente: \$60\.00'
     direction: DOWN
@@ -98,6 +106,14 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn: "Pagadas"
 - assertVisible: "Factura Electric test.*"
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - swipe:
+          start: 85%, 75%
+          end: 85%, 40%
+          duration: 500
 - scrollUntilVisible:
     element: '.*Pendiente: \$0\.00'
     direction: DOWN
@@ -115,6 +131,14 @@ appId: com.edumoney.app
     element: "Factura Electric test.*"
     direction: DOWN
     timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - swipe:
+          start: 85%, 75%
+          end: 85%, 40%
+          duration: 500
 - scrollUntilVisible:
     element: '.*Pendiente: \$0\.00'
     direction: DOWN
