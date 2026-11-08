@@ -1,0 +1,214 @@
+appId: com.edumoney.app
+---
+- launchApp:
+    clearState: true
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: "Quickstep isn't responding"
+          commands:
+            - tapOn: "Close app"
+      - extendedWaitUntil:
+          visible: "Abrir Mi dinero"
+          timeout: 60000
+- tapOn: "Abrir Mi dinero"
+- tapOn: "Mis metas"
+- assertVisible: "Todavía no has creado metas.*"
+- takeScreenshot: stage6-empty-light
+- tapOn:
+    id: goal-create
+- tapOn:
+    id: goal-name
+- inputText: "Emergency test"
+- tapOn:
+    text: "Nombre de la meta"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: goal-target
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: goal-target
+- inputText: "100.00"
+- tapOn:
+    text: "Cantidad objetivo"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: goal-opening
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: goal-opening
+- inputText: "20.00"
+- tapOn:
+    text: "Ahorro previo.*"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: goal-date
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: goal-date
+- inputText: "2030-01-15"
+- tapOn:
+    text: "Fecha deseada.*"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: goal-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: goal-save
+- scrollUntilVisible:
+    element: 'Meta Emergency test, ahorro \$20\.00, objetivo \$100\.00, progreso 20%'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage6-goal-light
+- tapOn: 'Meta Emergency test, ahorro \$20\.00.*'
+- tapOn:
+    id: goal-contribute
+- scrollUntilVisible:
+    element:
+      id: goal-contribution-amount
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: goal-contribution-amount
+- inputText: "30.00"
+- tapOn:
+    text: "Importe de aportación"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: goal-contribution-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: goal-contribution-save
+- scrollUntilVisible:
+    element: 'Meta Emergency test, ahorro \$50\.00, objetivo \$100\.00, progreso 50%'
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: theme-picker-open
+- tapOn: "Oscuro"
+- assertVisible:
+    id: theme-dark
+- takeScreenshot: stage6-goal-dark
+- tapOn: 'Meta Emergency test, ahorro \$50\.00.*'
+- tapOn:
+    id: goal-edit
+- scrollUntilVisible:
+    element:
+      id: goal-target
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: goal-target
+- eraseText
+- inputText: "40.00"
+- tapOn:
+    text: "Cantidad objetivo"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: goal-reason
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: goal-reason
+- inputText: "Test target correction"
+- tapOn:
+    text: "Motivo del cambio"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: goal-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: goal-save
+- scrollUntilVisible:
+    element: 'Meta Emergency test, ahorro \$50\.00, objetivo \$40\.00, progreso 125%'
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage6-goal-complete-dark
+- tapOn: "Mi progreso"
+- scrollUntilVisible:
+    element: "1 de 1 metas registradas.*"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage6-progress-dark
+- scrollUntilVisible:
+    element:
+      id: progress-start-plan
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: progress-start-plan
+- scrollUntilVisible:
+    element:
+      id: progress-step-start
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: progress-step-start
+- scrollUntilVisible:
+    element: "1 de 8 revisiones confirmadas.*"
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage6-plan-dark
+- stopApp
+- launchApp
+- tapOn: "Abrir Mi dinero"
+- scrollUntilVisible:
+    element: '\$30\.00'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage6-money-single-contribution
+- tapOn: "Mis metas"
+- scrollUntilVisible:
+    element: 'Meta Emergency test, ahorro \$50\.00, objetivo \$40\.00, progreso 125%'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage6-goal-reopened-dark
+- tapOn: "Mi progreso"
+- scrollUntilVisible:
+    element: "1 de 8 revisiones confirmadas.*"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage6-plan-reopened-dark
+- tapOn:
+    id: theme-picker-open
+- tapOn: "Claro"
+- scrollUntilVisible:
+    element: "Facturas atendidas"
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage6-progress-light

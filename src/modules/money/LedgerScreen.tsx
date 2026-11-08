@@ -101,7 +101,7 @@ export default function LedgerScreen() {
    {segment === 'summary' && summary ? <>
     <Card style={{ backgroundColor: colors.mint }}><Body style={{ fontWeight: '700' }}>Disponible estimado del mes</Body><Body style={{ fontSize: 32, lineHeight: 40, fontWeight: '800' }}>{formatMoney(summary.available)}</Body><Body muted>Estimación basada en los registros del mes completo, incluidas fechas futuras. Parte de cero; no representa el saldo de tus cuentas bancarias.</Body></Card>
    <View style={{ gap: 12 }}><ActionButton title="Añadir ingreso" icon="add-circle-outline" onPress={() => setForm({ kind: 'income' })}/><ActionButton title="Registrar gasto" icon="receipt-outline" onPress={() => setForm({ kind: 'expense' })}/><ActionButton title="Registrar transferencia, préstamo o pago" secondary onPress={() => setForm({ kind: 'transfer' })}/></View>
-    <Card>{[['Ingresos recibidos', summary.income], ['Gastos registrados', summary.expenses], ['Préstamos recibidos (no son ingresos)', summary.loans], ['Pagos de tarjeta o deuda', summary.payments], ['Compromisos de facturas registrados', summary.commitments]].map(([label, value]) => <View key={label} style={ui.between}><Body style={{ flex: 1 }}>{label}</Body><Body style={{ fontWeight: '700' }}>{formatMoney(value as number)}</Body></View>)}
+    <Card>{[['Ingresos recibidos', summary.income], ['Gastos registrados', summary.expenses], ['Préstamos recibidos (no son ingresos)', summary.loans], ['Pagos de tarjeta o deuda', summary.payments], ['Aportaciones a metas', summary.contributions], ['Compromisos de facturas registrados', summary.commitments]].map(([label, value]) => <View key={label} style={ui.between}><Body style={{ flex: 1 }}>{label}</Body><Body style={{ fontWeight: '700' }}>{formatMoney(value as number)}</Body></View>)}
      <Body muted>Disponible = ingresos + préstamos − gastos pagados sin crédito − pagos de deuda − aportaciones − compromisos pendientes. Las transferencias propias no alteran el total. Las compras con crédito consumen presupuesto; su pago reduce el disponible una sola vez.</Body>
      {!data.commitments.length ? <Body muted>No hay facturas pendientes registradas. Añade una factura para preparar tus vencimientos.</Body> : null}
     </Card>
@@ -121,7 +121,7 @@ export default function LedgerScreen() {
    </> : null}
    {segment === 'history' ? <>
     <Field label="Buscar descripción" value={query} onChangeText={v => { setQuery(v); setLimit(50); }}/>
-    <Choices label="Tipo" value={filterKind} options={[['all', 'Todos'], ...Object.entries(kindLabels)]} onChange={v => { setFilterKind(v); setLimit(50); }}/>
+    <Choices label="Tipo" value={filterKind} options={[['all', 'Todos'], ...Object.entries(kindLabels), ['goal_contribution','Aportación a meta']]} onChange={v => { setFilterKind(v); setLimit(50); }}/>
     <Choices label="Filtrar categoría" value={filterCategory} options={[['all', 'Todas'], ['none', 'Sin categoría'], ...data.categories.map(c => [c.id, c.name] as const)]} onChange={setFilterCategory}/>
     <Choices label="Filtrar método" value={filterMethod} options={[['all', 'Todos los métodos'], ...Object.entries(paymentLabels)]} onChange={setFilterMethod}/>
     <Field label="Desde (AAAA-MM-DD, opcional)" value={from} onChangeText={setFrom}/><Field label="Hasta (AAAA-MM-DD, opcional)" value={to} onChangeText={setTo}/>
@@ -142,14 +142,15 @@ export default function LedgerScreen() {
    {category !== undefined ? <CategoryForm initial={category} store={store} saved={refresh} close={() => setCategory(undefined)}/> : null}
    {budget ? <BudgetForm data={data} month={month} store={store} saved={refresh} close={() => setBudget(false)}/> : null}
    {selected ? <Sheet title="Detalle del movimiento" close={() => setSelected(null)} busy={busy}>
-    <Body style={{ fontWeight: '700' }}>{selected.description} · {formatMoney(selected.amountCents)}</Body><Body>{selected.date} · {kindLabels[selected.kind as EntryKind] ?? selected.kind}</Body><Body muted>Identificador: {selected.id}</Body>
+    <Body style={{ fontWeight: '700' }}>{selected.description} · {formatMoney(selected.amountCents)}</Body><Body>{selected.date} · {kindLabels[selected.kind as EntryKind] ?? 'Aportación a meta'}</Body><Body muted>Identificador: {selected.id}</Body>
     {selected.grossCents !== null ? <Body>Bruto registrado: {formatMoney(selected.grossCents)}</Body> : null}{selected.withholdingCents !== null ? <Body>Retención: {formatMoney(selected.withholdingCents)}</Body> : null}
     <Body>Uso: {selected.useKind === 'unknown' ? 'Sin clasificar' : selected.useKind === 'personal' ? 'Personal' : selected.useKind === 'business' ? 'Comercial' : 'Mixto'} · {selected.taxReview ? 'Marcado para revisión' : 'Sin marca contributiva'}</Body>
     {selected.scheduleId ? <Body muted>Vinculado a ingreso recurrente. Eliminarlo no vuelve a generar este cobro; puedes restaurarlo.</Body> : null}
-    {!selected.deletedAt && !busy ? <ActionButton title="Corregir movimiento" onPress={() => { setForm({ initial: selected, kind: selected.kind as EntryKind }); setSelected(null); }}/> : null}
+    {selected.kind==='goal_contribution'?<><Body>Las aportaciones se corrigen desde Mis metas para conservar sus vínculos.</Body><ActionButton title="Abrir Mis metas" secondary onPress={()=>{setSelected(null);router.push('/goals');}}/></>:null}
+    {selected.kind!=='goal_contribution' && !selected.deletedAt && !busy ? <ActionButton title="Corregir movimiento" onPress={() => { setForm({ initial: selected, kind: selected.kind as EntryKind }); setSelected(null); }}/> : null}
     <Field label={selected.deletedAt ? 'Motivo de restauración' : 'Motivo de eliminación'} value={reason} onChangeText={setReason} multiline/>
     <Body muted>{selected.deletedAt ? 'La restauración vuelve a incluirlo en los cálculos.' : 'La eliminación lo retira de los cálculos y conserva su historial. Puedes restaurarlo desde Eliminados.'}</Body>
-    {!busy ? <ActionButton title={selected.deletedAt ? 'Confirmar restauración' : 'Confirmar eliminación'} secondary onPress={() => void action(async () => { await store.setDeleted(selected.id, selected.version, !selected.deletedAt, reason); setSelected(null); }, selected.deletedAt ? 'Movimiento restaurado.' : 'Movimiento retirado de los cálculos; disponible en Eliminados.')}/> : null}
+    {selected.kind!=='goal_contribution' && !busy ? <ActionButton title={selected.deletedAt ? 'Confirmar restauración' : 'Confirmar eliminación'} secondary onPress={() => void action(async () => { await store.setDeleted(selected.id, selected.version, !selected.deletedAt, reason); setSelected(null); }, selected.deletedAt ? 'Movimiento restaurado.' : 'Movimiento retirado de los cálculos; disponible en Eliminados.')}/> : null}
     {!busy ? <ActionButton title="Ver historial de correcciones" secondary onPress={() => void action(async () => setRevisions(await store.revisions(selected.id)), 'Historial cargado.')}/> : null}
     {revisions?.length === 0 ? <Body>Sin correcciones registradas.</Body> : null}{revisions?.map((r, index) => <Body key={index}>{r.recordedAt} · {r.action === 'edit' ? 'Corrección' : r.action === 'delete' ? 'Eliminación' : 'Restauración'} · {r.reason}</Body>)}<ErrorNotice message={error}/>
    </Sheet> : null}

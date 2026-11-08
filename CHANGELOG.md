@@ -89,3 +89,10 @@
 - Android sin conexión; cifrado y exclusión de respaldo verificados en iOS después del recorrido.
 - Contraste de títulos corregido sobre tarjetas claras del tema oscuro; capturas y guía disponibles en docs/stages/evidence/05.
 - Etapa 6 pendiente de revisión; aplicación sin publicar.
+
+## Etapa 6 — Mis metas y Mi progreso
+
+- Metas editables, ahorro previo, aportaciones e historial con correcciones controladas.
+- Movimientos únicos vinculados y reserva de flujo sin duplicar ingresos o gastos.
+- Indicadores calculados desde registros reales y plan manual persistente de 90 días.
+- Migración 4→5 preservando metas históricas; 19 pruebas nuevas, 94 en total.

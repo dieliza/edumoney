@@ -88,5 +88,5 @@ export function monthlySummary(snapshot: Snapshot, month: string) {
     const uncategorized = total(m => m.kind === 'expense' && !m.categoryId);
     if (uncategorized)
         distribution.push({ id: 'uncategorized', name: 'Sin categoría', kind: 'expense', archived: false, spent: uncategorized, budget: null });
-    return { income, expenses, loans, payments, commitments, cashFlow, available: addAmounts(cashFlow, cents(-commitments)), distribution };
+    return { income, expenses, loans, payments, contributions, commitments, cashFlow, available: addAmounts(cashFlow, cents(-commitments)), distribution };
 }

@@ -75,3 +75,10 @@ El plan de 30 días no dispara pagos, notificaciones ni cambios de saldo automá
 La [validación nativa de Etapa 5](stages/05.md) aprobó en Android e iOS. Tras guardar deuda y pago vinculado,
 iOS rechazó lectura sin clave, conservó la cabecera cifrada y la misma huella al reabrir; la exclusión de respaldo se verificó.
 El recorrido Android se ejecutó con datos y Wi-Fi desactivados. Las evidencias públicas contienen solo datos ficticios y comprobaciones, nunca bases ni claves.
+
+## Etapa 6
+
+Metas, aportaciones, cambios y planes de 90 días comparten SQLCipher y la cola de transacciones existente.
+No hay dependencias ni permisos nuevos. Los formularios nativos parten vacíos; la web sigue en demostración.
+Una aportación y su vínculo se guardan atómicamente; las correcciones preservan identificadores e historial.
+No se introducen notificaciones push remotas ni servicios en línea.
