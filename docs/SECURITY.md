@@ -32,3 +32,11 @@ En cada plataforma: primera apertura, cerrar/reabrir, verificar cipher_version, 
 no abre una copia, probar clave incorrecta/ausente sin pérdida, bloqueo de dispositivo y exclusiones de backup.
 Verificar ausencia de tráfico de datos en una compilación release en modo avión. No afirmar validación física por pasar
 pruebas de SQLite de escritorio: esas pruebas no utilizan SQLCipher.
+
+## Evidencia actual de simuladores
+
+La apertura y reapertura nativas ya pasaron en Android e iOS. En iOS se verificó además el archivo cifrado,
+el rechazo de lectura sin clave y el atributo de exclusión de backup. Ver resultados y límites en
+[Etapa 1](stages/01.md). Los puntos de la lista anterior que requieren dispositivos físicos, pérdida de clave,
+restauración y tráfico de red siguen pendientes. El paquete iOS de CI usa firma local de Xcode con permisos
+incorporados durante la compilación para simulador; no reutilizar esos permisos de prueba como perfil de distribución.

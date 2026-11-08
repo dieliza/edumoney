@@ -14,3 +14,10 @@
 - CI en GitHub Actions para Android e iOS sin publicación.
 - Prueba Maestro de primera apertura y reapertura del almacenamiento cifrado.
 - Capturas y compilaciones de simulador como evidencias descargables.
+
+### Resultados de validación nativa
+
+- Android compilado y apertura/reapertura sin Wi-Fi ni datos aprobadas en emulador.
+- iOS compilado con firma local de Xcode y permisos de llavero; primera apertura/reapertura aprobadas en simulador.
+- Verificación iOS directa de cabecera cifrada, rechazo de lectura sin clave, huella estable y exclusión de backup.
+- Evidencias y resultados en docs/stages/01.md; pruebas físicas y recuperación siguen pendientes.

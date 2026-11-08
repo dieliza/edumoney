@@ -46,3 +46,7 @@ yarn-error.*
 *.sqlite*
 .env
 coverage/
+
+# Herramientas de validación nativa
+__pycache__/
+native-results/
