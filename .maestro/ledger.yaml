@@ -17,7 +17,7 @@ appId: com.edumoney.app
 - extendedWaitUntil:
     visible: "Disponible estimado del mes"
     timeout: 30000
-- assertVisible: "$0.00"
+- assertVisible: '\$0\.00'
 - tapOn: "Añadir ingreso"
 - tapOn:
     id: "movement-amount"
@@ -48,7 +48,7 @@ appId: com.edumoney.app
     timeout: 30000
 - tapOn: "Guardar movimiento"
 - scrollUntilVisible:
-    element: "$989.90"
+    element: '\$989\.90'
     direction: DOWN
     timeout: 30000
 - takeScreenshot: stage3-money-light
@@ -61,7 +61,7 @@ appId: com.edumoney.app
     id: "theme-picker-open"
 - tapOn: "Oscuro"
 - scrollUntilVisible:
-    element: "$989.90"
+    element: '\$989\.90'
     direction: DOWN
     timeout: 30000
 - takeScreenshot: stage3-money-dark
@@ -71,7 +71,7 @@ appId: com.edumoney.app
 - assertVisible:
     id: "theme-dark"
 - scrollUntilVisible:
-    element: "$989.90"
+    element: '\$989\.90'
     direction: DOWN
     timeout: 30000
 - scrollUntilVisible:
@@ -80,10 +80,10 @@ appId: com.edumoney.app
     timeout: 30000
 - tapOn: "Historial"
 - scrollUntilVisible:
-    element: "Food native test"
+    element: ".*Food native test.*"
     direction: DOWN
     timeout: 30000
-- tapOn: "Food native test"
+- tapOn: ".*Food native test.*"
 - tapOn: "Corregir movimiento"
 - tapOn:
     id: "movement-amount"
@@ -93,14 +93,16 @@ appId: com.edumoney.app
     element: "Motivo de la corrección"
     direction: DOWN
     timeout: 30000
-- tapOn: "Motivo de la corrección"
+- tapOn:
+    text: "Motivo de la corrección"
+    index: 1
 - inputText: "Receipt correction"
 - scrollUntilVisible:
     element: "Guardar corrección"
     direction: DOWN
     timeout: 30000
 - tapOn: "Guardar corrección"
-- assertVisible: "Food native test"
+- assertVisible: ".*Food native test.*"
 - takeScreenshot: stage3-history-corrected
 - scrollUntilVisible:
     element: "Resumen"
@@ -108,7 +110,7 @@ appId: com.edumoney.app
     timeout: 30000
 - tapOn: "Resumen"
 - scrollUntilVisible:
-    element: "$990.00"
+    element: '\$990\.00'
     direction: DOWN
     timeout: 30000
 - takeScreenshot: stage3-money-corrected
