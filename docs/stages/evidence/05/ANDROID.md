@@ -1,6 +1,6 @@
 # Etapa 5 — Capturas Android
 
-Datos ficticios de prueba. Recorrido Android aprobado: deuda de $100.00, pago único de $10.00 y saldo de $90.00 conservado al reabrir. iOS sigue en validación.
+Datos ficticios de prueba. Recorrido Android aprobado: deuda de $100.00, pago único de $10.00 y saldo de $90.00 conservado al reabrir. iOS también aprobó. [Abrir la galería completa de ambas plataformas](README.md).
 
 ![Deuda](android-debt-light.png)
 

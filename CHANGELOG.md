@@ -81,3 +81,11 @@
 - Simulación determinística de bola de nieve y avalancha con presupuesto constante, aporte extra y cambios de tasa conocidos.
 - Plan persistente de revisiones de 30 días; confirmar tareas no registra pagos.
 - Migración transaccional 3→4 y 23 pruebas nuevas; 75 pruebas de lógica/SQLite aprobadas.
+
+### Verificación final de Etapa 5
+
+- Recorridos Android e iOS aprobados: pago compartido con factura, saldo persistente, calendario, simulación y plan de 30 días.
+- 75 pruebas de lógica/SQLite, tipos, lint y tres pruebas de navegador aprobados.
+- Android sin conexión; cifrado y exclusión de respaldo verificados en iOS después del recorrido.
+- Contraste de títulos corregido sobre tarjetas claras del tema oscuro; capturas y guía disponibles en docs/stages/evidence/05.
+- Etapa 6 pendiente de revisión; aplicación sin publicar.

@@ -71,3 +71,7 @@ Deudas, desglose de pagos, condiciones, conciliaciones, historial y planes perma
 No se añaden dependencias, permisos ni servicios remotos. Los cálculos usan centavos enteros y BigInt; no se infieren tasas ni fechas desconocidas.
 Los vínculos entre deuda, factura y movimiento se actualizan en la misma transacción y se conserva su historial al revertir.
 El plan de 30 días no dispara pagos, notificaciones ni cambios de saldo automáticamente.
+
+La [validación nativa de Etapa 5](stages/05.md) aprobó en Android e iOS. Tras guardar deuda y pago vinculado,
+iOS rechazó lectura sin clave, conservó la cabecera cifrada y la misma huella al reabrir; la exclusión de respaldo se verificó.
+El recorrido Android se ejecutó con datos y Wi-Fi desactivados. Las evidencias públicas contienen solo datos ficticios y comprobaciones, nunca bases ni claves.
