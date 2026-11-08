@@ -23,7 +23,7 @@ No conectar cámara/voz hasta validar procesamiento local y revisión manual.
 
 Los respaldos manuales cifrados, recuperación, cambio/rotación de clave, bloqueo biométrico opcional y borrado
 seguro integral son trabajo posterior. No existe respaldo automático. Desinstalar o perder el dispositivo/clave
-puede impedir recuperar datos. La pantalla técnica no permite capturar información real todavía.
+puede impedir recuperar datos. Mi dinero permite registrar información local; la recuperación mediante respaldo manual todavía no está implementada.
 El cifrado en reposo no protege un dispositivo comprometido ni la memoria mientras la aplicación está abierta.
 
 ## Validación nativa pendiente
@@ -40,3 +40,11 @@ el rechazo de lectura sin clave y el atributo de exclusión de backup. Ver resul
 [Etapa 1](stages/01.md). Los puntos de la lista anterior que requieren dispositivos físicos, pérdida de clave,
 restauración y tráfico de red siguen pendientes. El paquete iOS de CI usa firma local de Xcode con permisos
 incorporados durante la compilación para simulador; no reutilizar esos permisos de prueba como perfil de distribución.
+
+## Etapa 3
+
+Los movimientos, campos salariales, categorías, presupuestos, programaciones y revisiones se guardan únicamente
+en SQLCipher. AsyncStorage conserva solo la apariencia. No hay adaptador financiero web sin cifrado.
+Las entradas SQL se parametrizan; las operaciones se serializan y se revierten ante errores. Los identificadores
+se conservan durante correcciones y eliminación lógica. Los errores de validación usan mensajes revisados;
+los errores internos de base de datos se ocultan en pantalla. Las pruebas utilizan datos sintéticos.
