@@ -96,3 +96,10 @@
 - Movimientos únicos vinculados y reserva de flujo sin duplicar ingresos o gastos.
 - Indicadores calculados desde registros reales y plan manual persistente de 90 días.
 - Migración 4→5 preservando metas históricas; 19 pruebas nuevas, 94 en total.
+
+### Verificación final de Etapa 6
+
+- 94 pruebas de lógica/SQLite, tipos, lint y tres pruebas de navegador aprobados.
+- Recorridos Android sin conexión e iOS aprobados: creación, aportación única, cambio de objetivo, progreso y plan persistentes al reabrir.
+- Cifrado, rechazo de lectura sin clave y exclusión de respaldo comprobados en iOS.
+- Galería de 20 capturas y guía de uso disponibles; etapa 7 sin iniciar y main sin modificar.

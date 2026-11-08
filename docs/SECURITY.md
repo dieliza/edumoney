@@ -82,3 +82,8 @@ Metas, aportaciones, cambios y planes de 90 días comparten SQLCipher y la cola 
 No hay dependencias ni permisos nuevos. Los formularios nativos parten vacíos; la web sigue en demostración.
 Una aportación y su vínculo se guardan atómicamente; las correcciones preservan identificadores e historial.
 No se introducen notificaciones push remotas ni servicios en línea.
+
+La [verificación nativa de Etapa 6](stages/06.md) aprobó en Android e iOS. Después de guardar meta,
+aportación y plan, iOS conservó cabecera cifrada, rechazó SQLite sin clave y mantuvo la misma huella al reabrir;
+la exclusión de respaldo también se comprobó. Android completó el recorrido con Wi-Fi y datos desactivados.
+Las capturas contienen exclusivamente datos ficticios; no se publican bases ni claves.
