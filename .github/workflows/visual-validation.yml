@@ -78,6 +78,10 @@ jobs:
             adb shell svc wifi disable
             adb shell svc data disable
             maestro test --test-output-dir native-results .maestro/visual.yaml
+            adb shell cmd uimode night yes
+            maestro test --test-output-dir native-results/automatic-dark .maestro/automatic-dark.yaml
+            adb shell cmd uimode night no
+            maestro test --test-output-dir native-results/automatic-light .maestro/automatic-light.yaml
             adb shell settings put system font_scale 1.3
             adb shell am force-stop com.edumoney.app
             adb shell monkey -p com.edumoney.app 1

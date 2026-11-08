@@ -1,0 +1,7 @@
+appId: com.edumoney.app
+---
+- extendedWaitUntil:
+    visible:
+      id: "theme-light"
+    timeout: 10000
+- takeScreenshot: stage2-automatic-light

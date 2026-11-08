@@ -1,4 +1,4 @@
-# EduMoney — Etapa 1
+# EduMoney — Base técnica y diseño
 
 Base móvil local para iOS y Android. React Native 0.88, Expo SDK 58 y TypeScript estricto.
 El repositorio remoto inspeccionado estaba vacío: sin ramas, archivos ni funciones previas que preservar.
@@ -17,10 +17,23 @@ npm run ios
 ```
 
 `npm run prebuild` genera los proyectos nativos desde app.json y plugins. No editar los directorios generados.
-SQLCipher requiere compilación nativa: **Expo Go y la web no son destinos compatibles**.
+SQLCipher requiere compilación nativa: **Expo Go y la web no son destinos compatibles para datos financieros**.
 No se necesita cuenta Expo/EAS para compilar localmente. El modo desarrollo usa Metro; una compilación release no lo necesita.
 
-La única pantalla es un diagnóstico de apertura del almacenamiento. No hay pantallas financieras, datos ficticios ni funciones de otras etapas.
+La Etapa 2 incorpora bienvenida, cuatro pestañas y temas Claro/Oscuro/Automático con ejemplos ficticios.
+La preferencia se guarda localmente. Las funciones financieras continúan desconectadas. El logo original está pendiente.
+
+La vista web es solo una demostración visual, sin acceso a bases financieras. Para revisar localmente:
+
+```sh
+npx expo export --platform web --output-dir dist-preview
+python scripts/serve-preview.py
+# En otra terminal:
+npm run test:visual
+```
+
+Las capturas y el estado de verificación se documentan en [Etapa 2](docs/stages/02.md).
+
 
 - [Arquitectura](docs/ARCHITECTURE.md)
 - [Privacidad y seguridad](docs/SECURITY.md)
