@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "EduMoney",
+    "slug": "edumoney",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.edumoney.app"
+    },
+    "android": {
+      "predictiveBackGestureEnabled": false,
+      "package": "com.edumoney.app",
+      "allowBackup": false
+    },
+    "plugins": [
+      [
+        "expo-sqlite",
+        {
+          "useSQLCipher": true
+        }
+      ],
+      [
+        "expo-secure-store",
+        {
+          "configureAndroidBackup": false
+        }
+      ],
+      "./plugins/withLocalOnly.cjs"
+    ],
+    "updates": {
+      "enabled": false
+    },
+    "platforms": [
+      "ios",
+      "android"
+    ]
+  }
+}
