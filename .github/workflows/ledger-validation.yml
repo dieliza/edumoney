@@ -160,7 +160,7 @@ jobs:
           xcrun simctl install "$DEVICE_ID" build/Build/Products/Release-iphonesimulator/EduMoney.app
           rm -rf native-results
           xcrun simctl ui "$DEVICE_ID" appearance light
-          maestro --device "$DEVICE_ID" test --test-output-dir native-results/ledger .maestro/ledger.yaml
+          maestro --device "$DEVICE_ID" test --test-output-dir native-results/ledger .maestro/ios-ledger.yaml
           # Revalidar el cifrado y la reapertura después de guardar los movimientos de prueba.
           bash scripts/ios-smoke.sh "$DEVICE_ID"
       - uses: actions/upload-artifact@v4
