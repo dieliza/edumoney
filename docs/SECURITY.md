@@ -94,3 +94,7 @@ Avance, intentos y escenarios se almacenan en SQLCipher con la cola compartida; 
 `expo-speech` se usa únicamente para contenido editorial de lecciones mediante una voz española básica disponible en iOS.
 No se envían registros personales a síntesis de voz ni se añade un servicio remoto. En Android no se inicia síntesis porque la API no permite comprobar si requiere red.
 La aplicación conserva texto y explicaciones si la voz no está disponible. Sin permisos nuevos, cuentas, IA ni push remoto.
+
+La [validación nativa de Etapa 7](stages/07.md) aprobó en Android e iOS. Tras guardar el avance de aprendizaje y los escenarios,
+iOS conservó cabecera cifrada, rechazó SQLite sin clave y mantuvo la misma huella al reabrir; exclusión de respaldo comprobada.
+Android completó el recorrido con Wi-Fi y datos desactivados. Las evidencias contienen únicamente datos ficticios y comprobaciones, nunca bases ni claves.

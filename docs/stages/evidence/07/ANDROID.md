@@ -1,6 +1,6 @@
 # Etapa 7 — Android
 
-Datos ficticios de prueba. Android aprobó el recorrido sin Wi-Fi ni datos. iOS continúa en verificación.
+Datos ficticios de prueba. Android aprobó el recorrido sin Wi-Fi ni datos. iOS también aprobó. [Abrir la galería completa](README.md).
 
 Se resolvió la lección de presupuesto y se conservó **1 de 10 lecciones completadas**. Se guardaron dos préstamos ficticios de **$1,200 al 0%**: **12 meses/$100** y **24 meses/$50**, con total de $1,200 en ambos casos. El margen mensual elegido fue $500, sin cargos ni costos adicionales confirmados.
 

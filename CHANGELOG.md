@@ -111,3 +111,11 @@
 - Escenarios independientes con comparación, inputs y fórmula versionada, sin movimientos financieros.
 - Lectura iOS con voz básica disponible; alternativa textual cuando no se puede verificar una voz local.
 - Migración 5→6 y 23 pruebas nuevas; 117 pruebas totales aprobadas.
+
+### Verificación final de Etapa 7
+
+- 117 pruebas de lógica/SQLite, TypeScript, ESLint y tres pruebas de navegador aprobados.
+- Android sin conexión e iOS: ejercicio, dos escenarios comparados, temas y reapertura persistente aprobados.
+- Voz española disponible detectada en iOS, interfaz/parada comprobadas; Android conserva texto al no poder verificar el motor local. Audio físico pendiente.
+- Cifrado, rechazo de SQLite sin clave, huella estable y exclusión de respaldo verificados en iOS.
+- Galería de 18 capturas y guía disponibles. Etapa 8 pendiente de revisión; main sin cambios y Negocio reservado.
