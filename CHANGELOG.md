@@ -65,3 +65,10 @@
 - Migración transaccional 2→3 y 18 pruebas adicionales de lógica/SQLite/avisos; registro de push remoto desactivado.
 
 - Un gasto desvinculado por error puede vincularse a la factura correcta, conservando ambos registros históricos sin duplicar importes.
+
+### Verificación final de Etapa 4
+
+- 52 pruebas de lógica/SQLite, tipos y lint aprobados; tres pruebas de navegador sin regresiones.
+- Recorridos completos aprobados en simuladores Android e iOS: pagos parciales, ambos temas, agenda, reapertura y aviso local cancelado al pagar.
+- Cifrado, estabilidad al reabrir y exclusión de respaldo comprobados en iOS después de guardar facturas y pagos.
+- Galería con datos ficticios y guía de uso publicadas; Etapa 5 sin iniciar.

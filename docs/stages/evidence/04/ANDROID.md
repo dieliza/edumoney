@@ -1,7 +1,7 @@
 # EduMoney — Facturas en Android
 
 Capturas de la versión final de Etapa 4 con **datos ficticios** en un emulador desechable. Son imágenes, no una aplicación interactiva.
-La comprobación complementaria de iOS continúa en curso.
+Android e iOS aprobaron la verificación. [Abrir la galería completa](README.md).
 
 ## Pago parcial
 

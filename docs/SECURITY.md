@@ -60,3 +60,7 @@ Los avisos del SO no contienen proveedor, importe ni notas financieras. Se solic
 se desactiva la capacidad de push remoto en iOS y la inicialización automática de mensajería Firebase en Android.
 No se solicitan tokens ni se configura un servicio de envío remoto.
 La copia opcional al calendario solo propone un evento genérico y requiere confirmación del usuario; el calendario elegido puede sincronizarse fuera de EduMoney.
+
+La [validación nativa de Etapa 4](stages/04.md) aprobó en iOS y Android. Tras registrar facturas y pagos en iOS,
+el archivo conservó cabecera cifrada, rechazó SQLite sin clave y mantuvo la misma huella al reabrir; la exclusión de respaldo también se verificó.
+Los avisos locales se comprobaron programados, conservados al reabrir y cancelados después del pago. No se publican bases ni claves.
