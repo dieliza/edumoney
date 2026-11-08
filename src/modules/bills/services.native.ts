@@ -25,7 +25,11 @@ export async function enableReminders(){
 export async function calendarCopy(bill:Bill):Promise<string>{
  // El usuario elige el calendario y confirma en la hoja del SO. Solo se exporta una fecha genérica.
  const start=new Date(`${bill.dueDate}T09:00:00`);const end=new Date(start.getTime()+15*60*1000);
- const result=await createEventInCalendarAsync({title:'Revisar factura en EduMoney',startDate:start,endDate:end,notes:'Consulta la factura en EduMoney. Este evento no confirma un pago.'});
- if(result.action===CalendarDialogResultActions.canceled)return 'Se cerró el calendario sin confirmar la copia.';
- return 'Se abrió el calendario. Comprueba allí si guardaste el evento. La copia no se actualiza ni elimina desde EduMoney.';
+ try {
+  const result=await createEventInCalendarAsync({title:'Revisar factura en EduMoney',startDate:start,endDate:end,notes:'Consulta la factura en EduMoney. Este evento no confirma un pago.'});
+  if(result.action===CalendarDialogResultActions.canceled)return 'Se cerró el calendario sin confirmar la copia.';
+  return 'Se abrió el calendario. Comprueba allí si guardaste el evento. La copia no se actualiza ni elimina desde EduMoney.';
+ } catch {
+  return 'No se pudo abrir el calendario en este dispositivo. Puedes seguir usando la agenda de Mis facturas; no se modificó ningún pago.';
+ }
 }
