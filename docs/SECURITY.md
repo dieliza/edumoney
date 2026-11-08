@@ -52,3 +52,11 @@ los errores internos de base de datos se ocultan en pantalla. Las pruebas utiliz
 La [verificación de Etapa 3](stages/03.md) comprueba el recorrido financiero nativo y, en iOS, el archivo cifrado
 después de registrar y corregir movimientos: rechazo de lectura sin clave, huella estable al reiniciar
 y exclusión de respaldo. Se mantienen pendientes las comprobaciones físicas y de recuperación general.
+
+## Etapa 4
+
+Facturas, series, pagos y revisiones permanecen en SQLCipher. Todos los módulos comparten la cola de transacciones de la conexión cifrada.
+Los avisos del SO no contienen proveedor, importe ni notas financieras. Se solicita permiso solo por acción del usuario;
+se desactiva la capacidad de push remoto en iOS y la inicialización automática de mensajería Firebase en Android.
+No se solicitan tokens ni se configura un servicio de envío remoto.
+La copia opcional al calendario solo propone un evento genérico y requiere confirmación del usuario; el calendario elegido puede sincronizarse fuera de EduMoney.

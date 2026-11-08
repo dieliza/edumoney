@@ -11,7 +11,8 @@ no sustituye una compilación con Xcode/Gradle ni una prueba física. Identifica
 - `src/core`: modelos, UUID v4 criptográficos e importes USD en centavos enteros seguros.
 - `src/storage`: clave, apertura cifrada y migraciones versionadas atómicas.
 - `src/modules/money`: casos de uso y repositorios locales, cálculo de flujo/presupuesto, historial y UI nativa.
-- `src/modules/{bills,debts,goals,documents,tax,learning,progress}`: límites reservados para etapas futuras.
+- `src/modules/bills`: facturas concretas, series, pagos, revisiones y avisos locales.
+- `src/modules/{debts,goals,documents,tax,learning,progress}`: límites reservados para etapas futuras.
 - `tests`: pruebas de dominio, clave y SQLite real en archivos temporales sin datos personales.
 - `plugins/withLocalOnly.cjs`: exclusión de copias automáticas iOS/Android.
 
@@ -59,3 +60,13 @@ de una ocurrencia; restaurar conserva el identificador original.
 
 `UserInputError` delimita mensajes revisados para el usuario. Las excepciones internas del almacenamiento
 se convierten en un mensaje genérico en pantalla. No se registran consultas, claves ni datos financieros.
+
+## Esquema 3 — Etapa 4
+
+`bill_series` conserva frecuencia, ancla y próxima fecha por generar. `bills` representa cada obligación concreta;
+serie/fecha de origen es única y no cambia al corregir el vencimiento visible.
+`bill_payments` vincula cada pago a un único movimiento. `bill_payment_reversals` conserva la reversión sin eliminar el vínculo histórico.
+`bill_revisions` guarda motivo y valores anteriores de cada cambio o anulación.
+El libro y las facturas comparten la cola de `MoneyStore`, incluidas transacciones de pago y generación.
+Los avisos se derivan de obligaciones pendientes y preferencias cifradas; el SO recibe solo un título genérico y una fecha.
+La copia opcional al calendario también es genérica y requiere confirmación del usuario en el diálogo del SO.

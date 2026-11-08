@@ -10,7 +10,7 @@ import { cents } from '../src/core/money';
 import { MoneyStore,type SqlDb } from '../src/modules/money/store';
 import { monthlySummary } from '../src/modules/money/domain';
 import type { LedgerMovement } from '../src/modules/money/types';
-import { BillsStore,SimilarBillPaymentError } from '../src/modules/bills/store';
+import { BillsStore,SimilarBillError,SimilarBillPaymentError } from '../src/modules/bills/store';
 import { nextBillDate,billStatus,outstanding,reminderPlan,shiftDays } from '../src/modules/bills/domain';
 import { ReminderScheduler,type ReminderPort } from '../src/modules/bills/reminders';
 import type { Bill,BillInput,PaymentInput } from '../src/modules/bills/types';
@@ -46,6 +46,13 @@ describe('Etapa 4: facturas y pagos en SQLite real',()=>{
    expect(s.bills.map(b=>b.dueDate)).toEqual(['2026-11-15','2026-12-15','2027-01-15']);
    expect(s.bills.every(b=>b.paidCents===0)).toBe(true);expect((await ledger.snapshot()).movements).toHaveLength(0);
    expect(monthlySummary(await ledger.snapshot(),'2026-11').commitments).toBe(10000);
+  }finally{db.close();}
+ });
+ it('facturas coincidentes requieren revisión y confirmación expresa, sin reutilizar identificadores',async()=>{
+  const {db,bills}=await setup();try{
+   await bills.create(input(),null);await expect(bills.create(input('b2'),null)).rejects.toBeInstanceOf(SimilarBillError);
+   await bills.create(input('b2'),null,true);expect((await bills.snapshot()).bills).toHaveLength(2);
+   await expect(bills.create(input('b1',{amountCents:cents(500)}),null,true)).rejects.toThrow('identificador');
   }finally{db.close();}
  });
  it('pago parcial y completo, reintentos y doble pulsación mantienen un solo movimiento por pago',async()=>{

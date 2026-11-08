@@ -55,3 +55,11 @@
 - Archivo iOS cifrado y estable tras guardar movimientos y reiniciar; exclusión de respaldo comprobada.
 - Formularios adaptados al teclado e importe grande con altura de línea suficiente.
 - Galería y guía de uso en docs/stages/evidence/03 y docs/USAR_MI_DINERO.md.
+
+## Etapa 4 — Facturas y recordatorios
+
+- Facturas manuales y recurrentes, vistas Próximas/Pagadas/Calendario y próximas facturas reales en Mi dinero.
+- Pagos completos/parciales vinculados atómicamente, opción de vincular movimientos previos y prevención de duplicados.
+- Cambios de fecha auditados, reversión de pagos y anulación controlada del pendiente.
+- Avisos locales genéricos, conciliación tras cambios, permisos opcionales y copia manual al calendario.
+- Migración aditiva 2→3 y 17 pruebas adicionales de lógica/SQLite/avisos; registro de push remoto desactivado.
