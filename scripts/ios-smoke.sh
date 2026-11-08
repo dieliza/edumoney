@@ -3,6 +3,11 @@
 set -euo pipefail
 DEVICE_ID="$1"
 mkdir -p native-results/ios-direct
+capture_failure() {
+  xcrun simctl io "$DEVICE_ID" screenshot native-results/ios-direct/failure.png || true
+  xcrun simctl spawn "$DEVICE_ID" log show --style compact --last 3m --predicate 'process == "EduMoney" OR process == "SpringBoard" OR process == "runningboardd" OR process == "amfid"' > native-results/ios-direct/failure.log || true
+}
+trap capture_failure ERR
 xcrun simctl launch "$DEVICE_ID" com.edumoney.app
 APP_CONTAINER=$(xcrun simctl get_app_container "$DEVICE_ID" com.edumoney.app data)
 DATABASE_PATH="$APP_CONTAINER/Documents/SQLite/edumoney.db"
