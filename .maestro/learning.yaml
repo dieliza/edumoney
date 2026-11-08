@@ -198,7 +198,7 @@ appId: com.edumoney.app
 - scrollUntilVisible:
     element:
       id: decision-months
-    direction: DOWN
+    direction: UP
     centerElement: true
     timeout: 60000
 - tapOn:
