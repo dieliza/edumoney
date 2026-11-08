@@ -6,7 +6,7 @@ import { MoneyStore, movementSelect, readMovement, type SqlDb } from '../money/s
 import type { Category, LedgerMovement } from '../money/types';
 import { nextBillDate, outstanding, shiftDays, validateBill } from './domain';
 import type { Bill, BillInput, BillPayment, BillSeries, BillSnapshot, PaymentInput, RecurrenceInput } from './types';
-const selectBill = `SELECT b.id,b.provider,b.amount_cents AS amountCents,b.due_date AS dueDate,b.recurrence AS legacyRecurrence,
+const selectBill = `SELECT b.id,b.provider,b.amount_cents AS amountCents,b.due_date AS dueDate,b.recurrence AS legacyRecurrence,b.debt_id AS debtId,
  b.category_id AS categoryId,b.payment_kind AS paymentKind,b.series_id AS seriesId,b.occurrence_date AS occurrenceDate,
  b.reminder_days AS reminderDays,b.version,b.created_at AS createdAt,b.updated_at AS updatedAt,b.voided_at AS voidedAt,
  COALESCE((SELECT SUM(p.amount_cents) FROM bill_payments p WHERE p.bill_id=b.id AND NOT EXISTS(SELECT 1 FROM bill_payment_reversals r WHERE r.payment_id=p.id)),0) AS paidCents FROM bills b`;
@@ -87,6 +87,7 @@ export class BillsStore {
   validateBill(b);this.reason(reason);
   return this.ledger.transaction(async db=>{
    const old=await this.bill(db,b.id,version);
+   if(old.debtId && b.paymentKind!=='debt_payment')throw new UserInputError('Una factura vinculada a una deuda conserva el tipo pago de deuda.');
    if(old.voidedAt)throw new UserInputError('No se puede editar una factura anulada.');
    if(b.amountCents<old.paidCents)throw new UserInputError('El importe no puede ser menor que lo ya pagado.');
    const prior=await db.getFirstAsync<{id:string}>('SELECT id FROM bill_payments WHERE bill_id=? LIMIT 1',b.id);
@@ -114,6 +115,7 @@ export class BillsStore {
     return;
    }
    const b=await this.bill(db,p.billId,p.expectedVersion);
+   if(b.debtId)throw new UserInputError('Confirma esta factura desde Ordenar mis pagos para actualizar su deuda sin duplicar el movimiento.');
    if(b.voidedAt || p.amountCents>outstanding(b))throw new UserInputError('El pago supera el pendiente o la factura está anulada.');
    if(b.paymentKind==='debt_payment' && p.paymentMethod==='credit')throw new UserInputError('Un pago de deuda no se registra como compra con crédito.');
    let movementId=p.existingMovementId;
@@ -138,8 +140,9 @@ export class BillsStore {
   this.reason(reason);return this.ledger.transaction(async db=>{
    const p=await db.getFirstAsync<BillPayment>(selectPayment+' WHERE p.id=?',id);if(!p)throw new UserInputError('Pago no encontrado.');if(p.reversed)return;
    const b=await this.bill(db,p.billId);if(b.voidedAt)throw new UserInputError('La factura está anulada. Revisa el pago antes de anularla.');
+   if(b.debtId){const active=await db.getFirstAsync<{id:string}>('SELECT id FROM debt_payments WHERE movement_id=? AND reversed_at IS NULL',p.movementId);if(active)throw new UserInputError('Revierte este pago desde Ordenar mis pagos para mantener la deuda y la factura coordinadas.');}
    if(p.createdMovement){
-    const linked=await db.getFirstAsync<{n:number}>(`SELECT (SELECT COUNT(*) FROM documents WHERE movement_id=?)+(SELECT COUNT(*) FROM tax_records WHERE movement_id=?)+(SELECT COUNT(*) FROM debt_payments WHERE movement_id=?) AS n`,p.movementId,p.movementId,p.movementId);
+    const linked=await db.getFirstAsync<{n:number}>(`SELECT (SELECT COUNT(*) FROM documents WHERE movement_id=?)+(SELECT COUNT(*) FROM tax_records WHERE movement_id=?)+(SELECT COUNT(*) FROM debt_payments WHERE movement_id=? AND reversed_at IS NULL) AS n`,p.movementId,p.movementId,p.movementId);
     if(linked?.n)throw new UserInputError('El pago tiene documentos u otros vínculos. Debe revisarse junto con ellos.');
     const m=await db.getFirstAsync<Record<string,unknown>>('SELECT * FROM movements WHERE id=?',p.movementId);
     const now=new Date().toISOString();

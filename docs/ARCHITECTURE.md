@@ -12,7 +12,8 @@ no sustituye una compilación con Xcode/Gradle ni una prueba física. Identifica
 - `src/storage`: clave, apertura cifrada y migraciones versionadas atómicas.
 - `src/modules/money`: casos de uso y repositorios locales, cálculo de flujo/presupuesto, historial y UI nativa.
 - `src/modules/bills`: facturas concretas, series, pagos, revisiones y avisos locales.
-- `src/modules/{debts,goals,documents,tax,learning,progress}`: límites reservados para etapas futuras.
+- `src/modules/debts`: saldos, pagos, conciliación, simulación determinística y planes de revisión.
+- `src/modules/{goals,documents,tax,learning,progress}`: límites reservados para etapas futuras.
 - `tests`: pruebas de dominio, clave y SQLite real en archivos temporales sin datos personales.
 - `plugins/withLocalOnly.cjs`: exclusión de copias automáticas iOS/Android.
 
@@ -70,3 +71,12 @@ serie/fecha de origen es única y no cambia al corregir el vencimiento visible.
 El libro y las facturas comparten la cola de `MoneyStore`, incluidas transacciones de pago y generación.
 Los avisos se derivan de obligaciones pendientes y preferencias cifradas; el SO recibe solo un título genérico y una fecha.
 La copia opcional al calendario también es genérica y requiere confirmación del usuario en el diálogo del SO.
+
+## Esquema 4 — Etapa 5
+
+Cada deuda conserva fecha del saldo base, revisión de conciliación, condiciones conocidas y eventos antes/después.
+`debt_payments` conserva un único vínculo activo por movimiento y el efecto de cada pago sobre la revisión de saldo que existía al confirmarlo.
+Una conciliación posterior fija una nueva referencia; no vuelve a restar pagos antiguos ni se deshace al revertir un registro histórico.
+`bills.debt_id` permite confirmar deuda y factura con un único movimiento en la cola transaccional compartida.
+El calendario no inventa fechas y la simulación es pura: no escribe pagos ni intereses reales.
+`debt_plans` y `debt_plan_actions` guardan revisiones manuales, separadas de los eventos financieros.

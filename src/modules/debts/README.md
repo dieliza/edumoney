@@ -1,4 +1,7 @@
-# debts
+# Deudas — Etapa 5
 
-Límite reservado del módulo. Implementación funcional en su etapa correspondiente.
-Depende de modelos compartidos y repositorios locales; no debe crear copias de movimientos.
+Saldos confirmados, pagos vinculados a un único movimiento, desglose opcional, conciliación e historial.
+Comparación determinística de bola de nieve y avalancha, calendario de vencimientos y plan de revisiones de 30 días.
+La conexión y cola de transacciones se comparten con Mi dinero y Mis facturas. Sin servicios remotos ni IA.
+
+[Arquitectura y pruebas](../../../docs/stages/05.md) · [Guía de uso](../../../docs/USAR_ORDENAR_MIS_PAGOS.md)

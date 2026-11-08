@@ -64,3 +64,10 @@ La copia opcional al calendario solo propone un evento genérico y requiere conf
 La [validación nativa de Etapa 4](stages/04.md) aprobó en iOS y Android. Tras registrar facturas y pagos en iOS,
 el archivo conservó cabecera cifrada, rechazó SQLite sin clave y mantuvo la misma huella al reabrir; la exclusión de respaldo también se verificó.
 Los avisos locales se comprobaron programados, conservados al reabrir y cancelados después del pago. No se publican bases ni claves.
+
+## Etapa 5
+
+Deudas, desglose de pagos, condiciones, conciliaciones, historial y planes permanecen en SQLCipher.
+No se añaden dependencias, permisos ni servicios remotos. Los cálculos usan centavos enteros y BigInt; no se infieren tasas ni fechas desconocidas.
+Los vínculos entre deuda, factura y movimiento se actualizan en la misma transacción y se conserva su historial al revertir.
+El plan de 30 días no dispara pagos, notificaciones ni cambios de saldo automáticamente.

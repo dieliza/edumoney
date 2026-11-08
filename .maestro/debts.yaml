@@ -1,0 +1,242 @@
+appId: com.edumoney.app
+---
+- launchApp:
+    clearState: true
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: "Quickstep isn't responding"
+          commands:
+            - tapOn: "Close app"
+      - extendedWaitUntil:
+          visible: "Abrir Mi dinero"
+          timeout: 60000
+- tapOn: "Abrir Mi dinero"
+- scrollUntilVisible:
+    element:
+      id: "open-debts"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: "open-debts"
+- tapOn:
+    id: "add-debt"
+- tapOn:
+    id: "debt-name"
+- inputText: "Card test"
+- tapOn:
+    text: "Nombre de la deuda"
+    index: 0
+- tapOn:
+    id: "debt-balance"
+- inputText: "100.00"
+- tapOn:
+    text: "Saldo total pendiente.*"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: "debt-rate"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: "debt-rate"
+- inputText: "12.00"
+- tapOn:
+    text: "Tasa anual APR.*"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: "debt-minimum"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: "debt-minimum"
+- inputText: "10.00"
+- tapOn:
+    text: "Pago mínimo mensual.*"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: "debt-due"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: "debt-due"
+- inputText: "2030-01-15"
+- tapOn:
+    text: "Próximo vencimiento.*"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: "debt-save"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: "debt-save"
+- scrollUntilVisible:
+    element: 'Deuda Card test, saldo \$100\.00.*'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: 'Deuda Card test, saldo \$100\.00.*'
+- takeScreenshot: stage5-debt-light
+- scrollUntilVisible:
+    element: "Preparar factura del mínimo pendiente"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Preparar factura del mínimo pendiente"
+- scrollUntilVisible:
+    element: "Abrir Mis facturas"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Abrir Mis facturas"
+- scrollUntilVisible:
+    element: "Factura Card test.*"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Factura Card test.*"
+- tapOn:
+    id: "bill-paid"
+- extendedWaitUntil:
+    visible: "Confirmar pago de deuda"
+    timeout: 60000
+- scrollUntilVisible:
+    element: "Este pago aún reduce el saldo"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Este pago aún reduce el saldo"
+- scrollUntilVisible:
+    element: "Corresponde al vencimiento 2030-01-15"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Corresponde al vencimiento 2030-01-15"
+- scrollUntilVisible:
+    element:
+      id: "debt-confirm-payment"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: "debt-confirm-payment"
+- scrollUntilVisible:
+    element: 'Deuda Card test, saldo \$90\.00.*'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: 'Deuda Card test, saldo \$90\.00.*'
+- takeScreenshot: stage5-payment-balance
+- scrollUntilVisible:
+    element: "Cerrar ficha"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Cerrar ficha"
+- tapOn:
+    id: "theme-picker-open"
+- tapOn: "Oscuro"
+- assertVisible:
+    id: "theme-dark"
+- scrollUntilVisible:
+    element: "Simulador"
+    direction: UP
+    timeout: 60000
+- tapOn: "Simulador"
+- scrollUntilVisible:
+    element:
+      id: "debt-extra"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: "debt-extra"
+- eraseText
+- inputText: "5.00"
+- tapOn:
+    text: "Aporte adicional mensual.*"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: "debt-calculate"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: "debt-calculate"
+- scrollUntilVisible:
+    element: "Bola de nieve"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage5-snowball-dark
+- scrollUntilVisible:
+    element: "Avalancha"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage5-avalanche-dark
+- scrollUntilVisible:
+    element: "Calendario de pagos"
+    direction: UP
+    timeout: 60000
+- tapOn: "Calendario de pagos"
+- scrollUntilVisible:
+    element: 'Mínimo pendiente: \$0\.00'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage5-calendar-dark
+- scrollUntilVisible:
+    element: "Plan de 30 días"
+    direction: UP
+    timeout: 60000
+- tapOn: "Plan de 30 días"
+- tapOn:
+    id: "debt-create-plan"
+- scrollUntilVisible:
+    element: "Ya lo hice: Revisar saldos y estados de cuenta"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Ya lo hice: Revisar saldos y estados de cuenta"
+- scrollUntilVisible:
+    element: "1 de 6 tareas revisadas.*"
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage5-plan-dark
+- stopApp
+- launchApp
+- tapOn: "Abrir Mi dinero"
+- scrollUntilVisible:
+    element: '\$10\.00'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage5-money-single-payment
+- scrollUntilVisible:
+    element:
+      id: "open-debts"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: "open-debts"
+- scrollUntilVisible:
+    element: 'Deuda Card test, saldo \$90\.00.*'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: 'Deuda Card test, saldo \$90\.00.*'
+- takeScreenshot: stage5-debt-reopened-dark

@@ -6,6 +6,7 @@ export interface BillInput {
  categoryId: string | null; paymentKind: 'expense' | 'debt_payment'; reminderDays: number | null;
 }
 export interface Bill extends BillInput {
+ debtId?: string | null;
  seriesId: string | null; occurrenceDate: string | null; version: number;
  createdAt: string | null; updatedAt: string | null; voidedAt: string | null; paidCents: Cents;
  /** Plantillas antiguas se conservan sin interpretar texto desconocido. */

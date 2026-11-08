@@ -25,6 +25,8 @@ La preferencia se guarda localmente. En la Etapa 3, Mi dinero permite registrar 
 
 La Etapa 4 añade facturas, pagos parciales, recurrencias y avisos locales, con acceso desde Mi dinero. [Guía de Mis facturas](docs/USAR_MIS_FACTURAS.md).
 
+La Etapa 5 añade deudas, pagos vinculados, calendario, comparación de métodos y plan de 30 días. [Guía de Ordenar mis pagos](docs/USAR_ORDENAR_MIS_PAGOS.md).
+
 La vista web es solo una demostración visual, sin acceso a bases financieras. Para revisar localmente:
 
 ```sh
@@ -37,6 +39,7 @@ npm run test:visual
 Las capturas y el estado de verificación se documentan en [Etapa 2](docs/stages/02.md).
 
 
+- [Deudas y Ordenar mis pagos — Etapa 5](docs/stages/05.md)
 - [Facturas y recordatorios — Etapa 4](docs/stages/04.md)
 - [Mi dinero y presupuesto — Etapa 3](docs/stages/03.md)
 - [Arquitectura](docs/ARCHITECTURE.md)

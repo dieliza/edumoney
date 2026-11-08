@@ -72,3 +72,12 @@
 - Recorridos completos aprobados en simuladores Android e iOS: pagos parciales, ambos temas, agenda, reapertura y aviso local cancelado al pagar.
 - Cifrado, estabilidad al reabrir y exclusión de respaldo comprobados en iOS después de guardar facturas y pagos.
 - Galería con datos ficticios y guía de uso publicadas; Etapa 5 sin iniciar.
+
+## Etapa 5 — Deudas y Ordenar mis pagos
+
+- Tarjetas, préstamos personales, de auto y otras obligaciones con saldos, condiciones conocidas y campos desconocidos conservados.
+- Pagos completos/parciales, desglose opcional, movimientos compartidos con facturas y conciliaciones auditadas sin duplicar importes.
+- Calendario, advertencias de mínimos/vencimientos, historial y archivo/reactivación controlados.
+- Simulación determinística de bola de nieve y avalancha con presupuesto constante, aporte extra y cambios de tasa conocidos.
+- Plan persistente de revisiones de 30 días; confirmar tareas no registra pagos.
+- Migración transaccional 3→4 y 22 pruebas nuevas; 74 pruebas de lógica/SQLite aprobadas.
