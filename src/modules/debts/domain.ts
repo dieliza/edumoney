@@ -20,12 +20,15 @@ export function validateDebtPayment(p:DebtPaymentInput,today:string){
  if(known>BigInt(p.amountCents)||values.every(v=>v!==null)&&known!==BigInt(p.amountCents))throw new UserInputError('El desglose conocido no puede superar el pago; si está completo debe sumar el importe pagado.');
 }
 export function minimumRemaining(d:Debt){return d.minimumCents===null?null:cents(Math.min(d.balanceCents,Math.max(0,d.minimumCents-d.cyclePaidCents)));}
+export function applicableRate(d:Debt,day:string){return d.rateChangeDate&&d.rateChangeDate<=day?d.futureRateBps:d.annualRateBps;}
 export function debtWarnings(d:Debt,today:string){
  if(!d.balanceCents)return ['Saldo registrado liquidado. Confirma el cierre con tu entidad.'];
  const messages:string[]=[];if(d.annualRateBps===null)messages.push('Falta la tasa anual; no se estiman intereses.');
  if(d.minimumCents===null)messages.push('Falta el pago mínimo.');
  if(!d.dueDate)messages.push('Falta el vencimiento.');else if(d.dueDate<today && minimumRemaining(d)!==0)messages.push('Vencimiento registrado atrasado. Confirma el estado; la fecha no se ha movido.');else if(d.dueDate===today&&minimumRemaining(d)!==0)messages.push('Vence hoy.');
- if(d.minimumCents!==null&&d.annualRateBps!==null&&d.minimumCents<=monthlyInterest(d.balanceCents,d.annualRateBps))messages.push('El mínimo registrado puede no reducir el saldo con la tasa actual.');
+ const rate=applicableRate(d,today);
+ if(d.rateChangeDate&&d.rateChangeDate<=today)messages.push('La fecha del cambio de APR conocido ya llegó. Confirma la tasa en el nuevo estado y actualiza las condiciones.');
+ if(d.minimumCents!==null&&rate!==null&&d.minimumCents<=monthlyInterest(d.balanceCents,rate))messages.push('El mínimo registrado puede no reducir el saldo con la tasa conocida aplicable a esta fecha.');
  return messages;
 }
 /** Redondeo de medio centavo hacia arriba, APR en puntos básicos; aritmética entera. */

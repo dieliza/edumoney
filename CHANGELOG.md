@@ -80,4 +80,4 @@
 - Calendario, advertencias de mínimos/vencimientos, historial y archivo/reactivación controlados.
 - Simulación determinística de bola de nieve y avalancha con presupuesto constante, aporte extra y cambios de tasa conocidos.
 - Plan persistente de revisiones de 30 días; confirmar tareas no registra pagos.
-- Migración transaccional 3→4 y 22 pruebas nuevas; 74 pruebas de lógica/SQLite aprobadas.
+- Migración transaccional 3→4 y 23 pruebas nuevas; 75 pruebas de lógica/SQLite aprobadas.
