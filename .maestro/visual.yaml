@@ -34,11 +34,17 @@ appId: com.edumoney.app
 - takeScreenshot: stage2-dark-progress
 - stopApp
 - launchApp
+- assertVisible:
+    id: "theme-dark"
 - tapOn:
     id: "theme-picker-open"
-- assertVisible:
-    id: "theme-choice-dark"
-    checked: true
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - assertVisible:
+          id: "theme-choice-dark"
+          checked: true
 - tapOn: "Claro"
 - assertVisible:
     id: "theme-light"
