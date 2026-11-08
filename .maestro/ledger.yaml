@@ -20,6 +20,7 @@ appId: com.edumoney.app
     timeout: 60000
 - scrollUntilVisible:
     element: "Añadir ingreso"
+    centerElement: true
     direction: DOWN
     timeout: 60000
 - tapOn: "Añadir ingreso"
@@ -50,6 +51,7 @@ appId: com.edumoney.app
 - assertVisible: "Movimiento guardado en este dispositivo."
 - scrollUntilVisible:
     element: "Registrar gasto"
+    centerElement: true
     direction: DOWN
     timeout: 60000
 - tapOn: "Registrar gasto"
@@ -118,6 +120,7 @@ appId: com.edumoney.app
 - tapOn: "Historial"
 - scrollUntilVisible:
     element: ".*Food native test.*"
+    centerElement: true
     direction: DOWN
     timeout: 60000
 - tapOn: ".*Food native test.*"
@@ -169,6 +172,7 @@ appId: com.edumoney.app
       - tapOn: "Categorías"
       - scrollUntilVisible:
           element: "Definir presupuesto mensual"
+          centerElement: true
           direction: DOWN
           timeout: 60000
       - tapOn: "Definir presupuesto mensual"
