@@ -1,3 +1,4 @@
+import { UserInputError } from '../../core/errors';
 import type { Movement } from '../../core/models';
 import { MovementRepository } from './repository';
 import { cents } from '../../core/money';
@@ -11,7 +12,7 @@ export interface SqlDb {
     getAllAsync<T>(sql: string, ...params: (string | number | null)[]): Promise<T[]>;
     getFirstAsync<T>(sql: string, ...params: (string | number | null)[]): Promise<T | null>;
 }
-export class DuplicateMovementError extends Error {
+export class DuplicateMovementError extends UserInputError {
     constructor() { super('Ya hay un movimiento con la misma fecha, descripción e importe. Revisa el historial antes de guardar otro.'); }
 }
 const movementSelect = `SELECT id,idempotency_key AS idempotencyKey,kind,amount_cents AS amountCents,currency,date,description,
@@ -57,14 +58,14 @@ export class MoneyStore {
             return;
         const category = await this.db.getFirstAsync<Category>('SELECT id,name,kind,archived FROM categories WHERE id=?', m.categoryId);
         if (!category || !['income', 'expense'].includes(m.kind) || category.kind !== m.kind)
-            throw new Error('La categoría no corresponde al movimiento.');
+            throw new UserInputError('La categoría no corresponde al movimiento.');
         // Una categoría archivada conserva su historia; no se permite en movimientos nuevos.
         if (category.archived) {
             const old = await this.db.getFirstAsync<{
                 categoryId: string;
             }>('SELECT category_id AS categoryId FROM movements WHERE id=?', m.id);
             if (old?.categoryId !== m.categoryId)
-                throw new Error('Selecciona una categoría activa.');
+                throw new UserInputError('Selecciona una categoría activa.');
         }
     }
     private async insert(m: LedgerMovement) {
@@ -78,26 +79,26 @@ export class MoneyStore {
             if (previous) {
                 if (canonical(readMovement(previous)) === canonical(m))
                     return;
-                throw new Error('Este identificador ya pertenece a otra operación.');
+                throw new UserInputError('Este identificador ya pertenece a otra operación.');
             }
             if (!allowDuplicate && possibleDuplicates(m, await this.movements()).length)
                 throw new DuplicateMovementError();
             await this.validateCategory(m);
             if (schedule) {
                 if (m.kind !== 'income' || m.incomeType !== 'recurring' || m.scheduleId !== schedule.id || m.occurrenceDate !== m.date || schedule.nextDate !== m.date || schedule.anchorDate !== m.date || schedule.amountCents !== m.amountCents || schedule.description !== m.description || schedule.categoryId !== m.categoryId || schedule.paymentMethod !== m.paymentMethod)
-                    throw new Error('La recurrencia no corresponde al ingreso.');
+                    throw new UserInputError('La recurrencia no corresponde al ingreso.');
                 const next = nextOccurrence(schedule);
                 await this.db.runAsync(`INSERT INTO income_schedules(id,description,amount_cents,category_id,payment_method,cadence,interval_count,anchor_date,next_date) VALUES(?,?,?,?,?,?,?,?,?)`, schedule.id, schedule.description, schedule.amountCents, schedule.categoryId, schedule.paymentMethod, schedule.cadence, schedule.intervalCount, schedule.anchorDate, next);
             }
             else if (m.scheduleId || m.incomeType === 'recurring')
-                throw new Error('Confirma los ingresos recurrentes desde su fecha prevista.');
+                throw new UserInputError('Confirma los ingresos recurrentes desde su fecha prevista.');
             await this.insert(m);
         });
     }
     private async existing(id: string, version: number) {
         const m = await this.db.getFirstAsync<LedgerMovement>(movementSelect + ' WHERE id=?', id);
         if (!m || m.version !== version)
-            throw new Error('El movimiento cambió. Cierra esta ficha y vuelve a abrirla.');
+            throw new UserInputError('El movimiento cambió. Cierra esta ficha y vuelve a abrirla.');
         return readMovement(m);
     }
     private async guardLinks(id: string) {
@@ -108,11 +109,11 @@ export class MoneyStore {
     (SELECT COUNT(*) FROM goal_contributions WHERE movement_id=?)+(SELECT COUNT(*) FROM documents WHERE movement_id=?)+
     (SELECT COUNT(*) FROM tax_records WHERE movement_id=?)) AS n`, id, id, id, id, id);
         if (linked?.n)
-            throw new Error('Este movimiento está vinculado a otra sección. Debe corregirse junto con su registro de origen.');
+            throw new UserInputError('Este movimiento está vinculado a otra sección. Debe corregirse junto con su registro de origen.');
     }
     private async revision(m: LedgerMovement, action: string, reason: string) {
         if (!reason.trim() || reason.length > 240)
-            throw new Error('Escribe el motivo de la corrección (hasta 240 caracteres).');
+            throw new UserInputError('Escribe el motivo de la corrección (hasta 240 caracteres).');
         await this.db.runAsync('INSERT INTO movement_revisions(movement_id,action,reason,before_json,recorded_at) VALUES(?,?,?,?,?)', m.id, action, reason.trim(), JSON.stringify(m), new Date().toISOString());
     }
     async edit(m: LedgerMovement, reason: string, allowDuplicate = false) {
@@ -120,11 +121,11 @@ export class MoneyStore {
         return this.write(async () => {
             const old = await this.existing(m.id, m.version);
             if (old.deletedAt)
-                throw new Error('Restaura el movimiento antes de editarlo.');
+                throw new UserInputError('Restaura el movimiento antes de editarlo.');
             if (old.idempotencyKey !== m.idempotencyKey || old.scheduleId !== m.scheduleId || old.occurrenceDate !== m.occurrenceDate || old.incomeType === 'recurring' && m.incomeType !== 'recurring')
-                throw new Error('No se pueden cambiar los vínculos de recurrencia.');
+                throw new UserInputError('No se pueden cambiar los vínculos de recurrencia.');
             if (old.scheduleId && m.kind !== 'income')
-                throw new Error('Un cobro recurrente debe conservar el tipo ingreso.');
+                throw new UserInputError('Un cobro recurrente debe conservar el tipo ingreso.');
             await this.guardLinks(m.id);
             await this.validateCategory(m);
             if (!allowDuplicate && possibleDuplicates(m, await this.movements()).length)
@@ -148,29 +149,29 @@ export class MoneyStore {
         return this.write(async () => {
             name = name.trim();
             if (!name || name.length > 60)
-                throw new Error('La categoría necesita un nombre de hasta 60 caracteres.');
+                throw new UserInputError('La categoría necesita un nombre de hasta 60 caracteres.');
             const old = await this.db.getFirstAsync<Category>('SELECT id,name,kind FROM categories WHERE id=?', id);
             if (old && old.kind !== kind)
-                throw new Error('La categoría debe conservar su tipo.');
+                throw new UserInputError('La categoría debe conservar su tipo.');
             const duplicate = await this.db.getFirstAsync<Category>('SELECT id FROM categories WHERE lower(trim(name))=lower(?) AND kind=? AND id<>?', name, kind, id);
             if (duplicate)
-                throw new Error('Ya existe una categoría con ese nombre.');
+                throw new UserInputError('Ya existe una categoría con ese nombre.');
             await this.db.runAsync('INSERT INTO categories(id,name,kind,archived) VALUES(?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,archived=excluded.archived', id, name, kind, Number(archived));
         });
     }
     async saveBudget(month: string, categoryId: string, amount: number | null) {
         return this.write(async () => {
             if (!validMonth(month))
-                throw new Error('Usa un mes AAAA-MM.');
+                throw new UserInputError('Usa un mes AAAA-MM.');
             const category = await this.db.getFirstAsync<Category>('SELECT kind,archived FROM categories WHERE id=?', categoryId);
             if (!category || category.kind !== 'expense' || category.archived)
-                throw new Error('Selecciona una categoría de gasto activa.');
+                throw new UserInputError('Selecciona una categoría de gasto activa.');
             if (amount === null) {
                 await this.db.runAsync('DELETE FROM monthly_budgets WHERE month=? AND category_id=?', month, categoryId);
                 return;
             }
             if (cents(amount) < 0)
-                throw new Error('El presupuesto no puede ser negativo.');
+                throw new UserInputError('El presupuesto no puede ser negativo.');
             await this.db.runAsync('INSERT INTO monthly_budgets(month,category_id,amount_cents) VALUES(?,?,?) ON CONFLICT(month,category_id) DO UPDATE SET amount_cents=excluded.amount_cents', month, categoryId, amount);
         });
     }
@@ -178,7 +179,7 @@ export class MoneyStore {
     async confirmSchedule(scheduleId: string, expectedDate: string, id: string, today: string) {
         return this.write(async () => {
             if (!validDate(today) || !validDate(expectedDate))
-                throw new Error('Fecha no válida.');
+                throw new UserInputError('Fecha no válida.');
             const s = await this.db.getFirstAsync<IncomeSchedule>(scheduleSelect + ' WHERE id=?', scheduleId);
             const prior = await this.db.getFirstAsync<{
                 id: string;
@@ -186,7 +187,7 @@ export class MoneyStore {
             if (prior)
                 return;
             if (!s || !s.active || s.nextDate !== expectedDate || expectedDate > today)
-                throw new Error('Revisa la fecha prevista antes de confirmar el cobro.');
+                throw new UserInputError('Revisa la fecha prevista antes de confirmar el cobro.');
             const now = new Date().toISOString();
             const m: LedgerMovement = { id, idempotencyKey: `income:${scheduleId}:${expectedDate}`, kind: 'income', amountCents: s.amountCents, currency: 'USD', date: expectedDate, description: s.description, categoryId: s.categoryId, paymentMethod: s.paymentMethod, taxReview: false, useKind: 'unknown', grossCents: null, withholdingCents: null, createdAt: now, updatedAt: now, deletedAt: null, incomeType: 'recurring', scheduleId, occurrenceDate: expectedDate, version: 1 };
             validateMovement(m);

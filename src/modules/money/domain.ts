@@ -1,3 +1,4 @@
+import { UserInputError } from '../../core/errors';
 import { addAmounts, cents } from '../../core/money';
 import type { LedgerMovement, Snapshot, IncomeSchedule } from './types';
 export function validDate(value: string): boolean {
@@ -24,33 +25,33 @@ export function formatMoney(value: number): string {
 }
 export function validateMovement(m: LedgerMovement) {
     if (!m.id || !m.idempotencyKey || !m.description.trim() || m.description.length > 240 || !validDate(m.date))
-        throw new Error('Revisa la descripción y la fecha (AAAA-MM-DD).');
+        throw new UserInputError('Revisa la descripción y la fecha (AAAA-MM-DD).');
     if (cents(m.amountCents) <= 0 || m.currency !== 'USD')
-        throw new Error('El importe debe ser positivo y en dólares.');
+        throw new UserInputError('El importe debe ser positivo y en dólares.');
     if (!['income', 'expense', 'transfer', 'loan', 'debt_payment'].includes(m.kind))
-        throw new Error('Tipo de movimiento no disponible en esta etapa.');
+        throw new UserInputError('Tipo de movimiento no disponible en esta etapa.');
     if (!['manual', 'recurring', 'extraordinary'].includes(m.incomeType) || !['personal', 'business', 'mixed', 'unknown'].includes(m.useKind))
-        throw new Error('Clasificación no válida.');
+        throw new UserInputError('Clasificación no válida.');
     if (!['cash', 'debit', 'credit', 'bank', 'other'].includes(m.paymentMethod || ''))
-        throw new Error('Selecciona un método de pago.');
+        throw new UserInputError('Selecciona un método de pago.');
     if (m.kind !== 'expense' && m.paymentMethod === 'credit')
-        throw new Error('El crédito como método corresponde a una compra, no a un cobro o pago de deuda.');
+        throw new UserInputError('El crédito como método corresponde a una compra, no a un cobro o pago de deuda.');
     if (m.kind !== 'income' && (m.incomeType !== 'manual' || m.scheduleId || m.grossCents !== null || m.withholdingCents !== null))
-        throw new Error('Los datos salariales y recurrentes corresponden a ingresos.');
+        throw new UserInputError('Los datos salariales y recurrentes corresponden a ingresos.');
     for (const value of [m.grossCents, m.withholdingCents])
         if (value !== null && cents(value) < 0)
-            throw new Error('Bruto y retención no pueden ser negativos.');
+            throw new UserInputError('Bruto y retención no pueden ser negativos.');
     if (m.grossCents !== null && m.withholdingCents !== null && m.withholdingCents > m.grossCents)
-        throw new Error('La retención no puede superar el ingreso bruto.');
+        throw new UserInputError('La retención no puede superar el ingreso bruto.');
     if ((m.incomeType === 'recurring') !== Boolean(m.scheduleId) || Boolean(m.scheduleId) !== Boolean(m.occurrenceDate))
-        throw new Error('La recurrencia necesita una programación y su fecha de origen.');
+        throw new UserInputError('La recurrencia necesita una programación y su fecha de origen.');
     if (m.occurrenceDate !== null && !validDate(m.occurrenceDate))
-        throw new Error('Fecha de recurrencia no válida.');
+        throw new UserInputError('Fecha de recurrencia no válida.');
 }
 /** Se calcula desde el día original: enero 31 → febrero 28 → marzo 31. */
 export function nextOccurrence(s: IncomeSchedule): string {
     if (!['weekly', 'monthly'].includes(s.cadence) || !validDate(s.anchorDate) || !validDate(s.nextDate) || !Number.isInteger(s.intervalCount) || s.intervalCount < 1 || s.intervalCount > 120)
-        throw new Error('Recurrencia no válida.');
+        throw new UserInputError('Recurrencia no válida.');
     const d = new Date(`${s.nextDate}T12:00:00Z`);
     if (s.cadence === 'weekly')
         d.setUTCDate(d.getUTCDate() + 7 * s.intervalCount);
@@ -64,7 +65,7 @@ export function nextOccurrence(s: IncomeSchedule): string {
     }
     const result = d.toISOString().slice(0, 10);
     if (!validDate(result))
-        throw new Error('La próxima fecha queda fuera del rango admitido.');
+        throw new UserInputError('La próxima fecha queda fuera del rango admitido.');
     return result;
 }
 export function possibleDuplicates(m: LedgerMovement, movements: LedgerMovement[]) {
@@ -72,7 +73,7 @@ export function possibleDuplicates(m: LedgerMovement, movements: LedgerMovement[
 }
 export function monthlySummary(snapshot: Snapshot, month: string) {
     if (!validMonth(month))
-        throw new Error('Mes no válido.');
+        throw new UserInputError('Mes no válido.');
     const rows = snapshot.movements.filter(m => !m.deletedAt && m.date.startsWith(month));
     const total = (predicate: (m: LedgerMovement) => boolean) => addAmounts(...rows.filter(predicate).map(m => m.amountCents));
     const income = total(m => m.kind === 'income');

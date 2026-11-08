@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { describe, it, expect } from 'vitest';
 import { migrate } from '../src/storage/migrate';
 import { schemaV1 } from '../src/storage/schema';
+import { userMessage, UserInputError } from '../src/core/errors';
 import { cents } from '../src/core/money';
 import { formatMoney, inputAmount, monthlySummary, nextOccurrence, validDate } from '../src/modules/money/domain';
 import { DuplicateMovementError, MoneyStore, type SqlDb } from '../src/modules/money/store';
@@ -180,3 +181,5 @@ describe('Fechas y presentación decimal', () => {
     it('conserva exactamente el máximo monetario admitido al mostrar y editar', () => { expect(formatMoney(Number.MAX_SAFE_INTEGER)).toBe('$90,071,992,547,409.91'); expect(inputAmount(Number.MAX_SAFE_INTEGER)).toBe('90071992547409.91'); });
     it('respeta años bisiestos, intervalos y anclaje mensual', () => { expect(validDate('2028-02-29')).toBe(true); expect(validDate('2026-02-29')).toBe(false); expect(nextOccurrence({ ...schedule, anchorDate: '2028-01-31', nextDate: '2028-01-31' })).toBe('2028-02-29'); expect(nextOccurrence({ ...schedule, nextDate: '2026-02-28' })).toBe('2026-03-31'); expect(nextOccurrence({ ...schedule, cadence: 'weekly', intervalCount: 2 })).toBe('2026-02-14'); });
 });
+
+it('no presenta errores internos de SQLite ni detalles sensibles en pantalla',()=>{expect(userMessage(new Error('SQLITE_PRIVATE_PATH_AND_QUERY'))).not.toContain('SQLITE');expect(userMessage(new UserInputError('Revisa el importe'))).toBe('Revisa el importe');});

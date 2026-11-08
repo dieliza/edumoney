@@ -167,6 +167,8 @@ jobs:
           sleep 3
           xcrun simctl io "$DEVICE_ID" screenshot native-results/ios-direct/automatic-light.png
           maestro --device "$DEVICE_ID" test --test-output-dir native-results/ledger .maestro/ledger.yaml
+          # Revalidar el cifrado y la reapertura después de guardar los movimientos de prueba.
+          bash scripts/ios-smoke.sh "$DEVICE_ID"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

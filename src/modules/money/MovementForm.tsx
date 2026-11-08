@@ -1,3 +1,4 @@
+import { userMessage, UserInputError } from '../../core/errors';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { newId } from '../../core/id';
@@ -47,7 +48,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved }:
             let schedule: IncomeSchedule | undefined;
             if (!initial && scheduleId) {
                 if (!/^\d+$/.test(interval))
-                    throw new Error('El intervalo debe ser un número entero.');
+                    throw new UserInputError('El intervalo debe ser un número entero.');
                 schedule = { id: scheduleId, description: m.description, amountCents: m.amountCents, categoryId: m.categoryId, paymentMethod: m.paymentMethod, cadence, intervalCount: Number(interval), anchorDate: date, nextDate: date, active: true };
             }
             if (initial)
@@ -58,7 +59,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved }:
             close();
         }
         catch (e) {
-            setError(e instanceof Error ? e.message : 'No se pudo guardar.');
+            setError(userMessage(e));
             setDuplicate(e instanceof DuplicateMovementError);
         }
         finally {

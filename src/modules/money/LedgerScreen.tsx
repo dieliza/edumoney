@@ -1,3 +1,4 @@
+import { userMessage } from '../../core/errors';
 import { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, Pressable, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
@@ -57,7 +58,7 @@ export default function LedgerScreen() {
         setNotice(message);
     }
     catch (e) {
-        setError(e instanceof Error ? e.message : 'No se pudo completar la operación.');
+        setError(userMessage(e));
     }
     finally {
         setBusy(false);
@@ -170,7 +171,7 @@ function CategoryForm({ initial, store, saved, close }: {
         close();
     }
     catch (e) {
-        setError((e as Error).message);
+        setError(userMessage(e));
     }
     finally {
         setBusy(false);
@@ -197,7 +198,7 @@ function BudgetForm({ data, month, store, saved, close }: {
         close();
     }
     catch (e) {
-        setError((e as Error).message);
+        setError(userMessage(e));
     }
     finally {
         setBusy(false);
