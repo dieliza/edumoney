@@ -26,6 +26,11 @@ appId: com.edumoney.app
 - tapOn:
     id: "movement-amount"
 - inputText: "1000.10"
+- scrollUntilVisible:
+    element:
+      id: "movement-description"
+    direction: DOWN
+    timeout: 30000
 - tapOn:
     id: "movement-description"
 - inputText: "Salary native test"
@@ -43,6 +48,11 @@ appId: com.edumoney.app
 - tapOn:
     id: "movement-amount"
 - inputText: "10.20"
+- scrollUntilVisible:
+    element:
+      id: "movement-description"
+    direction: DOWN
+    timeout: 30000
 - tapOn:
     id: "movement-description"
 - inputText: "Food native test"

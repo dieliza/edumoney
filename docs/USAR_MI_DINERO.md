@@ -11,7 +11,7 @@ no permite introducir registros financieros. Las capturas de las pruebas usan im
 4. En **Registrar gasto**, elige la categoría y el método. Si fue una compra a crédito, selecciona **Tarjeta de crédito**.
    El pago posterior se registra como **Pago de tarjeta o deuda**, para que la compra no cuente dos veces como gasto.
 5. Usa **Registrar transferencia, préstamo o pago** para distinguir movimientos entre tus cuentas, dinero prestado y pagos de deuda.
-6. En **Categorías y presupuesto**, crea o cambia categorías y define un límite para el mes seleccionado (AAAA-MM).
+6. En **Categorías**, crea o cambia categorías y define un límite para el mes seleccionado (AAAA-MM).
    Un límite cero es distinto de quitar el presupuesto. Archivar una categoría conserva su historia.
 7. En **Historial**, busca una descripción o filtra tipo, categoría, método, fechas y estado. Toca un movimiento para corregirlo
    con motivo o confirmar su eliminación. Desde **Eliminados** puedes restaurarlo. Su identificador y las revisiones se conservan.
