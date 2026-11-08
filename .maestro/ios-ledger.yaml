@@ -27,7 +27,9 @@ appId: com.edumoney.app
 - tapOn:
     id: "movement-amount"
 - inputText: "1000.10"
-- hideKeyboard
+- tapOn:
+    text: "Importe recibido o neto.*"
+    index: 0
 - assertVisible: '1000\.10'
 - takeScreenshot: stage3-income-entry
 - scrollUntilVisible:
@@ -38,7 +40,9 @@ appId: com.edumoney.app
 - tapOn:
     id: "movement-description"
 - inputText: "Salary native test"
-- hideKeyboard
+- tapOn:
+    text: "Descripción"
+    index: 0
 - scrollUntilVisible:
     element: "Guardar movimiento"
     direction: DOWN
@@ -57,7 +61,9 @@ appId: com.edumoney.app
 - tapOn:
     id: "movement-amount"
 - inputText: "10.20"
-- hideKeyboard
+- tapOn:
+    text: "Importe.*"
+    index: 0
 - scrollUntilVisible:
     element:
       id: "movement-description"
@@ -66,7 +72,9 @@ appId: com.edumoney.app
 - tapOn:
     id: "movement-description"
 - inputText: "Food native test"
-- hideKeyboard
+- tapOn:
+    text: "Descripción"
+    index: 0
 - runFlow:
     when:
       platform: Android
@@ -124,7 +132,10 @@ appId: com.edumoney.app
     id: "movement-amount"
 - eraseText: 20
 - inputText: "10.10"
-- hideKeyboard
+- tapOn:
+    text: "Importe.*"
+    index: 0
+- assertVisible: '10\.10'
 - scrollUntilVisible:
     element: "Motivo de la corrección"
     centerElement: true
@@ -134,7 +145,9 @@ appId: com.edumoney.app
     text: "Motivo de la corrección"
     index: 1
 - inputText: "Receipt correction"
-- hideKeyboard
+- swipe:
+    start: "10%, 40%"
+    end: "10%, 20%"
 - assertVisible: "Receipt correction"
 - scrollUntilVisible:
     element: "Guardar corrección"
