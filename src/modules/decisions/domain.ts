@@ -10,7 +10,7 @@ const positive=(n:number,label:string,zero=true)=>{cents(n);if(n<0||!zero&&n===0
 const safe=(n:bigint)=>cents(Number(n));
 const sum=(...n:number[])=>safe(n.reduce((a,b)=>a+BigInt(b),0n));
 export function interestForMonth(balance:number,bps:number){positive(balance,'saldo');integer(bps,0,10000,'tasa nominal anual en puntos básicos');return safe((BigInt(balance)*BigInt(bps)+60000n)/120000n);}
-export function parseRate(value:string){if(!/^\d+(?:\.\d{1,2})?$/.test(value))fail('Confirma la tasa anual con hasta dos decimales; escribe 0 si es cero.');const [w,f='']=value.split('.');const n=Number(BigInt(w)*100n+BigInt(f.padEnd(2,'0')));integer(n,0,10000,'tasa anual (0 a 100%)');return n;}
+export function parseRate(value:string){if(!/^\d+(?:\.\d{1,2})?$/.test(value))fail('Confirma la tasa anual con hasta dos decimales; escribe 0 si es cero.');const [w,f='']=value.split('.');const n=Number(BigInt(w)*100n+BigInt(f.padEnd(2,'0')));if(!Number.isInteger(n)||n<0||n>10000)fail('La tasa anual soportada va de 0% a 100%.');return n;}
 /** Cuota fija mínima en centavos que amortiza en el plazo. Interés mensual redondeado medio centavo hacia arriba. */
 export function amortize(principal:number,bps:number,months:number){
  positive(principal,'principal',false);integer(bps,0,10000,'tasa nominal anual en puntos básicos');integer(months,1,600,'plazo en meses');

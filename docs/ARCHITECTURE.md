@@ -50,7 +50,7 @@ permanecen NULL. Marcar revisión contributiva no implica deducibilidad. `use_ki
 
 Migraciones con `PRAGMA user_version`, transacción y rollback. Se rechaza una versión futura desconocida.
 Cada etapa debe actualizar CHANGELOG y su informe, ejecutar pruebas relevantes y corregir errores antes de avanzar.
-La navegación usa Expo Router, según AGENTS.md. Mi dinero, Mis metas y Mi progreso nativos contienen registros reales; Aprende y la web mantienen demostraciones identificadas.
+La navegación usa Expo Router, según AGENTS.md. Las cuatro pestañas nativas usan registros locales reales; la web mantiene demostraciones identificadas.
 
 ## Esquema 2 — Etapa 3
 
@@ -88,3 +88,10 @@ Ahorro = base previa + aportaciones vigentes. La base no genera flujo; una nueva
 `goal_events` conserva estados anteriores y motivos al editar objetivos/base/archivo. No se modifica el historial al recalcular cumplimiento.
 `progress_plans` y `progress_actions` son revisiones manuales de 90 días independientes del plan de deudas de 30 días.
 Los indicadores se leen en una sola operación de la cola compartida; no guardan totales ficticios ni escriben movimientos al confirmar tareas. Los importes y redondeos usan centavos y BigInt.
+
+## Esquema 6 — Etapa 7
+
+`lesson_progress` identifica finalización por lección y versión de contenido. `lesson_attempts` conserva respuestas/resultado sin crear logros por intentos incorrectos; ejercicio y finalización se guardan en una transacción.
+`decision_scenarios` guarda inputs, nombre y versión de fórmula; los resultados se derivan sin escribir movimientos. La UI rechaza comparar versiones no soportadas.
+Los motores de cuota, recurrencia, ahorro y fondo operan en centavos/BigInt. El margen de comparación es elegido manualmente y queda desconocido si se omite.
+Las variantes nativas usan SQLCipher; el adaptador web conserva su demostración. La voz se limita a contenido editorial con voz española básica disponible en iOS, con parada por navegación/segundo plano. Android usa texto cuando no puede verificarse la ejecución local del motor.

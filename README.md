@@ -29,6 +29,8 @@ La Etapa 5 añade deudas, pagos vinculados, calendario, comparación de métodos
 
 La Etapa 6 incorpora metas, aportaciones vinculadas y progreso calculado desde registros locales. [Guía de Mis metas y Mi progreso](docs/USAR_MIS_METAS_Y_PROGRESO.md).
 
+La Etapa 7 añade diez lecciones, ejercicios y seis simuladores con escenarios comparables. [Guía de Aprende y Antes de decidir](docs/USAR_APRENDE_Y_SIMULADORES.md).
+
 La vista web es solo una demostración visual, sin acceso a bases financieras. Para revisar localmente:
 
 ```sh
@@ -41,6 +43,7 @@ npm run test:visual
 Las capturas y el estado de verificación se documentan en [Etapa 2](docs/stages/02.md).
 
 
+- [Aprende y Antes de decidir — Etapa 7](docs/stages/07.md)
 - [Mis metas y Mi progreso — Etapa 6](docs/stages/06.md)
 - [Deudas y Ordenar mis pagos — Etapa 5](docs/stages/05.md)
 - [Facturas y recordatorios — Etapa 4](docs/stages/04.md)
