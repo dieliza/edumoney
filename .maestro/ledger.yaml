@@ -153,7 +153,7 @@ appId: com.edumoney.app
           timeout: 60000
       - tapOn: "Definir presupuesto mensual"
       - tapOn:
-          text: "Límite mensual (USD)"
+          text: "Límite mensual.*"
           index: 1
       - inputText: "50.00"
       - scrollUntilVisible:
