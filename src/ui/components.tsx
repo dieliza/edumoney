@@ -44,7 +44,7 @@ export function SectionHeading({ title, action, onPress }: { title: string; acti
 }
 export function ProgressBar({ value, label }: { value: number; label: string }) {
   const { colors } = useTheme();
-  return <View accessibilityRole="progressbar" accessibilityLabel={label} accessibilityValue={{ min: 0, max: 100, now: value }} style={{ height: 8, borderRadius: 8, overflow: 'hidden', backgroundColor: colors.progressTrack }}>
+  return <View accessibilityRole="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={value} accessibilityLabel={label} accessibilityValue={{ min: 0, max: 100, now: value }} style={{ height: 8, borderRadius: 8, overflow: 'hidden', backgroundColor: colors.progressTrack }}>
     <LinearGradient colors={['#008464', '#2FBA91']} style={{ width: `${value}%`, height: 8, borderRadius: 8 }} />
   </View>;
 }

@@ -60,3 +60,25 @@ test('pantallas, contraste y ancho de dispositivo', async ({ page }) => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   }
 });
+
+
+test('bienvenida, selector y acciones de demostración', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto('/');
+  await expect(page.getByTestId('enter-demo')).toBeVisible();
+  for (const theme of ['light', 'dark'] as const) {
+    await page.getByTestId('theme-picker-open').click();
+    await page.getByTestId(`theme-choice-${theme}`).click();
+    await page.screenshot({ path: `${evidence}/02-${theme}-welcome.png`, fullPage: true });
+  }
+  await page.getByTestId('theme-picker-open').click();
+  const result = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
+  expect(result.violations.map(v => v.id)).toEqual([]);
+  await page.screenshot({ path: `${evidence}/02-theme-picker.png` });
+  await page.getByRole('button', { name: 'Cerrar selector de tema' }).click();
+  await page.getByTestId('enter-demo').click();
+  await page.getByRole('button', { name: 'Añadir ingreso', exact: true }).click();
+  await expect(page.getByText('Estás explorando una demostración de EduMoney. Las cantidades son ficticias y no se guardarán movimientos.')).toBeVisible();
+  await page.getByRole('button', { name: 'Seguir explorando' }).click();
+  await expect(page.getByRole('heading', { name: 'Mi dinero', exact: true })).toBeVisible();
+});
