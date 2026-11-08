@@ -2,9 +2,17 @@ appId: com.edumoney.app
 ---
 - launchApp:
     clearState: true
-- extendedWaitUntil:
-    visible: "Almacenamiento local cifrado preparado."
-    timeout: 60000
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: "Quickstep isn't responding"
+          commands:
+            - tapOn: "Close app"
+      - extendedWaitUntil:
+          visible: "Almacenamiento local cifrado preparado."
+          timeout: 60000
 - takeScreenshot: storage-first-open
 - stopApp
 - launchApp
