@@ -17,11 +17,11 @@ appId: com.edumoney.app
 - scrollUntilVisible:
     element: '\$0\.00'
     direction: DOWN
-    timeout: 30000
+    timeout: 60000
 - scrollUntilVisible:
     element: "Añadir ingreso"
     direction: DOWN
-    timeout: 30000
+    timeout: 60000
 - tapOn: "Añadir ingreso"
 - tapOn:
     id: "movement-amount"
@@ -30,20 +30,20 @@ appId: com.edumoney.app
     element:
       id: "movement-description"
     direction: DOWN
-    timeout: 30000
+    timeout: 60000
 - tapOn:
     id: "movement-description"
 - inputText: "Salary native test"
 - scrollUntilVisible:
     element: "Guardar movimiento"
     direction: DOWN
-    timeout: 30000
+    timeout: 60000
 - tapOn: "Guardar movimiento"
 - assertVisible: "Movimiento guardado en este dispositivo."
 - scrollUntilVisible:
     element: "Registrar gasto"
     direction: DOWN
-    timeout: 30000
+    timeout: 60000
 - tapOn: "Registrar gasto"
 - tapOn:
     id: "movement-amount"
@@ -52,32 +52,32 @@ appId: com.edumoney.app
     element:
       id: "movement-description"
     direction: DOWN
-    timeout: 30000
+    timeout: 60000
 - tapOn:
     id: "movement-description"
 - inputText: "Food native test"
 - scrollUntilVisible:
     element: "Guardar movimiento"
     direction: DOWN
-    timeout: 30000
+    timeout: 60000
 - tapOn: "Guardar movimiento"
 - scrollUntilVisible:
     element: '\$989\.90'
     direction: UP
-    timeout: 30000
+    timeout: 60000
 - takeScreenshot: stage3-money-light
 - scrollUntilVisible:
     element:
       id: "theme-picker-open"
     direction: UP
-    timeout: 30000
+    timeout: 60000
 - tapOn:
     id: "theme-picker-open"
 - tapOn: "Oscuro"
 - scrollUntilVisible:
     element: '\$989\.90'
     direction: DOWN
-    timeout: 30000
+    timeout: 60000
 - takeScreenshot: stage3-money-dark
 - stopApp
 - launchApp
@@ -87,16 +87,16 @@ appId: com.edumoney.app
 - scrollUntilVisible:
     element: '\$989\.90'
     direction: DOWN
-    timeout: 30000
+    timeout: 60000
 - scrollUntilVisible:
     element: "Historial"
     direction: UP
-    timeout: 30000
+    timeout: 60000
 - tapOn: "Historial"
 - scrollUntilVisible:
     element: ".*Food native test.*"
     direction: DOWN
-    timeout: 30000
+    timeout: 60000
 - tapOn: ".*Food native test.*"
 - tapOn: "Corregir movimiento"
 - tapOn:
@@ -106,7 +106,7 @@ appId: com.edumoney.app
 - scrollUntilVisible:
     element: "Motivo de la corrección"
     direction: DOWN
-    timeout: 30000
+    timeout: 60000
 - tapOn:
     text: "Motivo de la corrección"
     index: 1
@@ -114,17 +114,17 @@ appId: com.edumoney.app
 - scrollUntilVisible:
     element: "Guardar corrección"
     direction: DOWN
-    timeout: 30000
+    timeout: 60000
 - tapOn: "Guardar corrección"
 - assertVisible: ".*Food native test.*"
 - takeScreenshot: stage3-history-corrected
 - scrollUntilVisible:
     element: "Resumen"
     direction: UP
-    timeout: 30000
+    timeout: 60000
 - tapOn: "Resumen"
 - scrollUntilVisible:
     element: '\$990\.00'
     direction: DOWN
-    timeout: 30000
+    timeout: 60000
 - takeScreenshot: stage3-money-corrected

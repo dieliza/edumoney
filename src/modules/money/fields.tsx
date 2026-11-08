@@ -9,8 +9,8 @@ export function Sheet({ title, close, children, busy = false }: PropsWithChildre
     busy?: boolean;
 }>) {
     return <Modal transparent animationType="none" onRequestClose={() => { if (!busy)
-        close(); }}><KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1, justifyContent: 'center', padding: 16, backgroundColor: fixed.previewBackdrop }}>
-  <ScrollView tabIndex={0} keyboardShouldPersistTaps="handled" style={{ maxHeight: '92%', width: '100%', maxWidth: 650, alignSelf: 'center', borderRadius: 24 }}><Card>
+        close(); }}><KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1, justifyContent: 'center', padding: 16, backgroundColor: fixed.previewBackdrop }}>
+  <ScrollView tabIndex={0} keyboardDismissMode="on-drag" keyboardShouldPersistTaps="handled" style={{ maxHeight: '92%', width: '100%', maxWidth: 650, alignSelf: 'center', borderRadius: 24 }}><Card>
    <Body style={{ fontSize: 23, fontWeight: '700' }}>{title}</Body>{children}
    {!busy ? <ActionButton title="Cerrar ficha" secondary onPress={close}/> : <Body>Guardando en este dispositivo…</Body>}
   </Card></ScrollView>
