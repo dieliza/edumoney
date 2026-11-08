@@ -120,7 +120,7 @@ export class BillsStore {
    if(movementId){
     const m=await db.getFirstAsync<{kind:string;amountCents:number;date:string;paymentMethod:string;deletedAt:string|null}>(`SELECT kind,amount_cents AS amountCents,date,payment_method AS paymentMethod,deleted_at AS deletedAt FROM movements WHERE id=?`,movementId);
     if(!m || m.deletedAt || m.kind!==b.paymentKind || m.amountCents!==p.amountCents || m.date!==p.date || m.paymentMethod!==p.paymentMethod)throw new UserInputError('El movimiento debe coincidir exactamente en tipo, importe, fecha y método.');
-    const linked=await db.getFirstAsync<{n:number}>(`SELECT (SELECT COUNT(*) FROM bill_payments WHERE movement_id=?)+(SELECT COUNT(*) FROM goal_contributions WHERE movement_id=?) AS n`,movementId,movementId);
+    const linked=await db.getFirstAsync<{n:number}>(`SELECT (SELECT COUNT(*) FROM bill_payments WHERE movement_id=? AND reversed_at IS NULL)+(SELECT COUNT(*) FROM goal_contributions WHERE movement_id=?) AS n`,movementId,movementId);
     if(linked?.n)throw new UserInputError('El movimiento ya tiene un vínculo de pago. Revisa su registro de origen.');
    }else{
     const similar=await db.getFirstAsync<{id:string}>('SELECT id FROM movements WHERE deleted_at IS NULL AND kind=? AND amount_cents=? AND date=? LIMIT 1',b.paymentKind,p.amountCents,p.date);
@@ -146,6 +146,7 @@ export class BillsStore {
     await db.runAsync('INSERT INTO movement_revisions(movement_id,action,reason,before_json,recorded_at) VALUES(?,?,?,?,?)',p.movementId,'delete',reason.trim(),JSON.stringify(m),now);
     await db.runAsync('UPDATE movements SET deleted_at=?,updated_at=?,version=version+1 WHERE id=?',now,now,p.movementId);
    }
+   await db.runAsync('UPDATE bill_payments SET reversed_at=? WHERE id=?',new Date().toISOString(),id);
    await db.runAsync('INSERT INTO bill_payment_reversals(payment_id,reason,recorded_at) VALUES(?,?,?)',id,reason.trim(),new Date().toISOString());
    await db.runAsync('UPDATE bills SET version=version+1,updated_at=? WHERE id=?',new Date().toISOString(),b.id);
   });

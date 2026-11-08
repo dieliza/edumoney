@@ -78,6 +78,17 @@ describe('Etapa 4: facturas y pagos en SQLite real',()=>{
    await expect(ledger.setDeleted('m1',1,true,'Prueba')).rejects.toThrow('vinculado');
   }finally{db.close();}
  });
+ it('tras revertir un vínculo equivocado puede asignar el mismo gasto a la factura correcta sin duplicarlo',async()=>{
+  const {db,ledger,bills}=await setup();try{
+   await bills.create(input(),null);await bills.create(input('correct',{provider:'Proveedor correcto'}),null);await ledger.create(movement());
+   await bills.pay(payment({existingMovementId:'m1'}));await bills.reversePayment('p1','Factura equivocada');
+   await bills.pay(payment({id:'p2',billId:'correct',existingMovementId:'m1'}));
+   const s=await bills.snapshot();expect(s.movements).toHaveLength(1);expect(s.payments).toHaveLength(2);
+   expect(s.bills.find(b=>b.id==='b1')?.paidCents).toBe(0);expect(s.bills.find(b=>b.id==='correct')?.paidCents).toBe(4000);
+   expect(s.payments.find(p=>p.id==='p1')?.reversed).toBe(true);expect(s.payments.find(p=>p.id==='p2')?.reversed).toBe(false);
+   expect(monthlySummary(await ledger.snapshot(),'2026-11').expenses).toBe(4000);
+  }finally{db.close();}
+ });
  it('pagar tarjeta reduce flujo sin volver a sumar la compra como gasto',async()=>{
   const {db,ledger,bills}=await setup();try{
    await ledger.create(movement('purchase',{amountCents:cents(10000),paymentMethod:'credit'}));

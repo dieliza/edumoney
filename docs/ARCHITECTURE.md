@@ -27,7 +27,7 @@ pagos de deuda y aportaciones; no sumar todos los movimientos como gastos. En et
 aplicarán reglas de contabilización, principal/intereses y conciliación. Mi dinero calcula un disponible estimado mensual desde cero; no lo presenta como saldo bancario. Las compras a crédito cuentan como gasto/presupuesto y sus pagos solo reducen el flujo de efectivo.
 
 `bill_payments`, `debt_payments`, `goal_contributions` referencian movimientos existentes mediante claves foráneas.
-Una relación de cada clase por movimiento evita repetir el mismo pago en esa sección; varias aportaciones/pagos
+Un único vínculo activo de factura por movimiento evita repetir su pago, conservando los vínculos revertidos; las demás clases mantienen una relación única por movimiento; varias aportaciones/pagos
 parciales usan movimientos distintos. Una operación que afecte varias secciones reutilizará el mismo movimiento.
 El ahorro acumulado se derivará de aportaciones, sin mantener otro total independiente.
 
@@ -65,7 +65,7 @@ se convierten en un mensaje genérico en pantalla. No se registran consultas, cl
 
 `bill_series` conserva frecuencia, ancla y próxima fecha por generar. `bills` representa cada obligación concreta;
 serie/fecha de origen es única y no cambia al corregir el vencimiento visible.
-`bill_payments` vincula cada pago a un único movimiento. `bill_payment_reversals` conserva la reversión sin eliminar el vínculo histórico.
+`bill_payments` vincula cada pago a un movimiento y reserva un único vínculo activo por movimiento mediante un índice parcial. La migración conserva todos los pagos previos al reconstruir esa tabla. `bill_payment_reversals` conserva la reversión sin eliminar el vínculo histórico.
 `bill_revisions` guarda motivo y valores anteriores de cada cambio o anulación.
 El libro y las facturas comparten la cola de `MoneyStore`, incluidas transacciones de pago y generación.
 Los avisos se derivan de obligaciones pendientes y preferencias cifradas; el SO recibe solo un título genérico y una fecha.

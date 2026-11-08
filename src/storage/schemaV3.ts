@@ -23,7 +23,17 @@ CREATE TABLE bill_revisions (
  id INTEGER PRIMARY KEY AUTOINCREMENT, bill_id TEXT NOT NULL REFERENCES bills(id),
  reason TEXT NOT NULL, before_json TEXT NOT NULL, recorded_at TEXT NOT NULL
 );
-ALTER TABLE bill_payments ADD COLUMN created_movement INTEGER NOT NULL DEFAULT 0 CHECK(created_movement IN (0,1));
+-- La unicidad se aplica al vínculo activo, conservando los vínculos revertidos en el historial.
+ALTER TABLE bill_payments RENAME TO bill_payments_v2;
+CREATE TABLE bill_payments (
+ id TEXT PRIMARY KEY NOT NULL, bill_id TEXT NOT NULL REFERENCES bills(id),
+ movement_id TEXT NOT NULL REFERENCES movements(id),
+ amount_cents INTEGER NOT NULL CHECK(typeof(amount_cents)='integer' AND amount_cents>0),
+ created_movement INTEGER NOT NULL DEFAULT 0 CHECK(created_movement IN (0,1)), reversed_at TEXT
+);
+INSERT INTO bill_payments(id,bill_id,movement_id,amount_cents) SELECT id,bill_id,movement_id,amount_cents FROM bill_payments_v2;
+DROP TABLE bill_payments_v2;
+CREATE UNIQUE INDEX bill_active_movement_unique ON bill_payments(movement_id) WHERE reversed_at IS NULL;
 CREATE TABLE bill_payment_reversals (
  payment_id TEXT PRIMARY KEY NOT NULL REFERENCES bill_payments(id), reason TEXT NOT NULL, recorded_at TEXT NOT NULL
 );

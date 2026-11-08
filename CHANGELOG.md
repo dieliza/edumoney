@@ -62,4 +62,6 @@
 - Pagos completos/parciales vinculados atómicamente, opción de vincular movimientos previos y prevención de duplicados.
 - Cambios de fecha auditados, reversión de pagos y anulación controlada del pendiente.
 - Avisos locales genéricos, conciliación tras cambios, permisos opcionales y copia manual al calendario.
-- Migración aditiva 2→3 y 17 pruebas adicionales de lógica/SQLite/avisos; registro de push remoto desactivado.
+- Migración transaccional 2→3 y 18 pruebas adicionales de lógica/SQLite/avisos; registro de push remoto desactivado.
+
+- Un gasto desvinculado por error puede vincularse a la factura correcta, conservando ambos registros históricos sin duplicar importes.

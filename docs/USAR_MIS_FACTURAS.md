@@ -9,7 +9,7 @@
 7. Si ya registraste el gasto en Mi dinero, elígelo en **Movimiento del pago**: así se vincula sin duplicarlo. Los datos deben coincidir.
 8. Revisa el saldo pendiente y el historial. **Pagadas** muestra las completamente pagadas; **Calendario** muestra la agenda mensual por vencimiento.
 9. Para cambiar una fecha, entra en **Editar factura o vencimiento** y escribe el motivo. El historial conserva la fecha anterior.
-10. Si te equivocaste al confirmar, escribe el motivo y usa **Revertir pago**. Un gasto preexistente solo se desvincula; un movimiento creado por la factura se retira del cálculo.
+10. Si te equivocaste al confirmar, escribe el motivo y usa **Revertir pago**. Un gasto preexistente solo se desvincula y puede elegirse en la factura correcta; un movimiento creado por la factura se retira del cálculo. El historial de la reversión se conserva.
 
 Los avisos son genéricos, locales y se programan a las 9:00. El teléfono puede retrasarlos. Las horas ya pasadas no generan avisos nuevos; revisa los atrasos en la app.
 
