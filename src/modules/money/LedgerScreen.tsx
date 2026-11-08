@@ -90,7 +90,7 @@ export default function LedgerScreen() {
     <SectionHeading title="Distribución de gastos"/>
     <Distribution summary={summary}/>
     <SectionHeading title="Ingresos recurrentes"/>
-    <Body muted>Las fechas previstas no son dinero recibido. Confirma cada cobro una sola vez; editar un cobro pasado no cambia su programación.</Body>
+    <Card><Body muted>Las fechas previstas no son dinero recibido. Confirma cada cobro una sola vez; editar un cobro pasado no cambia su programación.</Body></Card>
     {!data.schedules.length ? <Card><Body>Añade un ingreso y elige Recurrente para preparar tus siguientes cobros.</Body></Card> : data.schedules.map(s => <Card key={s.id}><Body style={{ fontWeight: '700' }}>{s.description}</Body><Body>{formatMoney(s.amountCents)} · {s.active ? 'Próximo previsto' : 'En pausa'}: {s.nextDate}</Body><Body muted>Cada {s.intervalCount} {s.cadence === 'weekly' ? 'semana(s)' : 'mes(es)'}</Body>
      {s.active && s.nextDate <= localToday() && !busy ? <ActionButton title={`Confirmar cobro: ${s.description}`} onPress={() => void action(() => store.confirmSchedule(s.id, s.nextDate, newId(), localToday()), 'Cobro registrado. Los siguientes permanecen previstos.')}/> : null}
      {!busy ? <ActionButton title={s.active ? `Pausar: ${s.description}` : `Reanudar: ${s.description}`} secondary onPress={() => void action(() => store.toggleSchedule(s.id, !s.active), 'Programación actualizada. Los movimientos anteriores se conservan.')}/> : null}
@@ -104,7 +104,7 @@ export default function LedgerScreen() {
     <Choices label="Filtrar método" value={filterMethod} options={[['all', 'Todos los métodos'], ...Object.entries(paymentLabels)]} onChange={setFilterMethod}/>
     <Field label="Desde (AAAA-MM-DD, opcional)" value={from} onChangeText={setFrom}/><Field label="Hasta (AAAA-MM-DD, opcional)" value={to} onChangeText={setTo}/>
     <Choices label="Estado" value={deleted} options={[['active', 'Activos'], ['deleted', 'Eliminados']]} onChange={setDeleted}/><ErrorNotice message={filterError}/>
-    <Body>{rows.length} movimiento(s). Toca uno para revisar, corregir o restaurar.</Body>
+    <Card><Body>{rows.length} movimiento(s). Toca uno para revisar, corregir o restaurar.</Body></Card>
     {rows.slice(0, limit).map(m => <Pressable key={m.id} accessibilityRole="button" accessibilityLabel={`${m.description}, ${formatMoney(m.amountCents)}, ${m.date}`} onPress={() => { setSelected(m); setReason(''); setRevisions(null); setError(''); }}><Card><Body style={{ fontWeight: '700' }}>{m.description}</Body><Body>{formatMoney(m.amountCents)} · {m.date}</Body><Body muted>{kindLabels[m.kind as EntryKind] ?? 'Aportación a meta'} · {categoryName(m.categoryId)} · {paymentLabels[m.paymentMethod as keyof typeof paymentLabels] ?? m.paymentMethod}</Body>{m.taxReview ? <Body muted>Marcado para revisión contributiva</Body> : null}</Card></Pressable>)}
     {!rows.length ? <Card><Body>No hay movimientos que coincidan. Los importes de ejemplo de otras pestañas no se mezclan con tus registros.</Body></Card> : null}
     {rows.length > limit ? <ActionButton title="Mostrar más movimientos" secondary onPress={() => setLimit(limit + 50)}/> : null}

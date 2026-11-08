@@ -21,7 +21,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved }:
     const [description, setDescription] = useState(initial?.description ?? '');
     const [date, setDate] = useState(initial?.date ?? localToday());
     const [category, setCategory] = useState(initial?.categoryId ?? '');
-    const [method, setMethod] = useState<PaymentMethod>((initial?.paymentMethod as PaymentMethod) ?? 'bank');
+    const [method, setMethod] = useState<PaymentMethod>((initial ? (initial.paymentMethod ?? '') : 'bank') as PaymentMethod);
     const [incomeType, setIncomeType] = useState(initial?.incomeType ?? 'manual');
     const [cadence, setCadence] = useState<'weekly' | 'monthly'>('monthly');
     const [interval, setInterval] = useState('1');
