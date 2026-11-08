@@ -36,10 +36,10 @@ export function ActionButton({ title, onPress, icon, secondary = false, testID }
     </LinearGradient>
   </Pressable>;
 }
-export function SectionHeading({ title, action, onPress }: { title: string; action?: string; onPress?: () => void }) {
+export function SectionHeading({ title, action, onPress, onSurface = false }: { title: string; action?: string; onPress?: () => void; onSurface?: boolean }) {
   const { name, colors } = useTheme();
   return <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: 6 }}>
-    <Text accessibilityRole="header" style={{ color: name === 'dark' ? fixed.headingDark : colors.text, fontSize: 21, fontWeight: '700', flex: 1 }}>{title}</Text>
+    <Text accessibilityRole="header" style={{ color: name === 'dark' && !onSurface ? fixed.headingDark : colors.text, fontSize: 21, fontWeight: '700', flex: 1 }}>{title}</Text>
     {action && onPress ? <Pressable accessibilityRole="button" onPress={onPress} style={{ paddingVertical: 12, minHeight: 48, justifyContent: 'center' }}><Text style={{ color: colors.accent, fontSize: 14, fontWeight: '700' }}>{action}</Text></Pressable> : null}
   </View>;
 }

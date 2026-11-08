@@ -32,7 +32,7 @@ export function DebtSimulator({debts}:{debts:Debt[]}){
 }
 function ProjectionCard({method,result:r,baseline,debts}:{method:Method;result:Projection;baseline:Projection|null;debts:Debt[]}){
  const [detail,setDetail]=useState(false);const name=method==='snowball'?'Bola de nieve':'Avalancha';
- return <Card><SectionHeading title={name}/><Body>Presupuesto mensual del escenario: {formatMoney(r.monthlyBudgetCents)}</Body>
+ return <Card><SectionHeading title={name} onSurface/><Body>Presupuesto mensual del escenario: {formatMoney(r.monthlyBudgetCents)}</Body>
   <Body>{r.status==='paid'?`Liquidación estimada: ${r.months} mes(es)${r.lastMonth?` · mes ${r.lastMonth}`:' · sin mes de liquidación: faltan vencimientos'}.`:`No se liquida dentro de ${r.months} meses con estos supuestos.`}</Body>
   <Body>Intereses estimados {r.status==='paid'?'totales':'dentro del plazo'}: {formatMoney(r.interestCents)}</Body><Body>Pagos estimados: {formatMoney(r.paidCents)} · Saldo al final: {formatMoney(r.remainingCents)}</Body>
   {baseline&&baseline.status==='paid'&&r.status==='paid'?<Body>Comparado con cero adicional: {baseline.months-r.months} mes(es) de diferencia y {formatMoney(baseline.interestCents-r.interestCents)} de diferencia en intereses.</Body>:<Body muted>No hay una comparación completa con cero adicional cuando ese escenario no se liquida o no tiene presupuesto.</Body>}
