@@ -6,7 +6,10 @@ mkdir -p native-results/ios-direct
 capture_failure() {
   xcrun simctl io "$DEVICE_ID" screenshot native-results/ios-direct/failure.png || true
   xcrun simctl spawn "$DEVICE_ID" log show --style compact --last 3m --predicate 'process == "EduMoney" OR process == "SpringBoard" OR process == "runningboardd" OR process == "amfid"' > native-results/ios-direct/failure.log || true
+  /usr/bin/log show --style compact --last 3m --predicate 'eventMessage CONTAINS "EduMoney"' > native-results/ios-direct/host-failure.log || true
 }
+  # Los fallos de firma se registran en macOS, además del simulador.
+  # Se conserva únicamente el diagnóstico de esta app de prueba.
 trap capture_failure ERR
 xcrun simctl launch "$DEVICE_ID" com.edumoney.app
 APP_CONTAINER=$(xcrun simctl get_app_container "$DEVICE_ID" com.edumoney.app data)
