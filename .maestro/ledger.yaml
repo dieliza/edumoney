@@ -48,7 +48,10 @@ appId: com.edumoney.app
     direction: DOWN
     timeout: 60000
 - tapOn: "Guardar movimiento"
-- assertVisible: "Movimiento guardado en este dispositivo."
+- scrollUntilVisible:
+    element: '\$1,000\.10'
+    direction: UP
+    timeout: 60000
 - scrollUntilVisible:
     element: "Registrar gasto"
     centerElement: true
