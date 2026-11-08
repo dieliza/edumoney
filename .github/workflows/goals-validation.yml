@@ -107,7 +107,7 @@ jobs:
     timeout-minutes: 60
     env:
       MAESTRO_CLI_NO_ANALYTICS: 1
-      MAESTRO_DRIVER_STARTUP_TIMEOUT: 300000
+      MAESTRO_DRIVER_STARTUP_TIMEOUT: 600000
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -160,8 +160,10 @@ jobs:
           codesign --verify --strict --verbose=2 build/Build/Products/Release-iphonesimulator/EduMoney.app
           xcrun simctl install "$DEVICE_ID" build/Build/Products/Release-iphonesimulator/EduMoney.app
           rm -rf native-results
+          mkdir -p native-results
           xcrun simctl ui "$DEVICE_ID" appearance light
-          maestro --device "$DEVICE_ID" test --test-output-dir native-results/ledger .maestro/goals.yaml
+          set -o pipefail
+          maestro --device "$DEVICE_ID" test --test-output-dir native-results/ledger .maestro/goals.yaml 2>&1 | tee native-results/maestro.log
           # Revalidar el cifrado y la reapertura después de guardar los movimientos de prueba.
           bash scripts/ios-smoke.sh "$DEVICE_ID"
       - uses: actions/upload-artifact@v4
