@@ -24,3 +24,16 @@ El nombre en texto se reemplazará por el logo oficial cuando esté disponible s
 
 Las imágenes anteriores son vistas web de revisión. El [informe de pruebas](../02.md) distingue
 los resultados de navegador de las comprobaciones nativas en iOS y Android.
+
+## Capturas nativas Android
+
+[Mi dinero claro](02-android-light-money.png) · [Mi dinero oscuro](02-android-dark-money.png) ·
+[Automático claro](02-android-automatic-light.png) · [Automático oscuro](02-android-automatic-dark.png) ·
+[Letra al 130 % en bienvenida](02-android-font130.png).
+
+## Capturas nativas iOS
+
+[Mi dinero claro](02-ios-light-money.png) · [Mi dinero oscuro](02-ios-dark-money.png) ·
+[Mis metas claro](02-ios-light-goals.png) · [Mis metas oscuro](02-ios-dark-goals.png) ·
+[Aprende claro](02-ios-light-learn.png) · [Aprende oscuro](02-ios-dark-learn.png) ·
+[Mi progreso claro](02-ios-light-progress.png) · [Mi progreso oscuro](02-ios-dark-progress.png).

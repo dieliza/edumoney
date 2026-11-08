@@ -30,3 +30,11 @@
 - Tokens, componentes reutilizables, adaptación de anchos y pruebas de navegación/contraste.
 - Conservación de apertura cifrada nativa; sin conexión de funciones financieras.
 - Logo original pendiente de entrega; no se recrea el logo de los bocetos.
+
+### Seguimiento de verificación visual
+
+- 20 pruebas unitarias y 3 recorridos de navegador aprobados; TypeScript, ESLint y Expo Doctor sin errores.
+- Navegación y persistencia verificadas en iOS/Android; capturas en docs/stages/evidence.
+- Ajuste de barra de estado y apariencia nativa al cambiar de tema.
+- Automatización adaptada a metadatos del selector iOS y avisos de Quickstep del emulador Android.
+- Galería en Markdown para revisar ambos temas sin descargar ZIP.
