@@ -183,3 +183,10 @@ describe('Fechas y presentación decimal', () => {
 });
 
 it('no presenta errores internos de SQLite ni detalles sensibles en pantalla',()=>{expect(userMessage(new Error('SQLITE_PRIVATE_PATH_AND_QUERY'))).not.toContain('SQLITE');expect(userMessage(new UserInputError('Revisa el importe'))).toBe('Revisa el importe');});
+
+it('parametriza nombres y descripciones sin interpretar SQL del usuario',async()=>{
+ const {db,store}=await setup();try{const text="Comida'); DROP TABLE movements; --";await store.saveCategory('quoted',text,'expense');await store.create(entry('quoted-entry',{description:text,categoryId:'quoted'}));expect((await store.snapshot()).movements[0].description).toBe(text);expect(db.prepare('SELECT count(*) AS n FROM movements').get()).toMatchObject({n:1});}finally{db.close();}
+});
+it('resta solo la parte pendiente de una factura vinculada a un pago existente',async()=>{
+ const {db,store}=await setup();try{await store.create(entry('income',{kind:'income',categoryId:null,amountCents:cents(10000)}));await store.create(entry('payment',{amountCents:cents(4000)}));db.exec("INSERT INTO bills VALUES('bill','Proveedor',10000,'2026-11-30',NULL); INSERT INTO bill_payments VALUES('part','bill','payment',4000)");const summary=monthlySummary(await store.snapshot(),'2026-11');expect(summary.commitments).toBe(6000);expect(summary.available).toBe(0);}finally{db.close();}
+});
