@@ -50,7 +50,7 @@ permanecen NULL. Marcar revisión contributiva no implica deducibilidad. `use_ki
 
 Migraciones con `PRAGMA user_version`, transacción y rollback. Se rechaza una versión futura desconocida.
 Cada etapa debe actualizar CHANGELOG y su informe, ejecutar pruebas relevantes y corregir errores antes de avanzar.
-La navegación usa Expo Router, según AGENTS.md. Mi dinero nativo contiene registros reales; las demás pestañas y la web mantienen demostraciones identificadas.
+La navegación usa Expo Router, según AGENTS.md. Mi dinero, Mis metas y Mi progreso nativos contienen registros reales; Aprende y la web mantienen demostraciones identificadas.
 
 ## Esquema 2 — Etapa 3
 
@@ -80,3 +80,11 @@ Una conciliación posterior fija una nueva referencia; no vuelve a restar pagos 
 `bills.debt_id` permite confirmar deuda y factura con un único movimiento en la cola transaccional compartida.
 El calendario no inventa fechas y la simulación es pura: no escribe pagos ni intereses reales.
 `debt_plans` y `debt_plan_actions` guardan revisiones manuales, separadas de los eventos financieros.
+
+## Esquema 5 — Etapa 6
+
+`goals` conserva tipo, objetivo, base previa, fecha deseada, frecuencia, archivo y versión. `goal_contributions` mantiene un único vínculo activo por movimiento y reversos históricos; la migración conserva los vínculos anteriores.
+Ahorro = base previa + aportaciones vigentes. La base no genera flujo; una nueva aportación crea un movimiento reservado una sola vez. Se protegen los movimientos con comprobantes al revertir.
+`goal_events` conserva estados anteriores y motivos al editar objetivos/base/archivo. No se modifica el historial al recalcular cumplimiento.
+`progress_plans` y `progress_actions` son revisiones manuales de 90 días independientes del plan de deudas de 30 días.
+Los indicadores se leen en una sola operación de la cola compartida; no guardan totales ficticios ni escriben movimientos al confirmar tareas. Los importes y redondeos usan centavos y BigInt.

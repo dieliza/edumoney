@@ -21,11 +21,13 @@ SQLCipher requiere compilación nativa: **Expo Go y la web no son destinos compa
 No se necesita cuenta Expo/EAS para compilar localmente. El modo desarrollo usa Metro; una compilación release no lo necesita.
 
 La Etapa 2 incorpora bienvenida, cuatro pestañas y temas Claro/Oscuro/Automático con ejemplos ficticios.
-La preferencia se guarda localmente. En la Etapa 3, Mi dinero permite registrar ingresos, gastos, transferencias, préstamos y pagos, gestionar categorías y presupuestos y corregir/restaurar movimientos en la base cifrada. Las demás pestañas conservan datos ficticios identificados. El archivo separado del logo sigue pendiente de integración.
+La preferencia se guarda localmente. En la Etapa 3, Mi dinero permite registrar ingresos, gastos, transferencias, préstamos y pagos, gestionar categorías y presupuestos y corregir/restaurar movimientos en la base cifrada. Las pestañas pendientes conservan datos ficticios identificados. El archivo separado del logo sigue pendiente de integración.
 
 La Etapa 4 añade facturas, pagos parciales, recurrencias y avisos locales, con acceso desde Mi dinero. [Guía de Mis facturas](docs/USAR_MIS_FACTURAS.md).
 
 La Etapa 5 añade deudas, pagos vinculados, calendario, comparación de métodos y plan de 30 días. [Guía de Ordenar mis pagos](docs/USAR_ORDENAR_MIS_PAGOS.md).
+
+La Etapa 6 incorpora metas, aportaciones vinculadas y progreso calculado desde registros locales. [Guía de Mis metas y Mi progreso](docs/USAR_MIS_METAS_Y_PROGRESO.md).
 
 La vista web es solo una demostración visual, sin acceso a bases financieras. Para revisar localmente:
 
@@ -39,6 +41,7 @@ npm run test:visual
 Las capturas y el estado de verificación se documentan en [Etapa 2](docs/stages/02.md).
 
 
+- [Mis metas y Mi progreso — Etapa 6](docs/stages/06.md)
 - [Deudas y Ordenar mis pagos — Etapa 5](docs/stages/05.md)
 - [Facturas y recordatorios — Etapa 4](docs/stages/04.md)
 - [Mi dinero y presupuesto — Etapa 3](docs/stages/03.md)
