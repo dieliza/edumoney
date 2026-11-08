@@ -159,13 +159,7 @@ jobs:
           codesign --verify --strict --verbose=2 build/Build/Products/Release-iphonesimulator/EduMoney.app
           xcrun simctl install "$DEVICE_ID" build/Build/Products/Release-iphonesimulator/EduMoney.app
           rm -rf native-results
-          bash scripts/ios-smoke.sh "$DEVICE_ID"
-          xcrun simctl ui "$DEVICE_ID" appearance dark
-          sleep 3
-          xcrun simctl io "$DEVICE_ID" screenshot native-results/ios-direct/automatic-dark.png
           xcrun simctl ui "$DEVICE_ID" appearance light
-          sleep 3
-          xcrun simctl io "$DEVICE_ID" screenshot native-results/ios-direct/automatic-light.png
           maestro --device "$DEVICE_ID" test --test-output-dir native-results/ledger .maestro/ledger.yaml
           # Revalidar el cifrado y la reapertura después de guardar los movimientos de prueba.
           bash scripts/ios-smoke.sh "$DEVICE_ID"
