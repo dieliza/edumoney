@@ -56,7 +56,10 @@ jobs:
       - name: Compilar APK de prueba con JavaScript incluido
         if: inputs.artifact_run == ''
         working-directory: android
-        run: ./gradlew assembleRelease -PreactNativeArchitectures=x86_64 --no-daemon
+        run: |
+          # La descarga del wrapper puede superar los 10 segundos del valor predeterminado.
+          sed -i 's/^networkTimeout=.*/networkTimeout=120000/' gradle/wrapper/gradle-wrapper.properties
+          ./gradlew assembleRelease -PreactNativeArchitectures=x86_64 --no-daemon
       - name: Instalar Maestro
         run: |
           curl -fsSL https://get.maestro.mobile.dev | bash
