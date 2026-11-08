@@ -1,0 +1,104 @@
+name: Etapa 1 - Validación nativa
+on:
+  push:
+    branches: [etapa-1-base-tecnica]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: native-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: android-actions/setup-android@v3
+      - run: npm ci
+      - run: npm run lint && npm run check
+      - run: npx expo prebuild --no-install
+        env:
+          CI: 1
+      - run: node scripts/verify-native.mjs
+      - name: Compilar APK de prueba con JavaScript incluido
+        working-directory: android
+        run: ./gradlew assembleRelease -PreactNativeArchitectures=x86_64 --no-daemon
+      - name: Instalar Maestro
+        run: |
+          curl -fsSL https://get.maestro.mobile.dev | bash
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+      - name: Habilitar KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Arranque y reapertura sin conexión
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          script: |
+            adb install android/app/build/outputs/apk/release/app-release.apk
+            adb shell svc wifi disable
+            adb shell svc data disable
+            maestro test --test-output-dir native-results .maestro/storage.yaml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: android-etapa-1
+          path: |
+            android/app/build/outputs/apk/release/*.apk
+            native-results/
+          retention-days: 7
+  ios:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx expo prebuild --no-install
+        env:
+          CI: 1
+      - run: node scripts/verify-native.mjs
+      - name: Instalar CocoaPods
+        working-directory: ios
+        run: pod install
+      - name: Compilar para simulador sin firma de distribución
+        run: |
+          set -o pipefail
+          xcodebuild -workspace ios/EduMoney.xcworkspace -scheme EduMoney -configuration Release -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath build CODE_SIGNING_ALLOWED=NO build | tee ios-build.log
+      - name: Instalar Maestro
+        run: |
+          curl -fsSL https://get.maestro.mobile.dev | bash
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+      - name: Iniciar simulador y ejecutar prueba
+        run: |
+          DEVICE_ID=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin); print(next(v["udid"] for devices in d["devices"].values() for v in devices if "iPhone" in v["name"]))')
+          xcrun simctl boot "$DEVICE_ID"
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+          xcrun simctl install "$DEVICE_ID" build/Build/Products/Release-iphonesimulator/EduMoney.app
+          maestro --device "$DEVICE_ID" test --test-output-dir native-results .maestro/storage.yaml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ios-etapa-1
+          path: |
+            build/Build/Products/Release-iphonesimulator/EduMoney.app
+            native-results/
+            ios-build.log
+          retention-days: 7
