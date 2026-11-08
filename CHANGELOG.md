@@ -47,3 +47,11 @@
 - Categorías personalizables, presupuesto mensual y gráficas calculadas con datos registrados.
 - Migración aditiva a esquema 2, controles de versión y protección de vínculos.
 - Campos de revisión contributiva opcionales sin inferir deducibilidad ni calcular planillas.
+
+### Verificación y presentación
+
+- 34 pruebas de dominio/SQLite, TypeScript, ESLint y tres recorridos de navegador aprobados.
+- Registro, reapertura, temas y corrección comprobados en Android e iOS; presupuesto y restante persistente comprobados también desde la interfaz Android.
+- Archivo iOS cifrado y estable tras guardar movimientos y reiniciar; exclusión de respaldo comprobada.
+- Formularios adaptados al teclado e importe grande con altura de línea suficiente.
+- Galería y guía de uso en docs/stages/evidence/03 y docs/USAR_MI_DINERO.md.

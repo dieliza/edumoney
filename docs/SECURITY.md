@@ -48,3 +48,7 @@ en SQLCipher. AsyncStorage conserva solo la apariencia. No hay adaptador financi
 Las entradas SQL se parametrizan; las operaciones se serializan y se revierten ante errores. Los identificadores
 se conservan durante correcciones y eliminación lógica. Los errores de validación usan mensajes revisados;
 los errores internos de base de datos se ocultan en pantalla. Las pruebas utilizan datos sintéticos.
+
+La [verificación de Etapa 3](stages/03.md) comprueba el recorrido financiero nativo y, en iOS, el archivo cifrado
+después de registrar y corregir movimientos: rechazo de lectura sin clave, huella estable al reiniciar
+y exclusión de respaldo. Se mantienen pendientes las comprobaciones físicas y de recuperación general.
