@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type PropsWithChildren } from 'react';
-import { ActivityIndicator, Text, useColorScheme, View } from 'react-native';
+import { ActivityIndicator, Appearance, Platform, Text, useColorScheme, View } from 'react-native';
 import { createThemePreferences } from './preference';
 import { fixed, palettes, resolveTheme, type ThemePreference, type ThemeName, type Palette } from './tokens';
 const preferences = createThemePreferences(AsyncStorage);
@@ -23,6 +23,12 @@ export function ThemeProvider({ children }: PropsWithChildren) {
     preferences.write(value).then(() => setNotice(null))
       .catch(() => setNotice('El tema cambió, pero no pudo guardarse. Vuelve a seleccionarlo para reintentar.'));
   }, []);
+  useEffect(() => {
+    if (ready && Platform.OS !== 'web') {
+      // RN 0.88: 'auto' restaura el seguimiento del sistema. Solo afecta a esta app.
+      Appearance.setColorScheme(preference === 'automatic' ? 'auto' : preference);
+    }
+  }, [preference, ready]);
   const name = resolveTheme(preference, system);
   const value = useMemo(() => ({ name, preference, colors: palettes[name], setPreference, notice }), [name, preference, setPreference, notice]);
   if (!ready) return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: palettes[name].background }}>

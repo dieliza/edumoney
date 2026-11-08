@@ -1,9 +1,14 @@
 import { Stack } from 'expo-router';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { ThemeProvider } from '../design/ThemeProvider';
+import { ThemeProvider, useTheme } from '../design/ThemeProvider';
 import { StorageGate } from '../ui/StorageGate';
+
+function ThemedNavigator() {
+  const { name } = useTheme();
+  return <Stack screenOptions={{ headerShown: false, animation: 'none', statusBarStyle: name === 'dark' ? 'light' : 'dark' }} />;
+}
 export default function RootLayout() {
   return <SafeAreaProvider><ThemeProvider><StorageGate>
-    <Stack screenOptions={{ headerShown: false, animation: 'none' }} />
+    <ThemedNavigator />
   </StorageGate></ThemeProvider></SafeAreaProvider>;
 }
