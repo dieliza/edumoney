@@ -1,3 +1,4 @@
+import { fixed } from '../../design/tokens';
 import { Tabs } from 'expo-router';
 import { Text, useWindowDimensions } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -14,8 +15,8 @@ export default function TabLayout() {
   const { colors, name } = useTheme();
   const { fontScale } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  return <Tabs screenOptions={{ headerShown: false, animation: 'none', tabBarActiveTintColor: colors.accent, tabBarInactiveTintColor: name === 'dark' ? '#C4D8E2' : '#536976',
-    tabBarStyle: { backgroundColor: colors.tab, borderTopColor: name === 'dark' ? '#1C455B' : colors.line, height: 74 + insets.bottom + Math.max(0, fontScale - 1) * 42, paddingTop: 9, paddingBottom: Math.max(10, insets.bottom) },
+  return <Tabs screenOptions={{ headerShown: false, animation: 'none', tabBarActiveTintColor: colors.accent, tabBarInactiveTintColor: name === 'dark' ? fixed.tabMutedDark : fixed.tabMutedLight,
+    tabBarStyle: { backgroundColor: colors.tab, borderTopColor: name === 'dark' ? fixed.tabBorderDark : colors.line, height: 74 + insets.bottom + Math.max(0, fontScale - 1) * 42, paddingTop: 9, paddingBottom: Math.max(10, insets.bottom) },
     tabBarItemStyle: { minHeight: 52 }, tabBarHideOnKeyboard: true }}>
     {tabs.map(tab => <Tabs.Screen key={tab.name} name={tab.name} options={{ title: tab.label, tabBarAccessibilityLabel: tab.label,
       tabBarIcon: ({ color }) => <Ionicons name={tab.icon} color={typeof color === 'string' ? color : colors.primary} size={24} />,

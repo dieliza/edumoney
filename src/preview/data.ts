@@ -1,3 +1,4 @@
+import { fixed } from '../design/tokens';
 /** Solo datos ficticios. Ningún elemento procede de repositorios financieros. */
 export const goals = [
   { id: 'home', title: 'Comprar una casa', icon: 'home-outline', saved: '$18,000', target: '$60,000', percent: 30, tone: 'blue' },
@@ -13,12 +14,12 @@ export const lessons = [
   { title: 'Planificación a largo plazo', description: 'Vivienda, retiro y más.', icon: 'flag-outline', tone: 'violet' },
 ] as const;
 export const expenses = [
-  { name: 'Vivienda', percent: 38, amount: '$740.00', color: '#0079B5' },
-  { name: 'Comida', percent: 18, amount: '$352.40', color: '#DB384F' },
-  { name: 'Transporte', percent: 12, amount: '$234.00', color: '#CC9B12' },
-  { name: 'Servicios', percent: 10, amount: '$195.00', color: '#159DAB' },
-  { name: 'Deudas', percent: 8, amount: '$156.00', color: '#8D54CA' },
-  { name: 'Otros', percent: 14, amount: '$277.28', color: '#008963' },
+  { name: 'Vivienda', percent: 38, amount: '$740.00', color: fixed.chartHousing },
+  { name: 'Comida', percent: 18, amount: '$352.40', color: fixed.chartFood },
+  { name: 'Transporte', percent: 12, amount: '$234.00', color: fixed.chartTransport },
+  { name: 'Servicios', percent: 10, amount: '$195.00', color: fixed.chartServices },
+  { name: 'Deudas', percent: 8, amount: '$156.00', color: fixed.chartDebt },
+  { name: 'Otros', percent: 14, amount: '$277.28', color: fixed.chartOther },
 ];
 export const bills = [
   { title: 'LUMA', description: 'Electricidad', date: '5 nov 2026', amount: '$125.00', icon: 'flash', tone: 'mint' },

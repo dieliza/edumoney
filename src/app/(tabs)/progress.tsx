@@ -1,13 +1,14 @@
+import { fixed } from '../../design/tokens';
 import { View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Body, Card, IconBadge, ProgressBar, Screen, ui } from '../../ui/components';
 export default function Progress() {
   return <Screen title="Mi progreso" subtitle="Los pequeños hábitos hacen grandes cambios.">
-    <LinearGradient colors={['#008461', '#006458']} style={{ borderRadius: 24, padding: 24, gap: 14 }}>
-      <Ionicons name="trophy-outline" color="#FFE18B" size={42} />
-      <Body style={{ color: '#FFFFFF', fontSize: 23, fontWeight: '700' }}>¡Vas por buen camino!</Body>
-      <Body style={{ color: '#F0FFF9' }}>Así podrías visualizar tus avances. Estos reconocimientos son ejemplos.</Body>
+    <LinearGradient colors={[fixed.successStart, fixed.successEnd]} style={{ borderRadius: 24, padding: 24, gap: 14 }}>
+      <Ionicons name="trophy-outline" color={fixed.award} size={42} />
+      <Body style={{ color: fixed.white, fontSize: 23, fontWeight: '700' }}>¡Vas por buen camino!</Body>
+      <Body style={{ color: fixed.onSuccess }}>Así podrías visualizar tus avances. Estos reconocimientos son ejemplos.</Body>
     </LinearGradient>
     {([
       ['Movimientos registrados', '32 en este mes de ejemplo', 'bar-chart-outline', 'mint'],

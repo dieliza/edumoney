@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type PropsWithChildren } from 'react';
 import { ActivityIndicator, Text, useColorScheme, View } from 'react-native';
 import { createThemePreferences } from './preference';
-import { palettes, resolveTheme, type ThemePreference, type ThemeName, type Palette } from './tokens';
+import { fixed, palettes, resolveTheme, type ThemePreference, type ThemeName, type Palette } from './tokens';
 const preferences = createThemePreferences(AsyncStorage);
 interface ThemeState { name: ThemeName; preference: ThemePreference; colors: Palette; setPreference(value: ThemePreference): void; notice: string | null }
 const ThemeContext = createContext<ThemeState | null>(null);
@@ -27,7 +27,7 @@ export function ThemeProvider({ children }: PropsWithChildren) {
   const value = useMemo(() => ({ name, preference, colors: palettes[name], setPreference, notice }), [name, preference, setPreference, notice]);
   if (!ready) return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: palettes[name].background }}>
     <ActivityIndicator color={palettes[name].accent} accessibilityLabel="Cargando tu preferencia de apariencia" />
-    <Text style={{ color: name === 'dark' ? '#FFFFFF' : '#102F42', marginTop: 12 }}>Preparando EduMoney…</Text>
+    <Text style={{ color: name === 'dark' ? fixed.white : fixed.ink, marginTop: 12 }}>Preparando EduMoney…</Text>
   </View>;
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }

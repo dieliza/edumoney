@@ -1,3 +1,4 @@
+import { fixed } from '../../design/tokens';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -14,25 +15,25 @@ export default function Money() {
   const [detail, setDetail] = useState<string | null>(null);
   return <Screen title="Mi dinero" subtitle="¡Hola! Cada decisión cuenta para tu tranquilidad.">
     <View accessibilityRole="tablist" style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6, padding: 6, backgroundColor: colors.surfaceAlt, borderRadius: 16 }}>
-      {segments.map(item => <Pressable key={item} accessibilityRole="tab" accessibilityState={{ selected: item === segment }} onPress={() => setSegment(item)} style={{ flexGrow: 1, padding: 12, minHeight: 46, borderRadius: 12, backgroundColor: item === segment ? colors.primary : 'transparent' }}><Text style={{ color: item === segment ? '#FFFFFF' : colors.text, textAlign: 'center', fontSize: 13, fontWeight: '700' }}>{item}</Text></Pressable>)}
+      {segments.map(item => <Pressable key={item} accessibilityRole="tab" accessibilityState={{ selected: item === segment }} onPress={() => setSegment(item)} style={{ flexGrow: 1, padding: 12, minHeight: 46, borderRadius: 12, backgroundColor: item === segment ? colors.primary : 'transparent' }}><Text style={{ color: item === segment ? fixed.white : colors.text, textAlign: 'center', fontSize: 13, fontWeight: '700' }}>{item}</Text></Pressable>)}
     </View>
     {segment === 'Resumen' ? <>
       <Card style={{ padding: 0, overflow: 'hidden' }}>
         <LinearGradient colors={[colors.mint, colors.blue]} style={{ padding: 22, gap: 6 }}>
           <View style={ui.between}><Body style={{ fontWeight: '600' }}>Disponible estimado</Body><Ionicons name="eye-outline" size={23} color={colors.primary} /></View>
-          <Text style={{ color: '#00634B', fontSize: 38, fontWeight: '800', letterSpacing: -1 }}>$1,245.32</Text>
+          <Text style={{ color: fixed.balance, fontSize: 38, fontWeight: '800', letterSpacing: -1 }}>$1,245.32</Text>
           <Body muted style={ui.small}>Ejemplo · No es un saldo bancario confirmado</Body>
         </LinearGradient>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 20, paddingBottom: 20, gap: 18 }}>
-          <View style={[ui.row, { flex: 1, minWidth: 125 }]}><Ionicons name="arrow-up-circle" color="#007451" size={29} /><View><Body muted style={ui.small}>Ingresos</Body><Body style={{ fontWeight: '700' }}>$3,200.00</Body></View></View>
-          <View style={[ui.row, { flex: 1, minWidth: 125 }]}><Ionicons name="arrow-down-circle" color="#C12945" size={29} /><View><Body muted style={ui.small}>Gastos</Body><Body style={{ fontWeight: '700' }}>$1,954.68</Body></View></View>
+          <View style={[ui.row, { flex: 1, minWidth: 125 }]}><Ionicons name="arrow-up-circle" color={fixed.income} size={29} /><View><Body muted style={ui.small}>Ingresos</Body><Body style={{ fontWeight: '700' }}>$3,200.00</Body></View></View>
+          <View style={[ui.row, { flex: 1, minWidth: 125 }]}><Ionicons name="arrow-down-circle" color={fixed.expense} size={29} /><View><Body muted style={ui.small}>Gastos</Body><Body style={{ fontWeight: '700' }}>$1,954.68</Body></View></View>
         </View>
       </Card>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
         {([
           ['Añadir ingreso', 'add-circle-outline', 'mint'], ['Registrar gasto', 'receipt-outline', 'coral'],
           ['Escanear recibo', 'camera-outline', 'blue'], ['Ordenar mis pagos', 'calendar-outline', 'violet'],
-        ] as const).map(([title, icon, tone]) => <Pressable key={title} accessibilityRole="button" onPress={() => setDetail(title)} style={({ pressed }) => ({ width: '47%', flexGrow: 1, backgroundColor: colors[tone], borderWidth: 1, borderColor: colors.line, borderRadius: 20, padding: 18, minHeight: 112, alignItems: 'center', gap: 10, opacity: pressed ? 0.7 : 1 })}>
+        ] as const).map(([title, icon, tone]) => <Pressable key={title} accessibilityRole="button" accessibilityLabel={title} onPress={() => setDetail(title)} style={({ pressed }) => ({ width: '47%', flexGrow: 1, backgroundColor: colors[tone], borderWidth: 1, borderColor: colors.line, borderRadius: 20, padding: 18, minHeight: 112, alignItems: 'center', gap: 10, opacity: pressed ? 0.7 : 1 })}>
           <IconBadge icon={icon} tone={tone} size={40} /><Body style={{ textAlign: 'center', fontSize: 14, fontWeight: '700' }}>{title}</Body>
         </Pressable>)}
       </View>

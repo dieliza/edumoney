@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTheme } from '../design/ThemeProvider';
-import type { ThemePreference } from '../design/tokens';
+import { fixed, type ThemePreference } from '../design/tokens';
 const choices: { value: ThemePreference; label: string; icon: 'sunny-outline' | 'moon-outline' | 'phone-portrait-outline'; detail: string }[] = [
   { value: 'light', label: 'Claro', icon: 'sunny-outline', detail: 'Blancos suaves, menta y azul claro' },
   { value: 'dark', label: 'Oscuro', icon: 'moon-outline', detail: 'Azul profundo, esmeralda y turquesa' },
@@ -17,7 +17,7 @@ export function ThemePicker({ color }: { color: string }) {
       <Ionicons name={name === 'dark' ? 'moon-outline' : 'sunny-outline'} size={25} color={color} />
     </Pressable>
     <Modal visible={open} transparent animationType="none" onRequestClose={() => setOpen(false)}>
-      <View style={{ flex: 1, backgroundColor: '#00000099', justifyContent: 'center', padding: 22 }}>
+      <View style={{ flex: 1, backgroundColor: fixed.themeBackdrop, justifyContent: 'center', padding: 22 }}>
         <ScrollView tabIndex={0} style={{ maxHeight: '90%', width: '100%', maxWidth: 480, alignSelf: 'center', borderRadius: 28 }}>
         <View accessibilityViewIsModal style={{ backgroundColor: colors.surface, borderRadius: 28, padding: 24, maxWidth: 480, width: '100%', alignSelf: 'center', gap: 14 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>

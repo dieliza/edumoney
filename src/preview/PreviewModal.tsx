@@ -1,10 +1,11 @@
+import { fixed } from '../design/tokens';
 import { Modal, ScrollView, View } from 'react-native';
 import { useTheme } from '../design/ThemeProvider';
 import { ActionButton, Body, Card, IconBadge } from '../ui/components';
 export function PreviewModal({ title, close }: { title: string | null; close(): void }) {
   const { colors } = useTheme();
   return <Modal visible={title !== null} transparent animationType="none" onRequestClose={close}>
-    <View style={{ flex: 1, backgroundColor: '#00000088', padding: 24, justifyContent: 'center' }}>
+    <View style={{ flex: 1, backgroundColor: fixed.previewBackdrop, padding: 24, justifyContent: 'center' }}>
       <ScrollView tabIndex={0} style={{ maxHeight: '90%', width: '100%', maxWidth: 480, alignSelf: 'center', borderRadius: 24 }}>
       <Card style={{ width: '100%', maxWidth: 480, alignSelf: 'center', gap: 20 }}>
         <IconBadge icon="sparkles-outline" />

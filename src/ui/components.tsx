@@ -1,3 +1,4 @@
+import { fixed } from '../design/tokens';
 import { useIsFocused } from 'expo-router';
 import { type ComponentProps, type PropsWithChildren } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions, type StyleProp, type ViewStyle } from 'react-native';
@@ -20,8 +21,8 @@ export function Card({ children, style }: PropsWithChildren<{ style?: StyleProp<
 }
 export function IconBadge({ icon, tone = 'mint', size = 48 }: { icon: IconName; tone?: 'mint' | 'blue' | 'coral' | 'violet'; size?: number }) {
   const { colors } = useTheme();
-  const ink = { mint: '#006B50', blue: '#0066A5', coral: '#BB2638', violet: '#773DB1' }[tone];
-  return <View style={{ width: size, height: size, borderRadius: size / 3, backgroundColor: colors[tone], alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+  const ink = { mint: fixed.iconMint, blue: fixed.iconBlue, coral: fixed.iconCoral, violet: fixed.iconViolet }[tone];
+  return <View accessible={false} aria-hidden importantForAccessibility="no-hide-descendants" style={{ width: size, height: size, borderRadius: size / 3, backgroundColor: colors[tone], alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
     <Ionicons name={icon} size={size * 0.52} color={ink} />
   </View>;
 }
@@ -29,23 +30,23 @@ export function ActionButton({ title, onPress, icon, secondary = false, testID }
   const { colors } = useTheme();
   return <Pressable testID={testID} accessibilityRole="button" accessibilityLabel={title} onPress={onPress}
     style={({ pressed }) => ({ opacity: pressed ? 0.75 : 1, borderRadius: 18, overflow: 'hidden', minHeight: 54, borderWidth: secondary ? 1 : 0, borderColor: colors.primary })}>
-    <LinearGradient colors={secondary ? [colors.surface, colors.surface] : ['#00805C', '#006248']} style={{ minHeight: 54, padding: 16, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
-      {icon ? <Ionicons name={icon} color={secondary ? colors.primary : '#FFFFFF'} size={22} /> : null}
-      <Text style={{ fontSize: 17, fontWeight: '700', color: secondary ? colors.primary : '#FFFFFF', flexShrink: 1, textAlign: 'center' }}>{title}</Text>
+    <LinearGradient colors={secondary ? [colors.surface, colors.surface] : [fixed.buttonStart, fixed.buttonEnd]} style={{ minHeight: 54, padding: 16, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
+      {icon ? <Ionicons name={icon} color={secondary ? colors.primary : fixed.white} size={22} /> : null}
+      <Text style={{ fontSize: 17, fontWeight: '700', color: secondary ? colors.primary : fixed.white, flexShrink: 1, textAlign: 'center' }}>{title}</Text>
     </LinearGradient>
   </Pressable>;
 }
 export function SectionHeading({ title, action, onPress }: { title: string; action?: string; onPress?: () => void }) {
   const { name, colors } = useTheme();
   return <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: 6 }}>
-    <Text accessibilityRole="header" style={{ color: name === 'dark' ? '#F4FAFC' : colors.text, fontSize: 21, fontWeight: '700', flex: 1 }}>{title}</Text>
+    <Text accessibilityRole="header" style={{ color: name === 'dark' ? fixed.headingDark : colors.text, fontSize: 21, fontWeight: '700', flex: 1 }}>{title}</Text>
     {action && onPress ? <Pressable accessibilityRole="button" onPress={onPress} style={{ paddingVertical: 12, minHeight: 48, justifyContent: 'center' }}><Text style={{ color: colors.accent, fontSize: 14, fontWeight: '700' }}>{action}</Text></Pressable> : null}
   </View>;
 }
 export function ProgressBar({ value, label }: { value: number; label: string }) {
   const { colors } = useTheme();
   return <View accessibilityRole="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={value} accessibilityLabel={label} accessibilityValue={{ min: 0, max: 100, now: value }} style={{ height: 8, borderRadius: 8, overflow: 'hidden', backgroundColor: colors.progressTrack }}>
-    <LinearGradient colors={['#008464', '#2FBA91']} style={{ width: `${value}%`, height: 8, borderRadius: 8 }} />
+    <LinearGradient colors={[fixed.progressStart, fixed.progressEnd]} style={{ width: `${value}%`, height: 8, borderRadius: 8 }} />
   </View>;
 }
 export function Waves() {
@@ -53,8 +54,8 @@ export function Waves() {
   return <View pointerEvents="none" importantForAccessibility="no-hide-descendants" aria-hidden style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 210, opacity: 0.23 }}>
     <Svg width="100%" height="100%" viewBox="0 0 400 200" preserveAspectRatio="none">
       <Path d="M0 90 Q75 20 180 105 T400 70 V200 H0 Z" fill={colors.wave} />
-      <Path d="M0 145 Q110 70 230 145 T400 110 V200 H0 Z" fill="#39BFD0" />
-      <Path d="M0 175 Q130 110 260 160 T400 130 V200 H0 Z" fill="#78D38A" />
+      <Path d="M0 145 Q110 70 230 145 T400 110 V200 H0 Z" fill={fixed.waveBlue} />
+      <Path d="M0 175 Q130 110 260 160 T400 130 V200 H0 Z" fill={fixed.waveGreen} />
     </Svg>
   </View>;
 }
@@ -63,7 +64,7 @@ export function Screen({ children, title, subtitle, welcome = false }: PropsWith
   const { width } = useWindowDimensions();
   const focused = useIsFocused();
   if (!focused) return null;
-  const headerInk = name === 'dark' ? '#F4FAFC' : colors.text;
+  const headerInk = name === 'dark' ? fixed.headingDark : colors.text;
   return <LinearGradient testID={`theme-${name}`} colors={colors.gradient} style={{ flex: 1 }}>
     <StatusBar style={name === 'dark' ? 'light' : 'dark'} />
     <Waves />
@@ -77,7 +78,7 @@ export function Screen({ children, title, subtitle, welcome = false }: PropsWith
       <ScrollView tabIndex={0} accessibilityLabel={`Contenido de ${title}`} contentContainerStyle={{ flexGrow: 1, paddingBottom: 32 }} keyboardShouldPersistTaps="handled">
         <View style={{ width: '100%', maxWidth: 700, alignSelf: 'center', paddingHorizontal: width < 370 ? 16 : 24, gap: 18 }}>
           {!welcome ? <View style={{ backgroundColor: colors.warning, borderRadius: 12, paddingVertical: 8, paddingHorizontal: 12 }}><Text style={{ color: colors.warningText, fontSize: 12, fontWeight: '600', textAlign: 'center' }}>DEMOSTRACIÓN · DATOS FICTICIOS</Text></View> : null}
-          {subtitle ? <Text style={{ color: name === 'dark' ? '#D2E9EF' : colors.muted, fontSize: 16, lineHeight: 24 }}>{subtitle}</Text> : null}
+          {subtitle ? <Text style={{ color: name === 'dark' ? fixed.subtitleDark : colors.muted, fontSize: 16, lineHeight: 24 }}>{subtitle}</Text> : null}
           {notice ? <View accessibilityLiveRegion="polite" style={{ backgroundColor: colors.warning, padding: 14, borderRadius: 12 }}><Text style={{ color: colors.warningText, fontSize: 15 }}>{notice}</Text></View> : null}
           {children}
         </View>
