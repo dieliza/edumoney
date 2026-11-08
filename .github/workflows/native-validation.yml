@@ -130,7 +130,8 @@ jobs:
           chmod -R +x build/Build/Products/Release-iphonesimulator/EduMoney.app
           codesign --force --deep --sign - --entitlements scripts/simulator.entitlements build/Build/Products/Release-iphonesimulator/EduMoney.app
           xcrun simctl install "$DEVICE_ID" build/Build/Products/Release-iphonesimulator/EduMoney.app
-          maestro --device "$DEVICE_ID" test --test-output-dir native-results .maestro/storage.yaml
+          rm -rf native-results
+          bash scripts/ios-smoke.sh "$DEVICE_ID"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
