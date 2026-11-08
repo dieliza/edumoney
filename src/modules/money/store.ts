@@ -15,13 +15,13 @@ export interface SqlDb {
 export class DuplicateMovementError extends UserInputError {
     constructor() { super('Ya hay un movimiento con la misma fecha, descripción e importe. Revisa el historial antes de guardar otro.'); }
 }
-const movementSelect = `SELECT id,idempotency_key AS idempotencyKey,kind,amount_cents AS amountCents,currency,date,description,
+export const movementSelect = `SELECT id,idempotency_key AS idempotencyKey,kind,amount_cents AS amountCents,currency,date,description,
  category_id AS categoryId,payment_method AS paymentMethod,tax_review AS taxReview,use_kind AS useKind,gross_cents AS grossCents,
  withholding_cents AS withholdingCents,created_at AS createdAt,updated_at AS updatedAt,deleted_at AS deletedAt,
  income_type AS incomeType,schedule_id AS scheduleId,occurrence_date AS occurrenceDate,version FROM movements`;
 const scheduleSelect = `SELECT id,description,amount_cents AS amountCents,category_id AS categoryId,payment_method AS paymentMethod,
  cadence,interval_count AS intervalCount,anchor_date AS anchorDate,next_date AS nextDate,active FROM income_schedules`;
-const readMovement = (m: LedgerMovement): LedgerMovement => ({ ...m, taxReview: !!m.taxReview });
+export const readMovement = (m: LedgerMovement): LedgerMovement => ({ ...m, taxReview: !!m.taxReview });
 const canonical = (m: LedgerMovement) => JSON.stringify([m.kind, m.amountCents, m.date, m.description, m.categoryId, m.paymentMethod, m.taxReview, m.useKind, m.grossCents, m.withholdingCents, m.incomeType, m.scheduleId, m.occurrenceDate]);
 /** Una sola instancia serializa lecturas y escrituras de esta conexión cifrada. */
 export class MoneyStore {
@@ -42,6 +42,9 @@ export class MoneyStore {
             }
         });
     }
+    /** Los módulos comparten esta cola y conexión: no abrir transacciones anidadas ni conexiones sin clave. */
+    read<T>(task: (db: SqlDb) => Promise<T>): Promise<T> { return this.serialized(() => task(this.db)); }
+    transaction<T>(task: (db: SqlDb) => Promise<T>): Promise<T> { return this.write(() => task(this.db)); }
     private async movements() { return (await this.db.getAllAsync<LedgerMovement>(movementSelect + ' ORDER BY date DESC, created_at DESC')).map(readMovement); }
     async snapshot(): Promise<Snapshot> {
         return this.serialized(async () => ({
@@ -50,7 +53,7 @@ export class MoneyStore {
             budgets: await this.db.getAllAsync<Budget>('SELECT month,category_id AS categoryId,amount_cents AS amountCents FROM monthly_budgets'),
             schedules: (await this.db.getAllAsync<IncomeSchedule>(scheduleSelect + ' ORDER BY next_date')).map(s => ({ ...s, active: !!s.active })),
             commitments: await this.db.getAllAsync(`SELECT b.id,b.due_date AS dueDate,MAX(0,b.amount_cents-COALESCE(SUM(p.amount_cents),0)) AS outstandingCents
-    FROM bills b LEFT JOIN bill_payments p ON p.bill_id=b.id GROUP BY b.id HAVING outstandingCents>0`),
+    FROM bills b LEFT JOIN bill_payments p ON p.bill_id=b.id AND NOT EXISTS(SELECT 1 FROM bill_payment_reversals r WHERE r.payment_id=p.id) WHERE b.voided_at IS NULL GROUP BY b.id HAVING outstandingCents>0`),
         }));
     }
     private async validateCategory(m: LedgerMovement) {

@@ -42,9 +42,9 @@ describe('SQLite real (sin cifrado, solo pruebas de esquema)', () => {
       await expect(repo.create(movement('m2'))).rejects.toThrow();
       await expect(repo.create({ ...movement('m3'), idempotencyKey: 'op3', categoryId: 'missing' })).rejects.toThrow();
       expect(() => db.exec("UPDATE movements SET amount_cents=1.5")).toThrow();
-      db.exec("INSERT INTO bills VALUES ('b1','Proveedor',1234,'2026-12-01',NULL)");
-      db.exec("INSERT INTO bill_payments VALUES ('p1','b1','m1',1234)");
-      expect(() => db.exec("INSERT INTO bill_payments VALUES ('p2','b1','m1',1234)")).toThrow();
+      db.exec("INSERT INTO bills(id,provider,amount_cents,due_date,recurrence) VALUES ('b1','Proveedor',1234,'2026-12-01',NULL)");
+      db.exec("INSERT INTO bill_payments(id,bill_id,movement_id,amount_cents) VALUES ('p1','b1','m1',1234)");
+      expect(() => db.exec("INSERT INTO bill_payments(id,bill_id,movement_id,amount_cents) VALUES ('p2','b1','m1',1234)")).toThrow();
       expect(() => db.exec("DELETE FROM movements WHERE id='m1'")).toThrow();
       db.exec("INSERT INTO documents VALUES ('d1','m1','hash',NULL,NULL,'received')");
       expect(() => db.exec("INSERT INTO documents VALUES ('d2',NULL,'hash',NULL,NULL,'received')")).toThrow();
@@ -57,7 +57,7 @@ describe('SQLite real (sin cifrado, solo pruebas de esquema)', () => {
       await expect(migrate(failing)).rejects.toThrow('interrupted');
       expect(db.prepare('PRAGMA user_version').get()).toMatchObject({ user_version: 0 });
       expect(db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all()).toHaveLength(0);
-      db.exec('PRAGMA user_version=3'); await expect(migrate(real)).rejects.toThrow('compatible');
+      db.exec('PRAGMA user_version=4'); await expect(migrate(real)).rejects.toThrow('compatible');
     } finally { db.close(); }
   });
   it('valida fechas e importes antes de guardar', async () => {

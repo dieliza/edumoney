@@ -6,6 +6,13 @@ module.exports = config => {
   config = withAndroidManifest(config, mod => {
     const app = mod.modResults.manifest.application[0].$;
     app['android:allowBackup'] = 'false';
+    // expo-notifications incluye Firebase para push; EduMoney utiliza exclusivamente avisos locales.
+    const application = mod.modResults.manifest.application[0];
+    application['meta-data'] ??= [];
+    for (const name of ['firebase_messaging_auto_init_enabled', 'firebase_analytics_collection_enabled', 'firebase_data_collection_default_enabled']) {
+      application['meta-data'] = application['meta-data'].filter(item => item.$['android:name'] !== name);
+      application['meta-data'].push({ $: { 'android:name': name, 'android:value': 'false' } });
+    }
     app['android:fullBackupContent'] = '@xml/edumoney_backup_rules';
     app['android:dataExtractionRules'] = '@xml/edumoney_extraction_rules';
     return mod;

@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider, useTheme } from '../design/ThemeProvider';
+import { BillsLifecycle } from '../modules/bills/BillsLifecycle';
 import { StorageGate } from '../ui/StorageGate';
 
 function ThemedNavigator() {
@@ -9,6 +10,6 @@ function ThemedNavigator() {
 }
 export default function RootLayout() {
   return <SafeAreaProvider><ThemeProvider><StorageGate>
-    <ThemedNavigator />
+    <BillsLifecycle><ThemedNavigator /></BillsLifecycle>
   </StorageGate></ThemeProvider></SafeAreaProvider>;
 }

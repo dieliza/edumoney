@@ -18,3 +18,7 @@ const delegate = read('ios/EduMoney/AppDelegate.swift');
 assert.match(delegate, /values.isExcludedFromBackup = true/);
 assert.ok(delegate.indexOf('try documents.setResourceValues(values)') < delegate.indexOf('let delegate = ReactNativeDelegate()'));
 console.log('Configuración nativa: SQLCipher y exclusiones de respaldo verificadas para iOS y Android.');
+
+assert.match(manifest, /android:name="firebase_messaging_auto_init_enabled" android:value="false"/);
+assert.doesNotMatch(read('ios/EduMoney/EduMoney.entitlements'), /aps-environment/);
+console.log('Avisos locales: registro remoto desactivado; permisos de calendario y alarmas exactas bloqueados en la configuración.');

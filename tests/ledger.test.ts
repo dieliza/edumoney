@@ -92,7 +92,7 @@ describe('Etapa 3: libro local, SQLite real', () => {
         const { db, store } = await setup();
         try {
             await store.create(entry('a'));
-            db.exec("INSERT INTO bills VALUES('bill','Proveedor',1020,'2026-11-30',NULL);INSERT INTO bill_payments VALUES('pay','bill','a',1020)");
+            db.exec("INSERT INTO bills(id,provider,amount_cents,due_date,recurrence) VALUES('bill','Proveedor',1020,'2026-11-30',NULL);INSERT INTO bill_payments(id,bill_id,movement_id,amount_cents) VALUES('pay','bill','a',1020)");
             await expect(store.edit(entry('a'), 'Editar')).rejects.toThrow('vinculado');
             await expect(store.setDeleted('a', 1, true, 'Eliminar')).rejects.toThrow('vinculado');
             expect((await store.snapshot()).commitments).toHaveLength(0);
@@ -131,7 +131,7 @@ describe('Etapa 3: libro local, SQLite real', () => {
             await store.create(entry('pay', { kind: 'debt_payment', categoryId: null, amountCents: cents(2020) }));
             await store.create(entry('own', { kind: 'transfer', categoryId: null, amountCents: cents(50000) }));
             await store.create(entry('loan', { kind: 'loan', categoryId: null, amountCents: cents(5000) }));
-            db.exec("INSERT INTO bills VALUES('bill','Proveedor',10000,'2026-11-30',NULL)");
+            db.exec("INSERT INTO bills(id,provider,amount_cents,due_date,recurrence) VALUES('bill','Proveedor',10000,'2026-11-30',NULL)");
             const total = monthlySummary(await store.snapshot(), '2026-11');
             expect(total).toMatchObject({ income: 100010, expenses: 2030, loans: 5000, payments: 2020, cashFlow: 102980, commitments: 10000, available: 92980 });
             expect(monthlySummary(await store.snapshot(), '2026-12').income).toBe(0);
@@ -188,5 +188,5 @@ it('parametriza nombres y descripciones sin interpretar SQL del usuario',async()
  const {db,store}=await setup();try{const text="Comida'); DROP TABLE movements; --";await store.saveCategory('quoted',text,'expense');await store.create(entry('quoted-entry',{description:text,categoryId:'quoted'}));expect((await store.snapshot()).movements[0].description).toBe(text);expect(db.prepare('SELECT count(*) AS n FROM movements').get()).toMatchObject({n:1});}finally{db.close();}
 });
 it('resta solo la parte pendiente de una factura vinculada a un pago existente',async()=>{
- const {db,store}=await setup();try{await store.create(entry('income',{kind:'income',categoryId:null,amountCents:cents(10000)}));await store.create(entry('payment',{amountCents:cents(4000)}));db.exec("INSERT INTO bills VALUES('bill','Proveedor',10000,'2026-11-30',NULL); INSERT INTO bill_payments VALUES('part','bill','payment',4000)");const summary=monthlySummary(await store.snapshot(),'2026-11');expect(summary.commitments).toBe(6000);expect(summary.available).toBe(0);}finally{db.close();}
+ const {db,store}=await setup();try{await store.create(entry('income',{kind:'income',categoryId:null,amountCents:cents(10000)}));await store.create(entry('payment',{amountCents:cents(4000)}));db.exec("INSERT INTO bills(id,provider,amount_cents,due_date,recurrence) VALUES('bill','Proveedor',10000,'2026-11-30',NULL); INSERT INTO bill_payments(id,bill_id,movement_id,amount_cents) VALUES('part','bill','payment',4000)");const summary=monthlySummary(await store.snapshot(),'2026-11');expect(summary.commitments).toBe(6000);expect(summary.available).toBe(0);}finally{db.close();}
 });

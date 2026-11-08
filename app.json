@@ -19,7 +19,13 @@
     "android": {
       "predictiveBackGestureEnabled": false,
       "package": "com.edumoney.app",
-      "allowBackup": false
+      "allowBackup": false,
+      "blockedPermissions": [
+        "android.permission.READ_CALENDAR",
+        "android.permission.WRITE_CALENDAR",
+        "android.permission.SCHEDULE_EXACT_ALARM",
+        "android.permission.USE_EXACT_ALARM"
+      ]
     },
     "plugins": [
       [
@@ -36,7 +42,14 @@
       ],
       "./plugins/withLocalOnly.cjs",
       "expo-router",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-notifications",
+        {
+          "enableRemoteNotifications": false,
+          "enableBackgroundRemoteNotifications": false
+        }
+      ]
     ],
     "updates": {
       "enabled": false

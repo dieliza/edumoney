@@ -1,6 +1,10 @@
 import { userMessage } from '../../core/errors';
 import { useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, Pressable, View } from 'react-native';
+import { AppState, ActivityIndicator, Pressable, View } from 'react-native';
+import { router, useIsFocused } from 'expo-router';
+import { refreshBills } from '../bills/runtime';
+import { billStatus, outstanding } from '../bills/domain';
+import type { Bill } from '../bills/types';
 import Svg, { Circle } from 'react-native-svg';
 import { useTheme } from '../../design/ThemeProvider';
 import { fixed } from '../../design/tokens';
@@ -16,6 +20,8 @@ import { MovementForm } from './MovementForm';
 const empty: Snapshot = { movements: [], categories: [], budgets: [], schedules: [], commitments: [] };
 export default function LedgerScreen() {
     const { colors } = useTheme();
+    const focused = useIsFocused();
+    const [bills,setBills] = useState<Bill[]>([]);
     const [store, setStore] = useState<MoneyStore | null>(null);
     const [data, setData] = useState(empty);
     const [error, setError] = useState('');
@@ -44,11 +50,20 @@ export default function LedgerScreen() {
     const [from, setFrom] = useState('');
     const [to, setTo] = useState('');
     const [limit, setLimit] = useState(50);
-    useEffect(() => { let active = true; getMoneyStore().then(async (s) => { const snapshot = await s.snapshot(); if (active) {
-        setStore(s);
-        setData(snapshot);
-    } }).catch(() => { if (active)
-        setError('No pudimos cargar tus registros cifrados. Cierra y vuelve a abrir la app.'); }); return () => { active = false; }; }, []);
+    useEffect(() => {
+        if (!focused) return;
+        let active = true;
+        const load = async () => {
+            const s = await getMoneyStore();
+            const result = await refreshBills();
+            const snapshot = await s.snapshot();
+            if (active) { setStore(s); setData(snapshot); setBills(result.data.bills); }
+        };
+        const reload = () => { void load().catch(() => { if (active) setError('No pudimos cargar tus registros cifrados. Cierra y vuelve a abrir la app.'); }); };
+        reload();
+        const subscription = AppState.addEventListener('change', state => { if (state === 'active') reload(); });
+        return () => { active = false; subscription.remove(); };
+    }, [focused]);
     async function refresh() { if (store)
         setData(await store.snapshot()); }
     async function action(task: () => Promise<unknown>, message: string) { if (busy)
@@ -88,8 +103,11 @@ export default function LedgerScreen() {
    <View style={{ gap: 12 }}><ActionButton title="Añadir ingreso" icon="add-circle-outline" onPress={() => setForm({ kind: 'income' })}/><ActionButton title="Registrar gasto" icon="receipt-outline" onPress={() => setForm({ kind: 'expense' })}/><ActionButton title="Registrar transferencia, préstamo o pago" secondary onPress={() => setForm({ kind: 'transfer' })}/></View>
     <Card>{[['Ingresos recibidos', summary.income], ['Gastos registrados', summary.expenses], ['Préstamos recibidos (no son ingresos)', summary.loans], ['Pagos de tarjeta o deuda', summary.payments], ['Compromisos pendientes registrados', summary.commitments]].map(([label, value]) => <View key={label} style={ui.between}><Body style={{ flex: 1 }}>{label}</Body><Body style={{ fontWeight: '700' }}>{formatMoney(value as number)}</Body></View>)}
      <Body muted>Disponible = ingresos + préstamos − gastos pagados sin crédito − pagos de deuda − aportaciones − compromisos pendientes. Las transferencias propias no alteran el total. Las compras con crédito consumen presupuesto; su pago reduce el disponible una sola vez.</Body>
-     {!data.commitments.length ? <Body muted>No hay facturas pendientes registradas. El registro de facturas estará disponible próximamente.</Body> : null}
+     {!data.commitments.length ? <Body muted>No hay facturas pendientes registradas. Añade una factura para preparar tus vencimientos.</Body> : null}
     </Card>
+    <SectionHeading title="Próximas facturas" action="Ver todas" onPress={() => router.push('/bills')}/>
+    <ActionButton title="Mis facturas" testID="open-bills" icon="calendar-outline" secondary onPress={() => router.push('/bills')}/>
+    {bills.filter(b => !b.voidedAt && outstanding(b)>0).slice(0,5).map(b => <Card key={b.id}><Body style={{fontWeight:'700'}}>{b.provider}</Body><Body>{b.dueDate} · {billStatus(b,localToday())}</Body><Body>Pendiente: {formatMoney(outstanding(b))}</Body></Card>)}
     <SectionHeading title="Distribución de gastos"/>
     <Distribution summary={summary}/>
     <SectionHeading title="Ingresos recurrentes"/>

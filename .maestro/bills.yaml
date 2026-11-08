@@ -1,0 +1,120 @@
+appId: com.edumoney.app
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Abrir Mi dinero"
+    timeout: 60000
+- tapOn: "Abrir Mi dinero"
+- scrollUntilVisible:
+    element:
+      id: "open-bills"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: "open-bills"
+- assertVisible: "Mis facturas"
+- tapOn:
+    id: "add-bill"
+- tapOn:
+    id: "bill-provider"
+- inputText: "Electric test"
+- tapOn:
+    text: "Proveedor"
+    index: 0
+- tapOn:
+    id: "bill-amount"
+- inputText: "100.00"
+- tapOn:
+    text: "Importe de factura.*"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: "bill-save"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: "bill-save"
+- scrollUntilVisible:
+    element: "Factura Electric test.*"
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage4-upcoming-light
+- tapOn: "Factura Electric test.*"
+- tapOn:
+    id: "bill-paid"
+- tapOn:
+    id: "bill-paid-amount"
+- eraseText
+- inputText: "40.00"
+- tapOn:
+    text: "Importe pagado.*"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: "bill-confirm-payment"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: "bill-confirm-payment"
+- scrollUntilVisible:
+    element: "Factura Electric test.*"
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- assertVisible: '.*Pendiente: \$60\.00'
+- takeScreenshot: stage4-partial
+- tapOn: "Factura Electric test.*"
+- tapOn:
+    id: "bill-paid"
+- scrollUntilVisible:
+    element:
+      id: "bill-confirm-payment"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: "bill-confirm-payment"
+- scrollUntilVisible:
+    element: "Pagadas"
+    direction: UP
+    timeout: 60000
+- tapOn: "Pagadas"
+- assertVisible: "Factura Electric test.*"
+- takeScreenshot: stage4-paid-light
+- tapOn:
+    id: "theme-picker-open"
+- tapOn: "Oscuro"
+- assertVisible:
+    id: "theme-dark"
+- takeScreenshot: stage4-paid-dark
+- tapOn: "Calendario"
+- scrollUntilVisible:
+    element: "Factura Electric test.*"
+    direction: DOWN
+    timeout: 60000
+- takeScreenshot: stage4-calendar-dark
+- stopApp
+- launchApp
+- tapOn: "Abrir Mi dinero"
+- scrollUntilVisible:
+    element: '\$100\.00'
+    direction: DOWN
+    timeout: 60000
+- assertVisible: '.*Gastos registrados.*|Gastos registrados'
+- takeScreenshot: stage4-money-after-payments
+- scrollUntilVisible:
+    element:
+      id: "open-bills"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: "open-bills"
+- tapOn: "Pagadas"
+- assertVisible: "Factura Electric test.*"
+- takeScreenshot: stage4-paid-reopened
