@@ -14,10 +14,14 @@ appId: com.edumoney.app
           visible: "Abrir Mi dinero"
           timeout: 60000
 - tapOn: "Abrir Mi dinero"
-- extendedWaitUntil:
-    visible: "Disponible estimado del mes"
+- scrollUntilVisible:
+    element: '\$0\.00'
+    direction: DOWN
     timeout: 30000
-- assertVisible: '\$0\.00'
+- scrollUntilVisible:
+    element: "Añadir ingreso"
+    direction: DOWN
+    timeout: 30000
 - tapOn: "Añadir ingreso"
 - tapOn:
     id: "movement-amount"
@@ -49,7 +53,7 @@ appId: com.edumoney.app
 - tapOn: "Guardar movimiento"
 - scrollUntilVisible:
     element: '\$989\.90'
-    direction: DOWN
+    direction: UP
     timeout: 30000
 - takeScreenshot: stage3-money-light
 - scrollUntilVisible:

@@ -78,12 +78,14 @@ export default function LedgerScreen() {
     return <Screen title="Mi dinero" demo={false} subtitle="Tus registros, solo en este dispositivo.">
   <ErrorNotice message={error}/>{notice ? <Card><Body>{notice}</Body></Card> : null}
   {!store ? <ActivityIndicator color={colors.accent} accessibilityLabel="Cargando registros cifrados"/> : <>
-   <Choices label="Vista de Mi dinero" value={segment} options={[['summary', 'Resumen'], ['history', 'Historial'], ['categories', 'Categorías y presupuesto']]} onChange={setSegment}/>
-   <View style={{ gap: 12 }}><ActionButton title="Añadir ingreso" icon="add-circle-outline" onPress={() => setForm({ kind: 'income' })}/><ActionButton title="Registrar gasto" icon="receipt-outline" onPress={() => setForm({ kind: 'expense' })}/><ActionButton title="Registrar transferencia, préstamo o pago" secondary onPress={() => setForm({ kind: 'transfer' })}/></View>
-   {segment !== 'history' ? <Field label="Mes del resumen y presupuesto (AAAA-MM)" value={month} onChangeText={setMonth}/> : null}
+   <Choices label="Vista de Mi dinero" value={segment} options={[['summary', 'Resumen'], ['history', 'Historial'], ['categories', 'Categorías']]} onChange={setSegment}/>
+
+   {segment !== 'summary' ? <View style={{ gap: 12 }}><ActionButton title="Añadir ingreso" icon="add-circle-outline" onPress={() => setForm({ kind: 'income' })}/><ActionButton title="Registrar gasto" icon="receipt-outline" onPress={() => setForm({ kind: 'expense' })}/><ActionButton title="Registrar transferencia, préstamo o pago" secondary onPress={() => setForm({ kind: 'transfer' })}/></View> : null}
+   {segment !== 'history' ? <Field label="Mes (AAAA-MM)" value={month} onChangeText={setMonth}/> : null}
    {segment !== 'history' ? <ErrorNotice message={summaryError}/> : null}
    {segment === 'summary' && summary ? <>
     <Card style={{ backgroundColor: colors.mint }}><Body style={{ fontWeight: '700' }}>Disponible estimado del mes</Body><Body style={{ fontSize: 32, fontWeight: '800' }}>{formatMoney(summary.available)}</Body><Body muted>Estimación basada en los registros del mes completo, incluidas fechas futuras. Parte de cero; no representa el saldo de tus cuentas bancarias.</Body></Card>
+   <View style={{ gap: 12 }}><ActionButton title="Añadir ingreso" icon="add-circle-outline" onPress={() => setForm({ kind: 'income' })}/><ActionButton title="Registrar gasto" icon="receipt-outline" onPress={() => setForm({ kind: 'expense' })}/><ActionButton title="Registrar transferencia, préstamo o pago" secondary onPress={() => setForm({ kind: 'transfer' })}/></View>
     <Card>{[['Ingresos recibidos', summary.income], ['Gastos registrados', summary.expenses], ['Préstamos recibidos (no son ingresos)', summary.loans], ['Pagos de tarjeta o deuda', summary.payments], ['Compromisos pendientes registrados', summary.commitments]].map(([label, value]) => <View key={label} style={ui.between}><Body style={{ flex: 1 }}>{label}</Body><Body style={{ fontWeight: '700' }}>{formatMoney(value as number)}</Body></View>)}
      <Body muted>Disponible = ingresos + préstamos − gastos pagados sin crédito − pagos de deuda − aportaciones − compromisos pendientes. Las transferencias propias no alteran el total. Las compras con crédito consumen presupuesto; su pago reduce el disponible una sola vez.</Body>
      {!data.commitments.length ? <Body muted>No hay facturas pendientes registradas. El registro de facturas se incorporará en la Etapa 4.</Body> : null}
