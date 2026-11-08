@@ -38,3 +38,12 @@
 - Ajuste de barra de estado y apariencia nativa al cambiar de tema.
 - Automatización adaptada a metadatos del selector iOS y avisos de Quickstep del emulador Android.
 - Galería en Markdown para revisar ambos temas sin descargar ZIP.
+
+## Etapa 3 — Mi dinero y presupuesto personal
+
+- Libro nativo cifrado inicialmente vacío; vista web y otras pestañas conservan su demostración identificada.
+- Ingresos manuales, extraordinarios y recurrentes con confirmación; gastos, transferencias, préstamos y pagos diferenciados.
+- Historial filtrable, correcciones auditadas, eliminación reversible y prevención de duplicados.
+- Categorías personalizables, presupuesto mensual y gráficas calculadas con datos registrados.
+- Migración aditiva a esquema 2, controles de versión y protección de vínculos.
+- Campos de revisión contributiva opcionales sin inferir deducibilidad ni calcular planillas.

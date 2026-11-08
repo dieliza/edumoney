@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '../design/ThemeProvider';
 import { ActionButton, Body, Card, IconBadge, Screen } from '../ui/components';
+import { isPreview } from '../modules/money/localStore';
 import { Brand } from '../ui/Brand';
 export default function Welcome() {
   const { name, colors } = useTheme();
@@ -15,8 +16,8 @@ export default function Welcome() {
         <Body style={{ textAlign: 'center', fontSize: 21, lineHeight: 30, color: name === 'dark' ? fixed.white : colors.text }}>Toma el control de tu dinero con decisiones informadas</Body>
       </LinearGradient>
       <View style={{ width: '100%', gap: 14 }}>
-        <ActionButton testID="enter-demo" title="Explorar demostración" icon="arrow-forward" onPress={() => router.replace('/(tabs)/money')} />
-        <Body style={{ textAlign: 'center', color: name === 'dark' ? fixed.welcomeMutedDark : colors.muted, fontSize: 14 }}>Vista preliminar con datos ficticios. No necesitas crear una cuenta.</Body>
+        <ActionButton testID="enter-demo" title={isPreview ? "Explorar demostración" : "Abrir Mi dinero"} icon="arrow-forward" onPress={() => router.replace('/(tabs)/money')} />
+        <Body style={{ textAlign: 'center', color: name === 'dark' ? fixed.welcomeMutedDark : colors.muted, fontSize: 14 }}>{isPreview ? "Vista preliminar con datos ficticios. No necesitas crear una cuenta." : "Registra tu dinero en este dispositivo, sin crear una cuenta. Las demás pestañas siguen en demostración."}</Body>
       </View>
       <Card style={{ width: '100%', gap: 18 }}>
         <Body style={{ fontSize: 19, fontWeight: '700' }}>Tu tranquilidad va primero</Body>

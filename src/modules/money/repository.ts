@@ -1,9 +1,8 @@
-import type { SQLiteDatabase } from 'expo-sqlite';
 import type { Movement } from '../../core/models';
 import { cents } from '../../core/money';
 
 export class MovementRepository {
-  constructor(private readonly db: Pick<SQLiteDatabase, 'runAsync'>) {}
+  constructor(private readonly db: { runAsync(sql: string, ...params: (string | number | null)[]): Promise<unknown> }) {}
   /** La misma operación conserva su idempotencyKey en cada reintento. */
   async create(movement: Movement): Promise<void> {
     if (cents(movement.amountCents) <= 0) throw new Error('El importe debe ser positivo');

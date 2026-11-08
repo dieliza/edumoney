@@ -1,0 +1,110 @@
+appId: com.edumoney.app
+---
+- launchApp:
+    clearState: true
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: "Quickstep isn't responding"
+          commands:
+            - tapOn: "Close app"
+      - extendedWaitUntil:
+          visible: "Abrir Mi dinero"
+          timeout: 60000
+- tapOn: "Abrir Mi dinero"
+- extendedWaitUntil:
+    visible: "Disponible estimado del mes"
+    timeout: 30000
+- assertVisible: "$0.00"
+- tapOn: "Añadir ingreso"
+- tapOn:
+    id: "movement-amount"
+- inputText: "1000.10"
+- tapOn:
+    id: "movement-description"
+- inputText: "Salary native test"
+- scrollUntilVisible:
+    element: "Guardar movimiento"
+    direction: DOWN
+    timeout: 30000
+- tapOn: "Guardar movimiento"
+- assertVisible: "Movimiento guardado en este dispositivo."
+- tapOn: "Registrar gasto"
+- tapOn:
+    id: "movement-amount"
+- inputText: "10.20"
+- tapOn:
+    id: "movement-description"
+- inputText: "Food native test"
+- scrollUntilVisible:
+    element: "Guardar movimiento"
+    direction: DOWN
+    timeout: 30000
+- tapOn: "Guardar movimiento"
+- scrollUntilVisible:
+    element: "$989.90"
+    direction: DOWN
+    timeout: 30000
+- takeScreenshot: stage3-money-light
+- scrollUntilVisible:
+    element:
+      id: "theme-picker-open"
+    direction: UP
+    timeout: 30000
+- tapOn:
+    id: "theme-picker-open"
+- tapOn: "Oscuro"
+- scrollUntilVisible:
+    element: "$989.90"
+    direction: DOWN
+    timeout: 30000
+- takeScreenshot: stage3-money-dark
+- stopApp
+- launchApp
+- tapOn: "Abrir Mi dinero"
+- assertVisible:
+    id: "theme-dark"
+- scrollUntilVisible:
+    element: "$989.90"
+    direction: DOWN
+    timeout: 30000
+- scrollUntilVisible:
+    element: "Historial"
+    direction: UP
+    timeout: 30000
+- tapOn: "Historial"
+- scrollUntilVisible:
+    element: "Food native test"
+    direction: DOWN
+    timeout: 30000
+- tapOn: "Food native test"
+- tapOn: "Corregir movimiento"
+- tapOn:
+    id: "movement-amount"
+- eraseText: 20
+- inputText: "10.10"
+- scrollUntilVisible:
+    element: "Motivo de la corrección"
+    direction: DOWN
+    timeout: 30000
+- tapOn: "Motivo de la corrección"
+- inputText: "Receipt correction"
+- scrollUntilVisible:
+    element: "Guardar corrección"
+    direction: DOWN
+    timeout: 30000
+- tapOn: "Guardar corrección"
+- assertVisible: "Food native test"
+- takeScreenshot: stage3-history-corrected
+- scrollUntilVisible:
+    element: "Resumen"
+    direction: UP
+    timeout: 30000
+- tapOn: "Resumen"
+- scrollUntilVisible:
+    element: "$990.00"
+    direction: DOWN
+    timeout: 30000
+- takeScreenshot: stage3-money-corrected
