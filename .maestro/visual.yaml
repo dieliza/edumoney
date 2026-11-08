@@ -1,0 +1,58 @@
+appId: com.edumoney.app
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Explorar demostración"
+    timeout: 60000
+- tapOn: "Explorar demostración"
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: "Quickstep isn't responding"
+          commands:
+            - tapOn: "Close app"
+      - extendedWaitUntil:
+          visible: "Disponible estimado"
+          timeout: 30000
+- tapOn:
+    id: "theme-picker-open"
+- tapOn: "Oscuro"
+- assertVisible:
+    id: "theme-dark"
+- takeScreenshot: stage2-dark-money
+- tapOn: "Mis metas"
+- assertVisible: "Comprar una casa"
+- takeScreenshot: stage2-dark-goals
+- tapOn: "Aprende"
+- assertVisible: "Conceptos básicos"
+- takeScreenshot: stage2-dark-learn
+- tapOn: "Mi progreso"
+- assertVisible: "¡Vas por buen camino!"
+- takeScreenshot: stage2-dark-progress
+- stopApp
+- launchApp
+- tapOn:
+    id: "theme-picker-open"
+- assertVisible:
+    id: "theme-choice-dark"
+    checked: true
+- tapOn: "Claro"
+- assertVisible:
+    id: "theme-light"
+- tapOn: "Explorar demostración"
+- takeScreenshot: stage2-light-money
+- tapOn: "Mis metas"
+- assertVisible: "Comprar una casa"
+- takeScreenshot: stage2-light-goals
+- tapOn: "Aprende"
+- assertVisible: "Conceptos básicos"
+- takeScreenshot: stage2-light-learn
+- tapOn: "Mi progreso"
+- assertVisible: "¡Vas por buen camino!"
+- takeScreenshot: stage2-light-progress
+- tapOn:
+    id: "theme-picker-open"
+- tapOn: "Automático"

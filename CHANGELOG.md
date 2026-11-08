@@ -21,3 +21,12 @@
 - iOS compilado con firma local de Xcode y permisos de llavero; primera apertura/reapertura aprobadas en simulador.
 - Verificación iOS directa de cabecera cifrada, rechazo de lectura sin clave, huella estable y exclusión de backup.
 - Evidencias y resultados en docs/stages/01.md; pruebas físicas y recuperación siguen pendientes.
+
+## Etapa 2 — Diseño visual y navegación
+
+- Bienvenida con lema oficial y acceso a demostración sin cuenta.
+- Cuatro pestañas y datos ficticios visibles en ambos temas.
+- Temas claro/oscuro/automático con preferencia local persistente y controles accesibles.
+- Tokens, componentes reutilizables, adaptación de anchos y pruebas de navegación/contraste.
+- Conservación de apertura cifrada nativa; sin conexión de funciones financieras.
+- Logo original pendiente de entrega; no se recrea el logo de los bocetos.

@@ -7,7 +7,10 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.edumoney.app"
+      "bundleIdentifier": "com.edumoney.app",
+      "infoPlist": {
+        "RCTAsyncStorageExcludeFromBackup": true
+      }
     },
     "android": {
       "predictiveBackGestureEnabled": false,
@@ -27,14 +30,21 @@
           "configureAndroidBackup": false
         }
       ],
-      "./plugins/withLocalOnly.cjs"
+      "./plugins/withLocalOnly.cjs",
+      "expo-router"
     ],
     "updates": {
       "enabled": false
     },
     "platforms": [
       "ios",
-      "android"
-    ]
+      "android",
+      "web"
+    ],
+    "scheme": "edumoney",
+    "web": {
+      "bundler": "metro",
+      "output": "single"
+    }
   }
 }
