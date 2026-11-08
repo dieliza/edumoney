@@ -1,0 +1,4 @@
+import type { FutureEconomicScenario } from './domain';
+/** Plantillas sin números: no se habilitan hasta confirmar período, fuentes y reglas. */
+export const futureScenarios:FutureEconomicScenario[]=(['favorable','intermediate','adverse'] as const).map(name=>({name,inflationBps:null,assumptions:['Pendiente de elegir horizonte, inflación y variación de ingresos/gastos. No es una predicción.'],sources:[],status:'pending_validation'}));
+export const candidateInflationSources=[{name:'BLS — Consumer Price Index',url:'https://www.bls.gov/cpi/',use:'Seleccionar serie, período y fecha de consulta; no asumir que representa la canasta personal de Puerto Rico.'},{name:'Departamento del Trabajo y Recursos Humanos de Puerto Rico',url:'https://www.trabajo.pr.gov/',use:'Verificar publicación, metodología, período y vigencia antes de usar una cifra local.'}];

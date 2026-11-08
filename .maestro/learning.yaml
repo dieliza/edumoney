@@ -1,0 +1,298 @@
+appId: com.edumoney.app
+---
+- launchApp:
+    clearState: true
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: "Quickstep isn't responding"
+          commands:
+            - tapOn: "Close app"
+      - extendedWaitUntil:
+          visible: "Abrir Mi dinero"
+          timeout: 60000
+- tapOn: "Abrir Mi dinero"
+- tapOn: "Aprende"
+- tapOn:
+    id: lesson-budget
+- scrollUntilVisible:
+    element:
+      id: lesson-read
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: lesson-read
+- extendedWaitUntil:
+    visible: "(Lectura con la voz|No hay una voz|La lectura integrada|No se pudo).*"
+    timeout: 60000
+- takeScreenshot: stage7-voice-capability
+- tapOn: "Detener lectura"
+- scrollUntilVisible:
+    element: '\$300'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: '\$300'
+- scrollUntilVisible:
+    element:
+      id: lesson-check
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: lesson-check
+- extendedWaitUntil:
+    visible: "¡Buen paso! Lección completada.*"
+    timeout: 60000
+- takeScreenshot: stage7-lesson-light
+- scrollUntilVisible:
+    element: 'Cerrar ficha'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Cerrar ficha"
+- scrollUntilVisible:
+    element: '1 de 10 lecciones completadas'
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage7-learn-light
+- scrollUntilVisible:
+    element:
+      id: open-decisions
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: open-decisions
+- scrollUntilVisible:
+    element: 'Préstamo'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Préstamo"
+- scrollUntilVisible:
+    element:
+      id: decision-amount
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: decision-amount
+- inputText: '1200.00'
+- tapOn:
+    text: 'Principal solicitado'
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: decision-financedFees
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: decision-financedFees
+- inputText: '0.00'
+- tapOn:
+    text: 'Cargos que se financian.*'
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: decision-extra
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: decision-extra
+- inputText: '0.00'
+- tapOn:
+    text: 'Costos adicionales mensuales.*'
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: decision-upfront
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: decision-upfront
+- inputText: '0.00'
+- tapOn:
+    text: 'Cargos iniciales pagados aparte.*'
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: decision-rate
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: decision-rate
+- inputText: '0'
+- tapOn:
+    text: 'Tasa nominal anual fija.*'
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: decision-months
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: decision-months
+- inputText: '12'
+- tapOn:
+    text: 'Plazo u horizonte en meses.*'
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: decision-margin
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: decision-margin
+- inputText: '500.00'
+- tapOn:
+    text: 'Margen mensual elegido.*'
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: decision-calculate
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: decision-calculate
+- scrollUntilVisible:
+    element: 'Compromiso mensual estimado: \$100\.00'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage7-loan-light
+- scrollUntilVisible:
+    element:
+      id: decision-name
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: decision-name
+- inputText: 'Loan A'
+- tapOn:
+    text: 'Nombre del escenario para guardar'
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: decision-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: decision-save
+- tapOn:
+    id: theme-picker-open
+- tapOn: "Oscuro"
+- scrollUntilVisible:
+    element:
+      id: decision-months
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: decision-months
+- eraseText
+- inputText: '24'
+- tapOn:
+    text: 'Plazo u horizonte en meses.*'
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: decision-calculate
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: decision-calculate
+- scrollUntilVisible:
+    element: 'Compromiso mensual estimado: \$50\.00'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage7-loan-dark
+- scrollUntilVisible:
+    element:
+      id: decision-name
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: decision-name
+- eraseText
+- inputText: 'Loan B'
+- tapOn:
+    text: 'Nombre del escenario para guardar'
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: decision-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: decision-save
+- scrollUntilVisible:
+    element: 'A: Loan A'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "A: Loan A"
+- scrollUntilVisible:
+    element: 'B: Loan B'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "B: Loan B"
+- scrollUntilVisible:
+    element:
+      id: decision-compare
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: decision-compare
+- scrollUntilVisible:
+    element: 'Qué cambia de A a B'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage7-comparison-dark
+- stopApp
+- launchApp
+- tapOn: "Abrir Mi dinero"
+- tapOn: "Aprende"
+- assertVisible: "1 de 10 lecciones completadas"
+- takeScreenshot: stage7-learn-reopened-dark
+- scrollUntilVisible:
+    element:
+      id: open-decisions
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: open-decisions
+- scrollUntilVisible:
+    element: 'Cargar escenario: Loan A'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage7-scenarios-reopened-dark
+- tapOn: "Cargar escenario: Loan A"
+- scrollUntilVisible:
+    element: 'Compromiso mensual estimado: \$100\.00'
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage7-loan-reopened-dark

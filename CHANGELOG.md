@@ -103,3 +103,11 @@
 - Recorridos Android sin conexión e iOS aprobados: creación, aportación única, cambio de objetivo, progreso y plan persistentes al reabrir.
 - Cifrado, rechazo de lectura sin clave y exclusión de respaldo comprobados en iOS.
 - Galería de 20 capturas y guía de uso disponibles; etapa 7 sin iniciar y main sin modificar.
+
+## Etapa 7 — Aprende y Antes de decidir
+
+- Diez microlecciones con ejercicios, explicación y progreso versionado persistente.
+- Seis simuladores locales: vehículo, vivienda, préstamo, gasto recurrente, ahorro y fondo de emergencia.
+- Escenarios independientes con comparación, inputs y fórmula versionada, sin movimientos financieros.
+- Lectura iOS con voz básica disponible; alternativa textual cuando no se puede verificar una voz local.
+- Migración 5→6 y 23 pruebas nuevas; 117 pruebas totales aprobadas.

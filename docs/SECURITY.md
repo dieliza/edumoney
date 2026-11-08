@@ -87,3 +87,10 @@ La [verificación nativa de Etapa 6](stages/06.md) aprobó en Android e iOS. Des
 aportación y plan, iOS conservó cabecera cifrada, rechazó SQLite sin clave y mantuvo la misma huella al reabrir;
 la exclusión de respaldo también se comprobó. Android completó el recorrido con Wi-Fi y datos desactivados.
 Las capturas contienen exclusivamente datos ficticios; no se publican bases ni claves.
+
+## Etapa 7
+
+Avance, intentos y escenarios se almacenan en SQLCipher con la cola compartida; los cálculos no escriben movimientos.
+`expo-speech` se usa únicamente para contenido editorial de lecciones mediante una voz española básica disponible en iOS.
+No se envían registros personales a síntesis de voz ni se añade un servicio remoto. En Android no se inicia síntesis porque la API no permite comprobar si requiere red.
+La aplicación conserva texto y explicaciones si la voz no está disponible. Sin permisos nuevos, cuentas, IA ni push remoto.
