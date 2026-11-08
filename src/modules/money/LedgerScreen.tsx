@@ -84,11 +84,11 @@ export default function LedgerScreen() {
    {segment !== 'history' ? <Field label="Mes (AAAA-MM)" value={month} onChangeText={setMonth}/> : null}
    {segment !== 'history' ? <ErrorNotice message={summaryError}/> : null}
    {segment === 'summary' && summary ? <>
-    <Card style={{ backgroundColor: colors.mint }}><Body style={{ fontWeight: '700' }}>Disponible estimado del mes</Body><Body style={{ fontSize: 32, fontWeight: '800' }}>{formatMoney(summary.available)}</Body><Body muted>Estimación basada en los registros del mes completo, incluidas fechas futuras. Parte de cero; no representa el saldo de tus cuentas bancarias.</Body></Card>
+    <Card style={{ backgroundColor: colors.mint }}><Body style={{ fontWeight: '700' }}>Disponible estimado del mes</Body><Body style={{ fontSize: 32, lineHeight: 40, fontWeight: '800' }}>{formatMoney(summary.available)}</Body><Body muted>Estimación basada en los registros del mes completo, incluidas fechas futuras. Parte de cero; no representa el saldo de tus cuentas bancarias.</Body></Card>
    <View style={{ gap: 12 }}><ActionButton title="Añadir ingreso" icon="add-circle-outline" onPress={() => setForm({ kind: 'income' })}/><ActionButton title="Registrar gasto" icon="receipt-outline" onPress={() => setForm({ kind: 'expense' })}/><ActionButton title="Registrar transferencia, préstamo o pago" secondary onPress={() => setForm({ kind: 'transfer' })}/></View>
     <Card>{[['Ingresos recibidos', summary.income], ['Gastos registrados', summary.expenses], ['Préstamos recibidos (no son ingresos)', summary.loans], ['Pagos de tarjeta o deuda', summary.payments], ['Compromisos pendientes registrados', summary.commitments]].map(([label, value]) => <View key={label} style={ui.between}><Body style={{ flex: 1 }}>{label}</Body><Body style={{ fontWeight: '700' }}>{formatMoney(value as number)}</Body></View>)}
      <Body muted>Disponible = ingresos + préstamos − gastos pagados sin crédito − pagos de deuda − aportaciones − compromisos pendientes. Las transferencias propias no alteran el total. Las compras con crédito consumen presupuesto; su pago reduce el disponible una sola vez.</Body>
-     {!data.commitments.length ? <Body muted>No hay facturas pendientes registradas. El registro de facturas se incorporará en la Etapa 4.</Body> : null}
+     {!data.commitments.length ? <Body muted>No hay facturas pendientes registradas. El registro de facturas estará disponible próximamente.</Body> : null}
     </Card>
     <SectionHeading title="Distribución de gastos"/>
     <Distribution summary={summary}/>
@@ -98,7 +98,7 @@ export default function LedgerScreen() {
      {s.active && s.nextDate <= localToday() && !busy ? <ActionButton title={`Confirmar cobro: ${s.description}`} onPress={() => void action(() => store.confirmSchedule(s.id, s.nextDate, newId(), localToday()), 'Cobro registrado. Los siguientes permanecen previstos.')}/> : null}
      {!busy ? <ActionButton title={s.active ? `Pausar: ${s.description}` : `Reanudar: ${s.description}`} secondary onPress={() => void action(() => store.toggleSchedule(s.id, !s.active), 'Programación actualizada. Los movimientos anteriores se conservan.')}/> : null}
     </Card>)}
-    <Card><Body style={{ fontWeight: '700' }}>Para mi contable</Body><Body>En cada movimiento puedes marcar revisión, uso personal/comercial/mixto, bruto y retención. La marca no confirma deducibilidad. El expediente contributivo se desarrollará en su etapa.</Body></Card>
+    <Card><Body style={{ fontWeight: '700' }}>Para mi contable</Body><Body>En cada movimiento puedes marcar revisión, uso personal/comercial/mixto, bruto y retención. La marca no confirma deducibilidad. La organización del expediente contributivo estará disponible próximamente.</Body></Card>
    </> : null}
    {segment === 'history' ? <>
     <Field label="Buscar descripción" value={query} onChangeText={v => { setQuery(v); setLimit(50); }}/>
