@@ -1,0 +1,18 @@
+{
+  "run": 42696892099,
+  "job": 129431031322,
+  "artifact": 13709528720,
+  "result": "passed",
+  "applicationCommit": "3f03c59",
+  "procedureCommit": "34355138bd27b10ceb17da1a9607d610f5e2a2dd",
+  "device": "Pixel 6 emulator, API 35",
+  "network": "wifi and mobile data disabled",
+  "expenseCents": 5500,
+  "commercialCents": 2063,
+  "firstProjectExpenseCents": 3300,
+  "firstProjectCommercialCents": 1238,
+  "receiptName": "RECIBO-FICTICIO-MOVIL",
+  "receiptNote": "NOTA-FICTICIA-RECIBO-PERSISTE",
+  "sameTotalsAndReceiptAfterRestart": true,
+  "scope": "manual receipt, no camera/OCR/image copy"
+}

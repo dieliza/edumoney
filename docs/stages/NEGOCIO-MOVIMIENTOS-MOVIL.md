@@ -22,3 +22,12 @@ Nuevo escenario `business-ledger` en el workflow registrado, que omite las prueb
 ### Corrección del guion Android
 
 [42696209452](https://github.com/dieliza/edumoney/actions/runs/42696209452) falló antes de introducir datos: el alias YAML `id001` generado para un selector fue interpretado como texto por Maestro. Se expanden los selectores sin alias; la aplicación no cambia. Repetición [42696892099](https://github.com/dieliza/edumoney/actions/runs/42696892099), procedimiento `3435513`. Primer intento incluido en el presupuesto.
+
+
+### Resultado Android
+
+[42696892099](https://github.com/dieliza/edumoney/actions/runs/42696892099), procedimiento `3435513`, aprobado. Emulador Pixel 6 API 35, con Wi-Fi y datos desactivados: total $55.00, comercial $20.63; primer proyecto $33.00 y comercial $12.38; retorno a vista del titular; recibo manual y nota exacta conservados al reiniciar. Las capturas y aserciones se guardan en evidencia, sin bases ni claves.
+
+### Seguimiento iOS
+
+[42698356510](https://github.com/dieliza/edumoney/actions/runs/42698356510), procedimiento `fddf598`, en curso. Se reutilizan desplazamientos por el margen para evitar encabezado y barra inferior, comprobados en los recorridos previos de la misma navegación. No se repiten las pruebas unitarias. Presupuesto conservador previsto: 16 casos, incluyendo el intento Android fallido y siete comprobaciones internas XCTest si se ejecutan.

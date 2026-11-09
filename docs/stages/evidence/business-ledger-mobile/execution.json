@@ -16,11 +16,18 @@
     {
       "run": 42696892099,
       "platform": "android",
+      "status": "passed",
+      "casesExecuted": 1
+    },
+    {
+      "run": 42698356510,
+      "platform": "ios",
       "status": "in_progress",
       "casesExecuted": null
     }
   ],
-  "casesCompleted": 7,
+  "casesCompleted": 8,
   "notes": "Android first to validate existing form selectors. Add every retry and iOS XCTest driver cases to the conservative count.",
-  "casesIncludingActiveAttempts": 8
+  "casesIncludingActiveAttempts": 9,
+  "conservativeIncludingExpectedIOSDriverCases": 16
 }

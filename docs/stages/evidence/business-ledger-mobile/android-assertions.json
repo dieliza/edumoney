@@ -1,0 +1,508 @@
+[
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Abrir Mi dinero",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794257607366,
+      "duration": 2590,
+      "sequenceNumber": 3,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Abrir Mi dinero",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Movimientos de Negocio",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794257685888,
+      "duration": 75,
+      "sequenceNumber": 29,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Movimientos de Negocio",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^Gastos completos registrados: \\$55\\.00$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794257792970,
+      "duration": 112,
+      "sequenceNumber": 67,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^Gastos completos registrados: \\$55\\.00$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^Parte comercial identificada: \\$20\\.63 · Gastos de uso pendiente: \\$0\\.00$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794257793199,
+      "duration": 76,
+      "sequenceNumber": 69,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^Parte comercial identificada: \\$20\\.63 · Gastos de uso pendiente: \\$0\\.00$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^Gastos completos registrados: \\$33\\.00$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794257805183,
+      "duration": 107,
+      "sequenceNumber": 74,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^Gastos completos registrados: \\$33\\.00$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^Parte comercial identificada: \\$12\\.38 · Gastos de uso pendiente: \\$0\\.00$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794257805400,
+      "duration": 110,
+      "sequenceNumber": 76,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^Parte comercial identificada: \\$12\\.38 · Gastos de uso pendiente: \\$0\\.00$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^Gastos completos registrados: \\$55\\.00$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794257817159,
+      "duration": 111,
+      "sequenceNumber": 81,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^Gastos completos registrados: \\$55\\.00$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^Parte comercial identificada: \\$20\\.63 · Gastos de uso pendiente: \\$0\\.00$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794257817347,
+      "duration": 107,
+      "sequenceNumber": 83,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^Parte comercial identificada: \\$20\\.63 · Gastos de uso pendiente: \\$0\\.00$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Ver recibo: RECIBO-FICTICIO-MOVIL.*",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794257905002,
+      "duration": 110,
+      "sequenceNumber": 107,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Ver recibo: RECIBO-FICTICIO-MOVIL.*",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Abrir Mi dinero",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794257906740,
+      "duration": 2430,
+      "sequenceNumber": 111,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Abrir Mi dinero",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Movimientos de Negocio",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794257929222,
+      "duration": 69,
+      "sequenceNumber": 117,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Movimientos de Negocio",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^Gastos completos registrados: \\$55\\.00$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794257933734,
+      "duration": 107,
+      "sequenceNumber": 119,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^Gastos completos registrados: \\$55\\.00$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^Parte comercial identificada: \\$20\\.63 · Gastos de uso pendiente: \\$0\\.00$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794257933954,
+      "duration": 111,
+      "sequenceNumber": 121,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^Parte comercial identificada: \\$20\\.63 · Gastos de uso pendiente: \\$0\\.00$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Comprobante comercial",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794257951030,
+      "duration": 94,
+      "sequenceNumber": 125,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Comprobante comercial",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^RECIBO-FICTICIO-MOVIL$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794257951125,
+      "duration": 96,
+      "sequenceNumber": 126,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^RECIBO-FICTICIO-MOVIL$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^NOTA-FICTICIA-RECIBO-PERSISTE$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794257951282,
+      "duration": 95,
+      "sequenceNumber": 128,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^NOTA-FICTICIA-RECIBO-PERSISTE$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  }
+]
