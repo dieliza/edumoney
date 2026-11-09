@@ -27,3 +27,7 @@ Se añade un botón accesible «Ocultar teclado» fuera del desplazamiento de la
 La ejecución 42641895603 compiló el código actual a70f569. Falló antes de guardar: el campo estaba vacío y sin foco. La jerarquía sitúa `closure-notes` en y=141…189 y el control fijo del encabezado en y=132…180: el toque por identificador recaía en la zona superpuesta. [Captura](evidence/repair-iosqa10/ios-first-repair-occluded.png) y [coordenadas/estado originales](evidence/repair-iosqa10/occlusion.json). No se atribuye este fallo a SQLite.
 
 Se ajusta el recorrido iOS para revelar el campo mediante un desplazamiento por el margen exterior, verificar su posición bajo el encabezado y comprobar foco antes de borrar/escribir. Se conserva la aserción exacta. La siguiente repetición reutiliza únicamente el binario actual de 42641895603, sin una nueva compilación ni reutilizar binarios anteriores a las reparaciones.
+
+## Verificación del campo revelado y limitación del driver
+
+La ejecución 42644597524 confirma que el desplazamiento deja el campo visible en y=366…414, con cursor y teclado activos. El driver informa `focused=false` en el UITextView, por lo que esa comprobación auxiliar no es fiable en esta combinación iOS/Maestro. Se conserva la verificación por foco en Android y, en iOS, se exige la escritura exacta antes/después de cerrar teclado y tras reiniciar. [Captura con cursor activo](evidence/repair-iosqa10/ios-visible-caret.png). Se reutiliza el mismo binario a70f569, sin cambiar el código ni los datos para hacer pasar las comprobaciones.

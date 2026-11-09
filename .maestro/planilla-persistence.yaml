@@ -51,9 +51,15 @@ appId: com.edumoney.app
     id: closure-notes
 - waitForAnimationToEnd:
     timeout: 3000
-- assertVisible:
-    id: closure-notes
-    focused: true
+# iOS exposes focused=false on UITextView even with its caret/keyboard visible.
+# Its proof of input is the exact text assertion before and after keyboard dismissal.
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - assertVisible:
+          id: closure-notes
+          focused: true
 - eraseText
 - inputText: "Cierre ficticio de prueba"
 - assertVisible: "^Cierre ficticio de prueba$"
@@ -79,9 +85,15 @@ appId: com.edumoney.app
     id: closure-reason
 - waitForAnimationToEnd:
     timeout: 3000
-- assertVisible:
-    id: closure-reason
-    focused: true
+# iOS exposes focused=false on UITextView even with its caret/keyboard visible.
+# Its proof of input is the exact text assertion before and after keyboard dismissal.
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - assertVisible:
+          id: closure-reason
+          focused: true
 - eraseText
 - inputText: "Prueba ficticia"
 - assertVisible: "^Prueba ficticia$"
