@@ -19,6 +19,7 @@ export function validateCollection(c:SUTCollection,today:string){
  if(!validDate(c.date)||c.date>today||!['merchant','marketplace','pending'].includes(c.actor)||!text(c.reference,240)||!text(c.note,2000,true))throw new UserInputError('Revisa fecha no futura, responsable y nota del registro de IVU.');
  for(const v of [c.baseCents,c.collectedCents,c.stateCents,c.municipalCents])optionalMoney(v);
  if(c.stateCents!==null&&c.municipalCents!==null)cents(Number(BigInt(c.stateCents)+BigInt(c.municipalCents)));
+ if(c.collectedCents!==null&&BigInt(c.stateCents??0)+BigInt(c.municipalCents??0)>BigInt(c.collectedCents))throw new UserInputError('Los componentes conocidos del IVU no pueden exceder el total confirmado.');
  if(c.collectedCents!==null&&c.stateCents!==null&&c.municipalCents!==null&&BigInt(c.stateCents)+BigInt(c.municipalCents)!==BigInt(c.collectedCents))throw new UserInputError('IVU estatal más municipal debe coincidir con el total confirmado.');
 }
 export function validateProvider(p:Provider){checkId(p.id);if(!text(p.name,200,true)||!text(p.reference,120,true)||!Object.hasOwn(providerLabels,p.classification)||!text(p.notes,2000))throw new UserInputError('Indica nombre legal, referencia local única y clasificación del proveedor.');}

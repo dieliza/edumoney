@@ -24,6 +24,12 @@ const collection=(patch:Partial<SUTCollection>={}):SUTCollection=>({id:'c1',hold
 const obligation=(patch:Partial<ObligationRecord>={}):ObligationRecord=>({id:'r1',holderId:'h',providerId:null,flow:'ivu',kind:'remittance',form:'deposit',period:'2026-10',municipality:'',scope:'state',amountCents:10500,status:'confirmed',date:today(),reference:'REMESA-FICTICIA-1',note:'Pago ficticio confirmado',dueDate:null,dueSource:'',...patch});
 const relief=(patch:Partial<Relief>={}):Relief=>({id:'r',providerId:'v',kind:'full',validFrom:'2026-01-01',validTo:'2026-12-31',reference:'CERTIFICADO-FICTICIO',documentId:null,...patch});
 const drop12='DROP TABLE business_obligation_records; DROP TABLE business_contractor_payments; DROP TABLE business_contractor_reliefs; DROP TABLE business_contractors; DROP TABLE business_sut_collections; DROP TABLE business_sut_offers;';
+async function linkedEntries(ledger:MoneyStore){
+ const business=new BusinessLedgerStore(ledger,today);
+ const common={holderId:'h',date:'2026-10-01',description:'Movimiento ficticio vinculado',paymentMethod:'bank',existingMovementId:null,expectedMovementVersion:null,useKind:'business' as const,businessBps:null,justification:'Ficticio',cpaStatus:'pending' as const,confirmSimilar:false};
+ await business.save({...common,id:'ingreso',kind:'income',amountCents:111500,grossCents:100000,commissionCents:0,refundCents:0,ivuCents:11500,allocations:[{projectId:'h-p1',amountCents:111500}]});
+ await business.save({...common,id:'gasto',kind:'expense',amountCents:30000,grossCents:null,commissionCents:null,refundCents:null,ivuCents:null,allocations:[{projectId:'h-p1',amountCents:30000}]});
+}
 describe('Negocio 3: simuladores y registros locales',()=>{
  it('ordina 300 + 400 por pagador/proveedor/año: retiene 20 solo en el segundo',async()=>{const {db,ledger,store}=await setup();try{await store.saveProvider(provider(),0);expect((await store.savePayment(payment())).expectedWithheldCents).toBe(0);const second=payment({id:'p2',date:'2026-10-02',servicesCents:40000,actualWithheldCents:2000,actualNetCents:38000});expect((await store.savePayment(second)).expectedWithheldCents).toBe(2000);const s=await store.snapshot();expect(contractorSummary(s,'h','v','2026')).toMatchObject({servicesCents:70000,expectedWithheldCents:2000,actualWithheldCents:2000});expect((await ledger.snapshot()).movements).toHaveLength(0);}finally{db.close();}});
  it('separa titular, proveedor y año sin reiniciar por DBA o proyecto',async()=>{const {db,ledger,store}=await setup();try{await holder(ledger,'otro');await store.saveProvider(provider(),0);await store.saveProvider(provider({id:'v2',reference:'OTRO-FICTICIO'}),0);await store.savePayment(payment());expect((await store.savePayment(payment({id:'b',holderId:'otro',servicesCents:40000,actualNetCents:null}))).expectedWithheldCents).toBe(0);expect((await store.savePayment(payment({id:'c',providerId:'v2',servicesCents:40000,actualNetCents:null}))).expectedWithheldCents).toBe(0);expect((await store.savePayment(payment({id:'d',date:'2025-10-01',servicesCents:40000,actualNetCents:null}))).expectedWithheldCents).toBe(0);expect((await store.savePayment(payment({id:'e',date:'2026-10-03',servicesCents:40000,actualNetCents:null}))).expectedWithheldCents).toBe(2000);}finally{db.close();}});
@@ -68,5 +74,31 @@ describe('Negocio 3: simuladores y registros locales',()=>{
  expect((await ledger.snapshot()).movements).toHaveLength(2);
  }finally{db.close();}});
  it('rechaza neto confirmado incoherente y fechas o importes inválidos en simulación',()=>{expect(()=>validatePayment(payment({actualNetCents:1}),today())).toThrow('neto');expect(()=>evaluateWithholding(payment({date:'fecha'}),[],[provider()],[])).toThrow('Fecha');expect(()=>evaluateWithholding(payment({servicesCents:-1}),[],[provider()],[])).toThrow('negativos');});
+ it('un IVU previo desconocido no permite exceder la suma de cobros conocidos',async()=>{const {db,ledger,store}=await setup();try{
+ await linkedEntries(ledger);await store.saveOffer(offer(),0);
+ await store.saveCollection(collection({id:'pendiente',entryId:'ingreso',baseCents:null,collectedCents:null,stateCents:null,municipalCents:null,reference:'PENDIENTE'}));
+ await store.saveCollection(collection({id:'conocido',entryId:'ingreso',baseCents:50000,collectedCents:10000,stateCents:null,municipalCents:null,reference:'CONOCIDO'}));
+ await expect(store.saveCollection(collection({id:'exceso',entryId:'ingreso',baseCents:10000,collectedCents:2000,stateCents:null,municipalCents:null,reference:'EXCESO'}))).rejects.toThrow('excederían');
+ expect((await store.snapshot()).collections.find(c=>c.id==='pendiente')?.collectedCents).toBeNull();
+ }finally{db.close();}});
+ it('una base previa desconocida no permite exceder las ventas brutas conocidas',async()=>{const {db,ledger,store}=await setup();try{
+ await linkedEntries(ledger);await store.saveOffer(offer(),0);
+ await store.saveCollection(collection({id:'pendiente',entryId:'ingreso',baseCents:null,collectedCents:null,stateCents:null,municipalCents:null,reference:'PENDIENTE'}));
+ await store.saveCollection(collection({id:'conocido',entryId:'ingreso',baseCents:90000,collectedCents:1000,stateCents:null,municipalCents:null,reference:'CONOCIDO'}));
+ await expect(store.saveCollection(collection({id:'exceso',entryId:'ingreso',baseCents:15000,collectedCents:1000,stateCents:null,municipalCents:null,reference:'EXCESO'}),true)).rejects.toThrow('excederían');
+ }finally{db.close();}});
+ it('un solo componente conocido del IVU tampoco puede exceder el total vinculado',async()=>{const {db,ledger,store}=await setup();try{
+ await linkedEntries(ledger);await store.saveOffer(offer(),0);
+ await expect(store.saveCollection(collection({entryId:'ingreso',baseCents:null,collectedCents:null,stateCents:12000,municipalCents:null}))).rejects.toThrow('excederían');
+ }finally{db.close();}});
+ it('un neto anterior desconocido no permite exceder la suma de pagos conocidos',async()=>{const {db,ledger,store}=await setup();try{
+ await linkedEntries(ledger);await store.saveProvider(provider(),0);
+ await store.savePayment(payment({id:'pendiente',entryId:'gasto',servicesCents:null,actualWithheldCents:null,actualNetCents:null}));
+ await store.savePayment(payment({id:'conocido',entryId:'gasto',date:'2026-10-02'}));
+ await expect(store.savePayment(payment({id:'exceso',entryId:'gasto',date:'2026-10-03',servicesCents:10000,actualNetCents:10000}))).rejects.toThrow('excederían');
+ expect((await store.snapshot()).payments.find(p=>p.id==='pendiente')?.actualNetCents).toBeNull();
+ }finally{db.close();}});
+ it('un componente parcial del IVU no puede exceder su propio total confirmado',async()=>{const {db,store}=await setup();try{await store.saveOffer(offer(),0);await expect(store.saveCollection(collection({collectedCents:1000,stateCents:1001,municipalCents:null}))).rejects.toThrow('componentes conocidos');expect((await store.snapshot()).collections).toHaveLength(0);}finally{db.close();}});
+ it('admite repartos parciales dentro del límite sin convertir los desconocidos en cero',async()=>{const {db,ledger,store}=await setup();try{await linkedEntries(ledger);await store.saveOffer(offer(),0);await store.saveCollection(collection({id:'parcial',entryId:'ingreso',baseCents:null,collectedCents:null,stateCents:1000,municipalCents:null}));await store.saveCollection(collection({id:'completo',entryId:'ingreso',baseCents:50000,collectedCents:10500,stateCents:10000,municipalCents:500,reference:'SEGUNDO'}));const s=await store.snapshot();expect(s.collections.find(c=>c.id==='parcial')?.municipalCents).toBeNull();expect(sutSummary(s,'h','2026-10').collectedCents).toBeNull();}finally{db.close();}});
  it('genera evidencia ficticia revisable del caso 300+400 y remesas IVU separadas',async()=>{const {db,store}=await setup();try{await store.saveProvider(provider(),0);const first=await store.savePayment(payment());const second=await store.savePayment(payment({id:'segundo',date:'2026-10-02',servicesCents:40000,actualWithheldCents:2000,actualNetCents:38000}));await store.saveOffer(offer(),0);await store.saveCollection(collection());await store.saveObligation(obligation());const s=await store.snapshot();const evidence={fictitious:true,first,second,contractor:contractorSummary(s,'h','v','2026'),ivu:sutSummary(s,'h','2026-10'),sources:ruleSources};expect(evidence.second.expectedWithheldCents).toBe(2000);expect(evidence.ivu.differenceCents).toBe(1000);if(process.env.EDUMONEY_OBLIGATIONS_EXAMPLE==='1')writeFileSync('/tmp/edumoney-negocio3-ficticio.json',JSON.stringify(evidence,null,2));}finally{db.close();}});
 });

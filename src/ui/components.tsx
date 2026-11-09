@@ -1,7 +1,7 @@
 import { fixed } from '../design/tokens';
 import { useIsFocused } from 'expo-router';
 import { type ComponentProps, type PropsWithChildren } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View, KeyboardAvoidingView, Platform, useWindowDimensions, type StyleProp, type ViewStyle } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View, KeyboardAvoidingView, Keyboard, Platform, useWindowDimensions, type StyleProp, type ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
@@ -74,6 +74,7 @@ export function Screen({ children, title, subtitle, welcome = false, demo = true
           {welcome ? <Brand onDark={name === 'dark'} /> : <Text accessibilityRole="header" style={{ fontSize: 27, fontWeight: '800', letterSpacing: -0.5, color: headerInk, flex: 1 }}>{title}</Text>}
           <ThemePicker color={headerInk} />
         </View>
+        {keyboardForm?<Pressable testID="form-dismiss-keyboard" accessibilityRole="button" accessibilityLabel="Ocultar teclado" onPress={()=>Keyboard.dismiss()} style={{minHeight:48,justifyContent:'center',alignItems:'flex-end',paddingVertical:8}}><Text style={{color:headerInk,fontSize:16,fontWeight:'600'}}>Ocultar teclado</Text></Pressable>:null}
       </View>
       <KeyboardAvoidingView enabled={keyboardForm} behavior={Platform.OS==='ios'?'padding':'height'} style={{flex:1}}><ScrollView keyboardDismissMode="on-drag" tabIndex={0} accessibilityLabel={`Contenido de ${title}`} contentContainerStyle={{ flexGrow: 1, paddingBottom: 32 }} keyboardShouldPersistTaps="handled">
         <View style={{ width: '100%', maxWidth: 700, alignSelf: 'center', paddingHorizontal: width < 370 ? 16 : 24, gap: 18 }}>

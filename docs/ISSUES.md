@@ -2,10 +2,12 @@
 
 ## IOS-QA-10 — Automatización de entrevista contributiva
 
-Estado: diferida por instrucción expresa del usuario, 9 de noviembre de 2026. No bloquea la continuación de Negocio ni exige revisión de un CPA.
+Estado: reabierta para reparación por instrucción del usuario, 9 de noviembre de 2026. Cambios preparados; validación nativa estricta pendiente. No bloquea los cálculos ni exige revisión de CPA.
 
-En el simulador iPhone 17 Pro / iOS 26.4, Maestro puede pasar por alto campos al desplazar el formulario largo y escribir antes de que el foco se estabilice. Se verificaron respaldo/recuperación, PDF y temas; la última captura de reapertura muestra `Cierre ficticio de pruebaT` conservado. La aserción exacta esperaba el texto sin la T adicional de la entrada automatizada. No se ha demostrado una pérdida de datos del almacenamiento.
+Se revisó la ejecución 42626974236 y el job iOS 129193135032: terminaron con success. Sin embargo, la captura conservó `Cierre ficticio de pruebaT` y la aserción `Cierre ficticio de prueba.*` lo aceptó. El éxito histórico no demuestra que se haya introducido y recuperado el texto exacto. La interacción de foco/teclado sigue siendo la hipótesis principal; no se ha demostrado pérdida de datos.
 
-Evidencias: ejecuciones 42612854920 y 42624113429. Última repetición iniciada: 42626974236; su resultado no se considera aprobado hasta revisarlo. Android aprobó el recorrido completo en 42608879499. Las 195 pruebas de lógica/SQLite y las comprobaciones de TypeScript y lint aprobaron.
+La apertura/reapertura histórica conserva igual huella de la base, cabecera cifrada, rechazo de lectura sin clave y exclusión de respaldo. Evidencia anterior: ejecuciones 42612854920, 42624113429 y 42626974236. Android aprobó el recorrido histórico completo en 42608879499. Estas ejecuciones no validan por sí solas el código actual de Negocio.
 
-Próximo trabajo: estabilizar enfoque y desplazamiento, comparar el texto realmente introducido con el recuperado, y completar el recorrido iOS y controles nativos de cifrado. Mantener las pruebas físicas y de distribución pendientes según QUALITY_RELEASE.md. No publicar ni fusionar main.
+Reparación preparada: botón estable para ocultar el teclado fuera del formulario desplazable, eliminación de toques sobre etiquetas movibles, espera de animación y aserciones exactas antes/después de cerrar teclado y tras reabrir. No se altera el texto guardado para hacer pasar la prueba.
+
+[Informe y evidencia](stages/REPARACIONES-01.md). Mantener pruebas físicas y de distribución pendientes según QUALITY_RELEASE.md. No publicar la aplicación ni fusionar main.

@@ -127,23 +127,17 @@ appId: com.edumoney.app
     timeout: 120000
 - tapOn:
     id: closure-notes
-- tapOn:
-    id: closure-notes
+- waitForAnimationToEnd:
+    timeout: 3000
 - eraseText
 - inputText: "Cierre ficticio de prueba"
-- assertVisible: "Cierre ficticio de prueba.*"
-- runFlow:
-    when:
-      platform: Android
-    commands:
-      - hideKeyboard
-- runFlow:
-    when:
-      platform: iOS
-    commands:
-      - tapOn:
-          text: "Notas y situaciones para revisar"
-          index: 0
+- assertVisible: "^Cierre ficticio de prueba$"
+- tapOn:
+    id: form-dismiss-keyboard
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "^Cierre ficticio de prueba$"
+- takeScreenshot: stage10-notes-before-save
 - scrollUntilVisible:
     element:
       text: "Motivo del cierre o corrección"
@@ -152,22 +146,14 @@ appId: com.edumoney.app
     timeout: 120000
 - tapOn:
     id: closure-reason
-- tapOn:
-    id: closure-reason
+- waitForAnimationToEnd:
+    timeout: 3000
 - eraseText
-- inputText: "Prueba ficticia"
-- runFlow:
-    when:
-      platform: Android
-    commands:
-      - hideKeyboard
-- runFlow:
-    when:
-      platform: iOS
-    commands:
-      - tapOn:
-          text: "Motivo del cierre o corrección"
-          index: 0
+- inputText: "^Prueba ficticia$"
+- tapOn:
+    id: form-dismiss-keyboard
+- waitForAnimationToEnd:
+    timeout: 3000
 - scrollUntilVisible:
     element:
       id: closure-save
@@ -274,5 +260,5 @@ appId: com.edumoney.app
     direction: DOWN
     centerElement: true
     timeout: 120000
-- assertVisible: "Cierre ficticio de prueba.*"
+- assertVisible: "^Cierre ficticio de prueba$"
 - takeScreenshot: stage10-reopened

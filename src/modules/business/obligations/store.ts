@@ -4,9 +4,12 @@ import { localToday } from '../../money/domain';
 import type { MoneyStore,SqlDb } from '../../money/store';
 import { BusinessStore } from '../store';
 import { RULE_VERSION } from './catalog';
-import { collectionTotal,evaluateWithholding } from './domain';
+import { evaluateWithholding } from './domain';
 import { checkId,validateCollection,validateObligation,validateOffer,validatePayment,validateProvider,validateRelief } from './validation';
 import type { ContractorPayment,ObligationRecord,ObligationsSnapshot,Provider,Relief,SUTCollection,SUTOffer,SavedCollection,SavedObligation,SavedOffer,SavedPayment } from './types';
+// Lower bounds for reconciliation only. Unknown amounts stay null in records and totals.
+const recordedMinimum=(values:(number|null)[])=>addAmounts(...values.filter((v):v is number=>v!==null).map(cents));
+const collectedMinimum=(c:Pick<SUTCollection,'collectedCents'|'stateCents'|'municipalCents'>)=>c.collectedCents??recordedMinimum([c.stateCents,c.municipalCents]);
 const providerSQL='SELECT id,legal_name AS name,legal_reference AS reference,classification,notes,version FROM business_contractors';
 const reliefSQL='SELECT id,provider_id AS providerId,kind,valid_from AS validFrom,valid_to AS validTo,reference,document_id AS documentId FROM business_contractor_reliefs';
 const paymentSQL=`SELECT sequence,id,holder_id AS holderId,provider_id AS providerId,payment_date AS date,services_cents AS servicesCents,ivu_cents AS ivuCents,reimbursed_cents AS reimbursedCents,actual_withheld_cents AS actualWithheldCents,actual_net_cents AS actualNetCents,scope,relief_status AS reliefStatus,relief_id AS reliefId,entry_id AS entryId,note,calculation_json AS calculationAtSave,provider_snapshot AS providerJSON,voided_at AS voidedAt,void_reason AS voidReason FROM business_contractor_payments`;
@@ -52,10 +55,9 @@ export class BusinessObligationStore {
    if(c.reference.trim()&&await db.getFirstAsync('SELECT id FROM business_sut_collections WHERE holder_id=? AND reference=? AND voided_at IS NULL',c.holderId,c.reference.trim()))throw new UserInputError('La referencia de este cobro de IVU ya se registró.');
    if(c.entryId){
     const entry=await db.getFirstAsync<{ivuCents:number|null;grossCents:number|null}>('SELECT ivu_cents AS ivuCents,gross_cents AS grossCents FROM business_entries WHERE id=?',c.entryId);
-    const total=collectionTotal(c);
-    const rows=await db.getAllAsync<{collectedCents:number|null;baseCents:number|null}>("SELECT coalesce(collected_cents,CASE WHEN state_cents IS NOT NULL AND municipal_cents IS NOT NULL THEN state_cents+municipal_cents END) AS collectedCents,base_cents AS baseCents FROM business_sut_collections WHERE entry_id=? AND voided_at IS NULL",c.entryId);
-    if(entry?.ivuCents!==null&&entry?.ivuCents!==undefined&&total!==null&&rows.every(r=>r.collectedCents!==null)&&addAmounts(cents(total),...rows.map(r=>cents(r.collectedCents!)))>entry.ivuCents)throw new UserInputError('Los registros de IVU excederían el IVU registrado en el cobro vinculado.');
-    if(entry?.grossCents!==null&&entry?.grossCents!==undefined&&c.baseCents!==null&&rows.every(r=>r.baseCents!==null)&&addAmounts(cents(c.baseCents),...rows.map(r=>cents(r.baseCents!)))>entry.grossCents)throw new UserInputError('Las bases repartidas excederían las ventas brutas del registro vinculado.');
+    const rows=await db.getAllAsync<{collectedCents:number|null;stateCents:number|null;municipalCents:number|null;baseCents:number|null}>('SELECT collected_cents AS collectedCents,state_cents AS stateCents,municipal_cents AS municipalCents,base_cents AS baseCents FROM business_sut_collections WHERE entry_id=? AND voided_at IS NULL',c.entryId);
+    if(entry?.ivuCents!==null&&entry?.ivuCents!==undefined&&recordedMinimum([collectedMinimum(c),...rows.map(collectedMinimum)])>entry.ivuCents)throw new UserInputError('Los registros de IVU excederían el IVU registrado en el cobro vinculado.');
+    if(entry?.grossCents!==null&&entry?.grossCents!==undefined&&recordedMinimum([c.baseCents,...rows.map(r=>r.baseCents)])>entry.grossCents)throw new UserInputError('Las bases repartidas excederían las ventas brutas del registro vinculado.');
    }
    await db.runAsync('INSERT INTO business_sut_collections(id,holder_id,offer_id,collection_date,base_cents,collected_cents,state_cents,municipal_cents,actor,entry_id,reference,note,offer_snapshot,rule_version) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)',c.id,c.holderId,c.offerId,c.date,c.baseCents,c.collectedCents,c.stateCents,c.municipalCents,c.actor,c.entryId,c.reference.trim(),c.note.trim(),offer.json,RULE_VERSION);
   });
@@ -88,10 +90,10 @@ export class BusinessObligationStore {
    if(p.reliefId&&!await db.getFirstAsync('SELECT id FROM business_contractor_reliefs WHERE id=? AND provider_id=?',p.reliefId,p.providerId))throw new UserInputError('El relevo debe pertenecer a este proveedor.');
    if(await db.getFirstAsync('SELECT id FROM business_contractor_payments WHERE id=?',p.id))throw new UserInputError('Este pago ya tiene un registro de obligación.');
    if(!confirmSimilar&&await db.getFirstAsync('SELECT id FROM business_contractor_payments WHERE holder_id=? AND provider_id=? AND payment_date=? AND services_cents IS ? AND voided_at IS NULL',p.holderId,p.providerId,p.date,p.servicesCents))throw new UserInputError('Ya hay un pago similar al proveedor; revisa antes de confirmar otro distinto.');
-   if(p.entryId&&p.actualNetCents!==null){
+   if(p.entryId){
     const linked=await db.getFirstAsync<{amount:number}>('SELECT m.amount_cents AS amount FROM business_entries e JOIN movements m ON m.id=e.movement_id WHERE e.id=?',p.entryId);
     const others=await db.getAllAsync<{net:number|null}>('SELECT actual_net_cents AS net FROM business_contractor_payments WHERE entry_id=? AND voided_at IS NULL',p.entryId);
-    if(linked&&others.every(r=>r.net!==null)&&addAmounts(cents(p.actualNetCents),...others.map(r=>cents(r.net!)))>linked.amount)throw new UserInputError('Los pagos vinculados excederían el gasto financiero existente.');
+    if(linked&&recordedMinimum([p.actualNetCents,...others.map(r=>r.net)])>linked.amount)throw new UserInputError('Los pagos vinculados excederían el gasto financiero existente.');
    }
    const calculated=evaluateWithholding(p,await payments(db),await providers(db),await reliefs(db));
    await db.runAsync('INSERT INTO business_contractor_payments(id,holder_id,provider_id,payment_date,services_cents,ivu_cents,reimbursed_cents,actual_withheld_cents,actual_net_cents,scope,relief_status,relief_id,entry_id,note,calculation_json,provider_snapshot) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',p.id,p.holderId,p.providerId,p.date,p.servicesCents,p.ivuCents,p.reimbursedCents,p.actualWithheldCents,p.actualNetCents,p.scope,p.reliefStatus,p.reliefId,p.entryId,p.note.trim(),JSON.stringify(calculated),JSON.stringify(provider));

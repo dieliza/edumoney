@@ -15,15 +15,21 @@ export default function ObligationsScreen(){
  const params=useLocalSearchParams<{holderId:string}>();
  const [holderId,setHolderId]=useState(params.holderId??''),[flow,setFlow]=useState<'ivu'|'contractors'>('ivu'),[providerId,setProviderId]=useState('');
  const [data,setData]=useState<ObligationsSnapshot>(),[store,setStore]=useState<BusinessObligationStore>(),[error,setError]=useState(''),[editor,setEditor]=useState<Editor>(),[offer,setOffer]=useState<SUTOffer>(),[sources,setSources]=useState(false);
- const [month,setMonth]=useState(''),[year,setYear]=useState(''),[voiding,setVoiding]=useState<{kind:'collection'|'payment'|'obligation';id:string}>(),[reason,setReason]=useState('');
+ const [month,setMonth]=useState(''),[year,setYear]=useState(''),[voiding,setVoiding]=useState<{kind:'collection'|'payment'|'obligation';id:string}>(),[reason,setReason]=useState(''),[voidError,setVoidError]=useState(''),[voidBusy,setVoidBusy]=useState(false);
  const load=useCallback(async()=>{const s=new BusinessObligationStore(await getMoneyStore());setData(await s.snapshot());setStore(s);},[]);
  useEffect(()=>{let live=true;void getMoneyStore().then(async ledger=>{const s=new BusinessObligationStore(ledger),snapshot=await s.snapshot();if(live){setData(snapshot);setStore(s);}}).catch(e=>{if(live)setError(userMessage(e));});return()=>{live=false;};},[]);
+ async function confirmVoid(){
+  if(!voiding||!store||voidBusy)return;
+  setVoidBusy(true);setVoidError('');
+  try{await store.voidRecord(voiding.kind,voiding.id,reason);await load();setVoiding(undefined);}
+  catch(e){setVoidError(userMessage(e));}finally{setVoidBusy(false);}
+ }
  async function done(){setEditor(undefined);await load();}
  const activeHolder=data?.holders.find(h=>h.id===holderId);
  const summary=data&&validMonth(month)?sutSummary(data,holderId,month):undefined;
  const contractors=data&&providerId&&/^\d{4}$/.test(year)?contractorSummary(data,holderId,providerId,year):undefined;
  function open(kind:Editor,o?:SUTOffer){setOffer(o);setEditor(kind);}
- const voidButton=(kind:'collection'|'payment'|'obligation',id:string)=><ActionButton title="Anular este registro" secondary onPress={()=>{setReason('');setVoiding({kind,id});}}/>;
+ const voidButton=(kind:'collection'|'payment'|'obligation',id:string)=><ActionButton title="Anular este registro" secondary onPress={()=>{setReason('');setVoidError('');setVoiding({kind,id});}}/>;
  return <Screen title="IVU y contratistas" subtitle="Simuladores y registros de obligaciones locales." demo={false} keyboardForm>
  <ActionButton title="Volver a Negocio" secondary onPress={()=>router.dismissTo('/business')}/><ErrorNotice message={error}/>
  <Card><Body>{RULE_VERSION} · Fuentes verificadas: {VERIFIED_ON}. Cada simulación muestra supuestos y datos pendientes. Las cifras calculadas no confirman cobro, retención, depósito ni radicación. No se exige revisión de CPA para simular.</Body><ActionButton title={sources?'Ocultar fuentes oficiales':'Ver fuentes y vigencia'} secondary onPress={()=>setSources(!sources)}/></Card>
@@ -52,7 +58,7 @@ export default function ObligationsScreen(){
  <ActionButton title="Registrar presentación de formulario" secondary onPress={()=>open('filing')}/>
  {data.obligations.filter(o=>o.holderId===holderId&&o.flow===flow).map(o=><Card key={o.id}><Body>{o.form==='deposit'?'Pago / depósito':o.form} · {o.period} · {o.scope==='state'?'estatal':o.scope==='municipal'?'municipal':o.scope==='services'?'servicios':'consolidado'} {o.municipality}</Body><Body>{o.voidedAt?'Anulado':o.status==='confirmed'?'Confirmado':o.status==='not_applicable'?'No aplica':'Pendiente'} · {o.kind==='remittance'?show(o.amountCents):'Radicación, sin registrar otro pago'}</Body><Body>Vencimiento {o.dueDate?'verificado':'base por confirmar'}: {o.dueDate??obligationBaseDue(o)??'consultar municipio'}. {o.dueSource}</Body><Body>{o.reference} · {o.note}</Body>{!o.voidedAt?voidButton('obligation',o.id):null}</Card>)}
  {editor?<Sheet title={editor==='offer'?'Oferta de IVU':(editor==='provider'||editor==='providerEdit')?'Proveedor legal':editor==='relief'?'Relevo o excepción':editor==='collection'?'IVU: simulación y cobro':editor==='payment'?'Pago al contratista':editor==='filing'?'Presentación de formulario':'Depósito / remesa'} close={()=>setEditor(undefined)}><Forms key={`${editor}-${offer?.id??'new'}`} kind={editor} data={data} holderId={holderId} providerId={providerId} offer={offer} flow={flow} store={store} done={()=>void done().catch(e=>setError(userMessage(e)))}/></Sheet>:null}
- {voiding?<Sheet title="Anular registro de obligación" close={()=>setVoiding(undefined)}><Body>Conserva el historial. Esto no modifica movimientos financieros, pagos ni trámites ya realizados.</Body><Field label="Motivo de anulación" value={reason} onChangeText={setReason}/><ActionButton title="Confirmar anulación" onPress={()=>void store.voidRecord(voiding.kind,voiding.id,reason).then(async()=>{setVoiding(undefined);await load();}).catch(e=>setError(userMessage(e)))}/></Sheet>:null}
+ {voiding?<Sheet title="Anular registro de obligación" busy={voidBusy} close={()=>setVoiding(undefined)}><Body>Conserva el historial. Esto no modifica movimientos financieros, pagos ni trámites ya realizados.</Body><ErrorNotice message={voidError}/><Field label="Motivo de anulación" value={reason} onChangeText={setReason}/>{!voidBusy?<ActionButton title="Confirmar anulación" onPress={()=>void confirmVoid()}/>:null}</Sheet>:null}
  </>:null}
  </Screen>;
 }

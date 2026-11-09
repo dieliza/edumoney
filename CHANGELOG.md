@@ -187,3 +187,10 @@
 - Registros de depósitos y formularios separados, vencimientos base y verificados con fuente, anulaciones auditadas y control de duplicados/vínculos financieros.
 - Esquema 12, respaldo con recuperación de esquemas 9–12, instantáneas históricas y pruebas de persistencia/rollback.
 - Fuentes oficiales 2026 y alcance en docs/tax/business-2026/SOURCES.md. IOS-QA-10 continúa diferida. Sin cambios en main ni publicación.
+
+## Reparaciones — entrevista iOS y conciliación comercial
+
+- Se audita IOS-QA-10: el resultado anterior aceptaba una T extra mediante una aserción flexible. Se preparan comparaciones exactas y un botón estable para cerrar el teclado.
+- Se corrigen límites de IVU, bruto y neto vinculados cuando existen importes pendientes, preservando null. Nuevas pruebas reproducen los fallos previos y comprueban el caso parcial válido.
+- Los errores de anulación aparecen dentro del diálogo. Se protege el cambio de año de una entrevista frente a datos todavía en carga.
+- Evidencias, alcance y resultados en docs/stages/REPARACIONES-01.md.
