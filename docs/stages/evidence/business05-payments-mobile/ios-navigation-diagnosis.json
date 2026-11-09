@@ -1,0 +1,16 @@
+{
+  "run": 42674536726,
+  "applicationCommit": "3f03c59",
+  "procedureCommit": "4cb728b",
+  "overallResult": "failed at navigation after restart",
+  "completedBeforeRestart": [
+    "calculation not paid until confirmed",
+    "net 197019 cents confirmed",
+    "PR partial deposit 2000 cents, remaining 3491",
+    "PR deposited total 5491 cents, remaining zero",
+    "one salary payment after both deposits"
+  ],
+  "screenObservedAfterFailure": "Aprende",
+  "persistenceAfterRestartVerified": false,
+  "correction": "Center the Payroll link away from the tab bar and verify the destination heading before reading amounts; retry navigation only."
+}

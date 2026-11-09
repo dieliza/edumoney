@@ -25,3 +25,7 @@ Los recorridos están iniciados; sus resultados y capturas se añadirán al term
 [42671267051](https://github.com/dieliza/edumoney/actions/runs/42671267051): recorrido aprobado sin conexión de la aplicación, usando el APK de `3f03c59` y procedimiento `406e836`. Las capturas confirman un pago, neto $1,970.19, depósitos PR $54.91 y pendiente $0.00 después de reiniciar.
 
 El primer intento iOS (42671278977) falló al consultar la disponibilidad del campo de empleado, que sí aparece en la captura posterior; se ajustó la espera. La ejecución 42673444171 terminó sin crear trabajos y no ejecutó otro caso. El nuevo intento usará menos pulsaciones de borrado, manteniendo datos y comprobaciones.
+
+### Diagnóstico de navegación iOS
+
+42674536726 confirmó el pago y los dos depósitos con los importes esperados antes de reiniciar. Al volver a abrir, la automatización pulsó la pestaña Aprende en lugar del enlace de Nómina; la captura identifica esa pantalla, por lo que ese intento no prueba la persistencia posterior. Se centra el enlace fuera de la barra inferior, se comprueba el encabezado de Nómina y se permiten dos recuperaciones limitadas a navegación, sin registrar de nuevo operaciones. Repetición: 42678945990, procedimiento `9dbab0c`. Presupuesto: nueve casos terminados y uno activo, máximo 100.

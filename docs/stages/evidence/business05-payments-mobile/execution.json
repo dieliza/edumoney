@@ -27,10 +27,17 @@
     {
       "id": 42674536726,
       "platform": "ios",
-      "result": "in progress",
+      "result": "failed in navigation after restart; payment and both deposits verified before restart",
+      "casesExecuted": 1
+    },
+    {
+      "id": 42678945990,
+      "platform": "ios",
+      "result": "in progress, destination heading and navigation recovery added",
       "casesExecuted": null
     }
   ],
-  "casesCompleted": 8,
-  "casesIncludingCurrentAttempt": 9
+  "casesCompleted": 9,
+  "casesIncludingCurrentAttempt": 10,
+  "maximumNavigationRetriesInCurrentCase": 2
 }
