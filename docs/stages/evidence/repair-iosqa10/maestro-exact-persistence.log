@@ -1,0 +1,66 @@
+Running on iPhone 17 Pro - iOS 26.4 - 2CC7A2C1-E1A7-4633-911A-DB60BDEB97F0
+ > Flow planilla-persistence
+Launch app "com.edumoney.app" with clear state... COMPLETED
+Assert that "Abrir Mi dinero" is visible... COMPLETED
+Tap on "Abrir Mi dinero"... COMPLETED
+Scrolling DOWN until id: open-tax is visible with speed 40, visibility percentage 100%, timeout 60000 ms, with centering enabled... COMPLETED
+Tap on id: open-tax... COMPLETED
+Assert that "Expediente local para revisión profesional." is visible... COMPLETED
+Scrolling DOWN until id: open-planilla is visible with speed 40, visibility percentage 100%, timeout 60000 ms, with centering enabled... COMPLETED
+Tap on id: open-planilla... COMPLETED
+Assert that "Entrevista y borrador de cierre para revisión." is visible... COMPLETED
+Scrolling DOWN until "Cálculo automático sin requisito de CPA" is visible with speed 40, visibility percentage 100%, timeout 60000 ms, with centering enabled... COMPLETED
+Take screenshot stage10-year-pending... COMPLETED
+Scrolling DOWN until "Notas y situaciones para revisar" is visible with speed 40, visibility percentage 100%, timeout 120000 ms, with centering enabled... COMPLETED
+Run reveal-closure-field.yaml when Platform is IOS...
+  Swipe from (5%, 35%) to (5%, 60%) in 800 ms... COMPLETED
+  Wait for animation to end within 3000 ms... COMPLETED
+  Assert that id: ${FIELD_ID}, Below id: form-dismiss-keyboard is visible... COMPLETED
+Run reveal-closure-field.yaml when Platform is IOS... COMPLETED
+Tap on id: closure-notes... COMPLETED
+Wait for animation to end within 3000 ms... COMPLETED
+Run flow when Platform is ANDROID...
+Run flow when Platform is ANDROID... SKIPPED
+Erase text... COMPLETED
+Input text Cierre ficticio de prueba... COMPLETED
+Assert that "^Cierre ficticio de prueba$" is visible... COMPLETED
+Tap on id: form-dismiss-keyboard... COMPLETED
+Wait for animation to end within 3000 ms... COMPLETED
+Assert that "^Cierre ficticio de prueba$" is visible... COMPLETED
+Take screenshot stage10-notes-before-save... COMPLETED
+Scrolling DOWN until "Motivo del cierre o corrección" is visible with speed 40, visibility percentage 100%, timeout 120000 ms, with centering enabled... COMPLETED
+Run reveal-closure-field.yaml when Platform is IOS...
+  Swipe from (5%, 35%) to (5%, 60%) in 800 ms... COMPLETED
+  Wait for animation to end within 3000 ms... COMPLETED
+  Assert that id: ${FIELD_ID}, Below id: form-dismiss-keyboard is visible... COMPLETED
+Run reveal-closure-field.yaml when Platform is IOS... COMPLETED
+Tap on id: closure-reason... COMPLETED
+Wait for animation to end within 3000 ms... COMPLETED
+Run flow when Platform is ANDROID...
+Run flow when Platform is ANDROID... SKIPPED
+Erase text... COMPLETED
+Input text Prueba ficticia... COMPLETED
+Assert that "^Prueba ficticia$" is visible... COMPLETED
+Tap on id: form-dismiss-keyboard... COMPLETED
+Wait for animation to end within 3000 ms... COMPLETED
+Scrolling DOWN until id: closure-save is visible with speed 40, visibility percentage 100%, timeout 60000 ms, with centering enabled... COMPLETED
+Tap on id: closure-save... COMPLETED
+Scrolling UP until "Entrevista guardada localmente.*" is visible with speed 40, visibility percentage 100%, timeout 60000 ms, with centering enabled... COMPLETED
+Stop com.edumoney.app... COMPLETED
+Launch app "com.edumoney.app"... COMPLETED
+Assert that "Abrir Mi dinero" is visible... COMPLETED
+Tap on "Abrir Mi dinero"... COMPLETED
+Scrolling DOWN until id: open-tax is visible with speed 40, visibility percentage 100%, timeout 60000 ms, with centering enabled... COMPLETED
+Tap on id: open-tax... COMPLETED
+Assert that "Expediente local para revisión profesional." is visible... COMPLETED
+Scrolling DOWN until id: open-planilla is visible with speed 40, visibility percentage 100%, timeout 60000 ms, with centering enabled... COMPLETED
+Tap on id: open-planilla... COMPLETED
+Assert that "Entrevista y borrador de cierre para revisión." is visible... COMPLETED
+Scrolling DOWN until "Notas y situaciones para revisar" is visible with speed 40, visibility percentage 100%, timeout 120000 ms, with centering enabled... COMPLETED
+Run reveal-closure-field.yaml when Platform is IOS...
+  Swipe from (5%, 35%) to (5%, 60%) in 800 ms... COMPLETED
+  Wait for animation to end within 3000 ms... COMPLETED
+  Assert that id: ${FIELD_ID}, Below id: form-dismiss-keyboard is visible... COMPLETED
+Run reveal-closure-field.yaml when Platform is IOS... COMPLETED
+Assert that "^Cierre ficticio de prueba$" is visible... COMPLETED
+Take screenshot stage10-reopened... COMPLETED

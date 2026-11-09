@@ -194,3 +194,5 @@
 - Se corrigen límites de IVU, bruto y neto vinculados cuando existen importes pendientes, preservando null. Nuevas pruebas reproducen los fallos previos y comprueban el caso parcial válido.
 - Los errores de anulación aparecen dentro del diálogo. Se protege el cambio de año de una entrevista frente a datos todavía en carga.
 - Evidencias, alcance y resultados en docs/stages/REPARACIONES-01.md.
+
+- Cierre IOS-QA-10: ejecución 42647274836 aprobada en iPhone 17 Pro/iOS 26.4, con nota exacta antes/después de reiniciar y controles de cifrado/reapertura. Evidencias en el informe de reparaciones.

@@ -43,3 +43,7 @@ Son simuladores y registros locales: no presentan formularios, no pagan en SURI 
 La interacción de estos formularios en simuladores/teléfonos y su accesibilidad con teclado/lector nativo sigue pendiente. El empaquetado JavaScript no es una compilación firmada APK/IPA. No se declara resuelta IOS-QA-10. La vista del navegador es informativa y no admite datos financieros.
 
 La entrega se detiene aquí. El panel de ganancia/efectivo/reservas, escenarios y calendario por perfil corresponde al próximo bloque; nómina va después.
+
+## Seguimiento de reparación iOS
+
+IOS-QA-10 quedó resuelta para el recorrido de persistencia en simulador mediante la ejecución 42647274836, con texto exacto recuperado y cifrado/reapertura comprobados. Este seguimiento reemplaza el estado pendiente/diferido del informe original. [Reparaciones, evidencias y alcance](REPARACIONES-01.md). Las pruebas físicas y de publicación siguen pendientes.

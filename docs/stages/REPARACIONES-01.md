@@ -20,7 +20,7 @@ Se añade un botón accesible «Ocultar teclado» fuera del desplazamiento de la
 - TypeScript y ESLint aprobados. Empaquetado JavaScript web, iOS y Android aprobado; no equivale a prueba interactiva ni APK/IPA firmados.
 - Sintaxis YAML de ambos recorridos Maestro comprobada. Las nuevas aserciones son exactas, sin comodín que acepte una T extra.
 - Seis recorridos de navegador aprobados, con navegación, ambos temas, contraste y anchos adaptables. La comprobación adicional de respaldo conserva exactamente notas con acentos, salto de línea y T final.
-- Pendiente ejecutar la nueva validación nativa estricta. El entorno local es Linux y no tiene Xcode/simulador iOS; el éxito histórico no se presenta como prueba de esta reparación.
+- Validación nativa estricta aprobada en la ejecución 42647274836; detalles, capturas y alcance en el cierre de este informe. El entorno local es Linux: la prueba real se ejecutó en el simulador de GitHub Actions.
 
 ## Diagnóstico de la primera repetición estricta
 
@@ -31,3 +31,16 @@ Se ajusta el recorrido iOS para revelar el campo mediante un desplazamiento por 
 ## Verificación del campo revelado y limitación del driver
 
 La ejecución 42644597524 confirma que el desplazamiento deja el campo visible en y=366…414, con cursor y teclado activos. El driver informa `focused=false` en el UITextView, por lo que esa comprobación auxiliar no es fiable en esta combinación iOS/Maestro. Se conserva la verificación por foco en Android y, en iOS, se exige la escritura exacta antes/después de cerrar teclado y tras reiniciar. [Captura con cursor activo](evidence/repair-iosqa10/ios-visible-caret.png). Se reutiliza el mismo binario a70f569, sin cambiar el código ni los datos para hacer pasar las comprobaciones.
+
+## Resultado final — IOS-QA-10 cerrada en simulador
+
+La [ejecución 42647274836](https://github.com/dieliza/edumoney/actions/runs/42647274836), job iOS 129263822414, terminó con **success** en iPhone 17 Pro / iOS 26.4. Fuente del recorrido: 5a65000; binario compilado desde el código de aplicación a70f569 en 42641895603. Los commits posteriores modifican pruebas y documentación, no ese código de aplicación.
+
+- Campo visible bajo el encabezado, escritura de `Cierre ficticio de prueba` y comprobación exacta antes/después de ocultar teclado.
+- Motivo de cierre escrito y confirmado; entrevista guardada localmente.
+- Aplicación detenida y abierta de nuevo; navegación al mismo año y comprobación exacta de la nota recuperada, sin T añadida.
+- Cabecera cifrada y rechazo de lectura mediante SQLite sin clave. Huella idéntica antes/después de la reapertura: `6f2b81027001539c141c00dde93782ddfeab7d73dbf5b653da67b13e6a9ba3de`. Exclusión de respaldo comprobada por ios-smoke.sh, parte del paso aprobado.
+
+[Antes de guardar](evidence/repair-iosqa10/ios-exact-before-save.png) · [Nota exacta recuperada](evidence/repair-iosqa10/ios-exact-reopened.png) · [Recorrido completo aprobado](evidence/repair-iosqa10/maestro-exact-persistence.log).
+
+Las 268 pruebas locales y los seis recorridos web aprobaron. Se mantiene pendiente la interacción completa de los formularios comerciales en dispositivos, accesibilidad con lectores nativos y pruebas físicas/distribución según QUALITY_RELEASE.md. Este cierre resuelve el recorrido de entrevista iOS; no declara completa toda la validación de publicación. Sin fusión de main ni publicación de la aplicación.
