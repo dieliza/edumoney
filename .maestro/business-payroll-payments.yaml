@@ -16,7 +16,7 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-date
-- eraseText: 100
+- eraseText: 10
 - inputText: "2026-10-31"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -28,7 +28,6 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-start
-- eraseText: 100
 - inputText: "2026-10-01"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -40,7 +39,6 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-end
-- eraseText: 100
 - inputText: "2026-10-31"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -52,7 +50,6 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-reference
-- eraseText: 100
 - inputText: "FICTICIO-NOMINA-01"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -64,7 +61,6 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-priorWagesCents
-- eraseText: 100
 - inputText: "0.00"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -76,7 +72,6 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-priorSource
-- eraseText: 100
 - inputText: "FICTICIO: cero previo confirmado"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -88,7 +83,6 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-otherCents
-- eraseText: 100
 - inputText: "0.00"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -121,7 +115,7 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-gross
-- eraseText: 100
+- eraseText: 7
 - inputText: "2200.00"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -133,7 +127,6 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-ssWages
-- eraseText: 100
 - inputText: "2200.00"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -145,7 +138,6 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-medicareWages
-- eraseText: 100
 - inputText: "2200.00"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -157,7 +149,6 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-pr
-- eraseText: 100
 - inputText: "54.91"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -169,7 +160,6 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-ss
-- eraseText: 100
 - inputText: "136.40"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -181,7 +171,6 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-medicare
-- eraseText: 100
 - inputText: "31.90"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -193,7 +182,6 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-additionalMedicare
-- eraseText: 100
 - inputText: "0.00"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -205,7 +193,6 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-sinot
-- eraseText: 100
 - inputText: "6.60"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -217,7 +204,7 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-other
-- eraseText: 100
+- eraseText: 4
 - inputText: "0.00"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -229,7 +216,6 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-net
-- eraseText: 100
 - inputText: "1970.19"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -241,7 +227,6 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-reference
-- eraseText: 100
 - inputText: "FICTICIO-PAGO-01"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -253,7 +238,6 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-note
-- eraseText: 100
 - inputText: "FICTICIO: importes reales de prueba documentados"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -286,7 +270,7 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-date
-- eraseText: 100
+- eraseText: 10
 - inputText: "2026-11-01"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -298,7 +282,7 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-amountCents
-- eraseText: 100
+- eraseText: 4
 - inputText: "20.00"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -310,7 +294,6 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-reference
-- eraseText: 100
 - inputText: "FICTICIO-DEPOSITO-01/1"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -322,7 +305,6 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-note
-- eraseText: 100
 - inputText: "FICTICIO: partida del deposito"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -361,7 +343,7 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-date
-- eraseText: 100
+- eraseText: 10
 - inputText: "2026-11-01"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -373,7 +355,7 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-amountCents
-- eraseText: 100
+- eraseText: 4
 - inputText: "34.91"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -385,7 +367,6 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-reference
-- eraseText: 100
 - inputText: "FICTICIO-DEPOSITO-01/2"
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -397,7 +378,6 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn:
     id: record-note
-- eraseText: 100
 - inputText: "FICTICIO: partida del deposito"
 - tapOn:
     id: sheet-dismiss-keyboard
