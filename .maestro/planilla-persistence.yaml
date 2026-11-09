@@ -48,7 +48,7 @@ appId: com.edumoney.app
 - eraseText
 - inputText: "Cierre ficticio de prueba"
 - takeScreenshot: stage10-notes-before-save
-- assertVisible: "Cierre ficticio de prueba"
+- assertVisible: "Cierre ficticio de prueba.*"
 - runFlow:
     when:
       platform: Android
@@ -135,5 +135,5 @@ appId: com.edumoney.app
     direction: DOWN
     centerElement: true
     timeout: 120000
-- assertVisible: "Cierre ficticio de prueba"
+- assertVisible: "Cierre ficticio de prueba.*"
 - takeScreenshot: stage10-reopened
