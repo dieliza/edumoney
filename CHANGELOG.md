@@ -196,3 +196,12 @@
 - Evidencias, alcance y resultados en docs/stages/REPARACIONES-01.md.
 
 - Cierre IOS-QA-10: ejecución 42647274836 aprobada en iPhone 17 Pro/iOS 26.4, con nota exacta antes/después de reiniciar y controles de cifrado/reapertura. Evidencias en el informe de reparaciones.
+
+## Negocio 4 — Panel, escenarios y calendario
+
+- Resultado de operaciones, efectivo inicial/variación y reservas separados; clasificaciones económicas vinculadas a sus versiones.
+- Registro de estimadas PR/federal sin duplicar gasto vinculado, proyección anual documentada y reserva faltante con pendientes explícitos.
+- Escenarios de ventas/gastos/cobros/pagos/equipo con supuestos, comparación, edición e historial.
+- Calendario base por perfil y obligaciones verificadas con fuente, sin inferir régimen de LLC ni confirmar cumplimiento por un pago.
+- Esquema 13 y respaldos 9–13; centavos negativos editables y protección de agregados fuera de rango.
+- Informe y alcance en docs/stages/NEGOCIO-04.md. Sin nómina todavía, sin fusión de main ni publicación.

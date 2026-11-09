@@ -15,7 +15,8 @@ export function localToday(): string {
 export function inputAmount(value: number): string {
     cents(value);
     const n = BigInt(value);
-    return `${n / 100n}.${String(n % 100n).padStart(2, '0')}`;
+    const abs = n < 0n ? -n : n;
+    return `${n < 0n ? '-' : ''}${abs / 100n}.${String(abs % 100n).padStart(2, '0')}`;
 }
 export function formatMoney(value: number): string {
     cents(value);

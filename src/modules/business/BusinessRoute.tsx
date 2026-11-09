@@ -5,5 +5,6 @@ export default function BusinessPreview() {
   <Card><Body>El formulario comercial y sus datos se usan en la aplicación iOS o Android con almacenamiento local cifrado. Esta vista del navegador no guarda información comercial.</Body><Body>Los perfiles empiezan en blanco y admiten varios titulares, DBA y proyectos, con clasificaciones de Puerto Rico y federal separadas.</Body><Body>En la aplicación también puedes registrar ingresos, gastos y recibos, repartir importes por proyecto y preparar la exportación comercial.</Body></Card>
   <ActionButton title="Ver sección de registros comerciales" secondary onPress={()=>router.push('/business-ledger')}/>
   <ActionButton title="Ver IVU y contratistas" secondary onPress={()=>router.push('/business-obligations')}/>
+  <ActionButton title="Ver panel y escenarios" secondary onPress={()=>router.push('/business-planning')}/>
  </Screen>;
 }

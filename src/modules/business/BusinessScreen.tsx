@@ -32,6 +32,7 @@ export default function BusinessScreen() {
    <ActionButton title={`Abrir perfil: ${h.legalName}`} secondary onPress={()=>{setNotice('');setEditing(h.id);}}/>
    <ActionButton title={`Movimientos y recibos: ${h.legalName}`} onPress={()=>router.push({pathname:'/business-ledger',params:{holderId:h.id}})}/>
    <ActionButton title={`IVU y contratistas: ${h.legalName}`} secondary onPress={()=>router.push({pathname:'/business-obligations',params:{holderId:h.id}})}/>
+   <ActionButton title={`Panel y escenarios: ${h.legalName}`} secondary onPress={()=>router.push({pathname:'/business-planning',params:{holderId:h.id}})}/>
   </Card>)}
  </Screen>;
 }

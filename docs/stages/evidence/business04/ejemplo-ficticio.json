@@ -1,0 +1,404 @@
+{
+  "fictitious": true,
+  "base": {
+    "profitCents": 70000,
+    "cashChangeCents": 111500,
+    "cashCents": 211500,
+    "reserves": {
+      "tax": 20000,
+      "ivu": 11500,
+      "payroll": 5000
+    },
+    "reservedCents": 36500,
+    "availableCents": 175000,
+    "recordedPaidCents": 10000,
+    "dueCents": 65000,
+    "needReserveCents": 45000,
+    "taxReserveAllocatedCents": 20000,
+    "taxPending": [],
+    "pending": [],
+    "assumptions": [
+      "Resultado de operaciones registradas antes de depreciación y ajustes contributivos. No es renta tributable ni contabilidad completa de cuentas por cobrar.",
+      "Los cobros usan bruto menos devoluciones y comisiones; el IVU cobrado no es ganancia.",
+      "Compras a crédito afectan resultado cuando son operación, pero no efectivo hasta registrar su pago. Equipos, financiación, aportaciones/retiros y pagos estimados se separan de operación.",
+      "El efectivo inicial es declarado al comenzar la fecha base; el efectivo calculado no es saldo bancario confirmado. Reservar dinero no crea un gasto.",
+      "La proyección anual y los créditos son importes declarados con fundamento; no se anualiza automáticamente ni se exige validación de CPA."
+    ]
+  },
+  "scenario": {
+    "id": "escenario",
+    "holderId": "h",
+    "year": 2026,
+    "name": "Escenario ficticio",
+    "salesCents": 50000,
+    "expensesCents": 10000,
+    "collectionsCents": 30000,
+    "paymentsCents": 10000,
+    "equipmentCostCents": 50000,
+    "equipmentCashCents": 20000,
+    "taxChangeCents": 8000,
+    "assumptions": "Ficticio: ventas sin IVU; cobros parciales y equipo financiado, antes de depreciación."
+  },
+  "compared": {
+    "profitDelta": 40000,
+    "cashDelta": 0,
+    "profitCents": 110000,
+    "cashCents": 211500,
+    "availableCents": 175000,
+    "dueCents": 73000,
+    "needReserveCents": 53000,
+    "assumedFinancingCents": 30000,
+    "explanations": [
+      "Las ventas cambian el resultado; los cobros cambian el efectivo. No se supone que toda venta se cobre inmediatamente.",
+      "Los gastos operativos y sus pagos se introducen por separado. Una reducción se escribe negativa.",
+      "El equipo no se descuenta de inmediato de este resultado antes de depreciación; el efectivo baja solo por lo pagado. La diferencia es financiación/importe aún por atender del escenario.",
+      "El cambio contributivo es un supuesto declarado, no una tasa o deducción automática. Comparar no crea movimientos, pagos ni reservas.",
+      "Ficticio: ventas sin IVU; cobros parciales y equipo financiado, antes de depreciación."
+    ]
+  },
+  "incomplete": {
+    "profitCents": 70000,
+    "cashChangeCents": 111500,
+    "cashCents": 211500,
+    "reserves": {
+      "tax": 20000,
+      "ivu": 11500,
+      "payroll": 5000
+    },
+    "reservedCents": 36500,
+    "availableCents": 175000,
+    "recordedPaidCents": 10000,
+    "dueCents": null,
+    "needReserveCents": null,
+    "taxReserveAllocatedCents": 20000,
+    "taxPending": [
+      "Confirmar clasificación contributiva correspondiente al alcance elegido; miembros de LLC no bastan.",
+      "El perfil cambió: revisar fundamento e importe de la proyección."
+    ],
+    "pending": [],
+    "assumptions": [
+      "Resultado de operaciones registradas antes de depreciación y ajustes contributivos. No es renta tributable ni contabilidad completa de cuentas por cobrar.",
+      "Los cobros usan bruto menos devoluciones y comisiones; el IVU cobrado no es ganancia.",
+      "Compras a crédito afectan resultado cuando son operación, pero no efectivo hasta registrar su pago. Equipos, financiación, aportaciones/retiros y pagos estimados se separan de operación.",
+      "El efectivo inicial es declarado al comenzar la fecha base; el efectivo calculado no es saldo bancario confirmado. Reservar dinero no crea un gasto.",
+      "La proyección anual y los créditos son importes declarados con fundamento; no se anualiza automáticamente ni se exige validación de CPA."
+    ]
+  },
+  "calendar": [
+    {
+      "key": "deposit:2026-01",
+      "name": "Servicios: depósito mensual base",
+      "period": "2026-01",
+      "date": "2026-02-15",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-19-10-cc-ri-19-10",
+      "note": "Confirmar alternativa trimestral de CC 19-10 si retención del trimestre < $2,500 y cumple condiciones."
+    },
+    {
+      "key": "ivu:2026-01",
+      "name": "IVU: presentación mensual y revisión de remesas",
+      "period": "2026-01",
+      "date": "2026-02-20",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/node/1820",
+      "note": "Procedimiento municipal/COFIM del período anterior; confirmar trámite; pagar no confirma presentación ni remesa municipal."
+    },
+    {
+      "key": "deposit:2026-02",
+      "name": "Servicios: depósito mensual base",
+      "period": "2026-02",
+      "date": "2026-03-15",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-19-10-cc-ri-19-10",
+      "note": "Confirmar alternativa trimestral de CC 19-10 si retención del trimestre < $2,500 y cumple condiciones."
+    },
+    {
+      "key": "ivu:2026-02",
+      "name": "IVU: presentación mensual y revisión de remesas",
+      "period": "2026-02",
+      "date": "2026-03-20",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/node/1820",
+      "note": "Procedimiento municipal/COFIM del período anterior; confirmar trámite; pagar no confirma presentación ni remesa municipal."
+    },
+    {
+      "key": "deposit:2026-03",
+      "name": "Servicios: depósito mensual base",
+      "period": "2026-03",
+      "date": "2026-04-15",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-19-10-cc-ri-19-10",
+      "note": "Confirmar alternativa trimestral de CC 19-10 si retención del trimestre < $2,500 y cumple condiciones."
+    },
+    {
+      "key": "estimated:0",
+      "name": "Estimada PR: plazo base 1",
+      "period": "2026",
+      "date": "2026-04-15",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/sites/default/files/documentos/480_e-1_0.pdf",
+      "note": "Solo fecha nominal para régimen declarado y año calendario. Confirmar obligación, inicio, excepciones y avisos. Un pago registrado no confirma que se cumplió todo el plazo."
+    },
+    {
+      "key": "ivu:2026-03",
+      "name": "IVU: presentación mensual y revisión de remesas",
+      "period": "2026-03",
+      "date": "2026-04-20",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/node/1820",
+      "note": "Procedimiento municipal/COFIM del período anterior; confirmar trámite; pagar no confirma presentación ni remesa municipal."
+    },
+    {
+      "key": "quarter:1",
+      "name": "480.6SP-1 trimestral",
+      "period": "2026-Q1",
+      "date": "2026-04-30",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-19-10-cc-ri-19-10",
+      "note": "Revisar período y confirmación propia."
+    },
+    {
+      "key": "deposit:2026-04",
+      "name": "Servicios: depósito mensual base",
+      "period": "2026-04",
+      "date": "2026-05-15",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-19-10-cc-ri-19-10",
+      "note": "Confirmar alternativa trimestral de CC 19-10 si retención del trimestre < $2,500 y cumple condiciones."
+    },
+    {
+      "key": "ivu:2026-04",
+      "name": "IVU: presentación mensual y revisión de remesas",
+      "period": "2026-04",
+      "date": "2026-05-20",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/node/1820",
+      "note": "Procedimiento municipal/COFIM del período anterior; confirmar trámite; pagar no confirma presentación ni remesa municipal."
+    },
+    {
+      "key": "deposit:2026-05",
+      "name": "Servicios: depósito mensual base",
+      "period": "2026-05",
+      "date": "2026-06-15",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-19-10-cc-ri-19-10",
+      "note": "Confirmar alternativa trimestral de CC 19-10 si retención del trimestre < $2,500 y cumple condiciones."
+    },
+    {
+      "key": "estimated:1",
+      "name": "Estimada PR: plazo base 2",
+      "period": "2026",
+      "date": "2026-06-15",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/sites/default/files/documentos/480_e-1_0.pdf",
+      "note": "Solo fecha nominal para régimen declarado y año calendario. Confirmar obligación, inicio, excepciones y avisos. Un pago registrado no confirma que se cumplió todo el plazo."
+    },
+    {
+      "key": "ivu:2026-05",
+      "name": "IVU: presentación mensual y revisión de remesas",
+      "period": "2026-05",
+      "date": "2026-06-20",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/node/1820",
+      "note": "Procedimiento municipal/COFIM del período anterior; confirmar trámite; pagar no confirma presentación ni remesa municipal."
+    },
+    {
+      "key": "deposit:2026-06",
+      "name": "Servicios: depósito mensual base",
+      "period": "2026-06",
+      "date": "2026-07-15",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-19-10-cc-ri-19-10",
+      "note": "Confirmar alternativa trimestral de CC 19-10 si retención del trimestre < $2,500 y cumple condiciones."
+    },
+    {
+      "key": "ivu:2026-06",
+      "name": "IVU: presentación mensual y revisión de remesas",
+      "period": "2026-06",
+      "date": "2026-07-20",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/node/1820",
+      "note": "Procedimiento municipal/COFIM del período anterior; confirmar trámite; pagar no confirma presentación ni remesa municipal."
+    },
+    {
+      "key": "quarter:2",
+      "name": "480.6SP-1 trimestral",
+      "period": "2026-Q2",
+      "date": "2026-07-31",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-19-10-cc-ri-19-10",
+      "note": "Revisar período y confirmación propia."
+    },
+    {
+      "key": "deposit:2026-07",
+      "name": "Servicios: depósito mensual base",
+      "period": "2026-07",
+      "date": "2026-08-15",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-19-10-cc-ri-19-10",
+      "note": "Confirmar alternativa trimestral de CC 19-10 si retención del trimestre < $2,500 y cumple condiciones."
+    },
+    {
+      "key": "ivu:2026-07",
+      "name": "IVU: presentación mensual y revisión de remesas",
+      "period": "2026-07",
+      "date": "2026-08-20",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/node/1820",
+      "note": "SURI: planilla consolidada; pagos estatal y municipal separados; pagar no confirma presentación ni remesa municipal."
+    },
+    {
+      "key": "deposit:2026-08",
+      "name": "Servicios: depósito mensual base",
+      "period": "2026-08",
+      "date": "2026-09-15",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-19-10-cc-ri-19-10",
+      "note": "Confirmar alternativa trimestral de CC 19-10 si retención del trimestre < $2,500 y cumple condiciones."
+    },
+    {
+      "key": "estimated:2",
+      "name": "Estimada PR: plazo base 3",
+      "period": "2026",
+      "date": "2026-09-15",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/sites/default/files/documentos/480_e-1_0.pdf",
+      "note": "Solo fecha nominal para régimen declarado y año calendario. Confirmar obligación, inicio, excepciones y avisos. Un pago registrado no confirma que se cumplió todo el plazo."
+    },
+    {
+      "key": "ivu:2026-08",
+      "name": "IVU: presentación mensual y revisión de remesas",
+      "period": "2026-08",
+      "date": "2026-09-20",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/node/1820",
+      "note": "SURI: planilla consolidada; pagos estatal y municipal separados; pagar no confirma presentación ni remesa municipal."
+    },
+    {
+      "key": "deposit:2026-09",
+      "name": "Servicios: depósito mensual base",
+      "period": "2026-09",
+      "date": "2026-10-15",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-19-10-cc-ri-19-10",
+      "note": "Confirmar alternativa trimestral de CC 19-10 si retención del trimestre < $2,500 y cumple condiciones."
+    },
+    {
+      "key": "ivu:2026-09",
+      "name": "IVU: presentación mensual y revisión de remesas",
+      "period": "2026-09",
+      "date": "2026-10-20",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/node/1820",
+      "note": "SURI: planilla consolidada; pagos estatal y municipal separados; pagar no confirma presentación ni remesa municipal."
+    },
+    {
+      "key": "quarter:3",
+      "name": "480.6SP-1 trimestral",
+      "period": "2026-Q3",
+      "date": "2026-10-31",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-19-10-cc-ri-19-10",
+      "note": "Revisar período y confirmación propia."
+    },
+    {
+      "key": "deposit:2026-10",
+      "name": "Servicios: depósito mensual base",
+      "period": "2026-10",
+      "date": "2026-11-15",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-19-10-cc-ri-19-10",
+      "note": "Confirmar alternativa trimestral de CC 19-10 si retención del trimestre < $2,500 y cumple condiciones."
+    },
+    {
+      "key": "ivu:2026-10",
+      "name": "IVU: presentación mensual y revisión de remesas",
+      "period": "2026-10",
+      "date": "2026-11-20",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/node/1820",
+      "note": "SURI: planilla consolidada; pagos estatal y municipal separados; pagar no confirma presentación ni remesa municipal."
+    },
+    {
+      "key": "deposit:2026-11",
+      "name": "Servicios: depósito mensual base",
+      "period": "2026-11",
+      "date": "2026-12-15",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-19-10-cc-ri-19-10",
+      "note": "Confirmar alternativa trimestral de CC 19-10 si retención del trimestre < $2,500 y cumple condiciones."
+    },
+    {
+      "key": "ivu:2026-11",
+      "name": "IVU: presentación mensual y revisión de remesas",
+      "period": "2026-11",
+      "date": "2026-12-20",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/node/1820",
+      "note": "SURI: planilla consolidada; pagos estatal y municipal separados; pagar no confirma presentación ni remesa municipal."
+    },
+    {
+      "key": "deposit:2026-12",
+      "name": "Servicios: depósito mensual base",
+      "period": "2026-12",
+      "date": "2027-01-15",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-19-10-cc-ri-19-10",
+      "note": "Confirmar alternativa trimestral de CC 19-10 si retención del trimestre < $2,500 y cumple condiciones."
+    },
+    {
+      "key": "estimated:3",
+      "name": "Estimada PR: plazo base 4",
+      "period": "2026",
+      "date": "2027-01-15",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/sites/default/files/documentos/480_e-1_0.pdf",
+      "note": "Solo fecha nominal para régimen declarado y año calendario. Confirmar obligación, inicio, excepciones y avisos. Un pago registrado no confirma que se cumplió todo el plazo."
+    },
+    {
+      "key": "ivu:2026-12",
+      "name": "IVU: presentación mensual y revisión de remesas",
+      "period": "2026-12",
+      "date": "2027-01-20",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/node/1820",
+      "note": "SURI: planilla consolidada; pagos estatal y municipal separados; pagar no confirma presentación ni remesa municipal."
+    },
+    {
+      "key": "quarter:4",
+      "name": "480.6SP-1 trimestral",
+      "period": "2026-Q4",
+      "date": "2027-01-31",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-19-10-cc-ri-19-10",
+      "note": "Revisar período y confirmación propia."
+    },
+    {
+      "key": "sp2",
+      "name": "480.6SP.2: conciliación anual",
+      "period": "2026",
+      "date": "2027-02-28",
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/sites/default/files/documentos/480.6sp.2_2026_informativo.pdf",
+      "note": "No sustituye las informativas por proveedor."
+    },
+    {
+      "key": "annual-return",
+      "name": "Planilla anual: confirmar formulario, régimen y fecha",
+      "period": "2026",
+      "date": null,
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/calendario-contributivo",
+      "note": "Confirmar cierre contributivo y obligaciones del titular o socios. No se asigna una fecha de otro año sin verificar."
+    },
+    {
+      "key": "municipal-other",
+      "name": "Obligaciones municipales y permisos: confirmar alcance",
+      "period": "2026",
+      "date": null,
+      "status": "Por confirmar",
+      "source": "https://hacienda.pr.gov/calendario-contributivo",
+      "note": "Verificar patente, permisos y trámites aplicables con el municipio; añadir fechas verificadas con su fuente."
+    }
+  ]
+}
