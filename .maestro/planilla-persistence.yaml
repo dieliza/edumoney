@@ -1,0 +1,143 @@
+appId: com.edumoney.app
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Abrir Mi dinero"
+    timeout: 60000
+- tapOn: "Abrir Mi dinero"
+- scrollUntilVisible:
+    element:
+      id: open-tax
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: open-tax
+- extendedWaitUntil:
+    visible: "Expediente local para revisión profesional."
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: open-planilla
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: open-planilla
+- extendedWaitUntil:
+    visible: "Entrevista y borrador de cierre para revisión."
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      text: "Cálculo automático sin requisito de CPA"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage10-year-pending
+- scrollUntilVisible:
+    element:
+      id: closure-notes
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: closure-notes
+- tapOn:
+    id: closure-notes
+- eraseText
+- inputText: "Cierre ficticio de prueba"
+- takeScreenshot: stage10-notes-before-save
+- assertVisible: "Cierre ficticio de prueba"
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - hideKeyboard
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn:
+          text: "Notas y situaciones para revisar"
+          index: 0
+- scrollUntilVisible:
+    element:
+      id: closure-reason
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: closure-reason
+- eraseText
+- inputText: "Prueba ficticia"
+- assertVisible: "Prueba ficticia"
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - hideKeyboard
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn:
+          text: "Motivo del cierre o corrección"
+          index: 0
+- scrollUntilVisible:
+    element:
+      id: closure-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: closure-save
+- scrollUntilVisible:
+    element:
+      text: "Entrevista guardada localmente.*"
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible: "Abrir Mi dinero"
+    timeout: 60000
+- tapOn:
+    text: "Abrir Mi dinero"
+- scrollUntilVisible:
+    element:
+      id: open-tax
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: open-tax
+- extendedWaitUntil:
+    visible: "Expediente local para revisión profesional."
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: open-planilla
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: open-planilla
+- extendedWaitUntil:
+    visible: "Entrevista y borrador de cierre para revisión."
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: closure-notes
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      text: "Notas y situaciones para revisar"
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- assertVisible: "Cierre ficticio de prueba"
+- takeScreenshot: stage10-reopened

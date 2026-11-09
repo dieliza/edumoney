@@ -9,6 +9,11 @@ on:
         type: choice
         options: [both, android, ios]
         default: both
+      scenario:
+        description: 'Recorrido completo o diagnóstico de entrevista'
+        type: choice
+        options: [full, persistence]
+        default: full
       artifact_run:
         description: 'Opcional: repetir pruebas con los paquetes de una ejecución anterior, sin recompilar'
         type: string
@@ -168,7 +173,9 @@ jobs:
           mkdir -p native-results
           xcrun simctl ui "$DEVICE_ID" appearance light
           set -o pipefail
-          maestro --device "$DEVICE_ID" test --test-output-dir native-results .maestro/planilla.yaml 2>&1 | tee native-results/maestro-planilla.log
+          TEST_FLOW=.maestro/planilla.yaml
+          if [ "${{ inputs.scenario }}" = "persistence" ]; then TEST_FLOW=.maestro/planilla-persistence.yaml; fi
+          maestro --device "$DEVICE_ID" test --test-output-dir native-results "$TEST_FLOW" 2>&1 | tee native-results/maestro-planilla.log
           # Revalidar el cifrado y la reapertura después de guardar los movimientos de prueba.
           bash scripts/ios-smoke.sh "$DEVICE_ID"
       - uses: actions/upload-artifact@v4
