@@ -1,0 +1,14 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.edumoney.qa.receiver">
+  <uses-sdk android:minSdkVersion="23" android:targetSdkVersion="35"/>
+  <!-- Test-only receiver: deliberately has no permissions, including INTERNET. -->
+  <application android:label="EduMoney QA local" android:allowBackup="false" android:theme="@android:style/Theme.Material.Light.NoActionBar">
+    <activity android:name=".ReceiverActivity" android:exported="true">
+      <intent-filter>
+        <action android:name="android.intent.action.SEND"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <data android:mimeType="text/csv"/>
+        <data android:mimeType="application/pdf"/>
+      </intent-filter>
+    </activity>
+  </application>
+</manifest>

@@ -209,6 +209,11 @@ appId: com.edumoney.app
     when:
       platform: Android
     commands:
+      - tapOn: "EduMoney QA local"
+      - extendedWaitUntil:
+          visible: "CSV local válido.*"
+          timeout: 60000
+      - takeScreenshot: payroll-received-csv-local
       - pressKey: BACK
 - runFlow:
     when:
@@ -232,6 +237,11 @@ appId: com.edumoney.app
     when:
       platform: Android
     commands:
+      - tapOn: "EduMoney QA local"
+      - extendedWaitUntil:
+          visible: "PDF local válido.*"
+          timeout: 60000
+      - takeScreenshot: payroll-received-pdf-local
       - pressKey: BACK
 - runFlow:
     when:
