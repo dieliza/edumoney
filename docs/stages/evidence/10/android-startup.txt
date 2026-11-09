@@ -1,0 +1,7 @@
+Starting: Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=com.edumoney.app/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: com.edumoney.app/.MainActivity
+TotalTime: 1051
+WaitTime: 1057
+Complete

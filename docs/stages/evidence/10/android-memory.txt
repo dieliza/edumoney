@@ -1,0 +1,57 @@
+Applications Memory Usage (in Kilobytes):
+Uptime: 460748 Realtime: 460748
+
+** MEMINFO in pid 3433 [com.edumoney.app] **
+                   Pss  Private  Private     Swap      Rss     Heap     Heap     Heap
+                 Total    Dirty    Clean    Dirty    Total     Size    Alloc     Free
+                ------   ------   ------   ------   ------   ------   ------   ------
+  Native Heap    28734    28664        0        0    32668    44556    37314     3174
+  Dalvik Heap     8987     8840        0        0    16260    10682     5341     5341
+ Dalvik Other     1937     1028        0        0     3564                           
+        Stack      768      768        0        0      776                           
+       Ashmem       13        0        0        0      588                           
+    Other dev       22        0       20        0      272                           
+     .so mmap     2521      164      188        0    39264                           
+    .jar mmap     1882        0       16        0    38528                           
+    .apk mmap    27604     1048    25788        0    30244                           
+    .ttf mmap      715        0      572        0     1196                           
+    .dex mmap     8045        4     8028        0     8932                           
+    .oat mmap      653        0        0        0    13136                           
+    .art mmap     4813     4180       36        0    32968                           
+   Other mmap      607        4       84        0     2800                           
+      Unknown    11634    11628        0        0    12472                           
+        TOTAL    98935    56328    34732        0   233668    55238    42655     8515
+ 
+ App Summary
+                       Pss(KB)                        Rss(KB)
+                        ------                         ------
+           Java Heap:    13056                          49228
+         Native Heap:    28664                          32668
+                Code:    35844                         133136
+               Stack:      768                            776
+            Graphics:        0                              0
+       Private Other:    12728
+              System:     7875
+             Unknown:                                   17860
+ 
+           TOTAL PSS:    98935            TOTAL RSS:   233668      TOTAL SWAP (KB):        0
+ 
+ Objects
+               Views:      252         ViewRootImpl:        1
+         AppContexts:        5           Activities:        1
+              Assets:       12        AssetManagers:        0
+       Local Binders:       21        Proxy Binders:       56
+       Parcel memory:        9         Parcel count:       34
+    Death Recipients:        0             WebViews:        0
+ 
+ SQL
+         MEMORY_USED:       80
+  PAGECACHE_OVERFLOW:       21          MALLOC_SIZE:       46
+ 
+ DATABASES
+      pgsz     dbsz   Lookaside(b) cache hits cache misses cache size  Dbname
+PER CONNECTION STATS
+         4       20             27     1    20     2  /data/user/0/com.edumoney.app/databases/RKStorage
+POOL STATS
+     cache hits  cache misses    cache size  Dbname
+              1            21            22  /data/user/0/com.edumoney.app/databases/RKStorage
