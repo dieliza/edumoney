@@ -1,0 +1,475 @@
+[
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Abrir Mi dinero",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794251201924,
+      "duration": 6038,
+      "sequenceNumber": 5,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Abrir Mi dinero",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^Patrono FICTICIO movil$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794251223499,
+      "duration": 792,
+      "sequenceNumber": 11,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^Patrono FICTICIO movil$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Clasificación contributiva de Puerto Rico",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794251240567,
+      "duration": 236,
+      "sequenceNumber": 18,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Clasificación contributiva de Puerto Rico",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "idRegex": "record-name",
+            "optional": false
+          }
+        },
+        "timeout": "120000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794251309680,
+      "duration": 402,
+      "sequenceNumber": 25,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "idRegex": "record-name",
+              "optional": false
+            }
+          },
+          "timeout": "120000",
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^NOTA-FICTICIA-PERSISTE$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794251376703,
+      "duration": 256,
+      "sequenceNumber": 41,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^NOTA-FICTICIA-PERSISTE$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Pagos confirmados: 0.*",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794251515888,
+      "duration": 318,
+      "sequenceNumber": 81,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Pagos confirmados: 0.*",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^Neto pagado \\$1,970\\.19 · comprobante FICTICIO-PAGO-01$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794251684787,
+      "duration": 363,
+      "sequenceNumber": 138,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^Neto pagado \\$1,970\\.19 · comprobante FICTICIO-PAGO-01$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^Pagos confirmados: 1 · Bruto \\$2,200\\.00 · Neto \\$1,970\\.19 · Costo patronal Pendiente$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794251762473,
+      "duration": 562,
+      "sequenceNumber": 163,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^Pagos confirmados: 1 · Bruto \\$2,200\\.00 · Neto \\$1,970\\.19 · Costo patronal Pendiente$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^Hacienda: salarios: obligación \\$54\\.91 · depositado \\$20\\.00 · pendiente \\$34\\.91$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794251763541,
+      "duration": 438,
+      "sequenceNumber": 165,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^Hacienda: salarios: obligación \\$54\\.91 · depositado \\$20\\.00 · pendiente \\$34\\.91$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^Pagos confirmados: 1 · Bruto \\$2,200\\.00 · Neto \\$1,970\\.19 · Costo patronal Pendiente$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794251865673,
+      "duration": 427,
+      "sequenceNumber": 190,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^Pagos confirmados: 1 · Bruto \\$2,200\\.00 · Neto \\$1,970\\.19 · Costo patronal Pendiente$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^Hacienda: salarios: obligación \\$54\\.91 · depositado \\$54\\.91 · pendiente \\$0\\.00$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794251866451,
+      "duration": 331,
+      "sequenceNumber": 192,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^Hacienda: salarios: obligación \\$54\\.91 · depositado \\$54\\.91 · pendiente \\$0\\.00$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Abrir Mi dinero",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794251882496,
+      "duration": 4899,
+      "sequenceNumber": 196,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Abrir Mi dinero",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Nómina de Negocio",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794251929067,
+      "duration": 797,
+      "sequenceNumber": 205,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Nómina de Negocio",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^Pagos confirmados: 1 · Bruto \\$2,200\\.00 · Neto \\$1,970\\.19 · Costo patronal Pendiente$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794251934746,
+      "duration": 327,
+      "sequenceNumber": 207,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^Pagos confirmados: 1 · Bruto \\$2,200\\.00 · Neto \\$1,970\\.19 · Costo patronal Pendiente$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^Hacienda: salarios: obligación \\$54\\.91 · depositado \\$54\\.91 · pendiente \\$0\\.00$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794251935365,
+      "duration": 326,
+      "sequenceNumber": 209,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^Hacienda: salarios: obligación \\$54\\.91 · depositado \\$54\\.91 · pendiente \\$0\\.00$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  }
+]

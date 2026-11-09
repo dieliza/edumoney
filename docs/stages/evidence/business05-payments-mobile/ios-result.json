@@ -1,0 +1,16 @@
+{
+  "runId": 42678945990,
+  "jobId": 129367935819,
+  "result": "passed",
+  "artifactId": 13701864970,
+  "applicationCommit": "3f03c59",
+  "procedureCommit": "9dbab0c0c34aa767cedc0e0de1bd5f6c857d07fb",
+  "paymentCountAfterRestart": 1,
+  "grossCents": 220000,
+  "netCents": 197019,
+  "prDepositedCents": 5491,
+  "prPendingCents": 0,
+  "navigationAttempts": 1,
+  "encryptedDatabaseVerified": true,
+  "backupExclusionVerifiedInJobLog": true
+}

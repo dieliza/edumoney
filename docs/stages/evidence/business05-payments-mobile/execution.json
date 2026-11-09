@@ -33,11 +33,11 @@
     {
       "id": 42678945990,
       "platform": "ios",
-      "result": "in progress, destination heading and navigation recovery added",
-      "casesExecuted": null
+      "result": "passed",
+      "casesExecuted": 1
     }
   ],
-  "casesCompleted": 9,
-  "casesIncludingCurrentAttempt": 10,
-  "maximumNavigationRetriesInCurrentCase": 2
+  "casesCompleted": 10,
+  "maximumNavigationRetriesInCurrentCase": 2,
+  "navigationAttemptsInFinalRun": 1
 }

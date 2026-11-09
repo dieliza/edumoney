@@ -219,3 +219,10 @@
 - Persistencia de empleados comprobada en Android/iOS; prueba jurídica y comando de CI corregidos, reutilizando paquetes compilados.
 - 36 casos de nómina más tres recorridos, incluyendo el intento inicial fallido: 39 en total. El máximo de 100 queda registrado en AGENTS.md.
 - iOS completó recorrido y controles de cifrado antes de una cancelación en limpieza; el estado y la evidencia se documentan sin presentar la ejecución como verde. [Informe](docs/stages/NEGOCIO-05-MOVIL.md).
+
+### Pagos y depósitos — verificación móvil
+
+- Flujo reutilizable de alta y nuevo escenario de pago/depósitos parciales con datos ficticios.
+- Android e iOS finales aprobados: un pago salarial, depósitos PR reconciliados y persistencia al reiniciar; cifrado y exclusión de respaldo verificados en iOS.
+- Corrección de esperas y navegación del procedimiento iOS, sin cambios en el código de aplicación.
+- Diez casos ejecutados, incluidas repeticiones, por debajo de 100; TypeScript y ESLint aprobados. [Informe y evidencia](docs/stages/NEGOCIO-05-PAGOS-MOVIL.md). Sin cambios en main ni publicación.
