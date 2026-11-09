@@ -10,9 +10,9 @@ on:
         options: [both, android, ios]
         default: both
       scenario:
-        description: 'Recorrido completo o diagnóstico de entrevista'
+        description: 'Recorrido completo, entrevista o nómina móvil'
         type: choice
-        options: [full, persistence]
+        options: [full, persistence, payroll]
         default: full
       artifact_run:
         description: 'Opcional: repetir pruebas con los paquetes de una ejecución anterior, sin recompilar'
@@ -47,7 +47,9 @@ jobs:
         with:
           packages: platform-tools
       - run: npm ci
-      - run: npm run lint && npm run check
+      - run: npm run lint && npm run typecheck
+      - run: npm test
+        if: inputs.scenario != 'payroll'
       - run: npx expo prebuild --no-install
         env:
           CI: 1
@@ -98,7 +100,9 @@ jobs:
             adb shell svc wifi disable
             adb shell svc data disable
             rm -rf native-results
-            maestro test --test-output-dir native-results .maestro/planilla.yaml
+            TEST_FLOW=.maestro/planilla.yaml
+            if [ "${{ inputs.scenario }}" = "payroll" ]; then TEST_FLOW=.maestro/business-payroll.yaml; fi
+            maestro test --test-output-dir native-results "$TEST_FLOW"
             adb shell dumpsys meminfo com.edumoney.app > native-results/android-memory.txt
             adb shell am force-stop com.edumoney.app
             adb shell am start -W com.edumoney.app/.MainActivity > native-results/android-startup.txt
@@ -175,6 +179,7 @@ jobs:
           set -o pipefail
           TEST_FLOW=.maestro/planilla.yaml
           if [ "${{ inputs.scenario }}" = "persistence" ]; then TEST_FLOW=.maestro/planilla-persistence.yaml; fi
+          if [ "${{ inputs.scenario }}" = "payroll" ]; then TEST_FLOW=.maestro/business-payroll.yaml; fi
           maestro --device "$DEVICE_ID" test --test-output-dir native-results "$TEST_FLOW" 2>&1 | tee native-results/maestro-planilla.log
           # Revalidar el cifrado y la reapertura después de guardar los movimientos de prueba.
           bash scripts/ios-smoke.sh "$DEVICE_ID"

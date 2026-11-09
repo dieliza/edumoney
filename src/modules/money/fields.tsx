@@ -1,4 +1,4 @@
-import { Modal, Pressable, ScrollView, TextInput, View, KeyboardAvoidingView, Platform } from 'react-native';
+import { Modal, Pressable, ScrollView, TextInput, View, KeyboardAvoidingView, Keyboard, Platform } from 'react-native';
 import type { PropsWithChildren } from 'react';
 import { useTheme } from '../../design/ThemeProvider';
 import { fixed } from '../../design/tokens';
@@ -10,11 +10,12 @@ export function Sheet({ title, close, children, busy = false }: PropsWithChildre
 }>) {
     return <Modal transparent animationType="none" onRequestClose={() => { if (!busy)
         close(); }}><KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1, justifyContent: 'center', padding: 16, backgroundColor: fixed.previewBackdrop }}>
-  <ScrollView tabIndex={0} keyboardDismissMode="on-drag" keyboardShouldPersistTaps="handled" style={{ maxHeight: '92%', width: '100%', maxWidth: 650, alignSelf: 'center', borderRadius: 24 }}><Card>
+  <View style={{ width: '100%', maxWidth: 650, maxHeight: '92%', alignSelf: 'center' }}><ActionButton title="Ocultar teclado del formulario" testID="sheet-dismiss-keyboard" secondary onPress={()=>Keyboard.dismiss()}/>
+  <ScrollView tabIndex={0} keyboardDismissMode="on-drag" keyboardShouldPersistTaps="handled" style={{ flexShrink: 1, width: '100%', borderRadius: 24 }}><Card>
    <Body style={{ fontSize: 23, fontWeight: '700' }}>{title}</Body>{children}
    {!busy ? <ActionButton title="Cerrar ficha" secondary onPress={close}/> : <Body>Guardando en este dispositivo…</Body>}
   </Card></ScrollView>
- </KeyboardAvoidingView></Modal>;
+ </View></KeyboardAvoidingView></Modal>;
 }
 export function Field({ label, value, onChangeText, decimal = false, multiline = false, testID, maxLength, secure = false }: {
     label: string;
