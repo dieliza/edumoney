@@ -100,9 +100,7 @@ jobs:
             adb shell svc wifi disable
             adb shell svc data disable
             rm -rf native-results
-            TEST_FLOW=.maestro/planilla.yaml
-            if [ "${{ inputs.scenario }}" = "payroll" ]; then TEST_FLOW=.maestro/business-payroll.yaml; fi
-            maestro test --test-output-dir native-results "$TEST_FLOW"
+            maestro test --test-output-dir native-results "${{ inputs.scenario == 'payroll' && '.maestro/business-payroll.yaml' || '.maestro/planilla.yaml' }}"
             adb shell dumpsys meminfo com.edumoney.app > native-results/android-memory.txt
             adb shell am force-stop com.edumoney.app
             adb shell am start -W com.edumoney.app/.MainActivity > native-results/android-startup.txt
