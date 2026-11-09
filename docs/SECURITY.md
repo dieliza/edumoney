@@ -109,3 +109,11 @@ Los movimientos, documentos y contenidos se guardan atómicamente; correcciones 
 ## Expediente contributivo y exportaciones (Etapa 9)
 
 El expediente usa la base SQLCipher existente. Las informativas no crean movimientos y sus vínculos versionados protegen los originales durante la revisión. No se solicitan identificadores personales completos. JSON/CSV son exportaciones legibles por elección del usuario: descripciones y notas pueden contener información sensible. La interfaz muestra el contenido, excluye perfil/imágenes por defecto y requiere confirmar antes de abrir el diálogo nativo. El archivo temporal se elimina al cerrar o arrancar de nuevo; la aplicación receptora queda bajo el control del usuario. No se exportan claves, audio ni texto OCR original. El CSV neutraliza prefijos de fórmula. No hay envío automático, preparación de planilla ni certificación contributiva.
+
+## Cierre y respaldo con contraseña (Etapa 10)
+
+El cálculo automático no exige CPA ni aprobación previa; el usuario puede registrar su revisión sin presentarla como certificación oficial. Las fuentes por año y los datos no cubiertos permanecen explícitos. No hay radicación automática.
+
+El respaldo incluye las tablas y documentos locales, cifrados con AES-256-GCM y PBKDF2-HMAC-SHA256 de 600,000 iteraciones, sal aleatoria de 16 bytes y nonce de 12 bytes. La derivación es nativa en iOS/Android, con compatibilidad verificada frente a vectores independientes. Se valida el formato y el tamaño antes de derivar; una contraseña incorrecta o un archivo alterado no modifica la base. El archivo no incluye la clave de SQLCipher.
+
+Restaurar requiere contraseña, revisión y confirmación RESTAURAR; se valida el esquema y se reemplazan las tablas en una transacción con comprobación de referencias e integridad. No se admite ejecutar SQL del archivo. La contraseña no se conserva ni puede recuperarse. Los PDF compartidos son legibles y diferentes del respaldo cifrado.
