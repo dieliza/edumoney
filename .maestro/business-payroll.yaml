@@ -15,13 +15,28 @@ appId: com.edumoney.app
 - tapOn:
     id: business-legal-name
 - inputText: "Patrono FICTICIO movil"
+- assertVisible: "^Patrono FICTICIO movil$"
 - tapOn:
     id: form-dismiss-keyboard
 - scrollUntilVisible:
     element: "Comerciante individual"
     direction: DOWN
     centerElement: true
+# iOS may center a radio below the fixed Screen header; reveal it from the outer gutter.
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - swipe:
+          start: "5%,35%"
+          end: "5%,60%"
+          duration: 600
 - tapOn: "Comerciante individual"
+- scrollUntilVisible:
+    element: "Clasificación contributiva de Puerto Rico"
+    direction: DOWN
+    centerElement: true
+- assertVisible: "Clasificación contributiva de Puerto Rico"
 - scrollUntilVisible:
     element:
       id: business-save
