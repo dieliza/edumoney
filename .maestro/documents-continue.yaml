@@ -227,14 +227,20 @@ appId: com.edumoney.app
     centerElement: true
     timeout: 60000
 - tapOn: "Volver a Mi dinero"
-- scrollUntilVisible:
-    element:
-      id: open-bills
-    direction: DOWN
-    centerElement: true
-    timeout: 60000
-- tapOn:
-    id: open-bills
+- retry:
+    maxRetries: 2
+    commands:
+      - scrollUntilVisible:
+          element:
+            id: open-bills
+          direction: DOWN
+          centerElement: true
+          timeout: 60000
+      - tapOn:
+          id: open-bills
+      - extendedWaitUntil:
+          visible: "Vencimientos y pagos que tú confirmas."
+          timeout: 10000
 - scrollUntilVisible:
     element:
       text: "Factura FACTURA FICTICIA.*Pendiente: \\$75\\.00"
