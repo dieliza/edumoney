@@ -163,3 +163,10 @@
 - Derivación de contraseña nativa Swift/Kotlin: conserva 600,000 iteraciones, formato portátil y compatibilidad UTF-8 verificada mediante vector independiente.
 
 - Saldo de la línea 31 con créditos, estimadas y adición declarados: distingue pago/sobrepago, conserva desconocidos y comprueba desbordes. Formulario largo ajustado al teclado.
+
+## Negocio 1 — Perfiles comerciales
+
+- Quinta pestaña Negocio; formularios vacíos de titulares, DBA y proyectos.
+- Datos LLC y clasificaciones PR/federal independientes, con estado pendiente.
+- Relaciones por titular, versiones y migración SQLCipher 9→10; perfiles incluidos en respaldo y compatibilidad explícita del esquema 9.
+- Incidencia de automatización IOS-QA-10 diferida por instrucción del usuario; sin fusión a main.

@@ -57,7 +57,7 @@ describe('SQLite real (sin cifrado, solo pruebas de esquema)', () => {
       await expect(migrate(failing)).rejects.toThrow('interrupted');
       expect(db.prepare('PRAGMA user_version').get()).toMatchObject({ user_version: 0 });
       expect(db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all()).toHaveLength(0);
-      db.exec('PRAGMA user_version=10'); await expect(migrate(real)).rejects.toThrow('compatible');
+      db.exec('PRAGMA user_version=11'); await expect(migrate(real)).rejects.toThrow('compatible');
     } finally { db.close(); }
   });
   it('valida fechas e importes antes de guardar', async () => {

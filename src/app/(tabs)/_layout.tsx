@@ -10,6 +10,7 @@ const tabs: { name: string; label: string; icon: IconName }[] = [
   { name: 'goals', label: 'Mis metas', icon: 'flag-outline' },
   { name: 'learn', label: 'Aprende', icon: 'book-outline' },
   { name: 'progress', label: 'Mi progreso', icon: 'stats-chart-outline' },
+  { name: 'business', label: 'Negocio', icon: 'briefcase-outline' },
 ];
 export default function TabLayout() {
   const { colors, name } = useTheme();

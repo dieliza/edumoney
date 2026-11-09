@@ -20,6 +20,6 @@ La tabla regular y su factor se calculan con los datos esenciales del caso. Los 
 4. Para recuperar, escribe la contraseña y selecciona un respaldo compatible. Se descifra en memoria y se muestran fecha y cantidad de registros.
 5. Revisa lo que vas a reemplazar. Escribe RESTAURAR y confirma únicamente si deseas sustituir todos los datos locales. Conserva antes un respaldo actual si quieres poder volver a ellos.
 
-La restauración verifica estructura, referencias e integridad y revierte los cambios si falla. Esta versión admite respaldos de su mismo esquema. El PDF, CSV y JSON para revisión son documentos legibles distintos del respaldo cifrado de recuperación.
+La restauración verifica estructura, referencias e integridad y revierte los cambios si falla. Esta versión admite el esquema 10 y el esquema 9 anterior a Negocio. Restaurar un respaldo del esquema 9 elimina también los perfiles comerciales actuales, porque ese archivo no los contiene; la pantalla lo advierte antes de confirmar. Guarda un respaldo nuevo primero si quieres conservarlos. El PDF, CSV y JSON para revisión son documentos legibles distintos del respaldo cifrado de recuperación.
 
 [Fuentes y alcance 2025](tax/2025/SOURCES.md) · [Privacidad](PRIVACY.md) · [Pruebas pendientes de publicación](QUALITY_RELEASE.md)

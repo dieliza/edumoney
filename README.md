@@ -61,3 +61,7 @@ Las capturas y el estado de verificación se documentan en [Etapa 2](docs/stages
 - [Privacidad y seguridad](docs/SECURITY.md)
 - [Resultados y validación de Etapa 1](docs/stages/01.md)
 - [Registro de cambios](CHANGELOG.md)
+
+## Negocio — primera entrega
+
+[Perfiles comerciales: implementación, pruebas y límites](docs/stages/NEGOCIO-01.md). Titulares, DBA y proyectos locales; clasificación de Puerto Rico y federal separadas. La incidencia [IOS-QA-10](docs/ISSUES.md) queda diferida por instrucción del usuario.

@@ -7,6 +7,7 @@ import { schemaV6 } from './schemaV6';
 import { schemaV7 } from './schemaV7';
 import { schemaV8 } from './schemaV8';
 import { schemaV9 } from './schemaV9';
+import { schemaV10 } from './schemaV10';
 export interface MigrationDb {
   execAsync(sql: string): Promise<void>;
   getFirstAsync<T>(sql: string): Promise<T | null>;
@@ -15,8 +16,8 @@ export interface MigrationDb {
 export async function migrate(db: MigrationDb): Promise<void> {
   await db.execAsync('PRAGMA foreign_keys = ON;');
   const version = await db.getFirstAsync<{ user_version: number }>('PRAGMA user_version;');
-  if (!version || version.user_version > 9) throw new Error('Versión de datos no compatible');
-  if (version.user_version === 9) return;
+  if (!version || version.user_version > 10) throw new Error('Versión de datos no compatible');
+  if (version.user_version === 10) return;
   await db.execAsync('BEGIN IMMEDIATE;');
   try {
     if (version.user_version === 0) await db.execAsync(schemaV1);
@@ -27,8 +28,9 @@ export async function migrate(db: MigrationDb): Promise<void> {
     if (version.user_version < 6) await db.execAsync(schemaV6);
     if (version.user_version < 7) await db.execAsync(schemaV7);
     if (version.user_version < 8) await db.execAsync(schemaV8);
-    await db.execAsync(schemaV9);
-    await db.execAsync('PRAGMA user_version = 9;');
+    if (version.user_version < 9) await db.execAsync(schemaV9);
+    await db.execAsync(schemaV10);
+    await db.execAsync('PRAGMA user_version = 10;');
     await db.execAsync('COMMIT;');
   } catch (error) {
     await db.execAsync('ROLLBACK;');
