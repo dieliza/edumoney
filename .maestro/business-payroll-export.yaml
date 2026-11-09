@@ -19,15 +19,24 @@ appId: com.edumoney.app
       - waitForAnimationToEnd:
           timeout: 5000
 - tapOn: "Compartir conciliación CSV sin identidad sensible"
-- extendedWaitUntil:
-    visible: ".*EduMoney-Nomina-Borrador.*"
-    timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - extendedWaitUntil:
+          visible: ".*EduMoney-Nomina-Borrador.*"
+          timeout: 60000
 - takeScreenshot: payroll-share-csv
 - runFlow:
     when:
       platform: Android
     commands:
-      - tapOn: "EduMoney QA local"
+      # Android can launch the sole recipient directly instead of showing a chooser.
+      - runFlow:
+          when:
+            visible: "EduMoney QA local"
+          commands:
+            - tapOn: "EduMoney QA local"
       - extendedWaitUntil:
           visible: "(?s)CSV local válido.*"
           timeout: 60000
@@ -58,15 +67,24 @@ appId: com.edumoney.app
       - waitForAnimationToEnd:
           timeout: 5000
 - tapOn: "Preparar borrador imprimible 499R-2/W-2PR"
-- extendedWaitUntil:
-    visible: ".*EduMoney-Nomina-Borrador.*"
-    timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - extendedWaitUntil:
+          visible: ".*EduMoney-Nomina-Borrador.*"
+          timeout: 60000
 - takeScreenshot: payroll-share-pdf
 - runFlow:
     when:
       platform: Android
     commands:
-      - tapOn: "EduMoney QA local"
+      # Android can launch the sole recipient directly instead of showing a chooser.
+      - runFlow:
+          when:
+            visible: "EduMoney QA local"
+          commands:
+            - tapOn: "EduMoney QA local"
       - extendedWaitUntil:
           visible: "(?s)PDF local válido.*"
           timeout: 60000

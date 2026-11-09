@@ -28,7 +28,7 @@ public final class ReceiverActivity extends Activity {
       }
       String text = new String(bytes.toByteArray(), StandardCharsets.UTF_8);
       if ("text/csv".equals(getIntent().getType()) && text.startsWith("\"Empleado (código)\"")
-          && text.contains("FICTICIO-MOVIL-01") && !text.contains("Empleado FICTICIO movil")) {
+          && text.contains("CONCILIACIÓN POR AGENCIA") && !text.contains("Empleado FICTICIO movil")) {
         result = "CSV local válido";
       } else if ("application/pdf".equals(getIntent().getType()) && text.startsWith("%PDF-")) {
         result = "PDF local válido";
