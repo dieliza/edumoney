@@ -143,3 +143,11 @@
 - Exportación explícita JSON o CSV con copias por selección, revisión y limpieza de temporales.
 - Migración 7→8 atómica; 21 pruebas adicionales (175 en total).
 - Sin motor de planilla, sin push, main sin cambios y Negocio reservado.
+
+### Verificación final de Etapa 9
+
+- 175 pruebas de lógica/SQLite y servicios, TypeScript, ESLint y tres recorridos de navegador aprobados.
+- iOS y Android sin conexión: ingreso ficticio e informativa conciliados sin duplicaciones, exportación revisable, temas y reapertura persistente.
+- SQLCipher, rechazo de lectura sin clave, huella estable y exclusión de respaldo verificados en iOS.
+- Galería de diez capturas y guía disponibles. Destinos externos de compartir pendientes de validación física; no se envió información a terceros durante las pruebas.
+- Etapa 10 no iniciada, main sin modificar y Negocio reservado.
