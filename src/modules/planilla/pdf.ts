@@ -4,7 +4,7 @@ import { evaluateClosure } from './engine';
 import { fields,SOURCES,VALIDATION,schedules,fieldStateLabels } from './catalog';
 import { decimal } from '../tax/domain';
 const safe=(s:string)=>s.replace(/[\u2010-\u2015]/g,'-').replace(/[^\x20-\x7e\u00a0-\u00ff\n]/g,'?');
-/** Plantilla informativa original solo en laboratorio ficticio; no es una planilla radicable. */
+/** Plantilla informativa y guía de cálculos, con estados explícitos; no es una planilla radicada. */
 export async function buildClosurePDF(c:Closure,result:ReturnType<typeof evaluateClosure>,template?:Uint8Array){
  const pdf=await PDFDocument.create(),font=await pdf.embedFont(StandardFonts.Helvetica),bold=await pdf.embedFont(StandardFonts.HelveticaBold);
  if(template&&c.year===2025){const original=await PDFDocument.load(template);for(const p of await pdf.copyPages(original,[0,1,2]))pdf.addPage(p);const page=pdf.getPage(1);for(const [id,right] of [['1A',478],['1B',580]] as const){const value=result.fields.find(f=>f.id===id)?.valueCents;if(value!==null&&value!==undefined&&value%100===0){const text=String(value/100);page.drawText(text,{x:right-font.widthOfTextAtSize(text,8),y:672,size:8,font,color:rgb(0,0,0.6)});}}}

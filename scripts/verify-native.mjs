@@ -34,3 +34,7 @@ const voiceSource=read('node_modules/expo-speech-recognition/ios/ExpoSpeechRecog
 assert.match(voiceSource, /EduMoney: fail closed/);
 assert.match(voiceSource, /request.requiresOnDeviceRecognition = options.requiresOnDeviceRecognition/);
 console.log('Captura local: permisos presentes, OCR incluido y dictado sin fallback remoto.');
+
+assert.match(read('modules/edumoney-backup-crypto/android/src/main/java/expo/modules/edumoneybackupcrypto/EduMoneyBackupCryptoModule.kt'), /600000/);
+assert.match(read('modules/edumoney-backup-crypto/ios/EduMoneyBackupCryptoModule.swift'), /600000/);
+console.log('Respaldo: derivación nativa PBKDF2-SHA256 de 600000 iteraciones.');

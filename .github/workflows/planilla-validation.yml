@@ -52,7 +52,7 @@ jobs:
         if: inputs.artifact_run == ''
         with:
           path: android/app/build/outputs/apk/release/
-          key: planilla-test-native-${{ runner.os }}-${{ hashFiles('src/**/*.ts', 'src/**/*.tsx', 'src/**/*.js', 'src/**/*.jsx', 'src/**/*.json', 'assets/**', 'index.ts', 'app.json', 'package-lock.json', 'plugins/**', 'scripts/simulator.entitlements', 'scripts/prepare-local-recognition.mjs', 'package.json') }}
+          key: planilla-test-native-${{ runner.os }}-${{ hashFiles('src/**/*.ts', 'src/**/*.tsx', 'src/**/*.js', 'src/**/*.jsx', 'src/**/*.json', 'assets/**', 'modules/**', 'index.ts', 'app.json', 'package-lock.json', 'plugins/**', 'scripts/simulator.entitlements', 'scripts/prepare-local-recognition.mjs', 'package.json') }}
       - name: Recuperar APK compilado
         if: inputs.artifact_run != ''
         uses: actions/download-artifact@v4
@@ -129,7 +129,7 @@ jobs:
         if: inputs.artifact_run == ''
         with:
           path: build/Build/Products/Release-iphonesimulator/EduMoney.app
-          key: planilla-test-native-${{ runner.os }}-${{ hashFiles('src/**/*.ts', 'src/**/*.tsx', 'src/**/*.js', 'src/**/*.jsx', 'src/**/*.json', 'assets/**', 'index.ts', 'app.json', 'package-lock.json', 'plugins/**', 'scripts/simulator.entitlements', 'scripts/prepare-local-recognition.mjs', 'package.json') }}
+          key: planilla-test-native-${{ runner.os }}-${{ hashFiles('src/**/*.ts', 'src/**/*.tsx', 'src/**/*.js', 'src/**/*.jsx', 'src/**/*.json', 'assets/**', 'modules/**', 'index.ts', 'app.json', 'package-lock.json', 'plugins/**', 'scripts/simulator.entitlements', 'scripts/prepare-local-recognition.mjs', 'package.json') }}
       - name: Recuperar aplicación de simulador compilada
         if: inputs.artifact_run != ''
         uses: actions/download-artifact@v4
