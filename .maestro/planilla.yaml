@@ -125,10 +125,19 @@ appId: com.edumoney.app
     direction: DOWN
     centerElement: true
     timeout: 120000
+- runFlow:
+    when:
+      platform: iOS
+    file: reveal-closure-field.yaml
+    env:
+      FIELD_ID: closure-notes
 - tapOn:
     id: closure-notes
 - waitForAnimationToEnd:
     timeout: 3000
+- assertVisible:
+    id: closure-notes
+    focused: true
 - eraseText
 - inputText: "Cierre ficticio de prueba"
 - assertVisible: "^Cierre ficticio de prueba$"
@@ -144,10 +153,19 @@ appId: com.edumoney.app
     direction: DOWN
     centerElement: true
     timeout: 120000
+- runFlow:
+    when:
+      platform: iOS
+    file: reveal-closure-field.yaml
+    env:
+      FIELD_ID: closure-reason
 - tapOn:
     id: closure-reason
 - waitForAnimationToEnd:
     timeout: 3000
+- assertVisible:
+    id: closure-reason
+    focused: true
 - eraseText
 - inputText: "^Prueba ficticia$"
 - tapOn:
@@ -260,5 +278,11 @@ appId: com.edumoney.app
     direction: DOWN
     centerElement: true
     timeout: 120000
+- runFlow:
+    when:
+      platform: iOS
+    file: reveal-closure-field.yaml
+    env:
+      FIELD_ID: closure-notes
 - assertVisible: "^Cierre ficticio de prueba$"
 - takeScreenshot: stage10-reopened

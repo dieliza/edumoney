@@ -21,3 +21,9 @@ Se añade un botón accesible «Ocultar teclado» fuera del desplazamiento de la
 - Sintaxis YAML de ambos recorridos Maestro comprobada. Las nuevas aserciones son exactas, sin comodín que acepte una T extra.
 - Seis recorridos de navegador aprobados, con navegación, ambos temas, contraste y anchos adaptables. La comprobación adicional de respaldo conserva exactamente notas con acentos, salto de línea y T final.
 - Pendiente ejecutar la nueva validación nativa estricta. El entorno local es Linux y no tiene Xcode/simulador iOS; el éxito histórico no se presenta como prueba de esta reparación.
+
+## Diagnóstico de la primera repetición estricta
+
+La ejecución 42641895603 compiló el código actual a70f569. Falló antes de guardar: el campo estaba vacío y sin foco. La jerarquía sitúa `closure-notes` en y=141…189 y el control fijo del encabezado en y=132…180: el toque por identificador recaía en la zona superpuesta. [Captura](evidence/repair-iosqa10/ios-first-repair-occluded.png) y [coordenadas/estado originales](evidence/repair-iosqa10/occlusion.json). No se atribuye este fallo a SQLite.
+
+Se ajusta el recorrido iOS para revelar el campo mediante un desplazamiento por el margen exterior, verificar su posición bajo el encabezado y comprobar foco antes de borrar/escribir. Se conserva la aserción exacta. La siguiente repetición reutiliza únicamente el binario actual de 42641895603, sin una nueva compilación ni reutilizar binarios anteriores a las reparaciones.

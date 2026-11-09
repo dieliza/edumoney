@@ -1,0 +1,20 @@
+{
+  "form-dismiss-keyboard": {
+    "accessibilityText": "Ocultar teclado",
+    "resource-id": "form-dismiss-keyboard",
+    "bounds": "[24,132][378,180]",
+    "enabled": "true",
+    "focused": "false",
+    "selected": "false",
+    "checked": "false"
+  },
+  "closure-notes": {
+    "accessibilityText": "Notas y situaciones para revisar",
+    "resource-id": "closure-notes",
+    "bounds": "[58,141][344,189]",
+    "enabled": "true",
+    "focused": "false",
+    "selected": "false",
+    "checked": "false"
+  }
+}

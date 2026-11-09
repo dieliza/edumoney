@@ -1,0 +1,14 @@
+appId: com.edumoney.app
+---
+# iOS can report a field as visible while it overlaps the fixed header.
+# Drag on the outer margin, away from nested text-input scroll views.
+- swipe:
+    start: 5%, 35%
+    end: 5%, 60%
+    duration: 800
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: ${FIELD_ID}
+    below:
+      id: form-dismiss-keyboard
