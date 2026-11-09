@@ -1,0 +1,16 @@
+{
+  "run": 42667453343,
+  "platform": "iPhone 17 Pro, iOS 26.4",
+  "testStatus": "passed",
+  "workflowStatus": "cancelled during final cleanup after checks and artifact upload",
+  "sourceCommit": "3f03c59",
+  "testWorkflowCommit": "364dab0",
+  "commandStatuses": [
+    "COMPLETED"
+  ],
+  "screenshots": [
+    "ios-payroll-employee-input.png",
+    "ios-payroll-employee-reopened.png",
+    "ios-payroll-employee-saved.png"
+  ]
+}

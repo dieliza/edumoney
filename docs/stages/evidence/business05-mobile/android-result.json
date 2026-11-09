@@ -1,0 +1,16 @@
+{
+  "run": 42667613717,
+  "platform": "Android API 35",
+  "status": "passed",
+  "sourceCommit": "3f03c59",
+  "testWorkflowCommit": "66476fd",
+  "commandStatuses": [
+    "COMPLETED",
+    "SKIPPED"
+  ],
+  "screenshots": [
+    "android-payroll-employee-input.png",
+    "android-payroll-employee-reopened.png",
+    "android-payroll-employee-saved.png"
+  ]
+}

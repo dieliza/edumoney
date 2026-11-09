@@ -41,3 +41,7 @@ Los registros de nómina **no generan automáticamente movimientos financieros**
 5. Antes de **emitir oficialmente** 499R-2/W-2PR: validar formato del año, identidad completa, casillas/códigos, acumulados, diferencias, depósitos, correcciones y trámites Hacienda/SSA. No se exige que esta revisión la haga un CPA para utilizar los cálculos de EduMoney.
 
 Se detiene el trabajo al concluir este bloque, según la instrucción del usuario.
+
+### Seguimiento de formularios móviles
+
+El formulario de empleados, teclado, guardado y reapertura ya se verificó en Android e iOS. Véase [alcance, evidencia y estado de ejecución](NEGOCIO-05-MOVIL.md). Las demás fichas de nómina y el diálogo de compartir conservan su verificación móvil pendiente.

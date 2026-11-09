@@ -1,0 +1,35 @@
+{
+  "applicationCommit": "3f03c59e3f3fa368cb989599b2d602c85b71fc11",
+  "testLimit": 100,
+  "unitCasesExecuted": 36,
+  "completeSuiteExecuted": false,
+  "runs": [
+    {
+      "id": 42664986263,
+      "platform": "ios",
+      "result": "failed",
+      "reason": "No se seleccionó la forma jurídica antes de guardar; corregido en el recorrido."
+    },
+    {
+      "id": 42665307671,
+      "platform": "android",
+      "result": "setup_failed",
+      "reason": "APK compilado; el shell aisló la variable de selección del recorrido. Corregido en el flujo."
+    },
+    {
+      "id": 42667453343,
+      "platform": "ios",
+      "result": "test_passed",
+      "reusesApplicationFrom": 42664986263,
+      "workflowStatus": "cancelled during final cleanup after verification and artifact upload"
+    },
+    {
+      "id": 42667613717,
+      "platform": "android",
+      "result": "passed",
+      "reusesApplicationFrom": 42665307671
+    }
+  ],
+  "totalCasesExecuted": 39,
+  "mobileCasesExecuted": 3
+}

@@ -212,3 +212,10 @@
 - Cálculos, pagos reales, retenciones y depósitos separados; acumulados, conciliación, control de duplicados/correcciones y respaldo esquema 14 con compatibilidad 9–13.
 - CSV mínimo y borrador PDF de trabajo 499R-2/W-2PR, sin emisión ni radicación oficial.
 - 345 pruebas de lógica/SQLite y ocho recorridos web; TypeScript, ESLint y empaquetado JavaScript de tres plataformas. Interacción de los nuevos formularios nativos pendiente. [Informe](docs/stages/NEGOCIO-05.md).
+
+### Seguimiento móvil de nómina
+
+- Cierre accesible del teclado dentro de fichas y selectores estables para los formularios.
+- Persistencia de empleados comprobada en Android/iOS; prueba jurídica y comando de CI corregidos, reutilizando paquetes compilados.
+- 36 casos de nómina más tres recorridos, incluyendo el intento inicial fallido: 39 en total. El máximo de 100 queda registrado en AGENTS.md.
+- iOS completó recorrido y controles de cifrado antes de una cancelación en limpieza; el estado y la evidencia se documentan sin presentar la ejecución como verde. [Informe](docs/stages/NEGOCIO-05-MOVIL.md).

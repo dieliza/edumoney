@@ -77,3 +77,5 @@ Negocio incorpora flujos separados para IVU y contratistas, con simuladores loca
 [Negocio 4: panel, estimadas, escenarios y calendario](docs/stages/NEGOCIO-04.md). Separa resultado antes de depreciación, efectivo y reservas, sin una tasa contributiva universal; conserva datos pendientes y proyecciones documentadas del usuario.
 
 [Negocio 5: nómina, retenciones, depósitos y borrador de comprobante](docs/stages/NEGOCIO-05.md). Catálogo 2026 con fuentes oficiales, acumulados de pagos confirmados y exportación por código de empleado; no emite ni radica documentos oficiales.
+
+[Seguimiento móvil de nómina: teclado y persistencia de empleados](docs/stages/NEGOCIO-05-MOVIL.md). Verificado en Android e iOS, con 39 casos ejecutados contando repeticiones y límite de 100 por bloque. El estado de cancelación final de GitHub en iOS y su evidencia se explican en el informe.
