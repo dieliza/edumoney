@@ -105,6 +105,7 @@ export default function LedgerScreen() {
      <Body muted>Disponible = ingresos + préstamos − gastos pagados sin crédito − pagos de deuda − aportaciones − compromisos pendientes. Las transferencias propias no alteran el total. Las compras con crédito consumen presupuesto; su pago reduce el disponible una sola vez.</Body>
      {!data.commitments.length ? <Body muted>No hay facturas pendientes registradas. Añade una factura para preparar tus vencimientos.</Body> : null}
     </Card>
+    <ActionButton title="Escanear, dictar y documentos" testID="open-documents" icon="camera-outline" secondary onPress={()=>router.push('/documents')}/>
     <ActionButton title="Ordenar mis pagos" testID="open-debts" icon="card-outline" secondary onPress={() => router.push('/debts')}/>
     <SectionHeading title="Próximas facturas" action="Ver todas" onPress={() => router.push('/bills')}/>
     <ActionButton title="Mis facturas" testID="open-bills" icon="calendar-outline" secondary onPress={() => router.push('/bills')}/>

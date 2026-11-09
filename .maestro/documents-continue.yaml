@@ -1,0 +1,278 @@
+appId: com.edumoney.app
+---
+- stopApp
+- launchApp
+- tapOn: "Abrir Mi dinero"
+- scrollUntilVisible:
+    element:
+      text: "\\$55\\.00"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage8-money-once
+- scrollUntilVisible:
+    element:
+      id: open-documents
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: open-documents
+- scrollUntilVisible:
+    element:
+      text: "Documento COMERCIO FICTICIO, con copia cifrada, recibido"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Documento COMERCIO FICTICIO, con copia cifrada, recibido"
+- scrollUntilVisible:
+    element:
+      id: document-view-copy
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: document-view-copy
+- scrollUntilVisible:
+    element:
+      text: "Copia recuperada del almacenamiento cifrado"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage8-copy-reopened
+- scrollUntilVisible:
+    element:
+      id: document-delete-reason
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: document-delete-reason
+- inputText: "Retirar copia ficticia"
+- tapOn:
+    text: "Motivo de eliminación o revisión"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: document-delete-copy
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: document-delete-copy
+- scrollUntilVisible:
+    element:
+      text: "Solo se conservan los datos confirmados.*"
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage8-copy-removed
+- scrollUntilVisible:
+    element:
+      text: "Cerrar ficha"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Cerrar ficha"
+- scrollUntilVisible:
+    element:
+      id: document-fixture
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: document-fixture
+- scrollUntilVisible:
+    element:
+      text: "Solo datos; no conservar imagen"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Solo datos; no conservar imagen"
+- scrollUntilVisible:
+    element:
+      text: "Gasto ya realizado"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Gasto ya realizado"
+- scrollUntilVisible:
+    element:
+      id: document-amount
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: "55\\.00"
+- takeScreenshot: stage8-duplicate-review
+- scrollUntilVisible:
+    element:
+      text: "Transferencia bancaria"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Transferencia bancaria"
+- scrollUntilVisible:
+    element:
+      text: "Revisé todos los datos y el tipo de registro"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Revisé todos los datos y el tipo de registro"
+- scrollUntilVisible:
+    element:
+      id: document-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: document-save
+- scrollUntilVisible:
+    element:
+      text: "Este comprobante ya existe.*"
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage8-duplicate-blocked
+- scrollUntilVisible:
+    element:
+      text: "Abrir comprobante ya existente"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Abrir comprobante ya existente"
+- scrollUntilVisible:
+    element:
+      text: "Cerrar ficha"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Cerrar ficha"
+- scrollUntilVisible:
+    element:
+      id: document-manual
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: document-manual
+- scrollUntilVisible:
+    element:
+      text: "Factura pendiente"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Factura pendiente"
+- scrollUntilVisible:
+    element:
+      id: document-description
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: document-description
+- inputText: "FACTURA FICTICIA"
+- tapOn:
+    text: "Comercio o descripción confirmada"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: document-date
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: document-date
+- inputText: "2030-01-15"
+- tapOn:
+    text: "Vencimiento confirmado AAAA-MM-DD"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: document-amount
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: document-amount
+- inputText: "75.00"
+- tapOn:
+    text: "Importe confirmado USD.*"
+    index: 0
+- scrollUntilVisible:
+    element:
+      text: "Revisé todos los datos y el tipo de registro"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Revisé todos los datos y el tipo de registro"
+- scrollUntilVisible:
+    element:
+      id: document-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: document-save
+- scrollUntilVisible:
+    element:
+      text: "Documento FACTURA FICTICIA, sin copia de imagen, recibido"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage8-pending-document
+- scrollUntilVisible:
+    element:
+      text: "Volver a Mi dinero"
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- tapOn: "Volver a Mi dinero"
+- scrollUntilVisible:
+    element:
+      id: open-bills
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: open-bills
+- scrollUntilVisible:
+    element:
+      text: "Factura FACTURA FICTICIA.*Pendiente: \\$75\\.00"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Factura FACTURA FICTICIA.*Pendiente: \\$75\\.00"
+- assertVisible: "Pagado: \\$0\\.00 · Pendiente: \\$75\\.00"
+- takeScreenshot: stage8-pending-bill
+- scrollUntilVisible:
+    element:
+      text: "Cerrar ficha"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Cerrar ficha"
+- scrollUntilVisible:
+    element:
+      text: "Volver a Mi dinero"
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- tapOn: "Volver a Mi dinero"
+- scrollUntilVisible:
+    element:
+      id: open-documents
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: open-documents
+- tapOn:
+    id: theme-picker-open
+- tapOn: "Oscuro"
+- scrollUntilVisible:
+    element:
+      text: "Documento COMERCIO FICTICIO, sin copia de imagen, recibido"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage8-documents-dark

@@ -22,3 +22,15 @@ console.log('Configuración nativa: SQLCipher y exclusiones de respaldo verifica
 assert.match(manifest, /android:name="firebase_messaging_auto_init_enabled" android:value="false"/);
 assert.doesNotMatch(read('ios/EduMoney/EduMoney.entitlements'), /aps-environment/);
 console.log('Avisos locales: registro remoto desactivado; permisos de calendario y alarmas exactas bloqueados en la configuración.');
+
+// Etapa 8: capacidades locales y permisos expresamente configurados.
+assert.match(manifest, /android.permission.CAMERA/);
+assert.match(manifest, /android.permission.RECORD_AUDIO/);
+assert.doesNotMatch(manifest, /android:name="android.permission.RECORD_AUDIO"[^>]*tools:node="remove"/);
+const ocrBuild=read('node_modules/expo-text-extractor/android/build.gradle');
+assert.match(ocrBuild, /com.google.mlkit:text-recognition:16.0.1/);
+assert.doesNotMatch(ocrBuild, /play-services-mlkit/);
+const voiceSource=read('node_modules/expo-speech-recognition/ios/ExpoSpeechRecognizer.swift');
+assert.match(voiceSource, /EduMoney: fail closed/);
+assert.match(voiceSource, /request.requiresOnDeviceRecognition = options.requiresOnDeviceRecognition/);
+console.log('Captura local: permisos presentes, OCR incluido y dictado sin fallback remoto.');

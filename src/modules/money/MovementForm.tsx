@@ -8,13 +8,14 @@ import { localToday, formatMoney, inputAmount } from './domain';
 import { Choices, ErrorNotice, Field, Sheet } from './fields';
 import { DuplicateMovementError, type MoneyStore } from './store';
 import { kindLabels, paymentLabels, type Category, type EntryKind, type IncomeSchedule, type LedgerMovement, type PaymentMethod } from './types';
-export function MovementForm({ initial, kind, categories, store, close, saved }: {
+export function MovementForm({ initial, kind, categories, store, close, saved, documentReview }: {
     initial?: LedgerMovement;
     kind: EntryKind;
     categories: Category[];
     store: MoneyStore;
     close(): void;
     saved(): Promise<void>;
+    documentReview?: { id: string; version: number };
 }) {
     const [identity] = useState(() => ({ id: initial?.id ?? newId(), operation: initial?.idempotencyKey ?? newId(), schedule: newId() }));
     const [type, setType] = useState<EntryKind>(initial?.kind as EntryKind ?? kind);
@@ -52,7 +53,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved }:
                 schedule = { id: scheduleId, description: m.description, amountCents: m.amountCents, categoryId: m.categoryId, paymentMethod: m.paymentMethod, cadence, intervalCount: Number(interval), anchorDate: date, nextDate: date, active: true };
             }
             if (initial)
-                await store.edit(m, reason, allowDuplicate);
+                await store.edit(m, reason, allowDuplicate, documentReview);
             else
                 await store.create(m, allowDuplicate, schedule);
             await saved();

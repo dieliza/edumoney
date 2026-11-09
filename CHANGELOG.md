@@ -119,3 +119,11 @@
 - Voz española disponible detectada en iOS, interfaz/parada comprobadas; Android conserva texto al no poder verificar el motor local. Audio físico pendiente.
 - Cifrado, rechazo de SQLite sin clave, huella estable y exclusión de respaldo verificados en iOS.
 - Galería de 18 capturas y guía disponibles. Etapa 8 pendiente de revisión; main sin cambios y Negocio reservado.
+
+## Etapa 8 — Escaneo, voz y documentos
+
+- Cámara/selector y OCR local, dictado con requisito local y alternativa manual.
+- Revisión obligatoria y distinción entre recibo, ingreso, factura pendiente, adjunto y nota.
+- Copia opcional dentro de SQLCipher, temporales eliminados, huella y protección de duplicados.
+- Referencias de corrección y movimientos auditados con revisión documental pendiente.
+- Migración 6→7 preservando documentos; 36 pruebas adicionales, 153 en total.

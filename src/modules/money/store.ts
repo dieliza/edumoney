@@ -104,13 +104,13 @@ export class MoneyStore {
             throw new UserInputError('El movimiento cambió. Cierra esta ficha y vuelve a abrirla.');
         return readMovement(m);
     }
-    private async guardLinks(id: string) {
+    private async guardLinks(id: string, allowDocuments = false) {
         const linked = await this.db.getFirstAsync<{
             n: number;
         }>(`SELECT (
     (SELECT COUNT(*) FROM bill_payments WHERE movement_id=?)+(SELECT COUNT(*) FROM debt_payments WHERE movement_id=?)+
-    (SELECT COUNT(*) FROM goal_contributions WHERE movement_id=?)+(SELECT COUNT(*) FROM documents WHERE movement_id=?)+
-    (SELECT COUNT(*) FROM tax_records WHERE movement_id=?)) AS n`, id, id, id, id, id);
+    (SELECT COUNT(*) FROM goal_contributions WHERE movement_id=?)+(SELECT COUNT(*) FROM documents WHERE movement_id=? AND ?=0)+
+    (SELECT COUNT(*) FROM tax_records WHERE movement_id=?)) AS n`, id, id, id, id, Number(allowDocuments), id);
         if (linked?.n)
             throw new UserInputError('Este movimiento está vinculado a otra sección. Debe corregirse junto con su registro de origen.');
     }
@@ -119,7 +119,7 @@ export class MoneyStore {
             throw new UserInputError('Escribe el motivo de la corrección (hasta 240 caracteres).');
         await this.db.runAsync('INSERT INTO movement_revisions(movement_id,action,reason,before_json,recorded_at) VALUES(?,?,?,?,?)', m.id, action, reason.trim(), JSON.stringify(m), new Date().toISOString());
     }
-    async edit(m: LedgerMovement, reason: string, allowDuplicate = false) {
+    async edit(m: LedgerMovement, reason: string, allowDuplicate = false, documentReview?: { id: string; version: number }) {
         validateMovement(m);
         return this.write(async () => {
             const old = await this.existing(m.id, m.version);
@@ -129,12 +129,23 @@ export class MoneyStore {
                 throw new UserInputError('No se pueden cambiar los vínculos de recurrencia.');
             if (old.scheduleId && m.kind !== 'income')
                 throw new UserInputError('Un cobro recurrente debe conservar el tipo ingreso.');
-            await this.guardLinks(m.id);
+            if (documentReview) {
+                const doc = await this.db.getFirstAsync<{ version: number; status: string; deleted: string | null }>('SELECT version,status,deleted_at AS deleted FROM documents WHERE id=? AND movement_id=?', documentReview.id, m.id);
+                if (!doc || doc.deleted || doc.status === 'corrected' || doc.version !== documentReview.version) throw new UserInputError('El comprobante cambió; abre su ficha actual antes de corregir.');
+            }
+            await this.guardLinks(m.id, !!documentReview);
             await this.validateCategory(m);
             if (!allowDuplicate && possibleDuplicates(m, await this.movements()).length)
                 throw new DuplicateMovementError();
             await this.revision(old, 'edit', reason);
             await this.db.runAsync(`UPDATE movements SET kind=?,amount_cents=?,date=?,description=?,category_id=?,payment_method=?,tax_review=?,use_kind=?,gross_cents=?,withholding_cents=?,income_type=?,updated_at=?,version=version+1 WHERE id=?`, m.kind, m.amountCents, m.date, m.description.trim(), m.categoryId, m.paymentMethod, Number(m.taxReview), m.useKind, m.grossCents, m.withholdingCents, m.incomeType, new Date().toISOString(), m.id);
+            if (documentReview) {
+                const docs = await this.db.getAllAsync<{ id: string }>("SELECT * FROM documents WHERE movement_id=? AND status<>'corrected' AND deleted_at IS NULL", m.id);
+                for (const doc of docs) {
+                    await this.db.runAsync('INSERT INTO document_events(document_id,reason,before_json,recorded_at) VALUES(?,?,?,?)', doc.id, 'Movimiento corregido: ' + reason.trim(), JSON.stringify(doc), new Date().toISOString());
+                    await this.db.runAsync("UPDATE documents SET status='pending',version=version+1 WHERE id=?", doc.id);
+                }
+            }
         });
     }
     async setDeleted(id: string, version: number, deleted: boolean, reason: string) {

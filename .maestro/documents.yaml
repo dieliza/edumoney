@@ -1,0 +1,4 @@
+appId: com.edumoney.app
+---
+- runFlow: documents-capture.yaml
+- runFlow: documents-continue.yaml

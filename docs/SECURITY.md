@@ -98,3 +98,10 @@ La aplicación conserva texto y explicaciones si la voz no está disponible. Sin
 La [validación nativa de Etapa 7](stages/07.md) aprobó en Android e iOS. Tras guardar el avance de aprendizaje y los escenarios,
 iOS conservó cabecera cifrada, rechazó SQLite sin clave y mantuvo la misma huella al reabrir; exclusión de respaldo comprobada.
 Android completó el recorrido con Wi-Fi y datos desactivados. Las evidencias contienen únicamente datos ficticios y comprobaciones, nunca bases ni claves.
+
+## Etapa 8
+
+Las imágenes elegidas por el usuario se conservan solo por confirmación y dentro de SQLCipher. Base64 es una representación de almacenamiento, no un cifrado independiente. No se guardan comprobantes en AsyncStorage ni archivos públicos.
+Los temporales de captura se eliminan al terminar y los propios que queden tras una interrupción se limpian al iniciar. Las fotos originales de la fototeca no se eliminan. No se conservan grabaciones de voz.
+OCR: Apple Vision y ML Kit con modelo incluido. Dictado: idioma/capacidad local comprobados, Android 13+, requisito local incondicional en iOS y sin fallback remoto. Los parches de dependencias están ligados a versiones verificadas y se aplican antes de compilar.
+Los movimientos, documentos y contenidos se guardan atómicamente; correcciones y eliminación de copia mantienen el historial. Los estados documentales no declaran deducibilidad ni pagos. La cámara/audio físicos siguen requiriendo validación de calidad.

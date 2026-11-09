@@ -25,6 +25,10 @@
         "android.permission.WRITE_CALENDAR",
         "android.permission.SCHEDULE_EXACT_ALARM",
         "android.permission.USE_EXACT_ALARM"
+      ],
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "plugins": [
@@ -49,7 +53,26 @@
           "enableRemoteNotifications": false,
           "enableBackgroundRemoteNotifications": false
         }
-      ]
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Selecciona un comprobante para revisarlo y decidir si conservar una copia local cifrada.",
+          "cameraPermission": "Toma una foto del comprobante para reconocer su texto en este dispositivo.",
+          "microphonePermission": "Dicta datos para revisarlos antes de guardar. No conservamos grabaciones de audio."
+        }
+      ],
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "Dicta datos para revisarlos antes de guardar. No conservamos grabaciones de audio.",
+          "speechRecognitionPermission": "Usa reconocimiento de voz en el dispositivo cuando est\u00e9 disponible.",
+          "androidSpeechServicePackages": [
+            "com.google.android.as"
+          ]
+        }
+      ],
+      "expo-asset"
     ],
     "updates": {
       "enabled": false

@@ -1,0 +1,98 @@
+appId: com.edumoney.app
+---
+- launchApp:
+    clearState: true
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: "Quickstep isn't responding"
+          commands:
+            - tapOn: "Close app"
+      - extendedWaitUntil:
+          visible: "Abrir Mi dinero"
+          timeout: 60000
+- tapOn: "Abrir Mi dinero"
+- scrollUntilVisible:
+    element:
+      id: open-documents
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: open-documents
+- scrollUntilVisible:
+    element:
+      id: document-fixture
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: document-fixture
+- scrollUntilVisible:
+    element:
+      text: "Conservar copia local cifrada"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Conservar copia local cifrada"
+- scrollUntilVisible:
+    element:
+      text: "Gasto ya realizado"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Gasto ya realizado"
+- scrollUntilVisible:
+    element:
+      id: document-amount
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: "55\\.00"
+- takeScreenshot: stage8-review-ocr
+- scrollUntilVisible:
+    element:
+      text: "Transferencia bancaria"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Transferencia bancaria"
+- scrollUntilVisible:
+    element:
+      text: "Revisé todos los datos y el tipo de registro"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Revisé todos los datos y el tipo de registro"
+- scrollUntilVisible:
+    element:
+      id: document-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: document-save
+- scrollUntilVisible:
+    element:
+      text: "Documento COMERCIO FICTICIO, con copia cifrada, recibido"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Documento COMERCIO FICTICIO, con copia cifrada, recibido"
+- scrollUntilVisible:
+    element:
+      id: document-view-copy
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: document-view-copy
+- scrollUntilVisible:
+    element:
+      text: "Copia recuperada del almacenamiento cifrado"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage8-copy-first
