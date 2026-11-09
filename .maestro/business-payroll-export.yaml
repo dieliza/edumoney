@@ -1,0 +1,82 @@
+appId: com.edumoney.app
+---
+- runFlow:
+    file: business-payroll-holder.yaml
+- scrollUntilVisible:
+    element: "Compartir conciliación CSV sin identidad sensible"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      # Accessibility reports buttons covered by the fixed header as visible.
+      - swipe:
+          start: "5%,35%"
+          end: "5%,60%"
+          duration: 600
+      - waitForAnimationToEnd:
+          timeout: 5000
+- tapOn: "Compartir conciliación CSV sin identidad sensible"
+- extendedWaitUntil:
+    visible: ".*EduMoney-Nomina-Borrador.*"
+    timeout: 60000
+- takeScreenshot: payroll-share-csv
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn: "EduMoney QA local"
+      - extendedWaitUntil:
+          visible: "(?s)CSV local válido.*"
+          timeout: 60000
+      - takeScreenshot: payroll-received-csv-local
+      - pressKey: BACK
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn: "Close"
+- extendedWaitUntil:
+    visible: "Nómina de Negocio"
+    timeout: 60000
+- scrollUntilVisible:
+    element: "Preparar borrador imprimible 499R-2/W-2PR"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      # Accessibility reports buttons covered by the fixed header as visible.
+      - swipe:
+          start: "5%,35%"
+          end: "5%,60%"
+          duration: 600
+      - waitForAnimationToEnd:
+          timeout: 5000
+- tapOn: "Preparar borrador imprimible 499R-2/W-2PR"
+- extendedWaitUntil:
+    visible: ".*EduMoney-Nomina-Borrador.*"
+    timeout: 60000
+- takeScreenshot: payroll-share-pdf
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn: "EduMoney QA local"
+      - extendedWaitUntil:
+          visible: "(?s)PDF local válido.*"
+          timeout: 60000
+      - takeScreenshot: payroll-received-pdf-local
+      - pressKey: BACK
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn: "Close"
+- extendedWaitUntil:
+    visible: "Nómina de Negocio"
+    timeout: 60000

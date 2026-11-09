@@ -200,6 +200,17 @@ appId: com.edumoney.app
     direction: DOWN
     centerElement: true
     timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      # Accessibility reports buttons covered by the fixed header as visible.
+      - swipe:
+          start: "5%,35%"
+          end: "5%,60%"
+          duration: 600
+      - waitForAnimationToEnd:
+          timeout: 5000
 - tapOn: "Compartir conciliación CSV sin identidad sensible"
 - extendedWaitUntil:
     visible: ".*EduMoney-Nomina-Borrador.*"
@@ -228,6 +239,17 @@ appId: com.edumoney.app
     direction: DOWN
     centerElement: true
     timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      # Accessibility reports buttons covered by the fixed header as visible.
+      - swipe:
+          start: "5%,35%"
+          end: "5%,60%"
+          duration: 600
+      - waitForAnimationToEnd:
+          timeout: 5000
 - tapOn: "Preparar borrador imprimible 499R-2/W-2PR"
 - extendedWaitUntil:
     visible: ".*EduMoney-Nomina-Borrador.*"
