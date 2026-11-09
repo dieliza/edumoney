@@ -1,0 +1,351 @@
+appId: com.edumoney.app
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: Abrir Mi dinero
+    timeout: 60000
+- tapOn: Abrir Mi dinero
+- tapOn: Negocio.*
+- scrollUntilVisible:
+    element: &id001
+      id: business-legal-name
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: *id001
+- inputText: Titular FICTICIO comercial
+- tapOn:
+    id: form-dismiss-keyboard
+- scrollUntilVisible:
+    element: Comerciante individual
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,35%
+        end: 5%,60%
+        duration: 600
+- tapOn: Comerciante individual
+- scrollUntilVisible:
+    element: Añadir proyecto
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Añadir proyecto
+- scrollUntilVisible:
+    element: &id002
+      id: business-project-0
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: *id002
+- inputText: Proyecto FICTICIO uno
+- tapOn:
+    id: form-dismiss-keyboard
+- scrollUntilVisible:
+    element: Añadir proyecto
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Añadir proyecto
+- scrollUntilVisible:
+    element: &id003
+      id: business-project-1
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: *id003
+- inputText: Proyecto FICTICIO dos
+- tapOn:
+    id: form-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: business-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-save
+- scrollUntilVisible:
+    element: 'Movimientos y recibos: Titular FICTICIO comercial'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: 'Movimientos y recibos: Titular FICTICIO comercial'
+- extendedWaitUntil:
+    visible: Movimientos de Negocio
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: business-expense
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-expense
+- scrollUntilVisible:
+    element: &id004
+      id: business-entry-date
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: *id004
+- inputText: '2026-11-08'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: &id005
+      id: business-entry-description
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: *id005
+- inputText: Gasto mixto FICTICIO movil
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: &id006
+      id: business-entry-amount
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: *id006
+- inputText: '55.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: Transferencia bancaria
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Transferencia bancaria
+- scrollUntilVisible:
+    element: Mixto
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Mixto
+- scrollUntilVisible:
+    element: &id007
+      id: business-percent
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: *id007
+- inputText: '37.50'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: &id008
+      text: ^Justificación del porcentaje comercial$
+      below: ^Justificación del porcentaje comercial$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: *id008
+- inputText: USO-FICTICIO-37.5-PORCIENTO
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: &id009
+      text: ^Importe para Proyecto FICTICIO uno USD$
+      below: ^Importe para Proyecto FICTICIO uno USD$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: *id009
+- inputText: '33.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: &id010
+      text: ^Importe para Proyecto FICTICIO dos USD$
+      below: ^Importe para Proyecto FICTICIO dos USD$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: *id010
+- inputText: '22.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: business-entry-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-entry-save
+- scrollUntilVisible:
+    element: '^Gastos completos registrados: \$55\.00$'
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Gastos completos registrados: \$55\.00$'
+- scrollUntilVisible:
+    element: '^Parte comercial identificada: \$20\.63 · Gastos de uso pendiente: \$0\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Parte comercial identificada: \$20\.63 · Gastos de uso pendiente: \$0\.00$'
+- takeScreenshot: business-mixed-total
+- scrollUntilVisible:
+    element: ^Proyecto FICTICIO uno$
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- tapOn: ^Proyecto FICTICIO uno$
+- scrollUntilVisible:
+    element: '^Gastos completos registrados: \$33\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Gastos completos registrados: \$33\.00$'
+- scrollUntilVisible:
+    element: '^Parte comercial identificada: \$12\.38 · Gastos de uso pendiente: \$0\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Parte comercial identificada: \$12\.38 · Gastos de uso pendiente: \$0\.00$'
+- takeScreenshot: business-project-one
+- scrollUntilVisible:
+    element: Todos los proyectos del titular
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- tapOn: Todos los proyectos del titular
+- scrollUntilVisible:
+    element: '^Gastos completos registrados: \$55\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Gastos completos registrados: \$55\.00$'
+- scrollUntilVisible:
+    element: '^Parte comercial identificada: \$20\.63 · Gastos de uso pendiente: \$0\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Parte comercial identificada: \$20\.63 · Gastos de uso pendiente: \$0\.00$'
+- scrollUntilVisible:
+    element: 'Adjuntar recibo: Gasto mixto FICTICIO movil'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: 'Adjuntar recibo: Gasto mixto FICTICIO movil'
+- scrollUntilVisible:
+    element: &id011
+      text: ^Descripción del recibo$
+      below: ^Descripción del recibo$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: *id011
+- inputText: RECIBO-FICTICIO-MOVIL
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: &id012
+      text: ^Fecha confirmada del recibo AAAA-MM-DD \(opcional\)$
+      below: ^Fecha confirmada del recibo AAAA-MM-DD \(opcional\)$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: *id012
+- inputText: '2026-11-08'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: &id013
+      text: ^Total confirmado del recibo USD \(opcional\)$
+      below: ^Total confirmado del recibo USD \(opcional\)$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: *id013
+- inputText: '55.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: &id014
+      text: ^Notas del comprobante$
+      below: ^Notas del comprobante$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: *id014
+- inputText: NOTA-FICTICIA-RECIBO-PERSISTE
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: Confirmo recibo y movimiento vinculado
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Confirmo recibo y movimiento vinculado
+- scrollUntilVisible:
+    element: Guardar recibo vinculado
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Guardar recibo vinculado
+- scrollUntilVisible:
+    element: 'Ver recibo: RECIBO-FICTICIO-MOVIL.*'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: 'Ver recibo: RECIBO-FICTICIO-MOVIL.*'
+- takeScreenshot: business-receipt-linked
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible: Abrir Mi dinero
+    timeout: 60000
+- tapOn: Abrir Mi dinero
+- retry:
+    maxRetries: 2
+    commands:
+    - tapOn: Negocio.*
+    - scrollUntilVisible:
+        element: 'Movimientos y recibos: Titular FICTICIO comercial'
+        direction: DOWN
+        centerElement: true
+        timeout: 60000
+    - tapOn: 'Movimientos y recibos: Titular FICTICIO comercial'
+    - extendedWaitUntil:
+        visible: Movimientos de Negocio
+        timeout: 60000
+- scrollUntilVisible:
+    element: '^Gastos completos registrados: \$55\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Gastos completos registrados: \$55\.00$'
+- scrollUntilVisible:
+    element: '^Parte comercial identificada: \$20\.63 · Gastos de uso pendiente: \$0\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Parte comercial identificada: \$20\.63 · Gastos de uso pendiente: \$0\.00$'
+- takeScreenshot: business-mixed-reopened
+- scrollUntilVisible:
+    element: 'Ver recibo: RECIBO-FICTICIO-MOVIL.*'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: 'Ver recibo: RECIBO-FICTICIO-MOVIL.*'
+- extendedWaitUntil:
+    visible: Comprobante comercial
+    timeout: 60000
+- assertVisible: ^RECIBO-FICTICIO-MOVIL$
+- scrollUntilVisible:
+    element: ^NOTA-FICTICIA-RECIBO-PERSISTE$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: ^NOTA-FICTICIA-RECIBO-PERSISTE$
+- takeScreenshot: business-receipt-reopened
