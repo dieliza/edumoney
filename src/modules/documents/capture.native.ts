@@ -29,7 +29,10 @@ export async function captureImage(source:'camera'|'library'){
 /** Exclusivamente para builds de validación: ejercita el OCR real con una imagen sintética incluida. */
 export async function loadOCRFixture(){
  if(process.env.EXPO_PUBLIC_STAGE8_TESTS!=='1')throw new Error('Fixture deshabilitado');
- const { Asset }=await import('expo-asset');const asset=Asset.fromModule(require('../../../assets/tests/receipt.jpg'));await asset.downloadAsync();
+ const { Asset }=await import('expo-asset');const bundled=Asset.fromModule(require('../../../assets/tests/receipt.jpg'));
+ // Android image resources are marked downloaded despite lacking a file URI.
+ // A fresh descriptor materializes that bundled resource into the local cache.
+ const asset=new Asset({uri:bundled.uri,type:bundled.type});await asset.downloadAsync();
  const uri=asset.localUri;if(!uri?.startsWith('file://'))throw new Error('La imagen de pruebas no está incluida localmente');
  const f=new File(uri);const image:ImageData={base64:await f.base64(),mime:'image/jpeg'};validateImage(image);
  const text=(await extractTextFromImage(uri)).join('\n');return {image,text,warning:'Imagen ficticia incluida para validar el reconocimiento local. No es un comprobante real.'};
