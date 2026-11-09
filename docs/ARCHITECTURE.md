@@ -104,3 +104,11 @@ Guardar un recibo nuevo inserta documento y movimiento en una única transacció
 La corrección financiera desde un documento vigente mantiene las protecciones de otros módulos, audita el movimiento y marca sus comprobantes pendientes conservando los originales.
 Captura/OCR y voz usan adaptadores nativos; la web conserva una demostración. Los temporales propios se limpian tras procesar y al iniciar. Cámara/micrófono solo por acción; OCR con modelo incluido y dictado local obligatorio sin fallback remoto.
 `prepare-local-recognition.mjs` aplica parches acotados a versiones fijadas y verificados en pruebas antes de compilar. El control de carga de la imagen sintética está condicionado al build de CI; no aparece en compilaciones normales.
+
+## Esquema 8 — Etapa 9
+
+El expediente conserva referencias versionadas a movimientos y documentos. `tax_profiles` es opcional por año. `tax_records` añade clasificación, uso, porcentaje comercial justificado y versión de origen. `tax_statements` conserva importes informados y versiones corregidas; `tax_statement_movements` concilia ingresos existentes y nunca crea otro ingreso. `tax_events` audita cambios y retiradas.
+
+`TaxStore` comparte la cola y transacciones de MoneyStore. Los vínculos vigentes protegen las correcciones de sus originales hasta una desvinculación expresa. `tax/domain.ts` usa centavos enteros y BigInt, mantiene desconocidos como null y deja pendientes los agregados fuera de rango. El perfil, notas y registros permanecen en SQLCipher.
+
+La exportación elegida produce un archivo legible JSON o CSV en una carpeta propia de caché, usa el diálogo nativo y lo elimina al cerrar. El arranque limpia exportaciones interrumpidas. No hay envío automático, reglas de planilla ni dependencia de servidores.

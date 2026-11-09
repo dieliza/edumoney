@@ -33,6 +33,8 @@ La Etapa 7 añade diez lecciones, ejercicios y seis simuladores con escenarios c
 
 La Etapa 8 añade escaneo local, dictado cuando existe modelo local y comprobantes con copia cifrada opcional. [Guía de escaneo y documentos](docs/USAR_ESCANEO_VOZ_Y_DOCUMENTOS.md).
 
+La Etapa 9 añade Para mi contable: expediente por año, informativas, conciliación y exportación explícita para revisión profesional. No calcula ni radica planillas. [Guía del expediente](docs/USAR_PARA_MI_CONTABLE.md).
+
 La vista web es solo una demostración visual, sin acceso a bases financieras. Para revisar localmente:
 
 ```sh
@@ -45,6 +47,7 @@ npm run test:visual
 Las capturas y el estado de verificación se documentan en [Etapa 2](docs/stages/02.md).
 
 
+- [Para mi contable — Etapa 9](docs/stages/09.md)
 - [Escaneo, voz y documentos — Etapa 8](docs/stages/08.md)
 - [Aprende y Antes de decidir — Etapa 7](docs/stages/07.md)
 - [Mis metas y Mi progreso — Etapa 6](docs/stages/06.md)
