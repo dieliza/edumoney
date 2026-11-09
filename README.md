@@ -75,3 +75,5 @@ Negocio incorpora flujos separados para IVU y contratistas, con simuladores loca
 [Reparaciones de teclado, entrevista y límites comerciales](docs/stages/REPARACIONES-01.md).
 
 [Negocio 4: panel, estimadas, escenarios y calendario](docs/stages/NEGOCIO-04.md). Separa resultado antes de depreciación, efectivo y reservas, sin una tasa contributiva universal; conserva datos pendientes y proyecciones documentadas del usuario.
+
+[Negocio 5: nómina, retenciones, depósitos y borrador de comprobante](docs/stages/NEGOCIO-05.md). Catálogo 2026 con fuentes oficiales, acumulados de pagos confirmados y exportación por código de empleado; no emite ni radica documentos oficiales.

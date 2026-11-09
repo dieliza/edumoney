@@ -1,0 +1,14 @@
+export type Frequency='weekly'|'biweekly'|'semimonthly'|'monthly';
+export type Answer='yes'|'no'|'pending';
+export interface Employee {id:string;holderId:string;name:string;code:string;last4:string;frequency:Frequency;mode:'salary'|'hourly';rateCents:number|null;r4Date:string|null;personal:'none'|'individual'|'joint'|'half'|'pending';veteran:Answer;dependents:number|null;halfDependents:number|null;allowances:number|null;extraCents:number|null;ordinary:Answer;note:string}
+export interface Policy {id:string;holderId:string;year:number;fica:Answer;sinot:Answer;sinotEmployeeBps:number|null;suta:Answer;sutaBps:number|null;futa:Answer;futaCreditBps:number|null;futaReductionBps:number|null;cfse:Answer;cfseBps:number|null;validFrom:string;validTo:string;source:string;cfseClass:string;note:string}
+export interface PayInput {id:string;holderId:string;employeeId:string;date:string;start:string;end:string;reference:string;hoursHundredths:number|null;priorWagesCents:number|null;priorSource:string;otherCents:number|null;note:string}
+export interface Deductions {pr:number|null;ss:number|null;medicare:number|null;additionalMedicare:number|null;sinot:number|null;other:number|null}
+export interface Calculation {catalog:string;gross:number|null;ssWages:number|null;medicareWages:number|null;withheld:Deductions;employer:{ss:number|null;medicare:number|null;sinot:number|null;suta:number|null;futa:number|null;cfse:number|null};net:number|null;cost:number|null;pending:string[];priorWages:number|null}
+export interface Actual {gross:number;ssWages:number;medicareWages:number;withheld:Record<keyof Deductions,number>;net:number;reference:string;note:string}
+export interface Run {input:PayInput;employee:Employee;policy:Policy|null;calculation:Calculation;actual:Actual|null;paidAt:string|null;voidedAt:string|null;voidReason:string;version:number}
+export type Agency='pr'|'fica'|'sinot'|'suta'|'futa'|'cfse';
+export interface Deposit {id:string;holderId:string;runId:string;agency:Agency;date:string;amountCents:number;reference:string;note:string;reversedAt?:string|null;reverseReason?:string}
+export interface PayrollSnapshot {employees:(Employee&{version:number})[];policies:(Policy&{version:number})[];runs:Run[];deposits:Deposit[]}
+export const blankEmployee=(holderId:string):Employee=>({id:'',holderId,name:'',code:'',last4:'',frequency:'monthly',mode:'salary',rateCents:null,r4Date:null,personal:'pending',veteran:'pending',dependents:null,halfDependents:null,allowances:null,extraCents:null,ordinary:'pending',note:''});
+export const blankPolicy=(holderId:string,year:number):Policy=>({id:'',holderId,year,fica:'pending',sinot:'pending',sinotEmployeeBps:null,suta:'pending',sutaBps:null,futa:'pending',futaCreditBps:null,futaReductionBps:null,cfse:'pending',cfseBps:null,validFrom:`${year}-01-01`,validTo:`${year}-12-31`,source:'',cfseClass:'',note:''});

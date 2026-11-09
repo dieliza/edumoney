@@ -1,0 +1,24 @@
+# Nómina 2026 — fuentes y alcance
+
+Catálogo `PR-NOMINA-2026.1`, consulta 9 de noviembre de 2026. Los enlaces también se conservan en el catálogo local. No hay consultas ni envíos automáticos desde la aplicación.
+
+| Materia | Fuente oficial | Aplicación |
+| --- | --- | --- |
+| Retención PR | [Índice de tablas de Hacienda](https://hacienda.pr.gov/comerciantes/patronos-y-agentes-retenedores/tablas-de-retencion-withholding-tables), [manual publicado, apéndices 1 y 2](https://hacienda.pr.gov/sites/default/files/tablas_retencion_2017_4.pdf), pp. 24–25 impresas | Filas exactas semanal, cada dos semanas, quincenal y mensual; exenciones personales, veterano, dependientes completos/mitad, concesiones y retención adicional declaradas. El índice publica estas tablas como aplicables desde 2017. No se aplica el factor de la planilla 482 a salarios. |
+| Certificado | [499 R-4](https://hacienda.pr.gov/comerciantes/patronos-y-agentes-retenedores/certificado-de-exencion-para-la-retencion-withholding-exemption-certificate) | Resumen del certificado recibido; no se fabrica firma ni se infiere exención por edad. |
+| FICA 2026 | [IRS, Publicación 15 de 2026](https://www.irs.gov/publications/p15sp), [tasas y Medicare adicional](https://www.irs.gov/taxtopics/tc751) | SS 6.2% por parte hasta $184,500; Medicare 1.45% por parte; adicional empleado 0.9% sobre salarios superiores a $200,000 pagados por este patrono. Sin pareo patronal del adicional. |
+| FUTA | Publicación 15, sección 14; [IRS crédito reducido](https://www.irs.gov/businesses/small-businesses-self-employed/futa-credit-reduction); [DOL por año](https://oui.doleta.gov/unemploy/futa_credit.asp) | Base $7,000 y tasa 6%; crédito declarado hasta 5.4% menos reducción anual documentada. No se presupone 0.6% ni reducción cero. El 9 de noviembre no se presume resuelta la determinación ligada al 10 de noviembre. |
+| Desempleo PR | [DTRH, servicio contributivo](https://www.trabajo.pr.gov/servicio_contributivo.asp) | Base anual $7,000; tasa asignada por carta patronal, sin tasa genérica por defecto. |
+| SINOT | [DTRH, sección Contribución](https://www.trabajo.pr.gov/sinot.asp) y servicio contributivo | Plan estatal 0.60% hasta $9,000; empleado hasta 0.30%; el patrono puede asumir toda la aportación. Aplicabilidad explícita; planes privados y categorías especiales pendientes de revisión documental. |
+| CFSE | [Clasificaciones de riesgos](https://old.fondopr.com/patronos/polizas-requisitos-formalizarlas/clasificaciones-riesgos/) | Prima declarada según póliza/clase y vigencia; estimación devengada sobre salarios ordinarios del período. No sustituye liquidación de póliza, ajustes, bonificaciones ni múltiple clasificación por empleado. |
+| Comprobante 2026 | [Hacienda, Publicación 26-01](https://hacienda.pr.gov/sites/default/files/publicaciones/2026/10/publication_26-01.pdf), registros RW/RO | Verifica bases, retenciones y especificación del año 2026. El PDF de EduMoney es una hoja de trabajo propia; no replica ni emite el formulario ni genera el archivo de presentación. |
+
+## Precisión y alcance
+
+Los importes y tasas se calculan con enteros/BigInt. Horas hasta dos decimales y tarifa en centavos; bruto por hora y aportaciones FICA/SINOT/desempleo/CFSE redondeados a centavo, mitad hacia arriba. La retención PR trunca el producto al centavo para reproducir el ejemplo publicado de Hacienda ($2,200 mensuales, exención individual y nueve concesiones: $54.91). Esta decisión se documenta: el producto exacto del ejemplo contiene medio centavo y el manual muestra truncamiento; antes de emisión oficial se debe contrastar el criterio con los procedimientos aplicables y vectores externos. No se exige CPA para calcular.
+
+Soporte automático acotado: salario ordinario plenamente tributable de empleo en Puerto Rico, sin retención federal sobre ingresos, bonos, propinas, beneficios excluidos, retiro, exención de jóvenes, regímenes agrícolas/domésticos ni horas extraordinarias calculadas automáticamente. Esas situaciones permiten guardar el perfil y registrar importes reales documentados, pero las fórmulas que dependen de datos o reglas no cubiertos quedan pendientes.
+
+El saldo previo es el salario ordinario de **este mismo titular legal** anterior al comienzo del registro del año; los pagos confirmados en EduMoney se añaden una sola vez. El historial importado no se incluye como si fueran comprobantes de pago completos: el borrador se marca parcial. No se utiliza el salario de otro patrono para agotar topes de retención.
+
+El costo patronal y las obligaciones no retenidas se muestran como **cálculos**, no como depósitos confirmados. Si las bases reales difieren de las calculadas, sus obligaciones patronales quedan pendientes de conciliación. Los depósitos son partidas asignadas a una nómina y agencia; al repartir un comprobante se introduce únicamente cada partida, con referencia/sufijo único. Una corrección local no revierte el dinero en una agencia.

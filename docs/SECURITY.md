@@ -117,3 +117,7 @@ El cálculo automático no exige CPA ni aprobación previa; el usuario puede reg
 El respaldo incluye las tablas y documentos locales, cifrados con AES-256-GCM y PBKDF2-HMAC-SHA256 de 600,000 iteraciones, sal aleatoria de 16 bytes y nonce de 12 bytes. La derivación es nativa en iOS/Android, con compatibilidad verificada frente a vectores independientes. Se valida el formato y el tamaño antes de derivar; una contraseña incorrecta o un archivo alterado no modifica la base. El archivo no incluye la clave de SQLCipher.
 
 Restaurar requiere contraseña, revisión y confirmación RESTAURAR; se valida el esquema y se reemplazan las tablas en una transacción con comprobación de referencias e integridad. No se admite ejecutar SQL del archivo. La contraseña no se conserva ni puede recuperarse. Los PDF compartidos son legibles y diferentes del respaldo cifrado.
+
+### Nómina local
+
+Los perfiles laborales y sus instantáneas históricas se guardan en SQLCipher y se incluyen solo en el respaldo cifrado controlado por el usuario. El formulario de identificación acepta únicamente últimos cuatro dígitos opcionales; no recoge el SSN completo. El CSV y PDF de nómina omiten nombre, últimos dígitos, certificado y notas privadas, utilizando códigos de empleado. Los archivos compartidos se generan localmente en la carpeta temporal de exportación ya cubierta por la limpieza de inicio y se eliminan al cerrar el diálogo. Compartirlos depende de una acción explícita. No hay pagos bancarios, radicación ni envío de datos automáticos.

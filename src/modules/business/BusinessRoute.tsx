@@ -6,5 +6,6 @@ export default function BusinessPreview() {
   <ActionButton title="Ver sección de registros comerciales" secondary onPress={()=>router.push('/business-ledger')}/>
   <ActionButton title="Ver IVU y contratistas" secondary onPress={()=>router.push('/business-obligations')}/>
   <ActionButton title="Ver panel y escenarios" secondary onPress={()=>router.push('/business-planning')}/>
+  <ActionButton title="Ver nómina" secondary onPress={()=>router.push('/business-payroll')}/>
  </Screen>;
 }

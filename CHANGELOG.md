@@ -205,3 +205,10 @@
 - Calendario base por perfil y obligaciones verificadas con fuente, sin inferir régimen de LLC ni confirmar cumplimiento por un pago.
 - Esquema 13 y respaldos 9–13; centavos negativos editables y protección de agregados fuera de rango.
 - Informe y alcance en docs/stages/NEGOCIO-04.md. Sin nómina todavía, sin fusión de main ni publicación.
+
+## Negocio 5 — Nómina
+
+- Empleados y resumen 499 R-4, salario/horas y tasas patronales por año/titular; catálogo determinístico 2026 y datos pendientes explícitos, sin requisito de CPA para calcular.
+- Cálculos, pagos reales, retenciones y depósitos separados; acumulados, conciliación, control de duplicados/correcciones y respaldo esquema 14 con compatibilidad 9–13.
+- CSV mínimo y borrador PDF de trabajo 499R-2/W-2PR, sin emisión ni radicación oficial.
+- 345 pruebas de lógica/SQLite y ocho recorridos web; TypeScript, ESLint y empaquetado JavaScript de tres plataformas. Interacción de los nuevos formularios nativos pendiente. [Informe](docs/stages/NEGOCIO-05.md).

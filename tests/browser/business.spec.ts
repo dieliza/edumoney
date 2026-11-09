@@ -77,3 +77,11 @@ test('Negocio: panel, escenarios y calendario en ambos temas',async({page})=>{
  for(const width of [320,430,768]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}
  await page.getByRole('button',{name:'Volver a Negocio',exact:true}).click();await expect(page.getByRole('heading',{name:'Negocio',exact:true})).toBeVisible();
 });
+test('Negocio: nómina informativa, ambos temas y retorno',async({page})=>{
+ mkdirSync('docs/stages/evidence/business05',{recursive:true});
+ await page.setViewportSize({width:390,height:844});await page.goto('/');await page.getByTestId('enter-demo').click();await page.getByRole('tab',{name:'Negocio',exact:true}).click();await page.getByRole('button',{name:'Ver nómina',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'Nómina de Negocio',exact:true})).toBeVisible();
+ for(const theme of ['light','dark'] as const){await page.getByTestId('theme-picker-open').filter({visible:true}).click();await page.getByTestId(`theme-choice-${theme}`).click();const audit=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();expect(audit.violations.map(v=>v.id)).toEqual([]);await page.screenshot({path:`docs/stages/evidence/business05/web-${theme}.png`,fullPage:true});}
+ for(const width of [320,430,768]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}
+ await page.getByRole('button',{name:'Volver a Negocio',exact:true}).click();await expect(page.getByRole('heading',{name:'Negocio',exact:true})).toBeVisible();
+});
