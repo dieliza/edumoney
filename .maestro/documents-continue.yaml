@@ -2,6 +2,9 @@ appId: com.edumoney.app
 ---
 - stopApp
 - launchApp
+- extendedWaitUntil:
+    visible: "Abrir Mi dinero"
+    timeout: 60000
 - tapOn: "Abrir Mi dinero"
 - scrollUntilVisible:
     element:
