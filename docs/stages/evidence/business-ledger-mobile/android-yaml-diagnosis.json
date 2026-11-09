@@ -1,0 +1,11 @@
+{
+  "run": 42696209452,
+  "job": 129428617516,
+  "applicationCommit": "3f03c59",
+  "procedureCommit": "da017ef",
+  "result": "failed before data entry",
+  "observed": "Tap on id001; Element not found: Text matching regex: id001",
+  "cause": "Generated YAML alias was interpreted as selector text by Maestro",
+  "correction": "Expand all selectors, suppress YAML aliases",
+  "applicationChanges": false
+}

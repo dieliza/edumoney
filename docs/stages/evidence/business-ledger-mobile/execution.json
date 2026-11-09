@@ -10,11 +10,11 @@
     {
       "run": 42696209452,
       "platform": "android",
-      "status": "in_progress",
-      "casesExecuted": null
+      "status": "failed: generated YAML alias treated as selector text id001, before entering data",
+      "casesExecuted": 1
     }
   ],
-  "casesCompleted": 6,
+  "casesCompleted": 7,
   "notes": "Android first to validate existing form selectors. Add every retry and iOS XCTest driver cases to the conservative count.",
-  "casesIncludingActiveAttempts": 7
+  "casesIncludingActiveAttempts": 8
 }

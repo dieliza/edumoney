@@ -8,12 +8,13 @@ appId: com.edumoney.app
 - tapOn: Abrir Mi dinero
 - tapOn: Negocio.*
 - scrollUntilVisible:
-    element: &id001
+    element:
       id: business-legal-name
     direction: DOWN
     centerElement: true
     timeout: 60000
-- tapOn: *id001
+- tapOn:
+    id: business-legal-name
 - inputText: Titular FICTICIO comercial
 - tapOn:
     id: form-dismiss-keyboard
@@ -38,12 +39,13 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn: Añadir proyecto
 - scrollUntilVisible:
-    element: &id002
+    element:
       id: business-project-0
     direction: DOWN
     centerElement: true
     timeout: 60000
-- tapOn: *id002
+- tapOn:
+    id: business-project-0
 - inputText: Proyecto FICTICIO uno
 - tapOn:
     id: form-dismiss-keyboard
@@ -54,12 +56,13 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn: Añadir proyecto
 - scrollUntilVisible:
-    element: &id003
+    element:
       id: business-project-1
     direction: DOWN
     centerElement: true
     timeout: 60000
-- tapOn: *id003
+- tapOn:
+    id: business-project-1
 - inputText: Proyecto FICTICIO dos
 - tapOn:
     id: form-dismiss-keyboard
@@ -89,32 +92,35 @@ appId: com.edumoney.app
 - tapOn:
     id: business-expense
 - scrollUntilVisible:
-    element: &id004
+    element:
       id: business-entry-date
     direction: DOWN
     centerElement: true
     timeout: 60000
-- tapOn: *id004
+- tapOn:
+    id: business-entry-date
 - inputText: '2026-11-08'
 - tapOn:
     id: sheet-dismiss-keyboard
 - scrollUntilVisible:
-    element: &id005
+    element:
       id: business-entry-description
     direction: DOWN
     centerElement: true
     timeout: 60000
-- tapOn: *id005
+- tapOn:
+    id: business-entry-description
 - inputText: Gasto mixto FICTICIO movil
 - tapOn:
     id: sheet-dismiss-keyboard
 - scrollUntilVisible:
-    element: &id006
+    element:
       id: business-entry-amount
     direction: DOWN
     centerElement: true
     timeout: 60000
-- tapOn: *id006
+- tapOn:
+    id: business-entry-amount
 - inputText: '55.00'
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -131,45 +137,52 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn: Mixto
 - scrollUntilVisible:
-    element: &id007
+    element:
       id: business-percent
     direction: DOWN
     centerElement: true
     timeout: 60000
-- tapOn: *id007
+- tapOn:
+    id: business-percent
 - inputText: '37.50'
 - tapOn:
     id: sheet-dismiss-keyboard
 - scrollUntilVisible:
-    element: &id008
+    element:
       text: ^Justificación del porcentaje comercial$
       below: ^Justificación del porcentaje comercial$
     direction: DOWN
     centerElement: true
     timeout: 60000
-- tapOn: *id008
+- tapOn:
+    text: ^Justificación del porcentaje comercial$
+    below: ^Justificación del porcentaje comercial$
 - inputText: USO-FICTICIO-37.5-PORCIENTO
 - tapOn:
     id: sheet-dismiss-keyboard
 - scrollUntilVisible:
-    element: &id009
+    element:
       text: ^Importe para Proyecto FICTICIO uno USD$
       below: ^Importe para Proyecto FICTICIO uno USD$
     direction: DOWN
     centerElement: true
     timeout: 60000
-- tapOn: *id009
+- tapOn:
+    text: ^Importe para Proyecto FICTICIO uno USD$
+    below: ^Importe para Proyecto FICTICIO uno USD$
 - inputText: '33.00'
 - tapOn:
     id: sheet-dismiss-keyboard
 - scrollUntilVisible:
-    element: &id010
+    element:
       text: ^Importe para Proyecto FICTICIO dos USD$
       below: ^Importe para Proyecto FICTICIO dos USD$
     direction: DOWN
     centerElement: true
     timeout: 60000
-- tapOn: *id010
+- tapOn:
+    text: ^Importe para Proyecto FICTICIO dos USD$
+    below: ^Importe para Proyecto FICTICIO dos USD$
 - inputText: '22.00'
 - tapOn:
     id: sheet-dismiss-keyboard
@@ -238,46 +251,54 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn: 'Adjuntar recibo: Gasto mixto FICTICIO movil'
 - scrollUntilVisible:
-    element: &id011
+    element:
       text: ^Descripción del recibo$
       below: ^Descripción del recibo$
     direction: DOWN
     centerElement: true
     timeout: 60000
-- tapOn: *id011
+- tapOn:
+    text: ^Descripción del recibo$
+    below: ^Descripción del recibo$
 - inputText: RECIBO-FICTICIO-MOVIL
 - tapOn:
     id: sheet-dismiss-keyboard
 - scrollUntilVisible:
-    element: &id012
+    element:
       text: ^Fecha confirmada del recibo AAAA-MM-DD \(opcional\)$
       below: ^Fecha confirmada del recibo AAAA-MM-DD \(opcional\)$
     direction: DOWN
     centerElement: true
     timeout: 60000
-- tapOn: *id012
+- tapOn:
+    text: ^Fecha confirmada del recibo AAAA-MM-DD \(opcional\)$
+    below: ^Fecha confirmada del recibo AAAA-MM-DD \(opcional\)$
 - inputText: '2026-11-08'
 - tapOn:
     id: sheet-dismiss-keyboard
 - scrollUntilVisible:
-    element: &id013
+    element:
       text: ^Total confirmado del recibo USD \(opcional\)$
       below: ^Total confirmado del recibo USD \(opcional\)$
     direction: DOWN
     centerElement: true
     timeout: 60000
-- tapOn: *id013
+- tapOn:
+    text: ^Total confirmado del recibo USD \(opcional\)$
+    below: ^Total confirmado del recibo USD \(opcional\)$
 - inputText: '55.00'
 - tapOn:
     id: sheet-dismiss-keyboard
 - scrollUntilVisible:
-    element: &id014
+    element:
       text: ^Notas del comprobante$
       below: ^Notas del comprobante$
     direction: DOWN
     centerElement: true
     timeout: 60000
-- tapOn: *id014
+- tapOn:
+    text: ^Notas del comprobante$
+    below: ^Notas del comprobante$
 - inputText: NOTA-FICTICIA-RECIBO-PERSISTE
 - tapOn:
     id: sheet-dismiss-keyboard
