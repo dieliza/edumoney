@@ -1,0 +1,243 @@
+appId: com.edumoney.app
+---
+- runFlow:
+    file: business-payroll-setup.yaml
+- scrollUntilVisible:
+    element: "Configurar tasas y cubierta patronal"
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- tapOn: "Configurar tasas y cubierta patronal"
+- extendedWaitUntil:
+    visible:
+      id: record-year
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: record-sinotEmployeeBps
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-sinotEmployeeBps
+- inputText: "0.30"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-sutaBps
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-sutaBps
+- inputText: "3.40"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-futaCreditBps
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-futaCreditBps
+- inputText: "5.40"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-futaReductionBps
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-futaReductionBps
+- inputText: "0.00"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-cfseBps
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-cfseBps
+- inputText: "1.50"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-source
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-source
+- inputText: "FUENTE-FICTICIA-TASAS-2026"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-note
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-note
+- inputText: "FICTICIO: aplicabilidad pendiente, no es carta patronal"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- takeScreenshot: payroll-policy-input
+- scrollUntilVisible:
+    element:
+      id: record-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-save
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible: "Abrir Mi dinero"
+    timeout: 60000
+- tapOn: "Abrir Mi dinero"
+- retry:
+    maxRetries: 2
+    commands:
+      - tapOn: "Negocio.*"
+      - scrollUntilVisible:
+          element: "Nómina: Patrono FICTICIO movil"
+          direction: DOWN
+          centerElement: true
+          timeout: 60000
+      - runFlow:
+          when:
+            platform: iOS
+          commands:
+            - swipe:
+                start: "5%,70%"
+                end: "5%,55%"
+                duration: 600
+      - tapOn: "Nómina: Patrono FICTICIO movil"
+      - extendedWaitUntil:
+          visible: "Nómina de Negocio"
+          timeout: 60000
+- scrollUntilVisible:
+    element: "Configurar tasas y cubierta patronal"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Configurar tasas y cubierta patronal"
+- scrollUntilVisible:
+    element:
+      id: record-sinotEmployeeBps
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: "^0[.]30$"
+- scrollUntilVisible:
+    element:
+      id: record-sutaBps
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: "^3[.]40$"
+- scrollUntilVisible:
+    element:
+      id: record-futaCreditBps
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: "^5[.]40$"
+- scrollUntilVisible:
+    element:
+      id: record-futaReductionBps
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: "^0[.]00$"
+- scrollUntilVisible:
+    element:
+      id: record-cfseBps
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: "^1[.]50$"
+- scrollUntilVisible:
+    element:
+      id: record-source
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: "^FUENTE-FICTICIA-TASAS-2026$"
+- scrollUntilVisible:
+    element:
+      id: record-note
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: "^FICTICIO: aplicabilidad pendiente, no es carta patronal$"
+- takeScreenshot: payroll-policy-reopened
+- scrollUntilVisible:
+    element:
+      id: record-cancel
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-cancel
+- scrollUntilVisible:
+    element: "Pagos confirmados: 0.*"
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: "Pagos confirmados: 0.*"
+- scrollUntilVisible:
+    element: "Compartir conciliación CSV sin identidad sensible"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Compartir conciliación CSV sin identidad sensible"
+- extendedWaitUntil:
+    visible: ".*EduMoney-Nomina-Borrador.*"
+    timeout: 60000
+- takeScreenshot: payroll-share-csv
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - pressKey: BACK
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn: "Close"
+- extendedWaitUntil:
+    visible: "Nómina de Negocio"
+    timeout: 60000
+- scrollUntilVisible:
+    element: "Preparar borrador imprimible 499R-2/W-2PR"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: "Preparar borrador imprimible 499R-2/W-2PR"
+- extendedWaitUntil:
+    visible: ".*EduMoney-Nomina-Borrador.*"
+    timeout: 60000
+- takeScreenshot: payroll-share-pdf
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - pressKey: BACK
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn: "Close"
+- extendedWaitUntil:
+    visible: "Nómina de Negocio"
+    timeout: 60000
