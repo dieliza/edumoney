@@ -173,6 +173,12 @@ appId: com.edumoney.app
     id: closure-save
 - scrollUntilVisible:
     element:
+      text: "Entrevista guardada localmente.*"
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- scrollUntilVisible:
+    element:
       id: closure-review
     direction: DOWN
     centerElement: true
@@ -261,6 +267,12 @@ appId: com.edumoney.app
     element:
       id: closure-notes
     direction: DOWN
+    centerElement: true
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      text: "Notas y situaciones para revisar"
+    direction: UP
     centerElement: true
     timeout: 60000
 - assertVisible: "Cierre ficticio de prueba"
