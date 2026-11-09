@@ -141,5 +141,5 @@
 - Perfil opcional por año, revisión de movimientos/documentos, uso mixto justificado y estados.
 - Informativas versionadas, conciliación de bruto/retención/neto y pendientes/posibles duplicados.
 - Exportación explícita JSON o CSV con copias por selección, revisión y limpieza de temporales.
-- Migración 7→8 atómica; 20 pruebas adicionales (174 en total).
+- Migración 7→8 atómica; 21 pruebas adicionales (175 en total).
 - Sin motor de planilla, sin push, main sin cambios y Negocio reservado.

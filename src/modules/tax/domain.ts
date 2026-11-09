@@ -15,7 +15,7 @@ export function validateEntry(e:TaxEntry,m:LedgerMovement|undefined){
  if(e.useKind!=='mixed'&&e.businessBps!==null)throw new UserInputError('El porcentaje corresponde solo a uso mixto.');
  if(e.notes.length>2000)throw new UserInputError('La nota supera 2000 caracteres.');
 }
-const sum=(ns:number[])=>cents(Number(ns.reduce((a,n)=>a+BigInt(n),0n)));
+const sum=(ns:number[])=>{const n=ns.reduce((a,n)=>a+BigInt(n),0n);return n>BigInt(Number.MAX_SAFE_INTEGER)?null:cents(Number(n));};
 export function reconcile(s:TaxSnapshot,statement:Statement){
  const links=s.links.filter(l=>l.statementId===statement.id);const moves=links.map(l=>s.movements.find(m=>m.id===l.movementId));
  const stale=links.some((l,i)=>!moves[i]||moves[i]!.deletedAt||moves[i]!.version!==l.movementVersion);
@@ -24,7 +24,7 @@ export function reconcile(s:TaxSnapshot,statement:Statement){
  const gross=allIncome&&income.every(m=>m.grossCents!==null)?sum(income.map(m=>m.grossCents!)):null;
  const withheld=allIncome&&income.every(m=>m.withholdingCents!==null)?sum(income.map(m=>m.withholdingCents!)):null;
  const net=allIncome?sum(income.map(m=>m.amountCents)):null;
- const difference=(a:number|null,b:number|null)=>a===null||b===null?null:cents(a-b);
+ const difference=(a:number|null,b:number|null)=>{if(a===null||b===null)return null;const n=BigInt(a)-BigInt(b);return n>BigInt(Number.MAX_SAFE_INTEGER)||n< -BigInt(Number.MAX_SAFE_INTEGER)?null:cents(Number(n));};
  return {stale,count:links.length,gross,withheld,net,grossDifference:difference(statement.grossCents,gross),withheldDifference:difference(statement.withheldCents,withheld),netDifference:difference(statement.netCents,net),documentChanged:!!statement.documentId&&s.documents.find(d=>d.id===statement.documentId)?.version!==statement.documentVersion};
 }
 export function pendingItems(s:TaxSnapshot){
