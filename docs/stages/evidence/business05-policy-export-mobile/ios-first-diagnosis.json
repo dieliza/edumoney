@@ -1,0 +1,10 @@
+{
+  "run": 42684414704,
+  "result": "failed",
+  "policyPersistenceAssertions": "all passed",
+  "paymentCount": 0,
+  "failure": "CSV button covered by fixed header, share sheet not opened",
+  "buttonBounds": "[24,113][378,188]",
+  "fixedHeaderBottom": 180,
+  "correction": "Gutter swipe down before tapping export buttons; rerun exports only"
+}

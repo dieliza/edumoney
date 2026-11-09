@@ -1,0 +1,9 @@
+{
+  "run": 42684408082,
+  "result": "failed",
+  "policyPersistenceAssertions": "passed",
+  "paymentCount": 0,
+  "failure": "Emulator has no installed application accepting CSV",
+  "observedSystemText": "No apps can perform this action.",
+  "correction": "Install disposable receiver without INTERNET permission, read shared file in memory only"
+}

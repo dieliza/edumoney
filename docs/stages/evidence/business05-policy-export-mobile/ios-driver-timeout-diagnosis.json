@@ -1,0 +1,10 @@
+{
+  "run": 42687600566,
+  "result": "failed",
+  "exportsReached": false,
+  "lastCommand": "tap payroll link, metadata RUNNING",
+  "driverLog": "Failed to get screenshot: Timed out while requesting screenshot.",
+  "driverCasesStarted": 7,
+  "note": "Six driver self-tests plus XCTest HTTP server; count separately and include conservatively in the user limit",
+  "retryScope": "export only, no production source changes"
+}

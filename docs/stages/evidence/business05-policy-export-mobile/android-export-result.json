@@ -1,0 +1,15 @@
+{
+  "run": 42688455929,
+  "job": 129401516822,
+  "artifact": 13706321540,
+  "result": "passed",
+  "applicationCommit": "3f03c59",
+  "procedureCommit": "9eaa5e8942ecdc2ed360696a796bc682aac4d66b",
+  "scenario": "payroll-export",
+  "holderOnly": true,
+  "employeeCount": 0,
+  "csv": "read locally, MIME and header/agency section verified",
+  "pdf": "read locally, MIME and PDF signature verified",
+  "network": "wifi and data disabled; receiver has no INTERNET permission",
+  "externalDelivery": false
+}

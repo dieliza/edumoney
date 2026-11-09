@@ -1,0 +1,9 @@
+{
+  "run": 42686526379,
+  "result": "failed test assertion, successful CSV reception",
+  "policyAssertions": "all passed",
+  "observedSystemBehavior": "Single receiver launched directly, no chooser filename",
+  "observedText": "CSV local v\u00e1lido",
+  "meaning": "Receiver checked MIME, CSV header, employee code and absence of private employee name",
+  "correction": "Accept direct launch and verify receiver result; repeat exports only"
+}

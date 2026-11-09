@@ -2,18 +2,40 @@
 
 Rama `negocio-05-tasas-exportacion-movil`. Sin cambios de código de aplicación respecto a `3f03c59`; se reutilizan las compilaciones Android 42665307671 e iOS 42664986263. No se modifica main ni se publica.
 
-## Alcance
+## Resultados comprobados
 
-Formulario real con datos ficticios, sin precargar la base: titular y empleado, porcentajes SINOT 0.30, desempleo PR 3.40, crédito FUTA 5.40, reducción FUTA 0.00 y CFSE 1.50. La aplicabilidad se conserva pendiente y la fuente se identifica ficticia; no se presentan esas tasas como carta patronal real. Se guarda, reinicia y comprueba cada valor y la nota al volver a abrir el formulario. No se crea ningún pago.
+Las tasas ficticias y su nota se conservan al reiniciar en Android e iOS: SINOT 0.30%, desempleo PR 3.40%, crédito FUTA 5.40%, reducción FUTA 0.00% y CFSE 1.50%. Fuente `FUENTE-FICTICIA-TASAS-2026`; aplicabilidad pendiente en todas las agencias. No son tasas atribuidas a un patrono real. Se comprueba que guardar tasas no crea un pago.
 
-Se abren los diálogos nativos de compartir conciliación CSV y borrador PDF, se captura el nombre del archivo y se cancelan sin seleccionar destinatario. Este caso con cero pagos prueba disponibilidad e interacción; los contenidos de pagos confirmados y minimización de identidad se verifican mediante la prueba de exportación seleccionada y la evidencia del bloque anterior. No se afirma emisión oficial ni entrega de documentos.
+Android comparte CSV y PDF con un receptor desechable local, que comprueba MIME, cabecera/sección del CSV y firma PDF, sin permiso de Internet ni almacenamiento persistente. [Ejecución aprobada 42688455929](https://github.com/dieliza/edumoney/actions/runs/42688455929), procedimiento `9eaa5e8`. Se vuelve a Nómina después de cada recepción. El receptor se compila e instala solo en el emulador, no forma parte de EduMoney.
 
-## Presupuesto y verificaciones
+El seguimiento de exportación iOS [42689916331](https://github.com/dieliza/edumoney/actions/runs/42689916331) está en curso. No se declara aprobado hasta terminar.
 
-Seis casos unitarios seleccionados aprobados en una sola ejecución: cálculo SS/Medicare con tasas explícitas, FUTA incompleto, vigencia, aplicabilidad desconocida, límites de tasas y contenido mínimo CSV/PDF. Otras 30 pruebas omitidas; no se ejecuta suite completa. TypeScript y ESLint aprobados.
+## Alcance y límites
 
-Escenario `payroll-policy-export` añadido al workflow existente, omitiendo la suite general. Procedimiento `80007a6`. Android [42684408082](https://github.com/dieliza/edumoney/actions/runs/42684408082) e iOS [42684414704](https://github.com/dieliza/edumoney/actions/runs/42684414704) iniciados, todavía sin resultado final. Seis casos terminados, dos activos; máximo 100 contando repeticiones.
+Todos los datos se introducen mediante formularios reales, sin precargar la base. Los seguimientos breves de exportación crean únicamente un titular ficticio, sin empleados ni pagos; prueban disponibilidad e interacción con archivos vacíos de movimientos. El caso de lógica seleccionado verifica también contenidos de pagos confirmados, lectura del PDF y minimización de identidad. El registro salarial y los depósitos móviles ya se comprobaron en el bloque anterior.
 
-## Evidencia
+El receptor Android únicamente lee la URI compartida en memoria, con límite de 1 MiB, y no tiene permisos. iOS abre y cancela los diálogos del sistema sin destinatario. No se afirma entrega a terceros, emisión oficial ni radicación. La validación oficial del formato y de los trámites Hacienda/SSA permanece pendiente; el cálculo autónomo no exige aprobación de CPA.
 
-[Registro de ejecución y valores esperados](evidence/business05-policy-export-mobile/). Los valores esperados no son resultados medidos. Se añadirán capturas y resultados después de completar los recorridos.
+## Diagnósticos y correcciones
+
+| Ejecución | Resultado y evidencia |
+| --- | --- |
+| 42684408082 Android | Tasas reabiertas aprobadas; selector sin aplicación receptora. Se instala receptor local de prueba. |
+| 42684414704 iOS | Todos los valores reabiertos aprobados; botón CSV cubierto por encabezado fijo. Se corrige desplazamiento del procedimiento. |
+| 42686391208 Android | Cancelada durante lint/TypeScript para corregir comillas de cabecera en el receptor; ningún caso ejecutado. |
+| 42686526379 Android | Tasas aprobadas y CSV leído correctamente. La comprobación falló porque Android abrió directamente el único receptor, sin selector. Se admite esa variante. |
+| 42687600566 iOS | Fallo de XCTest al pedir captura antes de entrar en Nómina; exportaciones no alcanzadas. `Failed to get screenshot: Timed out while requesting screenshot.` Se repite solo el recorrido breve. |
+| 42688455929 Android | Exportaciones CSV y PDF aprobadas, lectura local verificada y retorno a Nómina. |
+| 42689916331 iOS | En curso. |
+
+## Pruebas y presupuesto
+
+Seis casos unitarios seleccionados aprobados una vez: cálculo SS/Medicare con tasas explícitas, FUTA incompleto, vigencia, aplicabilidad desconocida, límites de tasas y contenido mínimo CSV/PDF. Otras 30 pruebas omitidas; no se ejecuta suite completa. TypeScript y ESLint aprobados. YAML y sintaxis del instalador comprobados.
+
+Once casos de EduMoney terminados y uno activo. Se incluyen además conservadoramente catorce casos internos XCTest observados en los dos intentos iOS terminados (seis comprobaciones del controlador y su servidor por intento). Total terminado incluyendo controlador: 25; presupuesto incluyendo siete comprobaciones internas y el recorrido activo: 33, inferior a 100. La ejecución sustituida no inició casos. No se repiten pruebas de lógica ya aprobadas.
+
+## Archivos y evidencia
+
+Nuevos recorridos `.maestro/business-payroll-policy-export.yaml` y `.maestro/business-payroll-export.yaml`; alta de titular extraída a `.maestro/business-payroll-holder.yaml`, reutilizada desde el alta de empleado; escenarios específicos que omiten la suite general en `.github/workflows/planilla-validation.yml`. Receptor exclusivo de pruebas en `tests/fixtures/android-share-receiver/` e instalador `scripts/install-android-share-fixture.sh`.
+
+[Capturas, resultados, valores esperados y presupuesto](evidence/business05-policy-export-mobile/). Las capturas de diagnóstico conservan los fallos, sin presentarlos como recorridos aprobados. Los valores esperados están identificados como tales, separados de las comprobaciones observadas.

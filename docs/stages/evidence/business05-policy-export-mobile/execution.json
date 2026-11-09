@@ -10,16 +10,53 @@
     {
       "run": 42684408082,
       "platform": "android",
-      "status": "in_progress",
-      "casesExecuted": null
+      "status": "failed: no recipient app installed; policy persistence passed",
+      "casesExecuted": 1
     },
     {
       "run": 42684414704,
       "platform": "ios",
+      "status": "failed: policy assertions passed; CSV button covered by header",
+      "casesExecuted": 1
+    },
+    {
+      "run": 42686391208,
+      "platform": "android",
+      "status": "cancelled during lint/typecheck to correct fixture CSV header before native scenario",
+      "casesExecuted": 0
+    },
+    {
+      "run": 42686526379,
+      "platform": "android",
+      "status": "failed filename assertion: CSV delivered successfully to sole receiver directly; policy assertions passed",
+      "casesExecuted": 1
+    },
+    {
+      "run": 42687600566,
+      "platform": "ios",
+      "scenario": "payroll-export",
+      "status": "failed: XCTest screenshot timeout before payroll navigation; exports not reached",
+      "casesExecuted": 1
+    },
+    {
+      "run": 42688455929,
+      "platform": "android",
+      "scenario": "payroll-export",
+      "status": "passed",
+      "casesExecuted": 1
+    },
+    {
+      "run": 42689916331,
+      "platform": "ios",
+      "scenario": "payroll-export",
       "status": "in_progress",
       "casesExecuted": null
     }
   ],
-  "casesCompleted": 6,
-  "casesIncludingActiveAttempts": 8
+  "casesCompleted": 11,
+  "casesIncludingActiveAttempts": 12,
+  "iosDriverXCTestCasesObserved": 14,
+  "conservativeCasesCompletedIncludingDriver": 25,
+  "conservativeCasesIncludingNextAttempt": 33,
+  "iosDriverCasesPerAttempt": 7
 }

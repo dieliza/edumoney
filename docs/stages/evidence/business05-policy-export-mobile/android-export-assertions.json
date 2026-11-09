@@ -1,0 +1,229 @@
+[
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Abrir Mi dinero",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794254465025,
+      "duration": 2377,
+      "sequenceNumber": 5,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Abrir Mi dinero",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^Patrono FICTICIO movil$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794254485336,
+      "duration": 132,
+      "sequenceNumber": 11,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^Patrono FICTICIO movil$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Clasificación contributiva de Puerto Rico",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794254494494,
+      "duration": 115,
+      "sequenceNumber": 17,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Clasificación contributiva de Puerto Rico",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "(?s)CSV local válido.*",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794254524272,
+      "duration": 59,
+      "sequenceNumber": 29,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "(?s)CSV local válido.*",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Nómina de Negocio",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794254525522,
+      "duration": 101,
+      "sequenceNumber": 33,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Nómina de Negocio",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "(?s)PDF local válido.*",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794254534104,
+      "duration": 94,
+      "sequenceNumber": 42,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "(?s)PDF local válido.*",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Nómina de Negocio",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794254535337,
+      "duration": 102,
+      "sequenceNumber": 46,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Nómina de Negocio",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      }
+    }
+  }
+]

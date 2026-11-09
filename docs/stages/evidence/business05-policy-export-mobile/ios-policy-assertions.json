@@ -1,0 +1,555 @@
+[
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Abrir Mi dinero",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794253384068,
+      "duration": 4397,
+      "sequenceNumber": 5,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Abrir Mi dinero",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^Patrono FICTICIO movil$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794253440780,
+      "duration": 781,
+      "sequenceNumber": 11,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^Patrono FICTICIO movil$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Clasificación contributiva de Puerto Rico",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794253459802,
+      "duration": 354,
+      "sequenceNumber": 18,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Clasificación contributiva de Puerto Rico",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "idRegex": "record-name",
+            "optional": false
+          }
+        },
+        "timeout": "120000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794253491588,
+      "duration": 459,
+      "sequenceNumber": 25,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "idRegex": "record-name",
+              "optional": false
+            }
+          },
+          "timeout": "120000",
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^NOTA-FICTICIA-PERSISTE$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794253548026,
+      "duration": 506,
+      "sequenceNumber": 41,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^NOTA-FICTICIA-PERSISTE$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "idRegex": "record-year",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794253580614,
+      "duration": 298,
+      "sequenceNumber": 49,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "idRegex": "record-year",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Abrir Mi dinero",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794253684978,
+      "duration": 4041,
+      "sequenceNumber": 83,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Abrir Mi dinero",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Nómina de Negocio",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794253728996,
+      "duration": 245,
+      "sequenceNumber": 91,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Nómina de Negocio",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^0[.]30$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794253741028,
+      "duration": 325,
+      "sequenceNumber": 95,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^0[.]30$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^3[.]40$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794253741742,
+      "duration": 404,
+      "sequenceNumber": 97,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^3[.]40$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^5[.]40$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794253746927,
+      "duration": 520,
+      "sequenceNumber": 99,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^5[.]40$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^0[.]00$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794253748014,
+      "duration": 411,
+      "sequenceNumber": 101,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^0[.]00$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^1[.]50$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794253752767,
+      "duration": 415,
+      "sequenceNumber": 103,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^1[.]50$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^FUENTE-FICTICIA-TASAS-2026$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794253756838,
+      "duration": 415,
+      "sequenceNumber": 105,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^FUENTE-FICTICIA-TASAS-2026$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^FICTICIO: aplicabilidad pendiente, no es carta patronal$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794253757656,
+      "duration": 582,
+      "sequenceNumber": 107,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^FICTICIO: aplicabilidad pendiente, no es carta patronal$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Pagos confirmados: 0.*",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794253778579,
+      "duration": 230,
+      "sequenceNumber": 112,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Pagos confirmados: 0.*",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": ".*EduMoney-Nomina-Borrador.*",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "FAILED",
+      "timestamp": 1794253789626,
+      "duration": 60607,
+      "error": {
+        "message": "Assertion is false: \".*EduMoney-Nomina-Borrador.*\" is visible",
+        "debugMessage": "Assertion '\".*EduMoney-Nomina-Borrador.*\" is visible' failed. Check the UI hierarchy in debug artifacts to verify the element state and properties.\n\nPossible causes:\n- Element selector may be incorrect - check if there are similar elements with slightly different names/properties.\n- Element may be temporarily unavailable due to loading state\n- This could be a real regression that needs to be addressed"
+      },
+      "sequenceNumber": 115,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": ".*EduMoney-Nomina-Borrador.*",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      },
+      "artifacts": [
+        {
+          "type": "SCREEN_HIERARCHY",
+          "path": "screen-hierarchy/step-116-assertCondition-EduMoney-Nomina-Borrador.json"
+        },
+        {
+          "type": "SCREENSHOT",
+          "path": "screenshots/step-116-assertCondition-EduMoney-Nomina-Borrador.png"
+        }
+      ]
+    }
+  }
+]
