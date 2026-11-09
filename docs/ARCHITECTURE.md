@@ -95,3 +95,12 @@ Los indicadores se leen en una sola operación de la cola compartida; no guardan
 `decision_scenarios` guarda inputs, nombre y versión de fórmula; los resultados se derivan sin escribir movimientos. La UI rechaza comparar versiones no soportadas.
 Los motores de cuota, recurrencia, ahorro y fondo operan en centavos/BigInt. El margen de comparación es elegido manualmente y queda desconocido si se omite.
 Las variantes nativas usan SQLCipher; el adaptador web conserva su demostración. La voz se limita a contenido editorial con voz española básica disponible en iOS, con parada por navegación/segundo plano. Android usa texto cuando no puede verificarse la ejecución local del motor.
+
+## Esquema 7 — Etapa 8
+
+`documents` conserva movimiento o factura, origen, datos confirmados, huella, estado, versión y referencia de corrección. La migración conserva las referencias anteriores sin inventar fechas, importes ni archivos.
+`document_contents` guarda la representación de la imagen dentro de SQLCipher; no se crean copias permanentes sin cifrar. `document_events` conserva estados anteriores y motivos de eliminación/revisión.
+Guardar un recibo nuevo inserta documento y movimiento en una única transacción; una factura pendiente no crea pago. Adjuntar no modifica ni duplica el registro existente.
+La corrección financiera desde un documento vigente mantiene las protecciones de otros módulos, audita el movimiento y marca sus comprobantes pendientes conservando los originales.
+Captura/OCR y voz usan adaptadores nativos; la web conserva una demostración. Los temporales propios se limpian tras procesar y al iniciar. Cámara/micrófono solo por acción; OCR con modelo incluido y dictado local obligatorio sin fallback remoto.
+`prepare-local-recognition.mjs` aplica parches acotados a versiones fijadas y verificados en pruebas antes de compilar. El control de carga de la imagen sintética está condicionado al build de CI; no aparece en compilaciones normales.
