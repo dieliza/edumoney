@@ -17,3 +17,8 @@ Seis casos de `tests/business-ledger.test.ts` aprobados en una ejecución: gasto
 Android se ejecuta primero para comprobar los selectores de los formularios existentes. Las ejecuciones, repeticiones y comprobaciones internas XCTest de iOS se añadirán al [presupuesto de ejecución](evidence/business-ledger-mobile/execution.json), con máximo 100. No se afirma aprobación por iniciar CI.
 
 Nuevo escenario `business-ledger` en el workflow registrado, que omite las pruebas generales. Recorrido `.maestro/business-ledger.yaml`. [Valores esperados, no mediciones](evidence/business-ledger-mobile/expected-ficticio.json).
+
+
+### Corrección del guion Android
+
+[42696209452](https://github.com/dieliza/edumoney/actions/runs/42696209452) falló antes de introducir datos: el alias YAML `id001` generado para un selector fue interpretado como texto por Maestro. Se expanden los selectores sin alias; la aplicación no cambia. Repetición [42696892099](https://github.com/dieliza/edumoney/actions/runs/42696892099), procedimiento `3435513`. Primer intento incluido en el presupuesto.

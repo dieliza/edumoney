@@ -79,6 +79,16 @@ appId: com.edumoney.app
     direction: DOWN
     centerElement: true
     timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,70%
+        end: 5%,55%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
 - tapOn: 'Movimientos y recibos: Titular FICTICIO comercial'
 - extendedWaitUntil:
     visible: Movimientos de Negocio
@@ -212,6 +222,16 @@ appId: com.edumoney.app
     direction: UP
     centerElement: true
     timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,35%
+        end: 5%,60%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
 - tapOn: ^Proyecto FICTICIO uno$
 - scrollUntilVisible:
     element: '^Gastos completos registrados: \$33\.00$'
@@ -231,6 +251,16 @@ appId: com.edumoney.app
     direction: UP
     centerElement: true
     timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,35%
+        end: 5%,60%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
 - tapOn: Todos los proyectos del titular
 - scrollUntilVisible:
     element: '^Gastos completos registrados: \$55\.00$'
@@ -336,6 +366,16 @@ appId: com.edumoney.app
         direction: DOWN
         centerElement: true
         timeout: 60000
+    - runFlow:
+        when:
+          platform: iOS
+        commands:
+        - swipe:
+            start: 5%,70%
+            end: 5%,55%
+            duration: 600
+        - waitForAnimationToEnd:
+            timeout: 5000
     - tapOn: 'Movimientos y recibos: Titular FICTICIO comercial'
     - extendedWaitUntil:
         visible: Movimientos de Negocio

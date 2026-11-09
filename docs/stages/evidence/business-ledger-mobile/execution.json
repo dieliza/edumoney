@@ -12,6 +12,12 @@
       "platform": "android",
       "status": "failed: generated YAML alias treated as selector text id001, before entering data",
       "casesExecuted": 1
+    },
+    {
+      "run": 42696892099,
+      "platform": "android",
+      "status": "in_progress",
+      "casesExecuted": null
     }
   ],
   "casesCompleted": 7,
