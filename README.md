@@ -65,3 +65,7 @@ Las capturas y el estado de verificación se documentan en [Etapa 2](docs/stages
 ## Negocio — primera entrega
 
 [Perfiles comerciales: implementación, pruebas y límites](docs/stages/NEGOCIO-01.md). Titulares, DBA y proyectos locales; clasificación de Puerto Rico y federal separadas. La incidencia [IOS-QA-10](docs/ISSUES.md) queda diferida por instrucción del usuario.
+
+## Negocio — movimientos y recibos
+
+[Segunda entrega: funcionamiento, pruebas y límites](docs/stages/NEGOCIO-02.md) · [Ejemplo ficticio para revisión del CPA](docs/stages/evidence/business02/README.md).

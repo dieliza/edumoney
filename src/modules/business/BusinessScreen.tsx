@@ -1,5 +1,5 @@
 import { useCallback,useEffect,useState } from 'react';
-import { useIsFocused } from 'expo-router';
+import { router,useIsFocused } from 'expo-router';
 import { ActionButton,Body,Card,Screen } from '../../ui/components';
 import { ErrorNotice } from '../money/fields';
 import { getMoneyStore } from '../money/localStore';
@@ -30,6 +30,7 @@ export default function BusinessScreen() {
    <Body>DBA: {data.dbas.filter(d=>d.holderId===h.id).map(d=>d.name).join(', ')||'Sin registrar'}</Body>
    {data.projects.filter(p=>p.holderId===h.id).map(p=><Body key={p.id}>Proyecto: {p.name} · {p.dbaId?data.dbas.find(d=>d.id===p.dbaId)?.name:'Directamente con el titular'}</Body>)}
    <ActionButton title={`Abrir perfil: ${h.legalName}`} secondary onPress={()=>{setNotice('');setEditing(h.id);}}/>
+   <ActionButton title={`Movimientos y recibos: ${h.legalName}`} onPress={()=>router.push({pathname:'/business-ledger',params:{holderId:h.id}})}/>
   </Card>)}
  </Screen>;
 }

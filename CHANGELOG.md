@@ -170,3 +170,11 @@
 - Datos LLC y clasificaciones PR/federal independientes, con estado pendiente.
 - Relaciones por titular, versiones y migración SQLCipher 9→10; perfiles incluidos en respaldo y compatibilidad explícita del esquema 9.
 - Incidencia de automatización IOS-QA-10 diferida por instrucción del usuario; sin fusión a main.
+
+## Negocio 2 — Movimientos, recibos y CPA
+
+- Ingresos/gastos por titular y proyecto, uso mixto y reparto exacto sin duplicar el movimiento financiero.
+- Desglose conciliado de depósitos, componentes pendientes y recibos vinculados con copia local opcional.
+- Reservas manuales separadas y exportación JSON/CSV elegida para revisión del CPA.
+- Migración 10→11 y compatibilidad de respaldo 9/10/11; historial de cambios y conciliación de movimientos modificados.
+- IOS-QA-10 continúa diferida; sin cambios a main ni publicación.
