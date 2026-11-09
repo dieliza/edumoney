@@ -1,0 +1,30 @@
+{
+  "ios-with-copy": {
+    "before_reopen": {
+      "encrypted_header": true,
+      "plain_sqlite_rejected": true,
+      "sha256": "1d8211feef3b13070d3f06aab1eb774d1fb7cd659a03839f6c26f8127417f586",
+      "size": 335872
+    },
+    "after_reopen": {
+      "encrypted_header": true,
+      "plain_sqlite_rejected": true,
+      "sha256": "1d8211feef3b13070d3f06aab1eb774d1fb7cd659a03839f6c26f8127417f586",
+      "size": 335872
+    }
+  },
+  "ios-direct": {
+    "before_reopen": {
+      "encrypted_header": true,
+      "plain_sqlite_rejected": true,
+      "sha256": "d01e3935305ab24ed68d7af6831470ae0ba1debd05e89c98b48c8413bac5b746",
+      "size": 335872
+    },
+    "after_reopen": {
+      "encrypted_header": true,
+      "plain_sqlite_rejected": true,
+      "sha256": "d01e3935305ab24ed68d7af6831470ae0ba1debd05e89c98b48c8413bac5b746",
+      "size": 335872
+    }
+  }
+}

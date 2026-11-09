@@ -127,3 +127,11 @@
 - Copia opcional dentro de SQLCipher, temporales eliminados, huella y protección de duplicados.
 - Referencias de corrección y movimientos auditados con revisión documental pendiente.
 - Migración 6→7 preservando documentos; 37 pruebas adicionales, 154 en total.
+
+### Verificación final de Etapa 8
+
+- 154 pruebas, TypeScript, ESLint y 3 recorridos de navegador aprobados.
+- Android sin conexión e iOS: OCR real, revisión, copia cifrada, reinicio, eliminación de copia, duplicado bloqueado y factura pendiente aprobados.
+- Cifrado, rechazo de SQLite sin clave, huella estable y exclusión de backup verificados en iOS con y sin copia.
+- Galería de 20 capturas y guía de uso. Cámara y audio físicos pendientes de validación en dispositivos.
+- Etapa 9 pendiente de revisión; main sin cambios, sin push y Negocio reservado.
