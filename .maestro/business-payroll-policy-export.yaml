@@ -239,7 +239,11 @@ appId: com.edumoney.app
     when:
       platform: iOS
     commands:
-      - tapOn: "Close"
+      # iOS 26 presents a popover: dismiss through its outside region.
+      - tapOn:
+          point: "5%,20%"
+      - assertNotVisible:
+          id: ActivityListView
 - extendedWaitUntil:
     visible: "Nómina de Negocio"
     timeout: 60000
@@ -287,7 +291,11 @@ appId: com.edumoney.app
     when:
       platform: iOS
     commands:
-      - tapOn: "Close"
+      # iOS 26 presents a popover: dismiss through its outside region.
+      - tapOn:
+          point: "5%,20%"
+      - assertNotVisible:
+          id: ActivityListView
 - extendedWaitUntil:
     visible: "Nómina de Negocio"
     timeout: 60000
