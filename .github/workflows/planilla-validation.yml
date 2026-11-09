@@ -12,7 +12,7 @@ on:
       scenario:
         description: 'Recorrido completo, entrevista o nómina móvil'
         type: choice
-        options: [full, persistence, payroll]
+        options: [full, persistence, payroll, payroll-payments]
         default: full
       artifact_run:
         description: 'Opcional: repetir pruebas con los paquetes de una ejecución anterior, sin recompilar'
@@ -49,7 +49,7 @@ jobs:
       - run: npm ci
       - run: npm run lint && npm run typecheck
       - run: npm test
-        if: inputs.scenario != 'payroll'
+        if: inputs.scenario != 'payroll' && inputs.scenario != 'payroll-payments'
       - run: npx expo prebuild --no-install
         env:
           CI: 1
@@ -100,7 +100,7 @@ jobs:
             adb shell svc wifi disable
             adb shell svc data disable
             rm -rf native-results
-            maestro test --test-output-dir native-results "${{ inputs.scenario == 'payroll' && '.maestro/business-payroll.yaml' || '.maestro/planilla.yaml' }}"
+            maestro test --test-output-dir native-results "${{ inputs.scenario == 'payroll-payments' && '.maestro/business-payroll-payments.yaml' || inputs.scenario == 'payroll' && '.maestro/business-payroll.yaml' || '.maestro/planilla.yaml' }}"
             adb shell dumpsys meminfo com.edumoney.app > native-results/android-memory.txt
             adb shell am force-stop com.edumoney.app
             adb shell am start -W com.edumoney.app/.MainActivity > native-results/android-startup.txt
@@ -178,6 +178,7 @@ jobs:
           TEST_FLOW=.maestro/planilla.yaml
           if [ "${{ inputs.scenario }}" = "persistence" ]; then TEST_FLOW=.maestro/planilla-persistence.yaml; fi
           if [ "${{ inputs.scenario }}" = "payroll" ]; then TEST_FLOW=.maestro/business-payroll.yaml; fi
+          if [ "${{ inputs.scenario }}" = "payroll-payments" ]; then TEST_FLOW=.maestro/business-payroll-payments.yaml; fi
           maestro --device "$DEVICE_ID" test --test-output-dir native-results "$TEST_FLOW" 2>&1 | tee native-results/maestro-planilla.log
           # Revalidar el cifrado y la reapertura después de guardar los movimientos de prueba.
           bash scripts/ios-smoke.sh "$DEVICE_ID"

@@ -1,0 +1,450 @@
+appId: com.edumoney.app
+---
+- runFlow:
+    file: business-payroll-setup.yaml
+- scrollUntilVisible:
+    element: "Preparar nómina FICTICIO-MOVIL-01"
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn: "Preparar nómina FICTICIO-MOVIL-01"
+- scrollUntilVisible:
+    element:
+      id: record-date
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-date
+- eraseText: 100
+- inputText: "2026-10-31"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-start
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-start
+- eraseText: 100
+- inputText: "2026-10-01"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-end
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-end
+- eraseText: 100
+- inputText: "2026-10-31"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-reference
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-reference
+- eraseText: 100
+- inputText: "FICTICIO-NOMINA-01"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-priorWagesCents
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-priorWagesCents
+- eraseText: 100
+- inputText: "0.00"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-priorSource
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-priorSource
+- eraseText: 100
+- inputText: "FICTICIO: cero previo confirmado"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-otherCents
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-otherCents
+- eraseText: 100
+- inputText: "0.00"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-save
+- scrollUntilVisible:
+    element: "Pagos confirmados: 0.*"
+    direction: UP
+    centerElement: false
+    timeout: 60000
+- assertVisible: "Pagos confirmados: 0.*"
+- scrollUntilVisible:
+    element: "Confirmar importes realmente pagados"
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- takeScreenshot: payroll-calculation-unpaid
+- tapOn: "Confirmar importes realmente pagados"
+- scrollUntilVisible:
+    element:
+      id: record-gross
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-gross
+- eraseText: 100
+- inputText: "2200.00"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-ssWages
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-ssWages
+- eraseText: 100
+- inputText: "2200.00"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-medicareWages
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-medicareWages
+- eraseText: 100
+- inputText: "2200.00"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-pr
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-pr
+- eraseText: 100
+- inputText: "54.91"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-ss
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-ss
+- eraseText: 100
+- inputText: "136.40"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-medicare
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-medicare
+- eraseText: 100
+- inputText: "31.90"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-additionalMedicare
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-additionalMedicare
+- eraseText: 100
+- inputText: "0.00"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-sinot
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-sinot
+- eraseText: 100
+- inputText: "6.60"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-other
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-other
+- eraseText: 100
+- inputText: "0.00"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-net
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-net
+- eraseText: 100
+- inputText: "1970.19"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-reference
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-reference
+- eraseText: 100
+- inputText: "FICTICIO-PAGO-01"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-note
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-note
+- eraseText: 100
+- inputText: "FICTICIO: importes reales de prueba documentados"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-save
+- scrollUntilVisible:
+    element: "Neto pagado.*"
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: "^Neto pagado \\$1,970\\.19 · comprobante FICTICIO-PAGO-01$"
+- takeScreenshot: payroll-payment-confirmed
+- scrollUntilVisible:
+    element: "Registrar partida de depósito real"
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn: "Registrar partida de depósito real"
+- scrollUntilVisible:
+    element:
+      id: record-date
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-date
+- eraseText: 100
+- inputText: "2026-11-01"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-amountCents
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-amountCents
+- eraseText: 100
+- inputText: "20.00"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-reference
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-reference
+- eraseText: 100
+- inputText: "FICTICIO-DEPOSITO-01/1"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-note
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-note
+- eraseText: 100
+- inputText: "FICTICIO: partida del deposito"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-save
+- scrollUntilVisible:
+    element: "Pagos confirmados: 1.*"
+    direction: UP
+    centerElement: false
+    timeout: 60000
+- assertVisible: "^Pagos confirmados: 1 · Bruto \\$2,200\\.00 · Neto \\$1,970\\.19 · Costo patronal Pendiente$"
+- scrollUntilVisible:
+    element: "Hacienda: salarios: obligación.*"
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: "^Hacienda: salarios: obligación \\$54\\.91 · depositado \\$20\\.00 · pendiente \\$34\\.91$"
+- takeScreenshot: payroll-deposit-partial
+- scrollUntilVisible:
+    element: "Registrar partida de depósito real"
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn: "Registrar partida de depósito real"
+- scrollUntilVisible:
+    element:
+      id: record-date
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-date
+- eraseText: 100
+- inputText: "2026-11-01"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-amountCents
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-amountCents
+- eraseText: 100
+- inputText: "34.91"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-reference
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-reference
+- eraseText: 100
+- inputText: "FICTICIO-DEPOSITO-01/2"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-note
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-note
+- eraseText: 100
+- inputText: "FICTICIO: partida del deposito"
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-save
+- scrollUntilVisible:
+    element: "Pagos confirmados: 1.*"
+    direction: UP
+    centerElement: false
+    timeout: 60000
+- assertVisible: "^Pagos confirmados: 1 · Bruto \\$2,200\\.00 · Neto \\$1,970\\.19 · Costo patronal Pendiente$"
+- scrollUntilVisible:
+    element: "Hacienda: salarios: obligación.*"
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: "^Hacienda: salarios: obligación \\$54\\.91 · depositado \\$54\\.91 · pendiente \\$0\\.00$"
+- takeScreenshot: payroll-deposit-reconciled
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible: "Abrir Mi dinero"
+    timeout: 60000
+- tapOn: "Abrir Mi dinero"
+- tapOn: "Negocio.*"
+- scrollUntilVisible:
+    element: "Nómina: Patrono FICTICIO movil"
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn: "Nómina: Patrono FICTICIO movil"
+- scrollUntilVisible:
+    element: "Pagos confirmados: 1.*"
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: "^Pagos confirmados: 1 · Bruto \\$2,200\\.00 · Neto \\$1,970\\.19 · Costo patronal Pendiente$"
+- scrollUntilVisible:
+    element: "Hacienda: salarios: obligación.*"
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: "^Hacienda: salarios: obligación \\$54\\.91 · depositado \\$54\\.91 · pendiente \\$0\\.00$"
+- takeScreenshot: payroll-payments-reopened
