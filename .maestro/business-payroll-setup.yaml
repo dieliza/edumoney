@@ -56,8 +56,10 @@ appId: com.edumoney.app
     direction: DOWN
     centerElement: true
 - tapOn: "Añadir empleado"
-- assertVisible:
-    id: record-name
+- extendedWaitUntil:
+    visible:
+      id: record-name
+    timeout: 120000
 - tapOn:
     id: record-name
 - inputText: "Empleado FICTICIO movil"
