@@ -158,6 +158,8 @@
 - Por instrucción actualizada del usuario, el cálculo no exige CPA ni revisión previa; la revisión personal queda registrada de forma informativa.
 - Borrador PDF con estructura informativa oficial, guía de líneas, fuentes y campos pendientes, sin radicación ni certificación.
 - Respaldo AES-256-GCM con contraseña, comprobación independiente WebCrypto y recuperación transaccional; migración 8→9.
-- 16 pruebas adicionales (191 totales). Cómputo final y varios anejos aún fuera de alcance; pruebas físicas y Negocio pendientes antes de publicación.
+- 20 pruebas adicionales (195 totales). Saldo automático con componentes declarados; determinación de algunos anejos no automatizada; pruebas físicas y Negocio pendientes antes de publicación.
 
 - Derivación de contraseña nativa Swift/Kotlin: conserva 600,000 iteraciones, formato portátil y compatibilidad UTF-8 verificada mediante vector independiente.
+
+- Saldo de la línea 31 con créditos, estimadas y adición declarados: distingue pago/sobrepago, conserva desconocidos y comprueba desbordes. Formulario largo ajustado al teclado.

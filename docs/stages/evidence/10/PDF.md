@@ -1,10 +1,10 @@
 # Borrador ficticio 2025 para revisión
 
-[Abrir PDF de cinco páginas](2025-ficticio-no-radicado.pdf)
+[Abrir PDF de borrador](2025-ficticio-no-radicado.pdf)
 
 Usa las tres primeras páginas de la plantilla informativa del Formulario 482 de Hacienda y añade la guía de campos y pendientes. Todas las páginas están marcadas **Borrador de EduMoney — no radicado** y **FICTICIO — NO RADICAR**.
 
-El caso tiene $28,000 de salarios sujetos y $1,000 de retención ficticios. Bajo los supuestos del ejemplo, muestra exención individual de $3,500, ingreso neto de $24,500, contribución según tabla de $1,085 y cálculo parcial de la línea 17 de $998.20. Es un cálculo antes de los componentes no cubiertos, no un reintegro ni una deuda final.
+El caso tiene $28,000 de salarios sujetos y $1,000 de retención ficticios. Bajo los supuestos del ejemplo, muestra exención individual de $3,500, ingreso neto de $24,500, contribución según tabla de $1,085 y cálculo parcial de la línea 17 de $998.20. El escenario ficticio declara cero en todos los componentes adicionales para demostrar un sobrepago calculado de $1.80 en la línea 31. Esa declaración es un supuesto del ejemplo, no una validación de elegibilidad de créditos.
 
 No se exige un CPA ni una aprobación previa para ejecutar los cálculos implementados. La revisión puede registrarla el usuario. Los créditos, anejos y el redondeo de presentación oficial pendientes se identifican en la guía; no se sustituyen por cero ni se presume certificación de Hacienda.
 

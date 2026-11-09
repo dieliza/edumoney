@@ -1,7 +1,7 @@
 import { fixed } from '../design/tokens';
 import { useIsFocused } from 'expo-router';
 import { type ComponentProps, type PropsWithChildren } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions, type StyleProp, type ViewStyle } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View, KeyboardAvoidingView, Platform, useWindowDimensions, type StyleProp, type ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
@@ -59,7 +59,7 @@ export function Waves() {
     </Svg>
   </View>;
 }
-export function Screen({ children, title, subtitle, welcome = false, demo = true }: PropsWithChildren<{ title: string; subtitle?: string; welcome?: boolean; demo?: boolean }>) {
+export function Screen({ children, title, subtitle, welcome = false, demo = true, keyboardForm = false }: PropsWithChildren<{ title: string; subtitle?: string; welcome?: boolean; demo?: boolean; keyboardForm?: boolean }>) {
   const { name, colors, notice } = useTheme();
   const { width } = useWindowDimensions();
   const focused = useIsFocused();
@@ -75,14 +75,14 @@ export function Screen({ children, title, subtitle, welcome = false, demo = true
           <ThemePicker color={headerInk} />
         </View>
       </View>
-      <ScrollView tabIndex={0} accessibilityLabel={`Contenido de ${title}`} contentContainerStyle={{ flexGrow: 1, paddingBottom: 32 }} keyboardShouldPersistTaps="handled">
+      <KeyboardAvoidingView enabled={keyboardForm} behavior={Platform.OS==='ios'?'padding':'height'} style={{flex:1}}><ScrollView keyboardDismissMode="on-drag" tabIndex={0} accessibilityLabel={`Contenido de ${title}`} contentContainerStyle={{ flexGrow: 1, paddingBottom: 32 }} keyboardShouldPersistTaps="handled">
         <View style={{ width: '100%', maxWidth: 700, alignSelf: 'center', paddingHorizontal: width < 370 ? 16 : 24, gap: 18 }}>
           {!welcome && demo ? <View style={{ backgroundColor: colors.warning, borderRadius: 12, paddingVertical: 8, paddingHorizontal: 12 }}><Text style={{ color: colors.warningText, fontSize: 12, fontWeight: '600', textAlign: 'center' }}>DEMOSTRACIÓN · DATOS FICTICIOS</Text></View> : null}
           {subtitle ? <Text style={{ color: name === 'dark' ? fixed.subtitleDark : colors.muted, fontSize: 16, lineHeight: 24 }}>{subtitle}</Text> : null}
           {notice ? <View accessibilityLiveRegion="polite" style={{ backgroundColor: colors.warning, padding: 14, borderRadius: 12 }}><Text style={{ color: colors.warningText, fontSize: 15 }}>{notice}</Text></View> : null}
           {children}
         </View>
-      </ScrollView>
+      </ScrollView></KeyboardAvoidingView>
     </SafeAreaView>
   </LinearGradient>;
 }

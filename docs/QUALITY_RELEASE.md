@@ -21,4 +21,4 @@
 
 ## Límites vigentes
 
-No existe radicación automática ni certificación de Hacienda. Las tablas 2025 no se aplican a 2026. Crédito por trabajo, contribución básica alterna, demás anejos y pago/reintegro definitivo todavía requieren implementación. PDF de borrador y exportaciones son documentos legibles por elección del usuario; un respaldo de recuperación es un archivo distinto y cifrado.
+No existe radicación automática ni certificación de Hacienda. Las tablas 2025 no se aplican a 2026. La determinación de elegibilidad e importes de crédito por trabajo, contribución básica alterna y demás anejos no está automatizada. El saldo de la línea 31 sí se calcula con todos los componentes declarados; sus campos vacíos quedan pendientes. PDF de borrador y exportaciones son documentos legibles por elección del usuario; un respaldo de recuperación es un archivo distinto y cifrado.

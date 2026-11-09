@@ -6,10 +6,11 @@
 2. Transcribe salarios sujetos del encasillado 11 y retención del encasillado 13 del 499R-2/W-2PR. No uses un depósito neto como si fuera el salario sujeto.
 3. Responde las preguntas que determinan el caso aplicable. Deja como pendiente lo que desconoces. El catálogo inicial corresponde a 2025 y al caso salarial limitado descrito en sus fuentes; no se aplica a 2026.
 4. Guarda la entrevista indicando un motivo. Los campos soportados se calculan automáticamente cuando hay datos esenciales suficientes.
-5. Abre Revisar campos guardados y pendientes. Puedes registrar tu nombre y marcar Revisado por mí; no se exige que seas CPA. No necesitas completar esa revisión ni adjuntar comprobantes para ejecutar las fórmulas disponibles.
-6. Si deseas, revisa y comparte el PDF. Lleva la marca Borrador de EduMoney — no radicado y no se envía automáticamente a SURI.
+5. Introduce los componentes restantes del Encasillado 3 desde los anejos o confirma cero cuando no apliquen. El saldo se calcula cuando todos están presentes; un campo vacío no se convierte en cero.
+6. Abre Revisar campos guardados y pendientes. Puedes registrar tu nombre y marcar Revisado por mí; no se exige que seas CPA. No necesitas completar esa revisión ni adjuntar comprobantes para ejecutar las fórmulas disponibles.
+7. Si deseas, revisa y comparte el PDF. Lleva la marca Borrador de EduMoney — no radicado y no se envía automáticamente a SURI.
 
-La tabla regular y su factor son cómputos parciales. Crédito por trabajo, contribución básica alterna, otros anejos y el redondeo de presentación oficial permanecen identificados como pendientes o fuera de cobertura. Por eso no se presenta un pago/reintegro completo como confirmado. Esto no es una exigencia de aprobación profesional.
+La tabla regular y su factor se calculan con los datos esenciales del caso. Los créditos, contribución alterna, pagos y adición se incorporan como importes declarados para calcular el saldo de la línea 31. La elegibilidad de esos conceptos y el redondeo de presentación oficial no se determinan automáticamente. Si falta un componente, el saldo queda pendiente y se conserva el resto de los cálculos. No se exige aprobación profesional.
 
 ## Respaldo cifrado
 

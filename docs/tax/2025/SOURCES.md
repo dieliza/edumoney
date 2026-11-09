@@ -23,7 +23,7 @@ Catálogo `PR-482-2025-research.1`, definido en `src/modules/planilla/catalog.ts
 
 Individuo residente todo el año, 26 a 64 años, solo salarios ordinarios de Puerto Rico, sin dependientes, deducciones adicionales, veterano, ingresos exentos/especiales, negocio, inversión o situaciones especiales; límite inicial de salarios de $500,000. La revisión de comprobantes o adjuntos no es una condición para ejecutar las fórmulas disponibles. Los datos esenciales del caso sí deben introducirse para no inventar residencia, estado personal ni importes.
 
-El crédito por trabajo (Anejo CT), contribución básica alterna (Anejo O), deducciones detalladas y demás anejos se identifican como pendientes o fuera de alcance. No se sustituyen por cero. Por ello, los cómputos implementados son parciales: el reintegro o pago definitivo permanece pendiente de esos componentes.
+El crédito por trabajo (Anejo CT), contribución básica alterna (Anejo O), deducciones detalladas y demás anejos se identifican como pendientes o fuera de alcance. No se sustituyen por cero. Los importes de esos anejos pueden introducirse como componentes declarados, incluyendo cero confirmado donde corresponda. Con todos los componentes presentes, se calculan las líneas 19, 22, 26, 27F, 28, 29 y el saldo de la línea 31 conforme a las fórmulas del formulario. Sin ellos, el saldo queda pendiente y las fórmulas parciales siguen disponibles. La elegibilidad no se deduce de marcar o introducir un crédito. El saldo de la línea 31 no incluye por sí solo intereses o recargos de pago de la página 1.
 
 ## PDF
 

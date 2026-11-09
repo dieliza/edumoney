@@ -78,6 +78,12 @@ appId: com.edumoney.app
 - extendedWaitUntil:
     visible: "PRUEBA FICTICIA APROBADA:.*"
     timeout: 120000
+- scrollUntilVisible:
+    element:
+      text: "PRUEBA FICTICIA APROBADA:.*"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
 - takeScreenshot: stage10-backup-recovered
 - scrollUntilVisible:
     element:
@@ -126,9 +132,18 @@ appId: com.edumoney.app
     id: closure-notes
 - eraseText
 - inputText: "Cierre ficticio de prueba"
-- tapOn:
-    text: "Notas y situaciones para revisar"
-    index: 0
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - hideKeyboard
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn:
+          text: "Notas y situaciones para revisar"
+          index: 0
 - scrollUntilVisible:
     element:
       id: closure-reason
@@ -139,9 +154,18 @@ appId: com.edumoney.app
     id: closure-reason
 - eraseText
 - inputText: "Prueba ficticia"
-- tapOn:
-    text: "Motivo del cierre o corrección"
-    index: 0
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - hideKeyboard
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn:
+          text: "Motivo del cierre o corrección"
+          index: 0
 - scrollUntilVisible:
     element:
       id: closure-save

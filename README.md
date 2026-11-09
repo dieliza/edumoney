@@ -35,7 +35,7 @@ La Etapa 8 añade escaneo local, dictado cuando existe modelo local y comprobant
 
 La Etapa 9 añade Para mi contable: expediente por año, informativas, conciliación y exportación explícita para revisión profesional. No calcula ni radica planillas. [Guía del expediente](docs/USAR_PARA_MI_CONTABLE.md).
 
-La Etapa 10 añade entrevista de cierre y cálculos automáticos en los campos soportados del catálogo 2025, sin exigir CPA, además de PDF de borrador y respaldo cifrado con contraseña. El pago/reintegro completo y algunos anejos continúan pendientes. [Estado de etapa 10](docs/stages/10.md).
+La Etapa 10 añade entrevista de cierre y cálculos automáticos en los campos soportados del catálogo 2025, sin exigir CPA, además de PDF de borrador y respaldo cifrado con contraseña. El saldo se calcula con los componentes declarados; la elegibilidad y determinación de algunos anejos siguen siendo de revisión manual. [Estado de etapa 10](docs/stages/10.md).
 
 La vista web es solo una demostración visual, sin acceso a bases financieras. Para revisar localmente:
 
