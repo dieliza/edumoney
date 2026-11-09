@@ -1,0 +1,374 @@
+appId: com.edumoney.app
+---
+- launchApp:
+    clearState: true
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: "Quickstep isn't responding"
+          commands:
+            - tapOn: "Close app"
+      - extendedWaitUntil:
+          visible: "Abrir Mi dinero"
+          timeout: 60000
+- tapOn: "Abrir Mi dinero"
+- scrollUntilVisible:
+    element:
+      text: "Añadir ingreso"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: "Añadir ingreso"
+- scrollUntilVisible:
+    element:
+      id: movement-amount
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: movement-amount
+- eraseText
+- inputText: "900.00"
+- tapOn:
+    text: "Importe recibido o neto.*"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: movement-description
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: movement-description
+- eraseText
+- inputText: "Salario ficticio"
+- tapOn:
+    text: "Descripción"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: movement-gross
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: movement-gross
+- eraseText
+- inputText: "1000.00"
+- tapOn:
+    text: "Ingreso bruto.*"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: movement-withheld
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: movement-withheld
+- eraseText
+- inputText: "100.00"
+- tapOn:
+    text: "Retención.*"
+    index: 0
+- scrollUntilVisible:
+    element:
+      text: "Marcar para revisión"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: "Marcar para revisión"
+- scrollUntilVisible:
+    element:
+      text: "Guardar movimiento"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: "Guardar movimiento"
+- scrollUntilVisible:
+    element:
+      id: open-tax
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: open-tax
+- extendedWaitUntil:
+    visible: "Expediente local para revisión profesional."
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      text: "Resumen"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage9-summary-pending
+- scrollUntilVisible:
+    element:
+      text: "Movimientos"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: "Movimientos"
+- scrollUntilVisible:
+    element:
+      text: "Revisar movimiento: Salario ficticio"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: "Revisar movimiento: Salario ficticio"
+- scrollUntilVisible:
+    element:
+      text: "Ingreso salarial"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: "Ingreso salarial"
+- scrollUntilVisible:
+    element:
+      text: "Personal"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: "Personal"
+- scrollUntilVisible:
+    element:
+      text: "Recibido"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: "Recibido"
+- scrollUntilVisible:
+    element:
+      id: tax-review-reason
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: tax-review-reason
+- eraseText
+- inputText: "Revision ficticia"
+- tapOn:
+    text: "Motivo de revisión"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: tax-review-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: tax-review-save
+- scrollUntilVisible:
+    element:
+      text: "Informativas"
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: "Informativas"
+- scrollUntilVisible:
+    element:
+      id: tax-statement-open
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: tax-statement-open
+- scrollUntilVisible:
+    element:
+      id: tax-statement-type
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: tax-statement-type
+- eraseText
+- inputText: "499R-2 W-2PR ficticio"
+- tapOn:
+    text: "Formulario o tipo.*"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: tax-payer
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: tax-payer
+- eraseText
+- inputText: "Pagador ficticio"
+- tapOn:
+    text: "Nombre del pagador"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: tax-gross
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: tax-gross
+- eraseText
+- inputText: "1000.00"
+- tapOn:
+    text: "Ingreso bruto informado.*"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: tax-withheld
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: tax-withheld
+- eraseText
+- inputText: "100.00"
+- tapOn:
+    text: "Retención informada.*"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: tax-net
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: tax-net
+- eraseText
+- inputText: "900.00"
+- tapOn:
+    text: "Depósito neto informado.*"
+    index: 0
+- scrollUntilVisible:
+    element:
+      text: "Recibido"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: "Recibido"
+- scrollUntilVisible:
+    element:
+      text: "Vincular ingreso: Salario ficticio.*"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: "Vincular ingreso: Salario ficticio.*"
+- scrollUntilVisible:
+    element:
+      id: tax-statement-reason
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: tax-statement-reason
+- eraseText
+- inputText: "Transcripcion ficticia"
+- tapOn:
+    text: "Motivo de revisión"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: tax-statement-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: tax-statement-save
+- scrollUntilVisible:
+    element:
+      text: "Diferencias .*"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage9-reconciliation
+- scrollUntilVisible:
+    element:
+      text: "Exportar"
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: "Exportar"
+- scrollUntilVisible:
+    element:
+      id: tax-export-preview
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: tax-export-preview
+- extendedWaitUntil:
+    visible: "Contenido de la exportación"
+    timeout: 60000
+- takeScreenshot: stage9-export-preview
+- scrollUntilVisible:
+    element:
+      text: "Cerrar ficha"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: "Cerrar ficha"
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible: "Abrir Mi dinero"
+    timeout: 60000
+- tapOn:
+    text: "Abrir Mi dinero"
+- scrollUntilVisible:
+    element:
+      id: open-tax
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: open-tax
+- extendedWaitUntil:
+    visible: "Expediente local para revisión profesional."
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      text: "Informativas"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: "Informativas"
+- scrollUntilVisible:
+    element:
+      text: "Diferencias .*"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage9-reopened
+- scrollUntilVisible:
+    element:
+      id: theme-picker-open
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: theme-picker-open
+- tapOn:
+    text: "Oscuro"
+- scrollUntilVisible:
+    element:
+      text: "Diferencias .*"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage9-dark

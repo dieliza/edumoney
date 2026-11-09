@@ -88,8 +88,8 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
   {type === 'income' ? <>
    {!initial?.scheduleId ? <Choices<LedgerMovement['incomeType']> label="Clase de ingreso" value={incomeType} options={initial ? [['manual', 'Manual'], ['extraordinary', 'Extraordinario']] : [['manual', 'Manual'], ['recurring', 'Recurrente'], ['extraordinary', 'Extraordinario']]} onChange={setIncomeType}/> : null}
    {!initial && incomeType === 'recurring' ? <View style={{ gap: 14 }}><Choices<'weekly' | 'monthly'> label="Frecuencia" value={cadence} options={[['weekly', 'Semanas'], ['monthly', 'Meses']]} onChange={setCadence}/><Field label="Cada cuántas semanas o meses (1–120)" value={interval} onChangeText={setInterval}/><Body>Al guardar confirmas el primer cobro. Los siguientes aparecerán como previstos y solo se sumarán cuando confirmes que los recibiste.</Body></View> : null}
-   <Field label="Ingreso bruto (opcional, USD)" value={gross} onChangeText={setGross} decimal/>
-   <Field label="Retención (opcional, USD)" value={withholding} onChangeText={setWithholding} decimal/>
+   <Field label="Ingreso bruto (opcional, USD)" value={gross} onChangeText={setGross} decimal testID="movement-gross"/>
+   <Field label="Retención (opcional, USD)" value={withholding} onChangeText={setWithholding} decimal testID="movement-withheld"/>
    <Body muted>El resumen usa el importe recibido. Bruto y retención se conservan para revisión; no se suman otra vez ni se calcula una planilla.</Body>
   </> : null}
   <Choices label="Para revisión de mi contable" value={tax} options={[['no', 'No marcar'], ['yes', 'Marcar para revisión']]} onChange={setTax}/>

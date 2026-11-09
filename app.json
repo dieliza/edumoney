@@ -66,13 +66,14 @@
         "expo-speech-recognition",
         {
           "microphonePermission": "Dicta datos para revisarlos antes de guardar. No conservamos grabaciones de audio.",
-          "speechRecognitionPermission": "Usa reconocimiento de voz en el dispositivo cuando est\u00e9 disponible.",
+          "speechRecognitionPermission": "Usa reconocimiento de voz en el dispositivo cuando esté disponible.",
           "androidSpeechServicePackages": [
             "com.google.android.as"
           ]
         }
       ],
-      "expo-asset"
+      "expo-asset",
+      "expo-sharing"
     ],
     "updates": {
       "enabled": false

@@ -110,7 +110,8 @@ export class MoneyStore {
         }>(`SELECT (
     (SELECT COUNT(*) FROM bill_payments WHERE movement_id=?)+(SELECT COUNT(*) FROM debt_payments WHERE movement_id=?)+
     (SELECT COUNT(*) FROM goal_contributions WHERE movement_id=?)+(SELECT COUNT(*) FROM documents WHERE movement_id=? AND ?=0)+
-    (SELECT COUNT(*) FROM tax_records WHERE movement_id=?)) AS n`, id, id, id, id, Number(allowDocuments), id);
+    (SELECT COUNT(*) FROM tax_records WHERE movement_id=?) +
+    (SELECT COUNT(*) FROM tax_statement_movements l JOIN tax_statements s ON s.id=l.statement_id WHERE l.movement_id=? AND s.status NOT IN ('corrected','not_applicable'))) AS n`, id, id, id, id, Number(allowDocuments), id, id);
         if (linked?.n)
             throw new UserInputError('Este movimiento está vinculado a otra sección. Debe corregirse junto con su registro de origen.');
     }

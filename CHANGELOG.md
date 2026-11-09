@@ -135,3 +135,11 @@
 - Cifrado, rechazo de SQLite sin clave, huella estable y exclusión de backup verificados en iOS con y sin copia.
 - Galería de 20 capturas y guía de uso. Cámara y audio físicos pendientes de validación en dispositivos.
 - Etapa 9 pendiente de revisión; main sin cambios, sin push y Negocio reservado.
+
+## Etapa 9 — Para mi contable
+
+- Perfil opcional por año, revisión de movimientos/documentos, uso mixto justificado y estados.
+- Informativas versionadas, conciliación de bruto/retención/neto y pendientes/posibles duplicados.
+- Exportación explícita JSON o CSV con copias por selección, revisión y limpieza de temporales.
+- Migración 7→8 atómica; 20 pruebas adicionales (174 en total).
+- Sin motor de planilla, sin push, main sin cambios y Negocio reservado.
