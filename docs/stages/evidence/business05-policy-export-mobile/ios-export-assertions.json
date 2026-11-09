@@ -1,0 +1,291 @@
+[
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Abrir Mi dinero",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794255818988,
+      "duration": 3447,
+      "sequenceNumber": 5,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Abrir Mi dinero",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "^Patrono FICTICIO movil$",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794255831937,
+      "duration": 332,
+      "sequenceNumber": 11,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "^Patrono FICTICIO movil$",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Clasificación contributiva de Puerto Rico",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794255846276,
+      "duration": 260,
+      "sequenceNumber": 18,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Clasificación contributiva de Puerto Rico",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": ".*EduMoney-Nomina-Borrador.*",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794255876594,
+      "duration": 2136,
+      "sequenceNumber": 29,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": ".*EduMoney-Nomina-Borrador.*",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "notVisible": {
+            "idRegex": "ActivityListView",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794255881447,
+      "duration": 988,
+      "sequenceNumber": 34,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "notVisible": {
+              "idRegex": "ActivityListView",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Nómina de Negocio",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794255882437,
+      "duration": 272,
+      "sequenceNumber": 35,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Nómina de Negocio",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": ".*EduMoney-Nomina-Borrador.*",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794255891126,
+      "duration": 339,
+      "sequenceNumber": 42,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": ".*EduMoney-Nomina-Borrador.*",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "notVisible": {
+            "idRegex": "ActivityListView",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794255893891,
+      "duration": 936,
+      "sequenceNumber": 47,
+      "depth": 1,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "notVisible": {
+              "idRegex": "ActivityListView",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "Nómina de Negocio",
+            "optional": false
+          }
+        },
+        "timeout": "60000",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1794255894828,
+      "duration": 213,
+      "sequenceNumber": 48,
+      "depth": 0,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Nómina de Negocio",
+              "optional": false
+            }
+          },
+          "timeout": "60000",
+          "optional": false
+        }
+      }
+    }
+  }
+]

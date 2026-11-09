@@ -226,3 +226,11 @@
 - Android e iOS finales aprobados: un pago salarial, depósitos PR reconciliados y persistencia al reiniciar; cifrado y exclusión de respaldo verificados en iOS.
 - Corrección de esperas y navegación del procedimiento iOS, sin cambios en el código de aplicación.
 - Diez casos ejecutados, incluidas repeticiones, por debajo de 100; TypeScript y ESLint aprobados. [Informe y evidencia](docs/stages/NEGOCIO-05-PAGOS-MOVIL.md). Sin cambios en main ni publicación.
+
+### Tasas patronales y exportación — verificación móvil
+
+- Tasas y fuente ficticias guardadas y reabiertas en Android e iOS, incluyendo cero declarado y aplicabilidad pendiente, sin crear pagos.
+- Exportación Android leída por receptor exclusivo del emulador sin red ni almacenamiento; CSV y PDF iOS abiertos y cancelados. Controles de cifrado/reapertura iOS aprobados.
+- Procedimientos corregidos para encabezado fijo, apertura directa del receptor y popover iOS; timeout del controlador diagnosticado por separado. Sin cambios de código de aplicación.
+- Seis pruebas unitarias seleccionadas aprobadas, TypeScript y ESLint aprobados; 41 casos como recuento conservador incluyendo repeticiones y XCTest interno, inferior a 100. [Informe y capturas](docs/stages/NEGOCIO-05-TASAS-EXPORTACION-MOVIL.md).
+- Sin modificación de main ni publicación; validación oficial contributiva fuera de este bloque.

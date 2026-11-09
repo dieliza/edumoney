@@ -8,7 +8,9 @@ Las tasas ficticias y su nota se conservan al reiniciar en Android e iOS: SINOT 
 
 Android comparte CSV y PDF con un receptor desechable local, que comprueba MIME, cabecera/sección del CSV y firma PDF, sin permiso de Internet ni almacenamiento persistente. [Ejecución aprobada 42688455929](https://github.com/dieliza/edumoney/actions/runs/42688455929), procedimiento `9eaa5e8`. Se vuelve a Nómina después de cada recepción. El receptor se compila e instala solo en el emulador, no forma parte de EduMoney.
 
-El seguimiento de exportación iOS [42689916331](https://github.com/dieliza/edumoney/actions/runs/42689916331) está en curso. No se declara aprobado hasta terminar.
+iOS [42692090977](https://github.com/dieliza/edumoney/actions/runs/42692090977) aprobado, procedimiento `b21c1d1`: nombres CSV y PDF visibles en los popovers nativos, cierre por región exterior y desaparición del menú comprobada después de cada formato. Sin destinatarios ni copias seleccionadas. El control posterior confirma cabecera cifrada, rechazo de SQLite sin clave, exclusión del respaldo del sistema y hash de base idéntico al reabrir.
+
+Plataformas verificadas: Pixel 6 emulado, Android API 35, e iPhone 17 Pro simulado con iOS 26.4. No sustituye la revisión en dispositivos físicos.
 
 ## Alcance y límites
 
@@ -26,16 +28,22 @@ El receptor Android únicamente lee la URI compartida en memoria, con límite de
 | 42686526379 Android | Tasas aprobadas y CSV leído correctamente. La comprobación falló porque Android abrió directamente el único receptor, sin selector. Se admite esa variante. |
 | 42687600566 iOS | Fallo de XCTest al pedir captura antes de entrar en Nómina; exportaciones no alcanzadas. `Failed to get screenshot: Timed out while requesting screenshot.` Se repite solo el recorrido breve. |
 | 42688455929 Android | Exportaciones CSV y PDF aprobadas, lectura local verificada y retorno a Nómina. |
-| 42689916331 iOS | En curso. |
+| 42689916331 iOS | CSV abierto; el selector Close no existe en el popover. Se pulsa fuera y se verifica la desaparición del menú. |
+| 42692090977 iOS | CSV/PDF abiertos y cancelados; controles de cifrado/reapertura aprobados. |
 
 ## Pruebas y presupuesto
 
 Seis casos unitarios seleccionados aprobados una vez: cálculo SS/Medicare con tasas explícitas, FUTA incompleto, vigencia, aplicabilidad desconocida, límites de tasas y contenido mínimo CSV/PDF. Otras 30 pruebas omitidas; no se ejecuta suite completa. TypeScript y ESLint aprobados. YAML y sintaxis del instalador comprobados.
 
-Once casos de EduMoney terminados y uno activo. Se incluyen además conservadoramente catorce casos internos XCTest observados en los dos intentos iOS terminados (seis comprobaciones del controlador y su servidor por intento). Total terminado incluyendo controlador: 25; presupuesto incluyendo siete comprobaciones internas y el recorrido activo: 33, inferior a 100. La ejecución sustituida no inició casos. No se repiten pruebas de lógica ya aprobadas.
+Trece casos de EduMoney ejecutados, incluidas repeticiones: seis unitarios aprobados y siete recorridos móviles (cinco intentos fallidos diagnosticados y dos seguimientos finales aprobados). Se incluyen además conservadoramente 28 casos internos XCTest observados en cuatro intentos iOS (seis comprobaciones del controlador y su servidor por intento). Total conservador: 41, inferior a 100. No quedan ejecuciones activas. La ejecución sustituida no inició casos. No se repiten pruebas de lógica ya aprobadas.
 
 ## Archivos y evidencia
 
 Nuevos recorridos `.maestro/business-payroll-policy-export.yaml` y `.maestro/business-payroll-export.yaml`; alta de titular extraída a `.maestro/business-payroll-holder.yaml`, reutilizada desde el alta de empleado; escenarios específicos que omiten la suite general en `.github/workflows/planilla-validation.yml`. Receptor exclusivo de pruebas en `tests/fixtures/android-share-receiver/` e instalador `scripts/install-android-share-fixture.sh`.
 
 [Capturas, resultados, valores esperados y presupuesto](evidence/business05-policy-export-mobile/). Las capturas de diagnóstico conservan los fallos, sin presentarlos como recorridos aprobados. Los valores esperados están identificados como tales, separados de las comprobaciones observadas.
+
+
+## Cierre
+
+Las dos comprobaciones móviles pendientes del bloque anterior quedan cubiertas: persistencia del formulario de tasas y exportaciones CSV/PDF. Los cambios afectan procedimientos, infraestructura de prueba y documentación, sin alterar datos ni código de producción. La validación oficial contributiva, pruebas físicas y trámites de emisión/radicación siguen fuera de este bloque. No se modificó main ni se publicó.

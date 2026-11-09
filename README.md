@@ -81,3 +81,5 @@ Negocio incorpora flujos separados para IVU y contratistas, con simuladores loca
 [Seguimiento móvil de nómina: teclado y persistencia de empleados](docs/stages/NEGOCIO-05-MOVIL.md). Verificado en Android e iOS, con 39 casos ejecutados contando repeticiones y límite de 100 por bloque. El estado de cancelación final de GitHub en iOS y su evidencia se explican en el informe.
 
 Seguimiento de nómina: [pagos, depósitos parciales y persistencia móvil verificados en Android/iOS](docs/stages/NEGOCIO-05-PAGOS-MOVIL.md).
+
+Seguimiento de nómina: [tasas persistentes y exportaciones CSV/PDF verificadas en Android/iOS](docs/stages/NEGOCIO-05-TASAS-EXPORTACION-MOVIL.md).

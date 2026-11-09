@@ -1,0 +1,20 @@
+{
+  "run": 42692090977,
+  "job": 129414172733,
+  "artifact": 13707891558,
+  "result": "passed",
+  "applicationCommit": "3f03c59",
+  "procedureCommit": "b21c1d16b750e07af1ea145af0d92ad876a5c369",
+  "scenario": "payroll-export",
+  "device": "iPhone 17 Pro, iOS 26.4 simulator",
+  "holderOnly": true,
+  "employeeCount": 0,
+  "csv": "native filename shown, popover dismissed and absence verified",
+  "pdf": "native filename shown, popover dismissed and absence verified",
+  "externalDelivery": false,
+  "encryptedHeader": true,
+  "plainSQLiteRejected": true,
+  "sameDatabaseHashAfterReopen": true,
+  "systemBackupExclusionVerified": true,
+  "driverXCTestCasesStarted": 7
+}

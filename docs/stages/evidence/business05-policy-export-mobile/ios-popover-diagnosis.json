@@ -1,0 +1,11 @@
+{
+  "run": 42689916331,
+  "result": "failed on test selector Close",
+  "csvOpened": true,
+  "pdfReached": false,
+  "observedDismissRegionId": "PopoverDismissRegion",
+  "observedShareSheetId": "ActivityListView",
+  "popoverBounds": "[9,498][393,864] on 402x874 screen",
+  "correction": "Tap outside at 5%,20% and assert ActivityListView disappears",
+  "driverCasesStarted": 7
+}

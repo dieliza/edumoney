@@ -14,5 +14,5 @@
     "csv",
     "pdf"
   ],
-  "sharing": "open native share sheet and dismiss, no sending"
+  "sharing": "Android reads in disposable local receiver; iOS opens and dismisses native popovers. No external delivery."
 }

@@ -49,14 +49,20 @@
       "run": 42689916331,
       "platform": "ios",
       "scenario": "payroll-export",
-      "status": "in_progress",
-      "casesExecuted": null
+      "status": "failed: CSV opened; Close selector absent in native iOS popover, PDF not reached",
+      "casesExecuted": 1
+    },
+    {
+      "run": 42692090977,
+      "platform": "ios",
+      "scenario": "payroll-export",
+      "status": "passed",
+      "casesExecuted": 1
     }
   ],
-  "casesCompleted": 11,
-  "casesIncludingActiveAttempts": 12,
-  "iosDriverXCTestCasesObserved": 14,
-  "conservativeCasesCompletedIncludingDriver": 25,
-  "conservativeCasesIncludingNextAttempt": 33,
-  "iosDriverCasesPerAttempt": 7
+  "casesCompleted": 13,
+  "iosDriverXCTestCasesObserved": 28,
+  "conservativeCasesCompletedIncludingDriver": 41,
+  "iosDriverCasesPerAttempt": 7,
+  "countingNote": "13 EduMoney cases including failed attempts, plus 28 driver XCTest cases counted conservatively; no active tests. Cancelled preparation ran no cases."
 }

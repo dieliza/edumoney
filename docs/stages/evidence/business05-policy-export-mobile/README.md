@@ -6,7 +6,9 @@ Datos exclusivamente ficticios, introducidos mediante la interfaz.
 - `execution.json`: casos ejecutados, repeticiones y comprobaciones internas del controlador; máximo 100.
 - `android-policy-assertions.json` e `ios-policy-assertions.json`: comprobaciones de valores guardados al reiniciar. Incluyen el fallo posterior de exportación del intento de origen, identificado en sus diagnósticos.
 - `android-policy-reopened-first.png` e `ios-payroll-policy-reopened.png`: formulario reabierto con nota/fuente ficticias. Los porcentajes se verifican en las aserciones.
-- `android-export-result.json` y `android-export-assertions.json`: recorrido breve aprobado de CSV y PDF.
+- `android-export-result.json` e `ios-export-result.json`, con sus aserciones: recorridos breves aprobados de CSV y PDF.
+- `ios-payroll-share-*.png`: archivos presentados en los popovers nativos, cancelados sin destinatarios.
+- `ios-database-*.json`: cifrado y hash idéntico tras reapertura, comprobados después del recorrido iOS.
 - `android-payroll-received-*-local.png`: archivo leído por el receptor local sin red ni almacenamiento persistente.
 - `*-diagnosis.json` y capturas de diagnóstico: intentos fallidos y causas observadas, no recorridos aprobados.
 
