@@ -234,3 +234,10 @@
 - Procedimientos corregidos para encabezado fijo, apertura directa del receptor y popover iOS; timeout del controlador diagnosticado por separado. Sin cambios de código de aplicación.
 - Seis pruebas unitarias seleccionadas aprobadas, TypeScript y ESLint aprobados; 41 casos como recuento conservador incluyendo repeticiones y XCTest interno, inferior a 100. [Informe y capturas](docs/stages/NEGOCIO-05-TASAS-EXPORTACION-MOVIL.md).
 - Sin modificación de main ni publicación; validación oficial contributiva fuera de este bloque.
+
+### Recuperación integrada y documentación vigente
+
+- Archivo cifrado esquema 14 recuperado en base vacía y reabierto: conserva titular/DBA/proyectos, gasto mixto, imagen, reservas, nómina y depósitos, sin duplicar registros.
+- Comprobaciones de contraseña/alteración, confirmación explícita y rollback completo ante referencia de depósito rota; continuación del depósito pendiente después de recuperar.
+- Documentación de seguridad y privacidad actualizada: respaldo e imágenes ya implementados; matriz de calidad separa evidencia móvil de pruebas físicas y recorridos comerciales pendientes.
+- Ocho casos seleccionados aprobados una vez, TypeScript y ESLint aprobados. Sin suite completa ni CI; sin cambios de código de aplicación, main o publicación. [Informe](docs/stages/CIERRE-RESPALDO-NEGOCIO.md).

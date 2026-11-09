@@ -60,11 +60,12 @@ Las capturas y el estado de verificación se documentan en [Etapa 2](docs/stages
 - [Arquitectura](docs/ARCHITECTURE.md)
 - [Privacidad y seguridad](docs/SECURITY.md)
 - [Resultados y validación de Etapa 1](docs/stages/01.md)
+- [Estado de calidad y pendientes de publicación](docs/QUALITY_RELEASE.md)
 - [Registro de cambios](CHANGELOG.md)
 
 ## Negocio — primera entrega
 
-[Perfiles comerciales: implementación, pruebas y límites](docs/stages/NEGOCIO-01.md). Titulares, DBA y proyectos locales; clasificación de Puerto Rico y federal separadas. La incidencia [IOS-QA-10](docs/ISSUES.md) queda diferida por instrucción del usuario.
+[Perfiles comerciales: implementación, pruebas y límites](docs/stages/NEGOCIO-01.md). Titulares, DBA y proyectos locales; clasificación de Puerto Rico y federal separadas. La incidencia [IOS-QA-10](docs/ISSUES.md) quedó resuelta en el recorrido de persistencia del simulador iOS.
 
 ## Negocio — movimientos y recibos
 
@@ -83,3 +84,5 @@ Negocio incorpora flujos separados para IVU y contratistas, con simuladores loca
 Seguimiento de nómina: [pagos, depósitos parciales y persistencia móvil verificados en Android/iOS](docs/stages/NEGOCIO-05-PAGOS-MOVIL.md).
 
 Seguimiento de nómina: [tasas persistentes y exportaciones CSV/PDF verificadas en Android/iOS](docs/stages/NEGOCIO-05-TASAS-EXPORTACION-MOVIL.md).
+
+Cierre de calidad: [recuperación integrada de respaldo con Negocio, imagen y nómina](docs/stages/CIERRE-RESPALDO-NEGOCIO.md).

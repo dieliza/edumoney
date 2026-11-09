@@ -15,16 +15,13 @@
 
 ## Documentos y recuperación
 
-Etapa 1 solo define metadatos y relaciones. No existe escritura/lectura de imágenes o archivos sensibles.
-En Etapa 8, implementar un almacén de documentos con cifrado autenticado AES-256-GCM, nonce único por archivo,
-clave independiente en SecureStore y rutas internas aleatorias, sin nombres de comercios. No guardar imágenes en
-AsyncStorage ni galería sin decisión del usuario. Hash y metadatos permanecen en SQLite cifrado.
-No conectar cámara/voz hasta validar procesamiento local y revisión manual.
+Los comprobantes se conservan únicamente por confirmación, dentro de SQLCipher junto con sus vínculos y metadatos. Base64 es una representación de la imagen, no un cifrado independiente. No se guardan imágenes en AsyncStorage ni se borran las fotos originales de la biblioteca. Captura/OCR y dictado ofrecen entrada manual cuando no hay capacidad local; no usan un servicio remoto de IA.
 
-Los respaldos manuales cifrados, recuperación, cambio/rotación de clave, bloqueo biométrico opcional y borrado
-seguro integral son trabajo posterior. No existe respaldo automático. Desinstalar o perder el dispositivo/clave
-puede impedir recuperar datos. Mi dinero permite registrar información local; la recuperación mediante respaldo manual todavía no está implementada.
-El cifrado en reposo no protege un dispositivo comprometido ni la memoria mientras la aplicación está abierta.
+El respaldo manual ya está implementado: incluye registros y copias documentales locales, se cifra con AES-256-GCM y una contraseña elegida por el usuario, y no contiene la clave de SQLCipher. La contraseña no se conserva ni se puede recuperar. La derivación PBKDF2-HMAC-SHA256 usa 600,000 iteraciones, con implementación nativa en iOS/Android. El usuario elige el destino; no hay respaldo automático a servidores.
+
+La recuperación descifra en memoria, muestra el contenido resumido y requiere confirmar RESTAURAR antes de sustituir todos los datos. Se comprueban esquema, columnas, referencias e integridad dentro de una transacción. Los esquemas admitidos son 9–14; restaurar uno anterior reemplaza también los módulos que no contiene, con advertencias en pantalla. La recuperación entre instalaciones físicas sigue pendiente de verificación.
+
+Rotación de clave, bloqueo biométrico opcional y borrado integral controlado son trabajo posterior. Desinstalar o perder el dispositivo/clave sin un respaldo recuperable puede impedir recuperar los datos. El cifrado en reposo no protege un dispositivo comprometido ni la memoria mientras la aplicación está abierta.
 
 ## Validación nativa pendiente
 
