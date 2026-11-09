@@ -1,0 +1,14 @@
+{
+  "before_reopen": {
+    "encrypted_header": true,
+    "plain_sqlite_rejected": true,
+    "sha256": "34d59d78b9bccd257720ddcc33d1f1f5ae1f1b95ba0a8dac9ba687126681cd5e",
+    "size": 323584
+  },
+  "after_reopen": {
+    "encrypted_header": true,
+    "plain_sqlite_rejected": true,
+    "sha256": "34d59d78b9bccd257720ddcc33d1f1f5ae1f1b95ba0a8dac9ba687126681cd5e",
+    "size": 323584
+  }
+}
