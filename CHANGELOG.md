@@ -126,4 +126,4 @@
 - Revisión obligatoria y distinción entre recibo, ingreso, factura pendiente, adjunto y nota.
 - Copia opcional dentro de SQLCipher, temporales eliminados, huella y protección de duplicados.
 - Referencias de corrección y movimientos auditados con revisión documental pendiente.
-- Migración 6→7 preservando documentos; 36 pruebas adicionales, 153 en total.
+- Migración 6→7 preservando documentos; 37 pruebas adicionales, 154 en total.

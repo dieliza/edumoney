@@ -21,6 +21,6 @@ Si el comprobante ya existe, abre su ficha. Un registro parecido requiere compro
 
 En la ficha puedes **Ver copia cifrada** y **Eliminar solo la copia de imagen** con motivo. Esto conserva datos, huella e historial, y no borra tu fototeca ni anula movimientos.
 
-**Corregir con nuevo comprobante o texto** mantiene la referencia anterior y su vínculo. Si lo incorrecto es el movimiento, usa **Corregir movimiento vinculado**, explica el motivo y revisa después sus comprobantes: quedan pendientes conservando los originales. Los pagos vinculados a otras secciones deben corregirse desde su sección de origen.
+**Corregir con nuevo comprobante o texto** mantiene la referencia anterior y su vínculo. Si lo incorrecto es el movimiento, usa **Corregir movimiento vinculado**, explica el motivo y revisa después sus comprobantes: quedan pendientes conservando los originales. También puedes preparar el retiro o restauración del movimiento con confirmación y motivo, conservando la evidencia. Los pagos vinculados a otras secciones deben corregirse desde su sección de origen.
 
 Cámara y dictado dependen del dispositivo y de modelos disponibles sin conexión. La entrada manual funciona como alternativa. Ningún reconocimiento confirma por sí solo un pago, una deducción ni información contributiva.

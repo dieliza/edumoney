@@ -148,15 +148,26 @@ export class MoneyStore {
             }
         });
     }
-    async setDeleted(id: string, version: number, deleted: boolean, reason: string) {
+    async setDeleted(id: string, version: number, deleted: boolean, reason: string, documentReview?: { id: string; version: number }) {
         return this.write(async () => {
             const old = await this.existing(id, version);
             if (!!old.deletedAt === deleted)
                 return;
-            await this.guardLinks(id);
+            if (documentReview) {
+                const doc = await this.db.getFirstAsync<{ version: number; status: string; removed: string | null }>('SELECT version,status,deleted_at AS removed FROM documents WHERE id=? AND movement_id=?', documentReview.id, id);
+                if (!doc || doc.removed || doc.status === 'corrected' || doc.version !== documentReview.version) throw new UserInputError('Abre el comprobante vigente antes de retirar o restaurar el movimiento.');
+            }
+            await this.guardLinks(id, !!documentReview);
             await this.revision(old, deleted ? 'delete' : 'restore', reason);
             const now = new Date().toISOString();
             await this.db.runAsync('UPDATE movements SET deleted_at=?,updated_at=?,version=version+1 WHERE id=?', deleted ? now : null, now, id);
+            if (documentReview) {
+                const docs = await this.db.getAllAsync<{ id: string }>("SELECT * FROM documents WHERE movement_id=? AND status<>'corrected' AND deleted_at IS NULL", id);
+                for (const doc of docs) {
+                    await this.db.runAsync('INSERT INTO document_events(document_id,reason,before_json,recorded_at) VALUES(?,?,?,?)', doc.id, (deleted ? 'Movimiento retirado: ' : 'Movimiento restaurado: ') + reason.trim(), JSON.stringify(doc), now);
+                    await this.db.runAsync("UPDATE documents SET status='pending',version=version+1 WHERE id=?", doc.id);
+                }
+            }
         });
     }
     async saveCategory(id: string, name: string, kind: 'income' | 'expense', archived = false) {
