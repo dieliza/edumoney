@@ -31,6 +31,7 @@ export default function BusinessScreen() {
    {data.projects.filter(p=>p.holderId===h.id).map(p=><Body key={p.id}>Proyecto: {p.name} · {p.dbaId?data.dbas.find(d=>d.id===p.dbaId)?.name:'Directamente con el titular'}</Body>)}
    <ActionButton title={`Abrir perfil: ${h.legalName}`} secondary onPress={()=>{setNotice('');setEditing(h.id);}}/>
    <ActionButton title={`Movimientos y recibos: ${h.legalName}`} onPress={()=>router.push({pathname:'/business-ledger',params:{holderId:h.id}})}/>
+   <ActionButton title={`IVU y contratistas: ${h.legalName}`} secondary onPress={()=>router.push({pathname:'/business-obligations',params:{holderId:h.id}})}/>
   </Card>)}
  </Screen>;
 }

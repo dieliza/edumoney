@@ -38,3 +38,23 @@ test('Negocio: ruta de registros, regreso y temas compartidos',async({page})=>{
  }
  await page.getByRole('button',{name:'Volver a Negocio',exact:true}).click();await expect(page.getByRole('heading',{name:'Negocio',exact:true})).toBeVisible();
 });
+test('Negocio: IVU y contratistas, fuentes y navegación en ambos temas',async({page})=>{
+ mkdirSync('docs/stages/evidence/business03',{recursive:true});
+ await page.setViewportSize({width:390,height:844});
+ await page.goto('/');await page.getByTestId('enter-demo').click();
+ await page.getByRole('tab',{name:'Negocio',exact:true}).click();
+ await page.getByRole('button',{name:'Ver IVU y contratistas',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'IVU y contratistas',exact:true})).toBeVisible();
+ for(const theme of ['light','dark'] as const){
+  await page.getByTestId('theme-picker-open').filter({visible:true}).click();await page.getByTestId(`theme-choice-${theme}`).click();
+  for(const flow of ['IVU','Contratistas']){
+   await page.getByRole('radio',{name:flow,exact:true}).click();
+   await expect(page.getByRole('radio',{name:flow,exact:true})).toHaveAttribute('aria-checked','true');
+   if(flow==='Contratistas')await expect(page.getByText('Escenario ficticio ordinario:',{exact:false})).toBeVisible();
+   const audit=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();expect(audit.violations.map(v=>v.id)).toEqual([]);
+   await page.screenshot({path:`docs/stages/evidence/business03/${flow}-${theme}.png`,fullPage:true});
+  }
+ }
+ for(const width of [320,430,768]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}
+ await page.getByRole('button',{name:'Volver a Negocio',exact:true}).click();await expect(page.getByRole('heading',{name:'Negocio',exact:true})).toBeVisible();
+});

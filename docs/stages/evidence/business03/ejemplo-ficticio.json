@@ -1,0 +1,137 @@
+{
+  "fictitious": true,
+  "first": {
+    "ruleVersion": "PR-NEGOCIO-2026.1",
+    "beforeCents": 0,
+    "cumulativeCents": 30000,
+    "taxableCents": 0,
+    "rateBps": 1000,
+    "expectedWithheldCents": 0,
+    "actualWithheldCents": 0,
+    "differenceCents": 0,
+    "pending": [],
+    "assumptions": [
+      "Escenario ordinario: primeros $500 sin retención por pagador/proveedor/año; se grava solo el exceso incremental.",
+      "Mismo día: orden de registro. Un pago anterior añadido después puede cambiar la simulación de pagos posteriores, nunca su retención real registrada.",
+      "IVU y reembolsos separados no se agregan a la base de servicios. Casos especiales y elección por sucursal requieren revisión específica.",
+      "Pagos excluidos de esta retención pueden tener otras obligaciones; no se determina exención de todo impuesto."
+    ],
+    "sources": [
+      "sp2026",
+      "deposits",
+      "exceptions"
+    ]
+  },
+  "second": {
+    "ruleVersion": "PR-NEGOCIO-2026.1",
+    "beforeCents": 30000,
+    "cumulativeCents": 70000,
+    "taxableCents": 20000,
+    "rateBps": 1000,
+    "expectedWithheldCents": 2000,
+    "actualWithheldCents": 2000,
+    "differenceCents": 0,
+    "pending": [],
+    "assumptions": [
+      "Escenario ordinario: primeros $500 sin retención por pagador/proveedor/año; se grava solo el exceso incremental.",
+      "Mismo día: orden de registro. Un pago anterior añadido después puede cambiar la simulación de pagos posteriores, nunca su retención real registrada.",
+      "IVU y reembolsos separados no se agregan a la base de servicios. Casos especiales y elección por sucursal requieren revisión específica.",
+      "Pagos excluidos de esta retención pueden tener otras obligaciones; no se determina exención de todo impuesto."
+    ],
+    "sources": [
+      "sp2026",
+      "deposits",
+      "exceptions"
+    ]
+  },
+  "contractor": {
+    "servicesCents": 70000,
+    "excludedCents": 0,
+    "actualWithheldCents": 2000,
+    "expectedWithheldCents": 2000,
+    "pendingCount": 0,
+    "count": 2
+  },
+  "ivu": {
+    "collectedCents": 11500,
+    "marketplaceCents": 0,
+    "actorPending": 0,
+    "remittedCents": 10500,
+    "differenceCents": 1000,
+    "stateCollectedCents": 10500,
+    "municipalCollectedCents": 1000,
+    "pendingRecords": 0
+  },
+  "sources": [
+    {
+      "id": "sp2026",
+      "name": "480.6SP 2026, revisión 06.26",
+      "url": "https://hacienda.pr.gov/sites/default/files/documentos/480.6sp_2026_informativo.pdf",
+      "effective": "Año natural 2026",
+      "summary": "Servicios, primeros $500 anuales por pagador/proveedor, retención ordinaria 10%, certificado opcional 6% y declaración anual."
+    },
+    {
+      "id": "sp2",
+      "name": "480.6SP.2 2026",
+      "url": "https://hacienda.pr.gov/sites/default/files/documentos/480.6sp.2_2026_informativo.pdf",
+      "effective": "Año natural 2026",
+      "summary": "Reconciliación anual separada de la informativa del proveedor."
+    },
+    {
+      "id": "deposits",
+      "name": "CC RI 19-10",
+      "url": "https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-19-10-cc-ri-19-10",
+      "effective": "Desde 2019; consultada en 2026",
+      "summary": "Depósito mensual: día 15 siguiente. 480.6SP-1: último día del mes posterior al trimestre. Alternativa trimestral si retención del trimestre es menor de $2,500 y se cumplen sus condiciones."
+    },
+    {
+      "id": "exceptions",
+      "name": "BI RI 25-05",
+      "url": "https://hacienda.pr.gov/publicaciones/boletin-informativo-de-rentas-internas-num-25-05-bi-ri-25-05",
+      "effective": "Desde 2025-03-15",
+      "summary": "Distingue excepciones documentadas mediante declaración jurada y pagos excluidos que no requieren relevo ni esa declaración."
+    },
+    {
+      "id": "ivu2026",
+      "name": "SC 2915, julio 2026 en adelante",
+      "url": "https://hacienda.pr.gov/sites/default/files/documentos/sc_2915_rev._14_mar_25_informativo.pdf",
+      "effective": "Períodos desde 2026-07",
+      "summary": "Formulario informativo con bases estatales 10.5%, 6% y 4%, ventas exentas y componente municipal separado."
+    },
+    {
+      "id": "monthly",
+      "name": "Hacienda: planilla mensual de IVU",
+      "url": "https://hacienda.pr.gov/node/1820",
+      "effective": "Obligación mensual; fuente consultada 2026-11-09",
+      "summary": "Fecha base: día 20 del mes siguiente. Radicación y pago son trámites distintos de cobrar."
+    },
+    {
+      "id": "municipal",
+      "name": "CC RI 26-13",
+      "url": "https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-26-13-cc-ri-26-13",
+      "effective": "Períodos desde 2026-07",
+      "summary": "73 municipios integrados en SURI. Bayamón, Carolina, Guaynabo, Mayagüez y San Juan mantienen trámite municipal separado. Períodos anteriores siguen su procedimiento anterior."
+    },
+    {
+      "id": "digital",
+      "name": "Reglamento 9529",
+      "url": "https://hacienda.pr.gov/sites/default/files/publicaciones/2024/02/9529.pdf",
+      "effective": "Reglamento aprobado 2024-02-01; fuente consultada en 2026",
+      "summary": "Naturaleza de productos digitales, suscripciones y membresías electrónicas, fuente según comprador y reglas de facilitadores. Un procesador de pago no se presume facilitador."
+    },
+    {
+      "id": "marketplace",
+      "name": "CC RI 23-10 y referencia a CC 20-40",
+      "url": "https://hacienda.pr.gov/node/5277",
+      "effective": "Desde 2023; consultada en 2026",
+      "summary": "Facilitadores cobran por ventas de mercado; el vendedor registrado documenta su relevo de cobro y sigue informando las ventas que correspondan."
+    },
+    {
+      "id": "b2b",
+      "name": "CC RI 19-05",
+      "url": "https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-19-05-cc-ri-19-05",
+      "effective": "Desde 2019-03-01",
+      "summary": "La exclusión de $200,000 para ciertos servicios depende del año anterior, grupo controlado y requisitos del certificado; no se extiende automáticamente a cualquier servicio."
+    }
+  ]
+}

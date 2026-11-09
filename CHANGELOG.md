@@ -178,3 +178,12 @@
 - Reservas manuales separadas y exportación JSON/CSV elegida para revisión del CPA.
 - Migración 10→11 y compatibilidad de respaldo 9/10/11; historial de cambios y conciliación de movimientos modificados.
 - IOS-QA-10 continúa diferida; sin cambios a main ni publicación.
+
+## Negocio 3 — IVU y contratistas
+
+- Dos flujos dentro de Negocio, con formularios en blanco, simulaciones, datos pendientes y fuentes/vigencia visibles.
+- IVU por oferta, canal, proyecto y municipio; desglose estatal/municipal, facilitadores separados y remesas confirmadas independientes de presentaciones.
+- Proveedores legales únicos, relevos/declaraciones con vigencia, acumulados por pagador/proveedor/año y caso $300 + $400 → $20. Las cifras calculadas no se copian a retenciones reales.
+- Registros de depósitos y formularios separados, vencimientos base y verificados con fuente, anulaciones auditadas y control de duplicados/vínculos financieros.
+- Esquema 12, respaldo con recuperación de esquemas 9–12, instantáneas históricas y pruebas de persistencia/rollback.
+- Fuentes oficiales 2026 y alcance en docs/tax/business-2026/SOURCES.md. IOS-QA-10 continúa diferida. Sin cambios en main ni publicación.

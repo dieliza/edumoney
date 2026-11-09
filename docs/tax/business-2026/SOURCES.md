@@ -1,0 +1,27 @@
+# Negocio: fuentes y alcance 2026
+
+Verificado 9 de noviembre de 2026. Catálogo local `PR-NEGOCIO-2026.1`, implementado en `src/modules/business/obligations/catalog.ts`. Los enlaces se abren solo a petición del usuario; no se envían registros financieros. No se encontró `EduMoney_Negocio_Instruccion_Codex.md` en el repositorio. Se utilizaron las instrucciones de la conversación.
+
+## Servicios y contratistas
+
+- [480.6SP 2026, revisión 06.26](https://hacienda.pr.gov/sites/default/files/documentos/480.6sp_2026_informativo.pdf), instrucciones páginas 1–2: año natural, servicios pagados, primeros $500 y retención ordinaria del 10% sobre exceso; relevo opcional 6% documentado. Reembolsos facturados por separado e IVU se separan de servicios. Informativa anual por proveedor, fecha nominal 28 de febrero del año siguiente. El DBA del individuo no crea otro proveedor legal. SHA256: `e9e089e21c90694944a7da18147fa315a6f19f21781e41a771782f620cbcb6b0`.
+- [480.6SP.2 2026](https://hacienda.pr.gov/sites/default/files/documentos/480.6sp.2_2026_informativo.pdf): conciliación anual separada, fecha nominal 28 de febrero siguiente. SHA256: `8c7446d483b4d836fc967397432269d5e9d262a544c04bcd4fd54fe85f9ffb81`.
+- [CC RI 19-10](https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-19-10-cc-ri-19-10): depósito mensual, día 15 siguiente, y declaración trimestral 480.6SP-1, último día del mes posterior al trimestre. Alternativa de depósito trimestral cuando el total retenido del trimestre sea menor de $2,500 y se cumplan sus condiciones. Si alcanza $2,500 se revisan las obligaciones mensuales del trimestre; no se promete que cualquier cantidad pueda depositarse trimestralmente.
+- [BI RI 25-05](https://hacienda.pr.gov/publicaciones/boletin-informativo-de-rentas-internas-num-25-05-bi-ri-25-05): separar excepción estatutaria sustentada con declaración jurada y pagos excluidos de esta retención, que no requieren ese relevo o declaración. Esto no significa exención de otros impuestos.
+
+Escenario ordinario: 300 + 400 = 700; exceso nuevo sobre 500 = 200; 200 × 10% = 20. Se agrupa por titular pagador legal, proveedor legal y año natural. No se reinicia por proyecto o DBA. No residentes, empleados, excepciones especiales y elección por sucursal no se resuelven con esta fórmula. La propuesta divulgada en 2026 sobre enfermeros no se implementa como legislación aprobada.
+
+## IVU
+
+- [SC 2915 vigente desde julio de 2026](https://hacienda.pr.gov/sites/default/files/documentos/sc_2915_rev._14_mar_25_informativo.pdf), enlazado por [Hacienda para ese período](https://hacienda.pr.gov/documentos/planilla-mensual-de-impuesto-sobre-ventas-y-uso-y-sobre-importaciones-julio-2026-en-adelante-sales-and-use-tax-and-tax-imports-monthly-return-july-2026-and): tasas estatales 10.5%, servicios especiales 4%, alimentos preparados elegibles 6%; componente municipal separado donde corresponda. La fecha de revisión impresa de 2025 no cambia el período aplicable que indica Hacienda. SHA256: `463264da77c534e257e2cfeb2be8af543bdaaeb116c1171b3a33cf111c9253ae`.
+- [Planilla mensual de IVU](https://hacienda.pr.gov/node/1820): fecha base día 20 del mes siguiente. Cobrar, remitir y presentar son hechos diferentes.
+- [CC RI 26-13](https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-26-13-cc-ri-26-13), efectiva para períodos desde julio de 2026: consolidación de 73 municipios en SURI con pagos estatal y municipal separados. Bayamón, Carolina, Guaynabo, Mayagüez y San Juan conservan trámite municipal separado. Para meses anteriores se revisa el procedimiento anterior. No elimina el 1% municipal aplicable.
+- [Reglamento 9529](https://hacienda.pr.gov/sites/default/files/publicaciones/2024/02/9529.pdf), aprobado 1 de febrero de 2024: contenido digital, suscripciones, membresías y reglas de fuente y facilitadores. El nombre comercial de la oferta no basta para clasificarla. La ubicación del comprador importa. Un certificado reducido/exento del vendedor no se transfiere automáticamente al facilitador.
+- [CC RI 23-10](https://hacienda.pr.gov/node/5277), junto con su referencia a [CC RI 20-40](https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-20-40-cc-ri-20-40): facilitadores registrados, responsabilidad de cobro y relevo documentado del vendedor. Un procesador de pagos no se presume facilitador.
+- [CC RI 19-05](https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-19-05-cc-ri-19-05): el umbral $200,000 se revisa para servicios elegibles, volumen anterior, grupo controlado y requisitos/certificados; no se extiende automáticamente a toda oferta.
+
+## Límites y fechas
+
+Las tasas son escenarios determinísticos con lista de datos por confirmar, no una clasificación automática. La simulación no se bloquea por falta de aprobación de un CPA. Los datos realmente desconocidos permanecen pendientes; fuera de las fechas/año verificados se pide revalidar vigencia y se identifica el escenario. La clasificación guardada conserva sus fechas y evidencia declarada.
+
+Los vencimientos mostrados son nominales; no se ajustan automáticamente por fines de semana, feriados, prórrogas o avisos. Puede registrarse un vencimiento verificado con su fuente. Por ejemplo, la DA 26-03 sobre el incidente SURI de mayo de 2026 tenía condiciones específicas; no se convierte en una prórroga general. Los formularios de Hacienda consultados son informativos: este módulo no genera presentación oficial, no radica ni paga en SURI.

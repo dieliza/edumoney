@@ -69,3 +69,5 @@ Las capturas y el estado de verificación se documentan en [Etapa 2](docs/stages
 ## Negocio — movimientos y recibos
 
 [Segunda entrega: funcionamiento, pruebas y límites](docs/stages/NEGOCIO-02.md) · [Ejemplo ficticio para revisión del CPA](docs/stages/evidence/business02/README.md).
+
+Negocio incorpora flujos separados para IVU y contratistas, con simuladores locales y registros de cobros, retenciones, remesas y formularios. [Entrega Negocio 3](docs/stages/NEGOCIO-03.md) · [Fuentes oficiales y alcance 2026](docs/tax/business-2026/SOURCES.md). El esquema 12 incluye estos registros en el respaldo cifrado; se conservan las restauraciones 9–11 con advertencias de reemplazo. La interacción de los nuevos formularios en dispositivos queda pendiente.
