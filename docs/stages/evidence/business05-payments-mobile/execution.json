@@ -1,0 +1,36 @@
+{
+  "limit": 100,
+  "unitCasesExecuted": 6,
+  "unitCasesPassed": 6,
+  "unitCasesSkipped": 30,
+  "unitCommand": "npm test -- tests/business-payroll.test.ts -t \"calcular no paga|dos pagos acumulan|depósitos exigen|corrección de un depósito|se reabren desde SQLite|retener menos FICA\"",
+  "completeSuiteExecuted": false,
+  "mobileRuns": [
+    {
+      "id": 42671267051,
+      "platform": "android",
+      "result": "passed",
+      "casesExecuted": 1
+    },
+    {
+      "id": 42671278977,
+      "platform": "ios",
+      "result": "failed",
+      "casesExecuted": 1
+    },
+    {
+      "id": 42673444171,
+      "platform": "ios",
+      "result": "startup failure, no jobs created",
+      "casesExecuted": 0
+    },
+    {
+      "id": 42674536726,
+      "platform": "ios",
+      "result": "in progress",
+      "casesExecuted": null
+    }
+  ],
+  "casesCompleted": 8,
+  "casesIncludingCurrentAttempt": 9
+}

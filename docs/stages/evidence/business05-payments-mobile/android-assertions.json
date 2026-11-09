@@ -1,0 +1,172 @@
+[
+  {
+    "command": {
+      "condition": {
+        "visible": {
+          "textRegex": "Abrir Mi dinero",
+          "optional": false
+        }
+      },
+      "timeout": "60000",
+      "optional": false
+    },
+    "status": "COMPLETED"
+  },
+  {
+    "command": {
+      "condition": {
+        "visible": {
+          "textRegex": "^Patrono FICTICIO movil$",
+          "optional": false
+        }
+      },
+      "optional": false
+    },
+    "status": "COMPLETED"
+  },
+  {
+    "command": {
+      "condition": {
+        "visible": {
+          "textRegex": "Clasificación contributiva de Puerto Rico",
+          "optional": false
+        }
+      },
+      "optional": false
+    },
+    "status": "COMPLETED"
+  },
+  {
+    "command": {
+      "condition": {
+        "visible": {
+          "idRegex": "record-name",
+          "optional": false
+        }
+      },
+      "optional": false
+    },
+    "status": "COMPLETED"
+  },
+  {
+    "command": {
+      "condition": {
+        "visible": {
+          "textRegex": "^NOTA-FICTICIA-PERSISTE$",
+          "optional": false
+        }
+      },
+      "optional": false
+    },
+    "status": "COMPLETED"
+  },
+  {
+    "command": {
+      "condition": {
+        "visible": {
+          "textRegex": "Pagos confirmados: 0.*",
+          "optional": false
+        }
+      },
+      "optional": false
+    },
+    "status": "COMPLETED"
+  },
+  {
+    "command": {
+      "condition": {
+        "visible": {
+          "textRegex": "^Neto pagado \\$1,970\\.19 · comprobante FICTICIO-PAGO-01$",
+          "optional": false
+        }
+      },
+      "optional": false
+    },
+    "status": "COMPLETED"
+  },
+  {
+    "command": {
+      "condition": {
+        "visible": {
+          "textRegex": "^Pagos confirmados: 1 · Bruto \\$2,200\\.00 · Neto \\$1,970\\.19 · Costo patronal Pendiente$",
+          "optional": false
+        }
+      },
+      "optional": false
+    },
+    "status": "COMPLETED"
+  },
+  {
+    "command": {
+      "condition": {
+        "visible": {
+          "textRegex": "^Hacienda: salarios: obligación \\$54\\.91 · depositado \\$20\\.00 · pendiente \\$34\\.91$",
+          "optional": false
+        }
+      },
+      "optional": false
+    },
+    "status": "COMPLETED"
+  },
+  {
+    "command": {
+      "condition": {
+        "visible": {
+          "textRegex": "^Pagos confirmados: 1 · Bruto \\$2,200\\.00 · Neto \\$1,970\\.19 · Costo patronal Pendiente$",
+          "optional": false
+        }
+      },
+      "optional": false
+    },
+    "status": "COMPLETED"
+  },
+  {
+    "command": {
+      "condition": {
+        "visible": {
+          "textRegex": "^Hacienda: salarios: obligación \\$54\\.91 · depositado \\$54\\.91 · pendiente \\$0\\.00$",
+          "optional": false
+        }
+      },
+      "optional": false
+    },
+    "status": "COMPLETED"
+  },
+  {
+    "command": {
+      "condition": {
+        "visible": {
+          "textRegex": "Abrir Mi dinero",
+          "optional": false
+        }
+      },
+      "timeout": "60000",
+      "optional": false
+    },
+    "status": "COMPLETED"
+  },
+  {
+    "command": {
+      "condition": {
+        "visible": {
+          "textRegex": "^Pagos confirmados: 1 · Bruto \\$2,200\\.00 · Neto \\$1,970\\.19 · Costo patronal Pendiente$",
+          "optional": false
+        }
+      },
+      "optional": false
+    },
+    "status": "COMPLETED"
+  },
+  {
+    "command": {
+      "condition": {
+        "visible": {
+          "textRegex": "^Hacienda: salarios: obligación \\$54\\.91 · depositado \\$54\\.91 · pendiente \\$0\\.00$",
+          "optional": false
+        }
+      },
+      "optional": false
+    },
+    "status": "COMPLETED"
+  }
+]

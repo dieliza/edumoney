@@ -19,3 +19,9 @@ Seis casos relevantes aprobados en una sola ejecución: calcular sin pagar, dos 
 - Se reutilizan los paquetes de aplicación compilados en 42665307671 (Android) y 42664986263 (iOS). El código de aplicación no cambia respecto de `3f03c59`.
 
 Los recorridos están iniciados; sus resultados y capturas se añadirán al terminar. No se declaran aprobados por haber sido enviados a CI.
+
+### Resultado Android
+
+[42671267051](https://github.com/dieliza/edumoney/actions/runs/42671267051): recorrido aprobado sin conexión de la aplicación, usando el APK de `3f03c59` y procedimiento `406e836`. Las capturas confirman un pago, neto $1,970.19, depósitos PR $54.91 y pendiente $0.00 después de reiniciar.
+
+El primer intento iOS (42671278977) falló al consultar la disponibilidad del campo de empleado, que sí aparece en la captura posterior; se ajustó la espera. La ejecución 42673444171 terminó sin crear trabajos y no ejecutó otro caso. El nuevo intento usará menos pulsaciones de borrado, manteniendo datos y comprobaciones.

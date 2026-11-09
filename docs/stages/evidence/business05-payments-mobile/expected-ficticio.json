@@ -1,0 +1,17 @@
+{
+  "kind": "Valores esperados del caso FICTICIO; no son mediciones ni datos reales",
+  "currency": "USD",
+  "year": 2026,
+  "calculationOnly": {"confirmedPayments": 0},
+  "confirmedPayment": {
+    "confirmedPayments": 1,
+    "grossCents": 220000,
+    "withheld": {"pr": 5491, "ss": 13640, "medicare": 3190, "additionalMedicare": 0, "sinot": 660, "other": 0},
+    "totalWithheldCents": 22981,
+    "netCents": 197019,
+    "employerCostCents": null
+  },
+  "firstDeposit": {"amountCents": 2000, "depositedPrCents": 2000, "remainingPrCents": 3491},
+  "secondDeposit": {"amountCents": 3491, "depositedPrCents": 5491, "remainingPrCents": 0},
+  "afterRestart": {"confirmedPayments": 1, "grossCents": 220000, "netCents": 197019, "depositedPrCents": 5491, "remainingPrCents": 0}
+}

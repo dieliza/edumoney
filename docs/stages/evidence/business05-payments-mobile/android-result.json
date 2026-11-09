@@ -1,0 +1,20 @@
+{
+  "run": 42671267051,
+  "status": "passed",
+  "platform": "Android API 35",
+  "applicationCommit": "3f03c59",
+  "procedureCommit": "406e836",
+  "commandStatuses": [
+    "COMPLETED",
+    "SKIPPED"
+  ],
+  "checks": [
+    "calculation does not confirm a payment",
+    "gross 220000 cents, net 197019 cents",
+    "PR withholding 5491 cents",
+    "first deposit 2000 cents, remainder 3491 cents",
+    "second deposit 3491 cents, remainder 0",
+    "one salary payment after restart"
+  ],
+  "fictionalData": true
+}
