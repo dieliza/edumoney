@@ -1,0 +1,20 @@
+{
+  "kind": "Expected values only, not measured results",
+  "holder": "Titular FICTICIO comercial",
+  "projects": [
+    "Proyecto FICTICIO uno",
+    "Proyecto FICTICIO dos"
+  ],
+  "expenseCents": 5500,
+  "businessBasisPoints": 3750,
+  "commercialCents": 2063,
+  "projectAmountsCents": [
+    3300,
+    2200
+  ],
+  "firstProjectCommercialCents": 1238,
+  "receipt": "RECIBO-FICTICIO-MOVIL",
+  "receiptNotes": "NOTA-FICTICIA-RECIBO-PERSISTE",
+  "imagePreserved": false,
+  "scope": "Manual receipt only, no camera/photo/OCR; no income or reserve UI in this case"
+}
