@@ -211,7 +211,7 @@ appId: com.edumoney.app
     commands:
       - tapOn: "EduMoney QA local"
       - extendedWaitUntil:
-          visible: "CSV local válido.*"
+          visible: "(?s)CSV local válido.*"
           timeout: 60000
       - takeScreenshot: payroll-received-csv-local
       - pressKey: BACK
@@ -239,7 +239,7 @@ appId: com.edumoney.app
     commands:
       - tapOn: "EduMoney QA local"
       - extendedWaitUntil:
-          visible: "PDF local válido.*"
+          visible: "(?s)PDF local válido.*"
           timeout: 60000
       - takeScreenshot: payroll-received-pdf-local
       - pressKey: BACK
