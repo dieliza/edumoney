@@ -236,6 +236,10 @@ appId: com.edumoney.app
           direction: DOWN
           centerElement: true
           timeout: 60000
+      # iOS can report the button visible while it sits behind the fixed header.
+      - swipe:
+          start: "50%,45%"
+          end: "50%,65%"
       - tapOn:
           id: open-bills
       - extendedWaitUntil:
