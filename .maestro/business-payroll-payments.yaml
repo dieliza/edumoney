@@ -412,9 +412,24 @@ appId: com.edumoney.app
 - scrollUntilVisible:
     element: "Nómina: Patrono FICTICIO movil"
     direction: DOWN
-    centerElement: false
+    centerElement: true
     timeout: 60000
+# iOS accessibility can report a button behind the tab bar as visible.
+# Move it clear of the bar using the outer gutter before tapping it.
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - swipe:
+          start: "5%,70%"
+          end: "5%,55%"
+          duration: 600
+      - waitForAnimationToEnd:
+          timeout: 5000
 - tapOn: "Nómina: Patrono FICTICIO movil"
+- extendedWaitUntil:
+    visible: "Nómina de Negocio"
+    timeout: 60000
 - scrollUntilVisible:
     element: "Pagos confirmados: 1.*"
     direction: DOWN
