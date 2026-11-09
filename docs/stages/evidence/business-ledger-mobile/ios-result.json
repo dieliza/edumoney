@@ -1,0 +1,21 @@
+{
+  "run": 42698356510,
+  "job": 129436168860,
+  "artifact": 13711153887,
+  "result": "passed",
+  "applicationCommit": "3f03c59",
+  "procedureCommit": "fddf598b029443d4f194e917198c074acb707487",
+  "device": "iPhone 17 Pro simulator, iOS 26.4",
+  "expenseCents": 5500,
+  "commercialCents": 2063,
+  "firstProjectExpenseCents": 3300,
+  "firstProjectCommercialCents": 1238,
+  "sameTotalsAndReceiptAfterRestart": true,
+  "receiptNote": "NOTA-FICTICIA-RECIBO-PERSISTE",
+  "encryptedHeader": true,
+  "plainSQLiteRejected": true,
+  "sameDatabaseHashAfterReopen": true,
+  "systemBackupExclusionVerified": true,
+  "driverXCTestCasesStarted": 7,
+  "scope": "manual receipt, no camera/OCR/image copy"
+}

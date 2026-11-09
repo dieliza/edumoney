@@ -15,3 +15,10 @@ Reparación implementada y verificada: botón estable para ocultar el teclado fu
 Cierre: se comprobó el texto exacto antes/después de ocultar teclado y después de reiniciar, sin aceptar caracteres finales adicionales. El campo se revela por el margen exterior antes de tocarlo; el indicador focused de UITextView no es fiable en este driver y se sustituye en iOS por la comprobación exacta del contenido. Android conserva su comprobación de foco. El binario actual mantiene cabecera cifrada, rechazo de SQLite sin clave y huella estable al reabrir. [Captura del resultado correcto](stages/evidence/repair-iosqa10/ios-exact-reopened.png).
 
 Continúan pendientes las pruebas físicas, la interacción comercial completa y la validación de distribución. No se fusionó main ni se publicó la aplicación.
+
+
+## UI-NEGOCIO-01 — Nombre del estado documental en la ficha comercial
+
+Estado: pendiente de mejora de presentación. Los recorridos Android 42696892099 e iOS 42698356510 guardaron y recuperaron correctamente el recibo, pero su ficha muestra el código `received` en lugar de una etiqueta española. El importe, nota y vínculo financiero se conservan. No bloquea cálculos ni requiere CPA.
+
+Reutilizar etiquetas españolas para los estados en la vista y botones de recibos, manteniendo los códigos persistidos y referencias. No se modifica el código de aplicación durante este bloque de verificación. [Captura iOS](stages/evidence/business-ledger-mobile/ios-business-receipt-reopened.png) · [Informe](stages/NEGOCIO-MOVIMIENTOS-MOVIL.md).

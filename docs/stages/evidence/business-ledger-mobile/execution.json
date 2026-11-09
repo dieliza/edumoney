@@ -22,12 +22,13 @@
     {
       "run": 42698356510,
       "platform": "ios",
-      "status": "in_progress",
-      "casesExecuted": null
+      "status": "passed",
+      "casesExecuted": 1
     }
   ],
-  "casesCompleted": 8,
-  "notes": "Android first to validate existing form selectors. Add every retry and iOS XCTest driver cases to the conservative count.",
-  "casesIncludingActiveAttempts": 9,
-  "conservativeIncludingExpectedIOSDriverCases": 16
+  "casesCompleted": 9,
+  "notes": "Six unit cases, three mobile cases including the failed YAML attempt, plus seven internal iOS driver XCTest cases. No active runs; no full suite.",
+  "unitCommand": "npm test -- tests/business-ledger.test.ts -t \"gasto compartido crea|recibo mixto conserva|depósito neto distingue|corregir clasificación|fallo en el reparto|reabre movimientos\" --reporter=dot",
+  "iosDriverXCTestCasesObserved": 7,
+  "conservativeCasesCompletedIncludingDriver": 16
 }

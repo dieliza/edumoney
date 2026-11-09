@@ -241,3 +241,10 @@
 - Comprobaciones de contraseña/alteración, confirmación explícita y rollback completo ante referencia de depósito rota; continuación del depósito pendiente después de recuperar.
 - Documentación de seguridad y privacidad actualizada: respaldo e imágenes ya implementados; matriz de calidad separa evidencia móvil de pruebas físicas y recorridos comerciales pendientes.
 - Ocho casos seleccionados aprobados una vez, TypeScript y ESLint aprobados. Sin suite completa ni CI; sin cambios de código de aplicación, main o publicación. [Informe](docs/stages/CIERRE-RESPALDO-NEGOCIO.md).
+
+### Gasto mixto y recibo manual — comprobación móvil
+
+- Formularios reales de titular/proyectos, gasto $55.00 con 37.5% comercial y reparto $33.00/$22.00; vista de proyecto y recibo manual recuperados al reiniciar en Android e iOS.
+- Ajuste del guion: selectores YAML sin alias y desplazamientos iOS fuera de encabezado/barra; sin cambios de aplicación o dependencias. Cifrado y reapertura iOS aprobados.
+- Seis pruebas unitarias seleccionadas y ambos recorridos finales aprobados; total conservador 16 casos con intento fallido y XCTest interno, inferior a 100. TypeScript y ESLint aprobados. [Informe](docs/stages/NEGOCIO-MOVIMIENTOS-MOVIL.md).
+- Mejora pendiente UI-NEGOCIO-01: estado documental visible en español. Sin modificaciones de main ni publicación.
