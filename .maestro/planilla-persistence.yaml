@@ -63,10 +63,12 @@ appId: com.edumoney.app
           index: 0
 - scrollUntilVisible:
     element:
-      id: closure-reason
+      text: "Motivo del cierre o corrección"
     direction: DOWN
     centerElement: true
-    timeout: 60000
+    timeout: 120000
+- tapOn:
+    id: closure-reason
 - tapOn:
     id: closure-reason
 - eraseText

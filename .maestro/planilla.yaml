@@ -127,8 +127,11 @@ appId: com.edumoney.app
     timeout: 120000
 - tapOn:
     id: closure-notes
+- tapOn:
+    id: closure-notes
 - eraseText
 - inputText: "Cierre ficticio de prueba"
+- assertVisible: "Cierre ficticio de prueba"
 - runFlow:
     when:
       platform: Android
@@ -143,10 +146,12 @@ appId: com.edumoney.app
           index: 0
 - scrollUntilVisible:
     element:
-      id: closure-reason
+      text: "Motivo del cierre o corrección"
     direction: DOWN
     centerElement: true
-    timeout: 60000
+    timeout: 120000
+- tapOn:
+    id: closure-reason
 - tapOn:
     id: closure-reason
 - eraseText
