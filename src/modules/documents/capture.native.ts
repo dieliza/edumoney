@@ -32,7 +32,7 @@ export async function loadOCRFixture(){
  const { Asset }=await import('expo-asset');const bundled=Asset.fromModule(require('../../../assets/tests/receipt.jpg'));
  // Android image resources are marked downloaded despite lacking a file URI.
  // A fresh descriptor materializes that bundled resource into the local cache.
- const asset=new Asset({uri:bundled.uri,type:bundled.type});await asset.downloadAsync();
+ const asset=new Asset({name:bundled.name,uri:bundled.uri,type:bundled.type});await asset.downloadAsync();
  const uri=asset.localUri;if(!uri?.startsWith('file://'))throw new Error('La imagen de pruebas no está incluida localmente');
  const f=new File(uri);const image:ImageData={base64:await f.base64(),mime:'image/jpeg'};validateImage(image);
  const text=(await extractTextFromImage(uri)).join('\n');return {image,text,warning:'Imagen ficticia incluida para validar el reconocimiento local. No es un comprobante real.'};
