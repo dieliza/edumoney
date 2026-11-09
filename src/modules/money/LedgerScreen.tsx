@@ -118,7 +118,7 @@ export default function LedgerScreen() {
      {s.active && s.nextDate <= localToday() && !busy ? <ActionButton title={`Confirmar cobro: ${s.description}`} onPress={() => void action(() => store.confirmSchedule(s.id, s.nextDate, newId(), localToday()), 'Cobro registrado. Los siguientes permanecen previstos.')}/> : null}
      {!busy ? <ActionButton title={s.active ? `Pausar: ${s.description}` : `Reanudar: ${s.description}`} secondary onPress={() => void action(() => store.toggleSchedule(s.id, !s.active), 'Programación actualizada. Los movimientos anteriores se conservan.')}/> : null}
     </Card>)}
-    <Card><Body style={{ fontWeight: '700' }}>Para mi contable</Body><Body>Organiza movimientos, informativas, comprobantes y pendientes para revisión profesional. Marcar un gasto no confirma deducibilidad.</Body><ActionButton title="Abrir Para mi contable" testID="open-tax" secondary onPress={()=>router.push('/tax')}/></Card>
+    <Card><Body style={{ fontWeight: '700' }}>Para mi contable</Body><Body>Organiza movimientos, informativas, comprobantes y pendientes para revisión profesional. Marcar un gasto no confirma deducibilidad.</Body><ActionButton title="Respaldo y recuperación" testID="open-backup" secondary onPress={()=>router.push('/backup')}/><ActionButton title="Abrir Para mi contable" testID="open-tax" secondary onPress={()=>router.push('/tax')}/></Card>
    </> : null}
    {segment === 'history' ? <>
     <Field label="Buscar descripción" value={query} onChangeText={v => { setQuery(v); setLimit(50); }}/>

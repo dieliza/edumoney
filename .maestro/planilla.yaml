@@ -1,0 +1,246 @@
+appId: com.edumoney.app
+---
+- launchApp:
+    clearState: true
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: "Quickstep isn't responding"
+          commands:
+            - tapOn: "Close app"
+      - extendedWaitUntil:
+          visible: "Abrir Mi dinero"
+          timeout: 60000
+- tapOn: "Abrir Mi dinero"
+- scrollUntilVisible:
+    element:
+      text: "Añadir ingreso"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: "Añadir ingreso"
+- scrollUntilVisible:
+    element:
+      id: movement-amount
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: movement-amount
+- eraseText
+- inputText: "100.00"
+- tapOn:
+    text: "Importe recibido o neto.*"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: movement-description
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: movement-description
+- eraseText
+- inputText: "Ingreso ficticio respaldo"
+- tapOn:
+    text: "Descripción"
+    index: 0
+- scrollUntilVisible:
+    element:
+      text: "Guardar movimiento"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: "Guardar movimiento"
+- scrollUntilVisible:
+    element:
+      id: open-backup
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: open-backup
+- extendedWaitUntil:
+    visible: "Archivo cifrado bajo tu control."
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: backup-fixture
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: backup-fixture
+- extendedWaitUntil:
+    visible: "PRUEBA FICTICIA APROBADA:.*"
+    timeout: 120000
+- takeScreenshot: stage10-backup-recovered
+- scrollUntilVisible:
+    element:
+      text: "Volver a Mi dinero"
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: "Volver a Mi dinero"
+- scrollUntilVisible:
+    element:
+      id: open-tax
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: open-tax
+- extendedWaitUntil:
+    visible: "Expediente local para revisión profesional."
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: open-planilla
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: open-planilla
+- extendedWaitUntil:
+    visible: "Entrevista y borrador de cierre para revisión."
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      text: "Cálculo automático sin requisito de CPA"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage10-year-pending
+- scrollUntilVisible:
+    element:
+      id: closure-notes
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: closure-notes
+- eraseText
+- inputText: "Cierre ficticio de prueba"
+- tapOn:
+    text: "Notas y situaciones para revisar"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: closure-reason
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: closure-reason
+- eraseText
+- inputText: "Prueba ficticia"
+- tapOn:
+    text: "Motivo del cierre o corrección"
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: closure-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: closure-save
+- scrollUntilVisible:
+    element:
+      id: closure-review
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: closure-review
+- extendedWaitUntil:
+    visible: "Borrador de EduMoney — no radicado"
+    timeout: 60000
+- takeScreenshot: stage10-pending-fields
+- scrollUntilVisible:
+    element:
+      text: "Cerrar ficha"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: "Cerrar ficha"
+- scrollUntilVisible:
+    element:
+      id: closure-fixture
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: closure-fixture
+- extendedWaitUntil:
+    visible: "PDF ficticio generado localmente:.*"
+    timeout: 120000
+- scrollUntilVisible:
+    element:
+      text: "Línea 17.*998\\.20"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage10-laboratory-2025
+- scrollUntilVisible:
+    element:
+      text: "Cerrar ficha"
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: "Cerrar ficha"
+- tapOn:
+    id: theme-picker-open
+- tapOn:
+    text: "Oscuro"
+- scrollUntilVisible:
+    element:
+      text: "Cálculo automático sin requisito de CPA"
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: stage10-dark
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible: "Abrir Mi dinero"
+    timeout: 60000
+- tapOn:
+    text: "Abrir Mi dinero"
+- scrollUntilVisible:
+    element:
+      id: open-tax
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: open-tax
+- extendedWaitUntil:
+    visible: "Expediente local para revisión profesional."
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: open-planilla
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: open-planilla
+- extendedWaitUntil:
+    visible: "Entrevista y borrador de cierre para revisión."
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: closure-notes
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: "Cierre ficticio de prueba"
+- takeScreenshot: stage10-reopened

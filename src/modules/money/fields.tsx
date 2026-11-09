@@ -16,7 +16,7 @@ export function Sheet({ title, close, children, busy = false }: PropsWithChildre
   </Card></ScrollView>
  </KeyboardAvoidingView></Modal>;
 }
-export function Field({ label, value, onChangeText, decimal = false, multiline = false, testID, maxLength }: {
+export function Field({ label, value, onChangeText, decimal = false, multiline = false, testID, maxLength, secure = false }: {
     label: string;
     value: string;
     onChangeText(value: string): void;
@@ -24,9 +24,10 @@ export function Field({ label, value, onChangeText, decimal = false, multiline =
     multiline?: boolean;
     testID?: string;
     maxLength?: number;
+    secure?: boolean;
 }) {
     const { colors } = useTheme();
-    return <View style={{ gap: 6, padding: 12, borderRadius: 16, backgroundColor: colors.surface }}><Body style={{ fontSize: 14, fontWeight: '600' }}>{label}</Body><TextInput testID={testID} accessibilityLabel={label} value={value} onChangeText={onChangeText} keyboardType={decimal ? 'decimal-pad' : 'default'} multiline={multiline} maxLength={maxLength ?? (multiline ? 240 : 100)} style={{ minHeight: 50, borderWidth: 1, borderColor: colors.muted, borderRadius: 12, padding: 12, color: colors.text, backgroundColor: colors.surface, fontSize: 17 }} placeholderTextColor={colors.muted}/></View>;
+    return <View style={{ gap: 6, padding: 12, borderRadius: 16, backgroundColor: colors.surface }}><Body style={{ fontSize: 14, fontWeight: '600' }}>{label}</Body><TextInput secureTextEntry={secure} autoCorrect={secure ? false : undefined} autoCapitalize={secure ? 'none' : undefined} testID={testID} accessibilityLabel={label} value={value} onChangeText={onChangeText} keyboardType={decimal ? 'decimal-pad' : 'default'} multiline={multiline} maxLength={maxLength ?? (multiline ? 240 : 100)} style={{ minHeight: 50, borderWidth: 1, borderColor: colors.muted, borderRadius: 12, padding: 12, color: colors.text, backgroundColor: colors.surface, fontSize: 17 }} placeholderTextColor={colors.muted}/></View>;
 }
 export function Choices<T extends string>({ label, value, options, onChange }: {
     label: string;

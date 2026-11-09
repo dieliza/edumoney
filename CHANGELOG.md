@@ -151,3 +151,11 @@
 - SQLCipher, rechazo de lectura sin clave, huella estable y exclusión de respaldo verificados en iOS.
 - Galería de diez capturas y guía disponibles. Destinos externos de compartir pendientes de validación física; no se envió información a terceros durante las pruebas.
 - Etapa 10 no iniciada, main sin modificar y Negocio reservado.
+
+## Etapa 10 — Cálculo automático y calidad
+
+- Catálogo 2025 con fuentes de Hacienda, entrevista y cálculos determinísticos de campos soportados; no se reutiliza para 2026.
+- Por instrucción actualizada del usuario, el cálculo no exige CPA ni revisión previa; la revisión personal queda registrada de forma informativa.
+- Borrador PDF con estructura informativa oficial, guía de líneas, fuentes y campos pendientes, sin radicación ni certificación.
+- Respaldo AES-256-GCM con contraseña, comprobación independiente WebCrypto y recuperación transaccional; migración 8→9.
+- 15 pruebas adicionales (190 totales). Cómputo final y varios anejos aún fuera de alcance; pruebas físicas y Negocio pendientes antes de publicación.
