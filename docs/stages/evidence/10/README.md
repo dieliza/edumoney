@@ -22,8 +22,18 @@ Mediciones puntuales: [arranque de actividad](android-startup.txt), 1,051 ms; [m
 
 ## iOS
 
-La compilación de simulador está aprobada. Se repite el recorrido para localizar correctamente la confirmación del respaldo después de desplazarse. El resultado final todavía está pendiente.
+Simulador iPhone 17 Pro / iOS 26.4, misma aplicación compilada desde `3e4ea0b`. La ejecución [42612854920](https://github.com/dieliza/edumoney/actions/runs/42612854920) aprobó el vector UTF-8, respaldo y recuperación íntegra (574 ms), PDF local y cambio de tema. Se repite la comprobación final de notas tras reabrir, porque el campo quedó parcialmente cubierto por el encabezado; no se declara todavía el recorrido completo aprobado.
+
+| Respaldo recuperado | Caso ficticio de 2025 | Tema oscuro |
+| --- | --- | --- |
+| ![Recuperación cifrada en iOS](ios-backup-recovered.png) | ![Cálculo de 2025 en iOS](ios-laboratory-2025.png) | ![Tema oscuro en iOS](ios-dark.png) |
+
+| Año pendiente | Campos pendientes |
+| --- | --- |
+| ![2026 sin reglas de otro año](ios-year-pending.png) | ![Pendientes del borrador](ios-pending-fields.png) |
 
 ## Antes de distribución
 
 Estas compilaciones son para simuladores, no paquetes firmados para teléfonos. Siguen pendientes las pruebas físicas, destinos reales de compartir, revisión del mapa completo del formulario y redondeos oficiales. No se ha publicado la aplicación ni fusionado main. Negocio conserva su etapa separada antes de finalizar la aplicación.
+
+Incidencia iOS diferida por instrucción del usuario: [IOS-QA-10](../../../ISSUES.md). Se continúa con Negocio sin declarar aprobada la validación móvil pendiente.
