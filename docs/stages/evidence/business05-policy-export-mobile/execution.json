@@ -1,0 +1,25 @@
+{
+  "limit": 100,
+  "unitCasesExecuted": 6,
+  "unitCasesPassed": 6,
+  "unitCasesSkipped": 30,
+  "completeSuiteExecuted": false,
+  "typecheck": "passed",
+  "lint": "passed",
+  "mobileRuns": [
+    {
+      "run": 42684408082,
+      "platform": "android",
+      "status": "in_progress",
+      "casesExecuted": null
+    },
+    {
+      "run": 42684414704,
+      "platform": "ios",
+      "status": "in_progress",
+      "casesExecuted": null
+    }
+  ],
+  "casesCompleted": 6,
+  "casesIncludingActiveAttempts": 8
+}

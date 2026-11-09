@@ -1,0 +1,18 @@
+{
+  "kind": "Expected values only, not measured results",
+  "year": 2026,
+  "sinotEmployeePercent": "0.30",
+  "sutaPercent": "3.40",
+  "futaCreditPercent": "5.40",
+  "futaReductionPercent": "0.00",
+  "cfsePercent": "1.50",
+  "applicability": "pending for all agencies",
+  "source": "FUENTE-FICTICIA-TASAS-2026",
+  "note": "FICTICIO: aplicabilidad pendiente, no es carta patronal",
+  "paymentCount": 0,
+  "exports": [
+    "csv",
+    "pdf"
+  ],
+  "sharing": "open native share sheet and dismiss, no sending"
+}
