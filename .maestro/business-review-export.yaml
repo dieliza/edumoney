@@ -388,7 +388,7 @@ appId: com.edumoney.app
         commands:
         - tapOn: EduMoney QA local
     - extendedWaitUntil:
-        visible: '^JSON comercial local válido: gasto 5500; comercial 2750; dos filas, un movimiento.*'
+        visible: '(?s)^JSON comercial local válido: gasto 5500; comercial 2750; dos filas, un movimiento.*'
         timeout: 60000
     - takeScreenshot: commercial-received-json
     - pressKey: BACK
@@ -423,7 +423,7 @@ appId: com.edumoney.app
         commands:
         - tapOn: EduMoney QA local
     - extendedWaitUntil:
-        visible: '^CSV comercial local válido: gasto 5500; comercial 2750; dos filas, un movimiento.*'
+        visible: '(?s)^CSV comercial local válido: gasto 5500; comercial 2750; dos filas, un movimiento.*'
         timeout: 60000
     - takeScreenshot: commercial-received-csv
     - pressKey: BACK
