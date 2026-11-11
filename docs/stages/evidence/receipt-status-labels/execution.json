@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-11",
+  "scope": "Receipt status display labels only",
+  "testsCommand": "npm test -- tests/documents.test.ts -t \"corrige movimiento desde comprobante|retirar y restaurar desde comprobante|imagen, metadatos y vínculos\" --reporter=dot",
+  "casesExecuted": 3,
+  "casesPassed": 3,
+  "casesSkipped": 22,
+  "limit": 100,
+  "repeats": 0,
+  "completeSuiteExecuted": false,
+  "nativeCasesExecuted": 0,
+  "typecheck": "passed",
+  "lint": "passed",
+  "maestroYaml": "valid, new label assertions prepared but not executed",
+  "bundles": {
+    "ios": {
+      "result": "passed",
+      "bytes": 5032736,
+      "sha256": "bf6bbad666485e0aa2e0227f1412d20e3987ae2cbef4cb5004dc2af3efddaffc"
+    },
+    "android": {
+      "result": "passed",
+      "bytes": 5022290,
+      "sha256": "47fb657ae973ddcea6f42f227f83f27364612d41efe8e8dbb3350de1335ea0a2"
+    }
+  },
+  "nativeVisualVerification": "pending new compiled applications; historical captures and binaries show the previous label",
+  "presentationSource": "src/modules/tax/types.ts statusOptions reused",
+  "storageChanges": false
+}

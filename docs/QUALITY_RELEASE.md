@@ -32,7 +32,7 @@ No existe radicación automática ni certificación de Hacienda. Las compilacion
 | Pagos y depósitos de nómina | Importes reales separados del cálculo, depósitos parciales y reapertura comprobados en ambos simuladores | Conciliación con trámites y documentos reales del patrono |
 | Exportación de nómina | CSV/PDF Android leídos por receptor local aislado; popovers iOS abiertos/cancelados; seis casos de lógica seleccionados | Destinos reales, impresión y formato de emisión oficial |
 | Recuperación con Negocio y nómina | Prueba integrada de archivo cifrado hacia base SQLite vacía, imagen y relaciones; reapertura y continuación de depósitos | Selección/guardado desde Archivos y recuperación entre teléfonos físicos |
-| Gasto mixto y recibo manual | Reparto y parte comercial por titular/proyecto, recibo y nota exacta tras reiniciar en Android/iOS | Otros flujos comerciales, imagen/cámara, localización del estado del recibo y pruebas físicas |
+| Gasto mixto y recibo manual | Reparto y parte comercial por titular/proyecto, recibo y nota exacta tras reiniciar en Android/iOS | Otros flujos comerciales, imagen/cámara, comprobación visual de etiquetas españolas en nueva compilación y pruebas físicas |
 | IVU, contratistas y panel comercial | Dominio y almacenamiento implementados; informes propios con alcance y fuentes | Interacción nativa completa y pruebas físicas |
 
 [Pagos móviles](stages/NEGOCIO-05-PAGOS-MOVIL.md) · [Tasas y exportaciones móviles](stages/NEGOCIO-05-TASAS-EXPORTACION-MOVIL.md) · [Recuperación integrada](stages/CIERRE-RESPALDO-NEGOCIO.md).

@@ -9,6 +9,7 @@ import { formatMoney } from '../money/domain';
 import type { LedgerMovement } from '../money/types';
 import { getDocumentStore } from '../documents/localStore';
 import type { StoredDocument } from '../documents/types';
+import { statusOptions } from '../tax/types';
 import { BusinessLedgerStore } from './ledgerStore';
 import { businessExport,businessTotals,commercialAmount,cpaLabels,entryRows,reserveLabels,useLabels } from './ledgerDomain';
 import type { BusinessEntry,BusinessLedgerSnapshot,ReserveKind } from './ledgerTypes';
@@ -18,10 +19,11 @@ import { BusinessReserveForm } from './BusinessReserveForm';
 import { BusinessExportForm } from './BusinessExportForm';
 const knownMoney=(value:number|null)=>value===null?'Pendiente de completar desglose':formatMoney(value);
 const empty:BusinessLedgerSnapshot={holders:[],dbas:[],projects:[],entries:[],reserves:[],documents:[],movements:[]};
+const receiptStatus=(document:StoredDocument)=>document.deletedAt?'Retirado':statusOptions.find(([code])=>code===document.status)?.[1]??'Estado por confirmar';
 function ReceiptView({document,close}:{document:StoredDocument;close():void}) {
  const [copy,setCopy]=useState<{base64:string;mime:string}|null>(null),[error,setError]=useState('');
  useEffect(()=>{let active=true;if(document.encryptedPath&&!document.deletedAt)void getDocumentStore().then(s=>s.content(document.id)).then(c=>{if(active)setCopy(c);}).catch(e=>{if(active)setError(userMessage(e));});return()=>{active=false;};},[document.id,document.encryptedPath,document.deletedAt]);
- return <Sheet title="Comprobante comercial" close={close}><Body>{document.description}</Body><Body>{document.date??'Fecha pendiente'} · {document.amountCents===null?'Importe pendiente':formatMoney(document.amountCents)}</Body><Body>{document.notes}</Body><Body>Estado: {document.deletedAt?'Retirado':document.status}. Referencia: {document.id}.</Body>{document.supersedesId?<Body>Corrige el comprobante {document.supersedesId}; no crea otro gasto.</Body>:null}{copy?<Image source={{uri:`data:${copy.mime};base64,${copy.base64}`}} accessibilityLabel="Copia local del recibo comercial" style={{width:'100%',height:360}} resizeMode="contain"/>:<Body>{document.encryptedPath&&!document.deletedAt?'Abriendo copia local…':'No hay copia local conservada.'}</Body>}<ErrorNotice message={error}/></Sheet>;
+ return <Sheet title="Comprobante comercial" close={close}><Body>{document.description}</Body><Body>{document.date??'Fecha pendiente'} · {document.amountCents===null?'Importe pendiente':formatMoney(document.amountCents)}</Body><Body>{document.notes}</Body><Body>Estado: {receiptStatus(document)}. Referencia: {document.id}.</Body>{document.supersedesId?<Body>Corrige el comprobante {document.supersedesId}; no crea otro gasto.</Body>:null}{copy?<Image source={{uri:`data:${copy.mime};base64,${copy.base64}`}} accessibilityLabel="Copia local del recibo comercial" style={{width:'100%',height:360}} resizeMode="contain"/>:<Body>{document.encryptedPath&&!document.deletedAt?'Abriendo copia local…':'No hay copia local conservada.'}</Body>}<ErrorNotice message={error}/></Sheet>;
 }
 export default function BusinessLedgerScreen() {
  const params=useLocalSearchParams<{holderId?:string}>(),focused=useIsFocused();
@@ -72,7 +74,7 @@ export default function BusinessLedgerScreen() {
      <Body>{e.justification}</Body><Body>{cpaLabels[e.cpaStatus]}</Body>
      {e.stale||e.deletedAt?<Body>{e.deletedAt?'Movimiento eliminado':'Movimiento modificado; conciliación pendiente'}. Excluido de totales.</Body>:null}
      {entryRows(e).map(a=><Body key={a.projectId}>{data.projects.find(p=>p.id===a.projectId)?.name}: {formatMoney(a.amountCents)}</Body>)}
-     {documents.map(d=><ActionButton key={d.id} title={`Ver recibo: ${d.description||d.id} · ${d.deletedAt?'Retirado':d.status}`} secondary onPress={()=>setViewReceipt(d)}/>)}
+     {documents.map(d=><ActionButton key={d.id} title={`Ver recibo: ${d.description||d.id} · ${receiptStatus(d)}`} secondary onPress={()=>setViewReceipt(d)}/>)}
      {!documents.length?<Body>Comprobante pendiente de adjuntar.</Body>:null}
      {!e.deletedAt?<ActionButton title={`Revisar clasificación y reparto: ${e.description}`} secondary onPress={()=>setForm({kind:e.kind,initial:e})}/>:null}
      {movement&&!e.stale&&!e.deletedAt?<ActionButton title={`Adjuntar recibo: ${e.description}`} secondary onPress={()=>setReceipt(movement)}/>:null}

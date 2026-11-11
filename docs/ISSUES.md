@@ -19,6 +19,8 @@ Continúan pendientes las pruebas físicas, la interacción comercial completa y
 
 ## UI-NEGOCIO-01 — Nombre del estado documental en la ficha comercial
 
-Estado: pendiente de mejora de presentación. Los recorridos Android 42696892099 e iOS 42698356510 guardaron y recuperaron correctamente el recibo, pero su ficha muestra el código `received` en lugar de una etiqueta española. El importe, nota y vínculo financiero se conservan. No bloquea cálculos ni requiere CPA.
+Estado: corregida en código; comprobación visual en nueva compilación nativa pendiente. Los recorridos históricos Android 42696892099 e iOS 42698356510 guardaron y recuperaron correctamente el recibo, pero su ficha mostraba el código `received` en lugar de una etiqueta española. El importe, nota y vínculo financiero se conservan. No bloquea cálculos ni requiere CPA.
 
-Reutilizar etiquetas españolas para los estados en la vista y botones de recibos, manteniendo los códigos persistidos y referencias. No se modifica el código de aplicación durante este bloque de verificación. [Captura iOS](stages/evidence/business-ledger-mobile/ios-business-receipt-reopened.png) · [Informe](stages/NEGOCIO-MOVIMIENTOS-MOVIL.md).
+Se reutilizan las etiquetas de `statusOptions` en la ficha y los botones: Recibido, Pendiente, Corregido y No aplica. Retirado conserva prioridad para documentos retirados; un código desconocido muestra Estado por confirmar. No se modifican códigos persistidos ni referencias. El recorrido Maestro ahora exige Recibido en botón y ficha; requiere recompilar la aplicación para ejecutar esas nuevas comprobaciones. [Captura iOS](stages/evidence/business-ledger-mobile/ios-business-receipt-reopened.png) · [Informe](stages/NEGOCIO-MOVIMIENTOS-MOVIL.md).
+
+[Implementación y verificación de UI-NEGOCIO-01](stages/UI-NEGOCIO-01.md). Las capturas históricas anteriores muestran el estado previo a la corrección.

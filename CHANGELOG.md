@@ -248,3 +248,10 @@
 - Ajuste del guion: selectores YAML sin alias y desplazamientos iOS fuera de encabezado/barra; sin cambios de aplicación o dependencias. Cifrado y reapertura iOS aprobados.
 - Seis pruebas unitarias seleccionadas y ambos recorridos finales aprobados; total conservador 16 casos con intento fallido y XCTest interno, inferior a 100. TypeScript y ESLint aprobados. [Informe](docs/stages/NEGOCIO-MOVIMIENTOS-MOVIL.md).
 - Mejora pendiente UI-NEGOCIO-01: estado documental visible en español. Sin modificaciones de main ni publicación.
+
+### Estados de recibos en español
+
+- Ficha y botones comerciales reutilizan Recibido/Pendiente/Corregido/No aplica; Retirado conserva prioridad y estados desconocidos indican Estado por confirmar.
+- Se mantienen códigos persistidos y vínculos. Guion móvil actualizado para exigir Recibido en ficha y botón; ejecución de esas aserciones pendiente de nueva compilación.
+- Tres casos existentes seleccionados aprobados, TypeScript/ESLint aprobados y empaquetado JavaScript iOS/Android aprobado. Sin nuevas pruebas nativas ni suite completa. [Informe](docs/stages/UI-NEGOCIO-01.md).
+- Sin cambios en main ni publicación.

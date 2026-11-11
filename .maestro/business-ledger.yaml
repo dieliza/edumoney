@@ -345,11 +345,11 @@ appId: com.edumoney.app
     timeout: 60000
 - tapOn: Guardar recibo vinculado
 - scrollUntilVisible:
-    element: 'Ver recibo: RECIBO-FICTICIO-MOVIL.*'
+    element: 'Ver recibo: RECIBO-FICTICIO-MOVIL · Recibido'
     direction: DOWN
     centerElement: true
     timeout: 60000
-- assertVisible: 'Ver recibo: RECIBO-FICTICIO-MOVIL.*'
+- assertVisible: 'Ver recibo: RECIBO-FICTICIO-MOVIL · Recibido'
 - takeScreenshot: business-receipt-linked
 - stopApp
 - launchApp
@@ -394,11 +394,11 @@ appId: com.edumoney.app
 - assertVisible: '^Parte comercial identificada: \$20\.63 · Gastos de uso pendiente: \$0\.00$'
 - takeScreenshot: business-mixed-reopened
 - scrollUntilVisible:
-    element: 'Ver recibo: RECIBO-FICTICIO-MOVIL.*'
+    element: 'Ver recibo: RECIBO-FICTICIO-MOVIL · Recibido'
     direction: DOWN
     centerElement: true
     timeout: 60000
-- tapOn: 'Ver recibo: RECIBO-FICTICIO-MOVIL.*'
+- tapOn: 'Ver recibo: RECIBO-FICTICIO-MOVIL · Recibido'
 - extendedWaitUntil:
     visible: Comprobante comercial
     timeout: 60000
@@ -409,4 +409,5 @@ appId: com.edumoney.app
     centerElement: true
     timeout: 60000
 - assertVisible: ^NOTA-FICTICIA-RECIBO-PERSISTE$
+- assertVisible: '^Estado: Recibido[.] Referencia: .*$'
 - takeScreenshot: business-receipt-reopened

@@ -88,3 +88,5 @@ Seguimiento de nómina: [tasas persistentes y exportaciones CSV/PDF verificadas 
 Cierre de calidad: [recuperación integrada de respaldo con Negocio, imagen y nómina](docs/stages/CIERRE-RESPALDO-NEGOCIO.md).
 
 Negocio: [gasto mixto por proyecto y recibo manual verificados en Android/iOS](docs/stages/NEGOCIO-MOVIMIENTOS-MOVIL.md).
+
+Negocio: [estados de recibos en español implementados; verificación visual nativa pendiente](docs/stages/UI-NEGOCIO-01.md).
