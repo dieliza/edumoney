@@ -1,0 +1,18 @@
+{
+  "limit": 10,
+  "scope": "New visual verification only; three previously passed code tests are not repeated",
+  "plannedAppCases": 2,
+  "plannedIOSDriverCases": 1,
+  "casesExecutedConfirmed": 0,
+  "casesReservedForActiveRun": 3,
+  "unitCasesExecuted": 0,
+  "completeSuiteExecuted": false,
+  "driverFilter": "maestro-driver-iosUITests/maestro_driver_iosUITests/testHttpServer",
+  "automaticDriverLaunchLimitPerJob": 1,
+  "reuseHistoricalApplicationBinaries": false,
+  "applicationCommit": "905d96f",
+  "procedureCommit": "94eb569",
+  "result": "in progress",
+  "run": 42948943240,
+  "runUrl": "https://github.com/dieliza/edumoney/actions/runs/42948943240"
+}
