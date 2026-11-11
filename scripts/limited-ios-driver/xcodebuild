@@ -1,5 +1,5 @@
 #!/bin/bash
-# Only for the receipt-labels visual check. Do not run driver self-test suites.
+# For narrow visual checks. Do not run driver self-test suites.
 set -euo pipefail
 if [ "${1:-}" != "test-without-building" ]; then
   exec /usr/bin/xcodebuild "$@"

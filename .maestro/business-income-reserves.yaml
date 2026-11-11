@@ -1,0 +1,561 @@
+appId: com.edumoney.app
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: Abrir Mi dinero
+    timeout: 60000
+- tapOn: Abrir Mi dinero
+- tapOn: Negocio.*
+- scrollUntilVisible:
+    element:
+      id: business-legal-name
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-legal-name
+- inputText: Titular FICTICIO comercial
+- tapOn:
+    id: form-dismiss-keyboard
+- scrollUntilVisible:
+    element: Comerciante individual
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,35%
+        end: 5%,60%
+        duration: 600
+- tapOn: Comerciante individual
+- scrollUntilVisible:
+    element: Añadir proyecto
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Añadir proyecto
+- scrollUntilVisible:
+    element:
+      id: business-project-0
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-project-0
+- inputText: Proyecto FICTICIO uno
+- tapOn:
+    id: form-dismiss-keyboard
+- scrollUntilVisible:
+    element: Añadir proyecto
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Añadir proyecto
+- scrollUntilVisible:
+    element:
+      id: business-project-1
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-project-1
+- inputText: Proyecto FICTICIO dos
+- tapOn:
+    id: form-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: business-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-save
+- scrollUntilVisible:
+    element: 'Movimientos y recibos: Titular FICTICIO comercial'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,70%
+        end: 5%,55%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
+- tapOn: 'Movimientos y recibos: Titular FICTICIO comercial'
+- extendedWaitUntil:
+    visible: Movimientos de Negocio
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: business-income
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-income
+- scrollUntilVisible:
+    element:
+      id: business-entry-date
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-entry-date
+- inputText: '2026-11-11'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: business-entry-description
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-entry-description
+- inputText: COBRO-FICTICIO-965
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: business-entry-amount
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-entry-amount
+- inputText: '965.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: Transferencia bancaria
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Transferencia bancaria
+- scrollUntilVisible:
+    element:
+      id: business-gross
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-gross
+- inputText: '1000.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      text: ^Comisiones descontadas USD$
+      below: ^Comisiones descontadas USD$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^Comisiones descontadas USD$
+    below: ^Comisiones descontadas USD$
+- inputText: '100.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      text: ^Devoluciones descontadas USD$
+      below: ^Devoluciones descontadas USD$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^Devoluciones descontadas USD$
+    below: ^Devoluciones descontadas USD$
+- inputText: '50.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      text: ^IVU registrado en este cobro USD$
+      below: ^IVU registrado en este cobro USD$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^IVU registrado en este cobro USD$
+    below: ^IVU registrado en este cobro USD$
+- inputText: '115.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: '^Neto del desglose: \$965\.00[.].*$'
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Neto del desglose: \$965\.00[.].*$'
+- scrollUntilVisible:
+    element:
+      text: ^Justificación o nota$
+      below: ^Justificación o nota$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^Justificación o nota$
+    below: ^Justificación o nota$
+- inputText: DESGLOSE-FICTICIO-CONFIRMADO
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      text: ^Importe para Proyecto FICTICIO uno USD$
+      below: ^Importe para Proyecto FICTICIO uno USD$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^Importe para Proyecto FICTICIO uno USD$
+    below: ^Importe para Proyecto FICTICIO uno USD$
+- inputText: '600.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      text: ^Importe para Proyecto FICTICIO dos USD$
+      below: ^Importe para Proyecto FICTICIO dos USD$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^Importe para Proyecto FICTICIO dos USD$
+    below: ^Importe para Proyecto FICTICIO dos USD$
+- inputText: '365.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: business-entry-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-entry-save
+- scrollUntilVisible:
+    element: '^Depósitos netos registrados: \$965\.00$'
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Depósitos netos registrados: \$965\.00$'
+- scrollUntilVisible:
+    element: '^Ventas brutas: \$1,000\.00 · Comisiones: \$100\.00 · Devoluciones: \$50\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Ventas brutas: \$1,000\.00 · Comisiones: \$100\.00 · Devoluciones: \$50\.00$'
+- scrollUntilVisible:
+    element: '^IVU registrado en cobros: \$115\.00[.].*$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^IVU registrado en cobros: \$115\.00[.].*$'
+- scrollUntilVisible:
+    element: '^Cobros con desglose pendiente: 0[.].*$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Cobros con desglose pendiente: 0[.].*$'
+- scrollUntilVisible:
+    element: '^Gastos completos registrados: \$0\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Gastos completos registrados: \$0\.00$'
+- takeScreenshot: income-breakdown
+- scrollUntilVisible:
+    element: Ajustar reservas manuales
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Ajustar reservas manuales
+- scrollUntilVisible:
+    element: ^Contribuciones$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: ^Contribuciones$
+- scrollUntilVisible:
+    element:
+      text: ^Cantidad total que mantienes reservada USD$
+      below: ^Cantidad total que mantienes reservada USD$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^Cantidad total que mantienes reservada USD$
+    below: ^Cantidad total que mantienes reservada USD$
+- inputText: '100.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      text: ^Motivo del importe o cambio$
+      below: ^Motivo del importe o cambio$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^Motivo del importe o cambio$
+    below: ^Motivo del importe o cambio$
+- inputText: RESERVA-FICTICIA-CONTRIBUCIONES
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: Guardar reserva manual
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Guardar reserva manual
+- scrollUntilVisible:
+    element: Ajustar reservas manuales
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Ajustar reservas manuales
+- scrollUntilVisible:
+    element: ^IVU$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: ^IVU$
+- scrollUntilVisible:
+    element:
+      text: ^Cantidad total que mantienes reservada USD$
+      below: ^Cantidad total que mantienes reservada USD$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^Cantidad total que mantienes reservada USD$
+    below: ^Cantidad total que mantienes reservada USD$
+- inputText: '115.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      text: ^Motivo del importe o cambio$
+      below: ^Motivo del importe o cambio$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^Motivo del importe o cambio$
+    below: ^Motivo del importe o cambio$
+- inputText: RESERVA-FICTICIA-IVU
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: Guardar reserva manual
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Guardar reserva manual
+- scrollUntilVisible:
+    element: Ajustar reservas manuales
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Ajustar reservas manuales
+- scrollUntilVisible:
+    element: ^Nómina$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: ^Nómina$
+- scrollUntilVisible:
+    element:
+      text: ^Cantidad total que mantienes reservada USD$
+      below: ^Cantidad total que mantienes reservada USD$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^Cantidad total que mantienes reservada USD$
+    below: ^Cantidad total que mantienes reservada USD$
+- inputText: '0.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      text: ^Motivo del importe o cambio$
+      below: ^Motivo del importe o cambio$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^Motivo del importe o cambio$
+    below: ^Motivo del importe o cambio$
+- inputText: RESERVA-FICTICIA-NOMINA
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: Guardar reserva manual
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Guardar reserva manual
+- scrollUntilVisible:
+    element: '^Contribuciones: \$100\.00$'
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Contribuciones: \$100\.00$'
+- scrollUntilVisible:
+    element: '^IVU: \$115\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^IVU: \$115\.00$'
+- scrollUntilVisible:
+    element: '^Nómina: \$0\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Nómina: \$0\.00$'
+- takeScreenshot: manual-reserves
+- scrollUntilVisible:
+    element: '^Depósitos netos registrados: \$965\.00$'
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Depósitos netos registrados: \$965\.00$'
+- scrollUntilVisible:
+    element: '^Ventas brutas: \$1,000\.00 · Comisiones: \$100\.00 · Devoluciones: \$50\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Ventas brutas: \$1,000\.00 · Comisiones: \$100\.00 · Devoluciones: \$50\.00$'
+- scrollUntilVisible:
+    element: '^IVU registrado en cobros: \$115\.00[.].*$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^IVU registrado en cobros: \$115\.00[.].*$'
+- scrollUntilVisible:
+    element: '^Cobros con desglose pendiente: 0[.].*$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Cobros con desglose pendiente: 0[.].*$'
+- scrollUntilVisible:
+    element: '^Gastos completos registrados: \$0\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Gastos completos registrados: \$0\.00$'
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible: Abrir Mi dinero
+    timeout: 60000
+- tapOn: Abrir Mi dinero
+- retry:
+    maxRetries: 2
+    commands:
+    - tapOn: Negocio.*
+    - scrollUntilVisible:
+        element: 'Movimientos y recibos: Titular FICTICIO comercial'
+        direction: DOWN
+        centerElement: true
+        timeout: 60000
+    - runFlow:
+        when:
+          platform: iOS
+        commands:
+        - swipe:
+            start: 5%,70%
+            end: 5%,55%
+            duration: 600
+        - waitForAnimationToEnd:
+            timeout: 5000
+    - tapOn: 'Movimientos y recibos: Titular FICTICIO comercial'
+    - extendedWaitUntil:
+        visible: Movimientos de Negocio
+        timeout: 60000
+- scrollUntilVisible:
+    element: '^Depósitos netos registrados: \$965\.00$'
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Depósitos netos registrados: \$965\.00$'
+- scrollUntilVisible:
+    element: '^Ventas brutas: \$1,000\.00 · Comisiones: \$100\.00 · Devoluciones: \$50\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Ventas brutas: \$1,000\.00 · Comisiones: \$100\.00 · Devoluciones: \$50\.00$'
+- scrollUntilVisible:
+    element: '^IVU registrado en cobros: \$115\.00[.].*$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^IVU registrado en cobros: \$115\.00[.].*$'
+- scrollUntilVisible:
+    element: '^Cobros con desglose pendiente: 0[.].*$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Cobros con desglose pendiente: 0[.].*$'
+- scrollUntilVisible:
+    element: '^Gastos completos registrados: \$0\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Gastos completos registrados: \$0\.00$'
+- takeScreenshot: income-reopened
+- scrollUntilVisible:
+    element: '^Contribuciones: \$100\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Contribuciones: \$100\.00$'
+- scrollUntilVisible:
+    element: '^IVU: \$115\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^IVU: \$115\.00$'
+- scrollUntilVisible:
+    element: '^Nómina: \$0\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Nómina: \$0\.00$'
+- takeScreenshot: reserves-reopened
+- scrollUntilVisible:
+    element: ^COBRO-FICTICIO-965$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: ^COBRO-FICTICIO-965$
+- scrollUntilVisible:
+    element: ^DESGLOSE-FICTICIO-CONFIRMADO$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: ^DESGLOSE-FICTICIO-CONFIRMADO$
+- scrollUntilVisible:
+    element: '^Proyecto FICTICIO uno: \$600\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Proyecto FICTICIO uno: \$600\.00$'
+- scrollUntilVisible:
+    element: '^Proyecto FICTICIO dos: \$365\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Proyecto FICTICIO dos: \$365\.00$'
+- takeScreenshot: income-allocations-reopened
