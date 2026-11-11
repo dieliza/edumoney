@@ -1,0 +1,16 @@
+#!/bin/bash
+# Only for the receipt-labels visual check. Do not run driver self-test suites.
+set -euo pipefail
+if [ "${1:-}" != "test-without-building" ]; then
+  exec /usr/bin/xcodebuild "$@"
+fi
+: "${EDUMONEY_IOS_DRIVER_MARKER:?This wrapper requires a disposable CI launch marker}"
+# A retry must be explicitly scheduled and counted, never started invisibly here.
+if ! (set -o noclobber; : > "$EDUMONEY_IOS_DRIVER_MARKER") 2>/dev/null; then
+  echo 'EduMoney: the single XCTest driver launch budget is exhausted.' >&2
+  exit 78
+fi
+printf '%s\n' 'EduMoney: running only the XCTest HTTP driver, once; no driver self-tests.'
+exec /usr/bin/xcodebuild "$@" \
+  '-only-testing:maestro-driver-iosUITests/maestro_driver_iosUITests/testHttpServer' \
+  -test-iterations 1

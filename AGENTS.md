@@ -43,3 +43,8 @@ Docs: https://docs.expo.dev/eas/index.md
 ## Límite de pruebas solicitado por el usuario
 
 No ejecutar más de 100 casos de prueba en un bloque de trabajo, contando repeticiones y CI. Seleccionar pruebas relevantes y llevar su cuenta. No lanzar `npm run check` ni `npm test` sin filtros: la suite completa supera ese límite. TypeScript y ESLint siguen siendo verificaciones requeridas. Para nómina, usar `npm test -- tests/business-payroll.test.ts` y reservar presupuesto para los recorridos móviles y correcciones.
+
+
+### Comprobación visual de etiquetas de recibos
+
+Para el bloque `receipt-labels`, el usuario amplió el máximo a **10 casos en total**, incluidas repeticiones y comprobaciones del controlador. No repetir las tres pruebas de código aprobadas previamente. Ejecutar solo el escenario `receipt-labels`; no lanzar suites generales. El controlador iOS se limita a `testHttpServer` y una invocación por trabajo. Registrar el consumo antes de repetir cualquier recorrido.
