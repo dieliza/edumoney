@@ -19,3 +19,10 @@ El selector XCTest se basa en el objetivo `maestro-driver-iosUITests` y clase/m�
 Compilaciones y recorridos iniciados; no se declaran aprobados hasta comprobar capturas y resultado. [Registro y presupuesto](evidence/receipt-status-visual/execution.json).
 
 La comprobación se realiza en emulador/simulador, con datos ficticios introducidos por interfaz. No sustituye revisión en teléfonos físicos. No se cambian importes, códigos documentales persistidos ni reglas contributivas.
+
+
+### Seguimiento de arranque iOS
+
+La ejecución [42948943240](https://github.com/dieliza/edumoney/actions/runs/42948943240) compiló ambas aplicaciones. El trabajo iOS se detuvo al iniciar Xcode porque `-test-iterations 1` no es válido: Xcode exige más de una iteración cuando se usa esa opción. No comenzó ningún caso XCTest ni el recorrido de la aplicación. Se cuenta conservadoramente como un intento fallido adicional.
+
+Se elimina esa opción y se conserva el filtro `only-testing` y el marcador de una sola invocación. El reintento [42951147933](https://github.com/dieliza/edumoney/actions/runs/42951147933) reutiliza la aplicación actual compilada en esa misma ejecución; no reutiliza el binario histórico anterior a la corrección de etiquetas. Android sigue en su primer recorrido. Presupuesto conservador reservado incluyendo los tres casos previos: siete de diez.

@@ -1,0 +1,16 @@
+{
+  "run": 42948943240,
+  "job": 130288423060,
+  "artifact": 13825395668,
+  "result": "passed",
+  "compiledApplicationRun": 42948943240,
+  "applicationCodeCommit": "905d96f",
+  "procedureCommit": "94eb569802bff1860e53d3571ded178b4e335a25",
+  "device": "Pixel 6 emulator, Android API 35",
+  "appCasesExecuted": 1,
+  "observedLabel": "Recibido",
+  "buttonAndDetailAssertions": "passed, including after restart",
+  "visualScreenshotInspected": "android-business-receipt-reopened.png",
+  "network": "wifi and mobile data disabled",
+  "note": "Overall original workflow contains a separate iOS startup failure; Android job succeeded."
+}
