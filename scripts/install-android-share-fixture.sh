@@ -13,7 +13,7 @@ fi
 ANDROID_JAR="$SDK_DIR/platforms/android-35/android.jar"
 BUILD_TOOLS="$(printf '%s\n' "$SDK_DIR"/build-tools/* | sort -V | tail -1)"
 mkdir -p "$QA_BUILD_DIR/classes" "$QA_BUILD_DIR/dex"
-javac -source 8 -target 8 -classpath "$ANDROID_JAR" -d "$QA_BUILD_DIR/classes" "$FIXTURE_DIR/ReceiverActivity.java"
+javac -source 8 -target 8 -classpath "$ANDROID_JAR" -d "$QA_BUILD_DIR/classes" "$FIXTURE_DIR/ReceiverActivity.java" "$FIXTURE_DIR/BusinessValidator.java"
 jar cf "$QA_BUILD_DIR/classes.jar" -C "$QA_BUILD_DIR/classes" .
 "$BUILD_TOOLS/d8" --min-api 23 --lib "$ANDROID_JAR" --output "$QA_BUILD_DIR/dex" "$QA_BUILD_DIR/classes.jar"
 "$BUILD_TOOLS/aapt2" link --manifest "$FIXTURE_DIR/AndroidManifest.xml" -I "$ANDROID_JAR" -o "$QA_BUILD_DIR/unsigned.apk"

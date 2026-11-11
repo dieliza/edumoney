@@ -1,0 +1,444 @@
+appId: com.edumoney.app
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: Abrir Mi dinero
+    timeout: 60000
+- tapOn: Abrir Mi dinero
+- tapOn: Negocio.*
+- scrollUntilVisible:
+    element:
+      id: business-legal-name
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-legal-name
+- inputText: Titular FICTICIO comercial
+- tapOn:
+    id: form-dismiss-keyboard
+- scrollUntilVisible:
+    element: Comerciante individual
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,35%
+        end: 5%,60%
+        duration: 600
+- tapOn: Comerciante individual
+- scrollUntilVisible:
+    element: Añadir proyecto
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Añadir proyecto
+- scrollUntilVisible:
+    element:
+      id: business-project-0
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-project-0
+- inputText: Proyecto FICTICIO uno
+- tapOn:
+    id: form-dismiss-keyboard
+- scrollUntilVisible:
+    element: Añadir proyecto
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Añadir proyecto
+- scrollUntilVisible:
+    element:
+      id: business-project-1
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-project-1
+- inputText: Proyecto FICTICIO dos
+- tapOn:
+    id: form-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: business-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-save
+- scrollUntilVisible:
+    element: 'Movimientos y recibos: Titular FICTICIO comercial'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,70%
+        end: 5%,55%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
+- tapOn: 'Movimientos y recibos: Titular FICTICIO comercial'
+- extendedWaitUntil:
+    visible: Movimientos de Negocio
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: business-expense
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-expense
+- scrollUntilVisible:
+    element:
+      id: business-entry-date
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-entry-date
+- inputText: '2026-11-08'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: business-entry-description
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-entry-description
+- inputText: Gasto mixto FICTICIO movil
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: business-entry-amount
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-entry-amount
+- inputText: '55.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: Transferencia bancaria
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Transferencia bancaria
+- scrollUntilVisible:
+    element: Mixto
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Mixto
+- scrollUntilVisible:
+    element:
+      id: business-percent
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-percent
+- inputText: '37.50'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      text: ^Justificación del porcentaje comercial$
+      below: ^Justificación del porcentaje comercial$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^Justificación del porcentaje comercial$
+    below: ^Justificación del porcentaje comercial$
+- inputText: USO-FICTICIO-37.5-PORCIENTO
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      text: ^Importe para Proyecto FICTICIO uno USD$
+      below: ^Importe para Proyecto FICTICIO uno USD$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^Importe para Proyecto FICTICIO uno USD$
+    below: ^Importe para Proyecto FICTICIO uno USD$
+- inputText: '33.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      text: ^Importe para Proyecto FICTICIO dos USD$
+      below: ^Importe para Proyecto FICTICIO dos USD$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^Importe para Proyecto FICTICIO dos USD$
+    below: ^Importe para Proyecto FICTICIO dos USD$
+- inputText: '22.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: business-entry-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-entry-save
+- scrollUntilVisible:
+    element: 'Revisar clasificación y reparto: Gasto mixto FICTICIO movil'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: 'Revisar clasificación y reparto: Gasto mixto FICTICIO movil'
+- scrollUntilVisible:
+    element:
+      id: business-percent
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-percent
+- eraseText: 5
+- inputText: '50.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      text: ^Justificación del porcentaje comercial$
+      below: ^Justificación del porcentaje comercial$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^Justificación del porcentaje comercial$
+    below: ^Justificación del porcentaje comercial$
+- eraseText: 27
+- inputText: REVISION-FICTICIA-50
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: Requiere corrección
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Requiere corrección
+- scrollUntilVisible:
+    element:
+      text: ^Importe para Proyecto FICTICIO uno USD$
+      below: ^Importe para Proyecto FICTICIO uno USD$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^Importe para Proyecto FICTICIO uno USD$
+    below: ^Importe para Proyecto FICTICIO uno USD$
+- eraseText: 5
+- inputText: '30.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      text: ^Importe para Proyecto FICTICIO dos USD$
+      below: ^Importe para Proyecto FICTICIO dos USD$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^Importe para Proyecto FICTICIO dos USD$
+    below: ^Importe para Proyecto FICTICIO dos USD$
+- eraseText: 5
+- inputText: '25.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      text: ^Motivo de la revisión comercial$
+      below: ^Motivo de la revisión comercial$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^Motivo de la revisión comercial$
+    below: ^Motivo de la revisión comercial$
+- inputText: CAMBIO-FICTICIO-DE-USO-Y-REPARTO
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: business-entry-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-entry-save
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible: Abrir Mi dinero
+    timeout: 60000
+- tapOn: Abrir Mi dinero
+- retry:
+    maxRetries: 2
+    commands:
+    - tapOn: Negocio.*
+    - scrollUntilVisible:
+        element: 'Movimientos y recibos: Titular FICTICIO comercial'
+        direction: DOWN
+        centerElement: true
+        timeout: 60000
+    - runFlow:
+        when:
+          platform: iOS
+        commands:
+        - swipe:
+            start: 5%,70%
+            end: 5%,55%
+            duration: 600
+        - waitForAnimationToEnd:
+            timeout: 5000
+    - tapOn: 'Movimientos y recibos: Titular FICTICIO comercial'
+    - extendedWaitUntil:
+        visible: Movimientos de Negocio
+        timeout: 60000
+- scrollUntilVisible:
+    element: '^Gastos completos registrados: \$55\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Gastos completos registrados: \$55\.00$'
+- scrollUntilVisible:
+    element: '^Parte comercial identificada: \$27\.50 · Gastos de uso pendiente: \$0\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Parte comercial identificada: \$27\.50 · Gastos de uso pendiente: \$0\.00$'
+- scrollUntilVisible:
+    element: ^REVISION-FICTICIA-50$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: ^REVISION-FICTICIA-50$
+- scrollUntilVisible:
+    element: ^Requiere corrección$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: ^Requiere corrección$
+- scrollUntilVisible:
+    element: '^Proyecto FICTICIO uno: \$30\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Proyecto FICTICIO uno: \$30\.00$'
+- scrollUntilVisible:
+    element: '^Proyecto FICTICIO dos: \$25\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Proyecto FICTICIO dos: \$25\.00$'
+- takeScreenshot: commercial-review-reopened
+- scrollUntilVisible:
+    element:
+      id: business-export
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: business-export
+- scrollUntilVisible:
+    element: '^Ingresos netos: \$0\.00 · Gastos registrados: \$55\.00 · Parte comercial identificada: \$27\.50[.]$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Ingresos netos: \$0\.00 · Gastos registrados: \$55\.00 · Parte comercial identificada: \$27\.50[.]$'
+- takeScreenshot: commercial-export-summary
+- scrollUntilVisible:
+    element: Confirmar y compartir expediente JSON
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Confirmar y compartir expediente JSON
+- runFlow:
+    when:
+      platform: Android
+    commands:
+    - runFlow:
+        when:
+          visible: EduMoney QA local
+        commands:
+        - tapOn: EduMoney QA local
+    - extendedWaitUntil:
+        visible: '^JSON comercial local válido: gasto 5500; comercial 2750; dos filas, un movimiento.*'
+        timeout: 60000
+    - takeScreenshot: commercial-received-json
+    - pressKey: BACK
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - extendedWaitUntil:
+        visible: .*EduMoney-Negocio-CPA.*
+        timeout: 60000
+    - takeScreenshot: commercial-share-json
+    - tapOn:
+        point: 5%,20%
+    - assertNotVisible:
+        id: ActivityListView
+- extendedWaitUntil:
+    visible: Confirmar y compartir expediente JSON
+    timeout: 60000
+- scrollUntilVisible:
+    element: Compartir CSV de movimientos
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Compartir CSV de movimientos
+- runFlow:
+    when:
+      platform: Android
+    commands:
+    - runFlow:
+        when:
+          visible: EduMoney QA local
+        commands:
+        - tapOn: EduMoney QA local
+    - extendedWaitUntil:
+        visible: '^CSV comercial local válido: gasto 5500; comercial 2750; dos filas, un movimiento.*'
+        timeout: 60000
+    - takeScreenshot: commercial-received-csv
+    - pressKey: BACK
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - extendedWaitUntil:
+        visible: .*EduMoney-Negocio-CPA.*
+        timeout: 60000
+    - takeScreenshot: commercial-share-csv
+    - tapOn:
+        point: 5%,20%
+    - assertNotVisible:
+        id: ActivityListView
+- extendedWaitUntil:
+    visible: Compartir CSV de movimientos
+    timeout: 60000

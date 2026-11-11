@@ -27,7 +27,9 @@ public final class ReceiverActivity extends Activity {
         }
       }
       String text = new String(bytes.toByteArray(), StandardCharsets.UTF_8);
-      if ("text/csv".equals(getIntent().getType()) && text.startsWith("\"Empleado (código)\"")
+      if ("application/json".equals(getIntent().getType()) || text.contains("\"entryId\",\"movementId\"")) {
+        result = BusinessValidator.validate(getIntent().getType(), text);
+      } else if ("text/csv".equals(getIntent().getType()) && text.startsWith("\"Empleado (código)\"")
           && text.contains("CONCILIACIÓN POR AGENCIA") && !text.contains("Empleado FICTICIO movil")) {
         result = "CSV local válido";
       } else if ("application/pdf".equals(getIntent().getType()) && text.startsWith("%PDF-")) {

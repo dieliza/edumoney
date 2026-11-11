@@ -12,7 +12,7 @@ on:
       scenario:
         description: 'Recorrido completo, entrevista o nómina móvil'
         type: choice
-        options: [full, persistence, payroll, payroll-payments, payroll-policy-export, payroll-export, business-ledger, receipt-labels, business-income-reserves]
+        options: [full, persistence, payroll, payroll-payments, payroll-policy-export, payroll-export, business-ledger, receipt-labels, business-income-reserves, business-review-export]
         default: full
       artifact_run:
         description: 'Opcional: repetir pruebas con los paquetes de una ejecución anterior, sin recompilar'
@@ -49,7 +49,7 @@ jobs:
       - run: npm ci
       - run: npm run lint && npm run typecheck
       - run: npm test
-        if: inputs.scenario != 'payroll' && inputs.scenario != 'payroll-payments' && inputs.scenario != 'payroll-policy-export' && inputs.scenario != 'payroll-export' && inputs.scenario != 'business-ledger' && inputs.scenario != 'receipt-labels' && inputs.scenario != 'business-income-reserves'
+        if: inputs.scenario != 'payroll' && inputs.scenario != 'payroll-payments' && inputs.scenario != 'payroll-policy-export' && inputs.scenario != 'payroll-export' && inputs.scenario != 'business-ledger' && inputs.scenario != 'receipt-labels' && inputs.scenario != 'business-income-reserves' && inputs.scenario != 'business-review-export'
       - run: npx expo prebuild --no-install
         env:
           CI: 1
@@ -97,11 +97,11 @@ jobs:
           disable-animations: true
           script: |
             adb install android/app/build/outputs/apk/release/app-release.apk
-            if [ "${{ inputs.scenario }}" = "payroll-policy-export" ] || [ "${{ inputs.scenario }}" = "payroll-export" ]; then bash scripts/install-android-share-fixture.sh; fi
+            if [ "${{ inputs.scenario }}" = "payroll-policy-export" ] || [ "${{ inputs.scenario }}" = "payroll-export" ] || [ "${{ inputs.scenario }}" = "business-review-export" ]; then bash scripts/install-android-share-fixture.sh; fi
             adb shell svc wifi disable
             adb shell svc data disable
             rm -rf native-results
-            maestro test --test-output-dir native-results "${{ inputs.scenario == 'business-income-reserves' && '.maestro/business-income-reserves.yaml' || inputs.scenario == 'receipt-labels' && '.maestro/business-ledger.yaml' || inputs.scenario == 'business-ledger' && '.maestro/business-ledger.yaml' || inputs.scenario == 'payroll-export' && '.maestro/business-payroll-export.yaml' || inputs.scenario == 'payroll-policy-export' && '.maestro/business-payroll-policy-export.yaml' || inputs.scenario == 'payroll-payments' && '.maestro/business-payroll-payments.yaml' || inputs.scenario == 'payroll' && '.maestro/business-payroll.yaml' || '.maestro/planilla.yaml' }}"
+            maestro test --test-output-dir native-results "${{ inputs.scenario == 'business-review-export' && '.maestro/business-review-export.yaml' || inputs.scenario == 'business-income-reserves' && '.maestro/business-income-reserves.yaml' || inputs.scenario == 'receipt-labels' && '.maestro/business-ledger.yaml' || inputs.scenario == 'business-ledger' && '.maestro/business-ledger.yaml' || inputs.scenario == 'payroll-export' && '.maestro/business-payroll-export.yaml' || inputs.scenario == 'payroll-policy-export' && '.maestro/business-payroll-policy-export.yaml' || inputs.scenario == 'payroll-payments' && '.maestro/business-payroll-payments.yaml' || inputs.scenario == 'payroll' && '.maestro/business-payroll.yaml' || '.maestro/planilla.yaml' }}"
             adb shell dumpsys meminfo com.edumoney.app > native-results/android-memory.txt
             adb shell am force-stop com.edumoney.app
             adb shell am start -W com.edumoney.app/.MainActivity > native-results/android-startup.txt
@@ -191,6 +191,11 @@ jobs:
           if [ "${{ inputs.scenario }}" = "business-income-reserves" ]; then
             TEST_FLOW=.maestro/business-income-reserves.yaml
             export EDUMONEY_IOS_DRIVER_MARKER="$RUNNER_TEMP/income-reserves-driver-started"
+            export PATH="$PWD/scripts/limited-ios-driver:$PATH"
+          fi
+          if [ "${{ inputs.scenario }}" = "business-review-export" ]; then
+            TEST_FLOW=.maestro/business-review-export.yaml
+            export EDUMONEY_IOS_DRIVER_MARKER="$RUNNER_TEMP/business-review-export-driver-started"
             export PATH="$PWD/scripts/limited-ios-driver:$PATH"
           fi
           maestro --device "$DEVICE_ID" test --test-output-dir native-results "$TEST_FLOW" 2>&1 | tee native-results/maestro-planilla.log
