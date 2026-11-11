@@ -6,7 +6,7 @@ Rama `negocio-etiquetas-validacion-visual`, sobre la corrección de etiquetas `9
 
 El usuario amplió el máximo de esta comprobación visual de cinco a **diez casos en total**, incluidas repeticiones y controles del controlador. No se repiten las tres pruebas de código aprobadas en el bloque anterior.
 
-Plan acotado: un recorrido Android y uno iOS con el guion comercial existente, que exige Recibido en botón y ficha. El controlador iOS se filtra a su único servidor XCTest, sin ejecutar la suite interna de clasificación. Se impide una segunda invocación automática del controlador dentro del mismo trabajo. Presupuesto inicial conservador reservado: tres casos. Antes de repetir se revisará el consumo observado.
+Plan acotado: un recorrido Android y uno iOS con el guion comercial existente, que exige Recibido en botón y ficha. El controlador iOS se filtra a su único servidor XCTest, sin ejecutar la suite interna de clasificación. Se impide una segunda invocación automática del controlador dentro del mismo trabajo. Presupuesto inicial reservado: tres casos nuevos. Se cuentan además una vez los tres casos de código ya aprobados: seis casos en total conservador, de un máximo de diez. No se permiten más de siete casos nuevos en este seguimiento. Antes de repetir se revisará el consumo observado.
 
 ## Compilaciones y procedimiento
 

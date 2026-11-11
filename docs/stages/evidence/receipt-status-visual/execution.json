@@ -12,7 +12,38 @@
   "reuseHistoricalApplicationBinaries": false,
   "applicationCommit": "905d96f",
   "procedureCommit": "94eb569",
-  "result": "in progress",
+  "result": "Android active; iOS startup parameter corrected, limited retry planned",
   "run": 42948943240,
-  "runUrl": "https://github.com/dieliza/edumoney/actions/runs/42948943240"
+  "runUrl": "https://github.com/dieliza/edumoney/actions/runs/42948943240",
+  "jobs": {
+    "ios": 130288422842,
+    "android": 130288423060
+  },
+  "observedState": {
+    "ios": "new simulator application compiled; visual job in progress",
+    "android": "compiling new APK"
+  },
+  "ciTypecheck": "passed",
+  "ciLint": "passed",
+  "ciUnitSuite": "skipped",
+  "previouslyPassedCodeCasesCountedOnce": 3,
+  "maximumNewVisualCasesAfterPriorCodeCases": 7,
+  "conservativeReservedTotalIncludingPriorCodeCases": 7,
+  "attempts": [
+    {
+      "run": 42948943240,
+      "platform": "ios",
+      "appCasesStarted": 0,
+      "driverCasesStarted": 0,
+      "failedStartupAttemptsCountedConservatively": 1,
+      "result": "startup failure: Xcode rejects -test-iterations 1; no XCTest or app case started"
+    },
+    {
+      "run": 42948943240,
+      "platform": "android",
+      "result": "in progress",
+      "reservedCases": 1
+    }
+  ],
+  "conservativeSpentIncludingPriorCodeAndFailedStartup": 4
 }

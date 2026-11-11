@@ -1,0 +1,12 @@
+{
+  "run": 42948943240,
+  "job": 130288422842,
+  "artifact": 13825027103,
+  "observedError": "xcodebuild: error: Must specify -test-iterations with more than 1 iteration.",
+  "appCasesStarted": 0,
+  "driverCasesStarted": 0,
+  "countedConservativelyAsAttempt": 1,
+  "correction": "Remove invalid iteration flag; retain only-testing and single-launch marker. Default XCTest execution is once.",
+  "applicationCompiled": true,
+  "applicationChangesRequired": false
+}

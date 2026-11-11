@@ -12,5 +12,4 @@ if ! (set -o noclobber; : > "$EDUMONEY_IOS_DRIVER_MARKER") 2>/dev/null; then
 fi
 printf '%s\n' 'EduMoney: running only the XCTest HTTP driver, once; no driver self-tests.'
 exec /usr/bin/xcodebuild "$@" \
-  '-only-testing:maestro-driver-iosUITests/maestro_driver_iosUITests/testHttpServer' \
-  -test-iterations 1
+  '-only-testing:maestro-driver-iosUITests/maestro_driver_iosUITests/testHttpServer'
