@@ -1,0 +1,19 @@
+{
+  "run_id": 42994152113,
+  "procedure_commit": "8b2c119b33dc095261729ee4c7ccb3564e88ddfc",
+  "app_source": "905d96f",
+  "reused_app_run": 42948943240,
+  "cases": {
+    "android_app": 1,
+    "ios_app": 1,
+    "ios_xctest_http_driver": 1,
+    "failed_attempts": 0,
+    "unit_suite": 0
+  },
+  "total_cases": 3,
+  "maximum_cases": 10,
+  "lint": "passed",
+  "typecheck": "passed",
+  "main_modified": false,
+  "published": false
+}

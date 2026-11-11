@@ -1,0 +1,38 @@
+{
+  "run_id": 42994152113,
+  "job_id": 130433936741,
+  "artifact_id": 13844536166,
+  "app_source": "905d96f",
+  "procedure": "8b2c119",
+  "platform": "iOS",
+  "command_statuses": {
+    "COMPLETED": 191
+  },
+  "app_cases": 1,
+  "xctest_cases": 1,
+  "xctest_starts": [
+    "Test Case '-[maestro_driver_iosUITests.maestro_driver_iosUITests testHttpServer]' started."
+  ],
+  "screenshots_reviewed": [
+    "reserves-reopened.png",
+    "income-allocations-reopened.png",
+    "income-breakdown.png"
+  ],
+  "expected": {
+    "net_cents": 96500,
+    "gross_cents": 100000,
+    "commission_cents": 10000,
+    "refund_cents": 5000,
+    "ivu_cents": 11500,
+    "expense_cents": 0,
+    "allocation_cents": [
+      60000,
+      36500
+    ],
+    "reserve_cents": {
+      "tax": 10000,
+      "ivu": 11500,
+      "payroll": 0
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "run_id": 42994152113,
+  "job_id": 130433936408,
+  "artifact_id": 13844031070,
+  "app_source": "905d96f",
+  "procedure": "8b2c119",
+  "platform": "Android",
+  "command_statuses": {
+    "COMPLETED": 183,
+    "SKIPPED": 3
+  },
+  "app_cases": 1,
+  "screenshots_reviewed": [
+    "reserves-reopened.png",
+    "income-reopened.png",
+    "income-allocations-reopened.png"
+  ],
+  "expected": {
+    "net_cents": 96500,
+    "gross_cents": 100000,
+    "commission_cents": 10000,
+    "refund_cents": 5000,
+    "ivu_cents": 11500,
+    "expense_cents": 0,
+    "allocation_cents": [
+      60000,
+      36500
+    ],
+    "reserve_cents": {
+      "tax": 10000,
+      "ivu": 11500,
+      "payroll": 0
+    }
+  }
+}

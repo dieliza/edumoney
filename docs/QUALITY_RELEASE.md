@@ -17,7 +17,7 @@
 4. Arranque, listas grandes, uso prolongado y batería: misma carga inicial, brillo, tamaño de datos y escenario; comparar consumos en reposo y durante OCR/voz/respaldo. No extrapolar del simulador.
 5. Revisar contratos de privacidad de las tiendas, permisos, documentación de recuperación, recursos gráficos oficiales y firma de compilaciones de distribución.
 6. Validar mapa completo del PDF, redondeos oficiales y componentes contributivos que continúan fuera de alcance. La revisión puede registrarla el usuario; no se impone un CPA como bloqueo de cálculo.
-7. Completar los recorridos nativos comerciales restantes (ingresos/desglose, reservas/revisión comercial, imágenes, IVU/contratistas y panel/escenarios) y su revisión física antes de dar por finalizada Negocio. Los formularios de nómina cuentan con seguimiento móvil específico. No publicar ni fusionar main durante estas etapas.
+7. Completar los recorridos nativos comerciales restantes (revisión comercial/exportación, imágenes, IVU/contratistas y panel/escenarios) y su revisión física antes de dar por finalizada Negocio. Los formularios de nómina cuentan con seguimiento móvil específico. No publicar ni fusionar main durante estas etapas.
 
 ## Límites vigentes
 
@@ -33,6 +33,7 @@ No existe radicación automática ni certificación de Hacienda. Las compilacion
 | Exportación de nómina | CSV/PDF Android leídos por receptor local aislado; popovers iOS abiertos/cancelados; seis casos de lógica seleccionados | Destinos reales, impresión y formato de emisión oficial |
 | Recuperación con Negocio y nómina | Prueba integrada de archivo cifrado hacia base SQLite vacía, imagen y relaciones; reapertura y continuación de depósitos | Selección/guardado desde Archivos y recuperación entre teléfonos físicos |
 | Gasto mixto y recibo manual | Reparto y parte comercial por titular/proyecto, recibo y nota exacta tras reiniciar en Android/iOS | Otros flujos comerciales, imagen/cámara, otras etiquetas/casos documentales y pruebas físicas |
+| Ingreso con desglose y reservas manuales | Neto, componentes, reparto y reservas conservados tras reiniciar en Android/iOS; reservas sin gastos adicionales | Revisión/edición comercial, exportación, otros casos y teléfonos físicos |
 | IVU, contratistas y panel comercial | Dominio y almacenamiento implementados; informes propios con alcance y fuentes | Interacción nativa completa y pruebas físicas |
 
 [Pagos móviles](stages/NEGOCIO-05-PAGOS-MOVIL.md) · [Tasas y exportaciones móviles](stages/NEGOCIO-05-TASAS-EXPORTACION-MOVIL.md) · [Recuperación integrada](stages/CIERRE-RESPALDO-NEGOCIO.md).
@@ -42,3 +43,5 @@ Los números de pruebas de los informes históricos corresponden a sus bloques a
 [Gasto mixto y recibo manual — evidencia móvil](stages/NEGOCIO-MOVIMIENTOS-MOVIL.md).
 
 [UI-NEGOCIO-01: Recibido verificado visualmente en nuevas compilaciones Android/iOS](stages/UI-NEGOCIO-01-VISUAL.md).
+
+[Ingresos y reservas manuales — evidencia móvil](stages/NEGOCIO-INGRESOS-RESERVAS-MOVIL.md).
