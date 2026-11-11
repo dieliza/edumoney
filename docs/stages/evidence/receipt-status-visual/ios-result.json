@@ -1,0 +1,22 @@
+{
+  "run": 42951147933,
+  "job": 130295486009,
+  "artifact": 13825308270,
+  "result": "passed",
+  "compiledApplicationRun": 42948943240,
+  "applicationCodeCommit": "905d96f",
+  "procedureCommit": "ead0c005b6082108c0af1625f1c8ff0c74f20266",
+  "device": "iPhone 17 Pro simulator, iOS 26.4",
+  "appCasesExecuted": 1,
+  "driverCasesStarted": 1,
+  "observedLabel": "Recibido",
+  "buttonAndDetailAssertions": "passed, including after restart",
+  "visualScreenshotsInspected": [
+    "ios-business-receipt-linked.png",
+    "ios-business-receipt-reopened.png"
+  ],
+  "encryptedHeader": true,
+  "plainSQLiteRejected": true,
+  "sameDatabaseHashAfterReopen": true,
+  "systemBackupExclusionVerified": true
+}

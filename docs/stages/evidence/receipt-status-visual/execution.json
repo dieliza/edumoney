@@ -3,8 +3,8 @@
   "scope": "New visual verification only; three previously passed code tests are not repeated",
   "plannedAppCases": 2,
   "plannedIOSDriverCases": 1,
-  "casesExecutedConfirmed": 1,
-  "casesReservedForActiveRun": 2,
+  "casesExecutedConfirmed": 3,
+  "casesReservedForActiveRun": 0,
   "unitCasesExecuted": 0,
   "completeSuiteExecuted": false,
   "driverFilter": "maestro-driver-iosUITests/maestro_driver_iosUITests/testHttpServer",
@@ -12,7 +12,7 @@
   "reuseHistoricalApplicationBinaries": false,
   "applicationCommit": "905d96f",
   "procedureCommit": "94eb569",
-  "result": "Android visually confirmed; corrected iOS retry in progress",
+  "result": "completed: Android and iOS visual checks passed; no active runs",
   "run": 42948943240,
   "runUrl": "https://github.com/dieliza/edumoney/actions/runs/42948943240",
   "jobs": {
@@ -20,15 +20,14 @@
     "android": 130288423060
   },
   "observedState": {
-    "ios": "new simulator application compiled; visual job in progress",
-    "android": "passed with new APK; Recibido visually confirmed"
+    "ios": "passed, Recibido visually confirmed; one XCTest server case observed",
+    "android": "passed, Recibido visually confirmed"
   },
   "ciTypecheck": "passed",
   "ciLint": "passed",
   "ciUnitSuite": "skipped",
   "previouslyPassedCodeCasesCountedOnce": 3,
   "maximumNewVisualCasesAfterPriorCodeCases": 7,
-  "conservativeReservedTotalIncludingPriorCodeCases": 7,
   "attempts": [
     {
       "run": 42948943240,
@@ -48,11 +47,16 @@
     {
       "run": 42951147933,
       "platform": "ios",
-      "result": "in progress",
-      "reservedAppCases": 1,
-      "reservedDriverCases": 1,
-      "applicationArtifactSourceRun": 42948943240
+      "result": "passed",
+      "applicationArtifactSourceRun": 42948943240,
+      "appCasesStarted": 1,
+      "appCasesPassed": 1,
+      "driverCasesStarted": 1
     }
   ],
-  "conservativeSpentIncludingPriorCodeAndFailedStartup": 5
+  "conservativeSpentIncludingPriorCodeAndFailedStartup": 7,
+  "newAppCasesExecuted": 2,
+  "newIOSDriverCasesExecuted": 1,
+  "failedStartupAttemptsCountedConservatively": 1,
+  "conservativeTotal": 7
 }

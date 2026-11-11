@@ -17,10 +17,15 @@ El cambio es de presentación. No modifica códigos guardados, referencias, impo
 - Expo SDK 58 consultado y empaquetado local Hermes de iOS y Android aprobado, sin conexión del CLI. Son paquetes JavaScript, no nuevas aplicaciones APK/IPA ni una verificación visual nativa.
 - [Registro de ejecución y huellas de los paquetes](evidence/receipt-status-labels/execution.json). Total de casos ejecutados: 3, inferior al límite de 100.
 
-## Pendiente de verificación nativa
+## Estado al cierre del bloque de código
 
 La corrección está implementada, pero su comprobación visual en una nueva compilación instalada sigue pendiente. Las capturas de los recorridos anteriores muestran `received` y documentan el problema previo; no prueban este texto corregido.
 
 El código de aplicación cambia respecto de `3f03c59`: no reutilizar aquellos binarios mediante `artifact_run` para comprobar las nuevas etiquetas. Se requieren compilaciones que incorporen este cambio. Los recorridos financieros previos conservan su alcance y versión históricos.
 
 [Incidencia y evidencia anterior](../ISSUES.md) · [Calidad y pendientes](../QUALITY_RELEASE.md).
+
+
+## Seguimiento visual completado
+
+Las nuevas compilaciones Android/iOS verificaron Recibido en botón y ficha, también tras reiniciar. [Resultados, capturas y presupuesto final de siete sobre diez](UI-NEGOCIO-01-VISUAL.md). Esta verificación posterior reemplaza el estado pendiente del bloque de código, sin atribuir resultados nuevos a las capturas antiguas.

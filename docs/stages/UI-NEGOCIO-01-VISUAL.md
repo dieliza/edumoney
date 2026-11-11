@@ -1,28 +1,36 @@
-# UI-NEGOCIO-01 — Comprobación visual en nuevas compilaciones
+# UI-NEGOCIO-01 — Comprobación visual completada
 
-Rama `negocio-etiquetas-validacion-visual`, sobre la corrección de etiquetas `905d96f`. No se modifica main ni se publica.
+Rama `negocio-etiquetas-validacion-visual`, sobre la corrección de etiquetas `905d96f`. Android e iOS muestran **Recibido** en el botón y en la ficha del recibo, también después de reiniciar. Las capturas fueron inspeccionadas. No se modifica main ni se publica.
 
-## Presupuesto autorizado
+## Resultados
 
-El usuario amplió el máximo de esta comprobación visual de cinco a **diez casos en total**, incluidas repeticiones y controles del controlador. No se repiten las tres pruebas de código aprobadas en el bloque anterior.
+| Plataforma | Aplicación y recorrido | Resultado |
+| --- | --- | --- |
+| Android, Pixel 6 API 35 emulado | Nueva compilación en [42948943240](https://github.com/dieliza/edumoney/actions/runs/42948943240), job 130288423060 | Aprobado; botón/ficha en español, importe y nota conservados al reiniciar, sin Wi-Fi ni datos |
+| iOS, iPhone 17 Pro con iOS 26.4 simulado | Aplicación nueva compilada en 42948943240, reutilizada en [42951147933](https://github.com/dieliza/edumoney/actions/runs/42951147933), job 130295486009 | Aprobado; botón/ficha en español, reinicio, cifrado y exclusión de respaldo comprobados |
 
-Plan acotado: un recorrido Android y uno iOS con el guion comercial existente, que exige Recibido en botón y ficha. El controlador iOS se filtra a su único servidor XCTest, sin ejecutar la suite interna de clasificación. Se impide una segunda invocación automática del controlador dentro del mismo trabajo. Presupuesto inicial reservado: tres casos nuevos. Se cuentan además una vez los tres casos de código ya aprobados: seis casos en total conservador, de un máximo de diez. No se permiten más de siete casos nuevos en este seguimiento. Antes de repetir se revisará el consumo observado.
+Las aplicaciones incorporan el cambio de etiquetas; no se utilizaron los binarios históricos que mostraban received. El código de aplicación no volvió a cambiar durante este seguimiento. El recorrido creó datos exclusivamente ficticios mediante la interfaz. La comprobación visual concreta corresponde al estado Recibido; las demás etiquetas conservan la implementación compartida documentada en el bloque de código.
 
-## Compilaciones y procedimiento
+## Presupuesto final
 
-Escenario específico `receipt-labels` del workflow registrado: omite `npm test`, mantiene las comprobaciones estáticas existentes y compila paquetes nuevos con el cambio de texto. No se usa `artifact_run` ni binarios históricos que mostraban received. La caché de compilación incorpora el hash del código de aplicación.
+El usuario amplió el límite de cinco a **diez casos**. Se contabilizan conservadoramente:
 
-El selector XCTest se basa en el objetivo `maestro-driver-iosUITests` y clase/método `maestro_driver_iosUITests/testHttpServer`, documentados por el código del controlador. El script exclusivo de CI `scripts/limited-ios-driver/xcodebuild` solo aplica durante ese escenario, delega las demás órdenes a Xcode y permite una sola ejecución del servidor; no se incluye en EduMoney.
+- Tres casos de código anteriores, contados una sola vez y no repetidos.
+- Un recorrido Android nuevo.
+- Un recorrido iOS nuevo.
+- Un caso del servidor XCTest iOS, observado en el registro; las seis pruebas internas de clasificación no se ejecutaron.
+- Un primer arranque iOS fallido, contado como intento adicional aunque no inició XCTest ni el recorrido.
 
-## Estado
+**Total conservador: 7 de 10.** No quedan trabajos activos y no se ejecutan más casos de esta corrección. La suite unitaria completa se omitió; TypeScript y ESLint pasaron en CI.
 
-Compilaciones y recorridos iniciados; no se declaran aprobados hasta comprobar capturas y resultado. [Registro y presupuesto](evidence/receipt-status-visual/execution.json).
+## Diagnóstico del primer arranque
 
-La comprobación se realiza en emulador/simulador, con datos ficticios introducidos por interfaz. No sustituye revisión en teléfonos físicos. No se cambian importes, códigos documentales persistidos ni reglas contributivas.
+El trabajo iOS inicial de 42948943240 terminó al rechazar Xcode la opción `-test-iterations 1`: exige un valor mayor que uno cuando se usa esa opción. No comenzó ningún caso. Se eliminó esa opción y se mantuvieron `only-testing` y el marcador que permite una sola invocación del controlador por trabajo.
 
+El selector `maestro-driver-iosUITests/maestro_driver_iosUITests/testHttpServer` limitó efectivamente el controlador a un caso, verificado en `ios-driver-selection.json`. El script exclusivo de CI delega las demás órdenes a Xcode y no se incluye en EduMoney. El Android de la ejecución original sí aprobó; el fallo global de esa ejecución corresponde al arranque iOS, no a la aplicación Android.
 
-### Seguimiento de arranque iOS
+## Evidencia y límites
 
-La ejecución [42948943240](https://github.com/dieliza/edumoney/actions/runs/42948943240) compiló ambas aplicaciones. El trabajo iOS se detuvo al iniciar Xcode porque `-test-iterations 1` no es válido: Xcode exige más de una iteración cuando se usa esa opción. No comenzó ningún caso XCTest ni el recorrido de la aplicación. Se cuenta conservadoramente como un intento fallido adicional.
+[Capturas, aserciones, resultados y presupuesto](evidence/receipt-status-visual/README.md). Se conservan el importe y la nota del recibo después de reiniciar. En iOS, la base presenta cabecera cifrada, rechaza lectura SQLite sin clave y conserva el mismo SHA-256 al reabrir; se verificó su exclusión del respaldo automático. No se publican bases ni claves.
 
-Se elimina esa opción y se conserva el filtro `only-testing` y el marcador de una sola invocación. El reintento [42951147933](https://github.com/dieliza/edumoney/actions/runs/42951147933) reutiliza la aplicación actual compilada en esa misma ejecución; no reutiliza el binario histórico anterior a la corrección de etiquetas. Android sigue en su primer recorrido. Presupuesto conservador reservado incluyendo los tres casos previos: siete de diez.
+Es verificación en emulador/simulador, sin certificación en teléfonos físicos ni publicación en tiendas. No se modifican importes, códigos documentales persistidos o reglas contributivas. La incidencia UI-NEGOCIO-01 queda cerrada para este alcance.

@@ -89,4 +89,4 @@ Cierre de calidad: [recuperación integrada de respaldo con Negocio, imagen y n�
 
 Negocio: [gasto mixto por proyecto y recibo manual verificados en Android/iOS](docs/stages/NEGOCIO-MOVIMIENTOS-MOVIL.md).
 
-Negocio: [estados de recibos en español implementados; verificación visual nativa pendiente](docs/stages/UI-NEGOCIO-01.md).
+Negocio: [estados de recibos en español; Recibido verificado en nuevas compilaciones Android/iOS](docs/stages/UI-NEGOCIO-01-VISUAL.md).

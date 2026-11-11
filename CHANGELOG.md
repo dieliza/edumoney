@@ -255,3 +255,10 @@
 - Se mantienen códigos persistidos y vínculos. Guion móvil actualizado para exigir Recibido en ficha y botón; ejecución de esas aserciones pendiente de nueva compilación.
 - Tres casos existentes seleccionados aprobados, TypeScript/ESLint aprobados y empaquetado JavaScript iOS/Android aprobado. Sin nuevas pruebas nativas ni suite completa. [Informe](docs/stages/UI-NEGOCIO-01.md).
 - Sin cambios en main ni publicación.
+
+### Etiquetas — cierre visual en nuevas aplicaciones
+
+- Android e iOS verifican Recibido en botón y ficha después de reiniciar; capturas inspeccionadas y cifrado/reapertura iOS comprobados.
+- Nuevas aplicaciones compiladas con el código corregido. Primer arranque iOS fallido por una opción de Xcode corregido sin repetir el Android aprobado.
+- Controlador iOS limitado efectivamente a un caso XCTest, sin las seis pruebas internas. Total conservador 7 de 10, contando las tres pruebas de código previas y el arranque fallido. Sin suite completa ni nuevas pruebas al finalizar. [Informe y capturas](docs/stages/UI-NEGOCIO-01-VISUAL.md).
+- UI-NEGOCIO-01 cerrada para simuladores; sin cambios en main ni publicación.
