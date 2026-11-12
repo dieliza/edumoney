@@ -27,9 +27,9 @@ export function IconBadge({ icon, tone = 'mint', size = 48 }: { icon: IconName; 
   </View>;
 }
 /** Acceso del panel: el mismo control visual para registros reales y demostraciones. */
-export function DashboardAction({ title, icon, tone = 'mint', onPress, testID }: { title: string; icon: IconName; tone?: 'mint' | 'blue' | 'coral' | 'violet'; onPress(): void; testID?: string }) {
+export function DashboardAction({ title, icon, tone = 'mint', onPress, testID, accessibilityLabel }: { title: string; accessibilityLabel?: string; icon: IconName; tone?: 'mint' | 'blue' | 'coral' | 'violet'; onPress(): void; testID?: string }) {
   const { colors } = useTheme();
-  return <Pressable testID={testID} accessibilityRole="button" accessibilityLabel={title} onPress={onPress} style={({ pressed }) => ({ flexBasis: '46%', flexGrow: 1, minHeight: 110, padding: 16, gap: 8, alignItems: 'center', justifyContent: 'center', borderRadius: 18, borderWidth: 1, borderColor: colors.line, backgroundColor: colors[tone], opacity: pressed ? 0.7 : 1 })}>
+  return <Pressable testID={testID} accessibilityRole="button" accessibilityLabel={accessibilityLabel ?? title} onPress={onPress} style={({ pressed }) => ({ flexBasis: '46%', flexGrow: 1, minHeight: 110, padding: 16, gap: 8, alignItems: 'center', justifyContent: 'center', borderRadius: 18, borderWidth: 1, borderColor: colors.line, backgroundColor: colors[tone], opacity: pressed ? 0.7 : 1 })}>
     <IconBadge icon={icon} tone={tone} size={42}/><Body style={{ fontSize: 14, fontWeight: '700', textAlign: 'center' }}>{title}</Body>
   </Pressable>;
 }

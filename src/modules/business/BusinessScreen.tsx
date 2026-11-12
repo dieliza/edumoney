@@ -1,6 +1,7 @@
+import { View } from 'react-native';
 import { useCallback,useEffect,useState } from 'react';
 import { router,useIsFocused } from 'expo-router';
-import { ActionButton,Body,Card,Screen } from '../../ui/components';
+import { ActionButton,Body,Card,DashboardAction,IconBadge,Screen } from '../../ui/components';
 import { ErrorNotice } from '../money/fields';
 import { getMoneyStore } from '../money/localStore';
 import { userMessage } from '../../core/errors';
@@ -23,17 +24,19 @@ export default function BusinessScreen() {
   {!store?<Card><Body>Abriendo perfiles locales…</Body></Card>:editing?<HolderForm key={editing} store={store} version={holder?.version??0} initial={holder?{holder,dbas:data.dbas.filter(d=>d.holderId===holder.id),projects:data.projects.filter(p=>p.holderId===holder.id)}:undefined} cancel={()=>setEditing(null)} done={async()=>{await load();setEditing(null);setNotice('Perfil comercial guardado localmente.');}}/>:<ActionButton title="Añadir titular" testID="business-create" onPress={()=>{setNotice('');setEditing('new');}}/>}
   {!data.holders.length?<Card><Body>No hay titulares guardados. No se crean perfiles de ejemplo automáticamente.</Body></Card>:null}
   {data.holders.map(h=><Card key={h.id}>
-   <Body style={{fontWeight:'700',fontSize:20}}>{h.legalName}</Body>
+   <View style={{flexDirection:'row',alignItems:'center',gap:12}}><IconBadge icon="briefcase"/><Body style={{fontWeight:'700',fontSize:20,flex:1}}>{h.legalName}</Body></View>
    <Body>{legalForms.find(([v])=>v===h.legalForm)?.[1]} · {h.municipality||'Municipio pendiente'}</Body>
    {h.legalForm==='llc'?<Body>Constitución: {h.llcJurisdiction} · Miembros: {h.llcMembers==='one'?'uno':h.llcMembers==='multiple'?'varios':'pendiente'}</Body>:null}
    <Body>Puerto Rico: {classificationLabels[h.prClassification]}</Body><Body>Federal: {classificationLabels[h.federalClassification]}</Body>
    <Body>DBA: {data.dbas.filter(d=>d.holderId===h.id).map(d=>d.name).join(', ')||'Sin registrar'}</Body>
    {data.projects.filter(p=>p.holderId===h.id).map(p=><Body key={p.id}>Proyecto: {p.name} · {p.dbaId?data.dbas.find(d=>d.id===p.dbaId)?.name:'Directamente con el titular'}</Body>)}
    <ActionButton title={`Abrir perfil: ${h.legalName}`} secondary onPress={()=>{setNotice('');setEditing(h.id);}}/>
-   <ActionButton title={`Movimientos y recibos: ${h.legalName}`} onPress={()=>router.push({pathname:'/business-ledger',params:{holderId:h.id}})}/>
-   <ActionButton title={`IVU y contratistas: ${h.legalName}`} secondary onPress={()=>router.push({pathname:'/business-obligations',params:{holderId:h.id}})}/>
-   <ActionButton title={`Panel y escenarios: ${h.legalName}`} secondary onPress={()=>router.push({pathname:'/business-planning',params:{holderId:h.id}})}/>
-   <ActionButton title={`Nómina: ${h.legalName}`} secondary onPress={()=>router.push({pathname:'/business-payroll',params:{holderId:h.id}})}/>
+   <View style={{flexDirection:'row',flexWrap:'wrap',gap:12}}>
+    <DashboardAction title="Movimientos y recibos" accessibilityLabel={`Movimientos y recibos: ${h.legalName}`} icon="receipt" onPress={()=>router.push({pathname:'/business-ledger',params:{holderId:h.id}})}/>
+    <DashboardAction title="IVU y contratistas" accessibilityLabel={`IVU y contratistas: ${h.legalName}`} icon="document-text" tone="blue" onPress={()=>router.push({pathname:'/business-obligations',params:{holderId:h.id}})}/>
+    <DashboardAction title="Panel y escenarios" accessibilityLabel={`Panel y escenarios: ${h.legalName}`} icon="stats-chart" tone="violet" onPress={()=>router.push({pathname:'/business-planning',params:{holderId:h.id}})}/>
+    <DashboardAction title="Nómina" accessibilityLabel={`Nómina: ${h.legalName}`} icon="people" tone="coral" onPress={()=>router.push({pathname:'/business-payroll',params:{holderId:h.id}})}/>
+   </View>
   </Card>)}
  </Screen>;
 }

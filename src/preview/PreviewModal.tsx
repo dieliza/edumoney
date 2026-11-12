@@ -1,9 +1,12 @@
+import { useState } from 'react';
+import { Choices } from '../modules/money/fields';
 import { fixed } from '../design/tokens';
 import { Modal, ScrollView, View } from 'react-native';
 import { useTheme } from '../design/ThemeProvider';
 import { ActionButton, Body, Card, IconBadge } from '../ui/components';
 export function PreviewModal({ title, close }: { title: string | null; close(): void }) {
   const { colors } = useTheme();
+  const [method, setMethod] = useState('cash');
   return <Modal visible={title !== null} transparent animationType="none" onRequestClose={close}>
     <View style={{ flex: 1, backgroundColor: fixed.previewBackdrop, padding: 24, justifyContent: 'center' }}>
       <ScrollView tabIndex={0} style={{ maxHeight: '90%', width: '100%', maxWidth: 480, alignSelf: 'center', borderRadius: 24 }}>
@@ -12,6 +15,7 @@ export function PreviewModal({ title, close }: { title: string | null; close(): 
         <Body style={{ fontSize: 23, fontWeight: '700' }}>{title}</Body>
         <Body>Estás explorando una demostración de EduMoney. Las cantidades son ficticias y no se guardarán movimientos.</Body>
         <View style={{ backgroundColor: colors.mint, padding: 14, borderRadius: 14 }}><Body style={{ fontSize: 14 }}>Por ahora puedes explorar las pantallas y elegir tu tema favorito.</Body></View>
+        {title === 'Registrar gasto' ? <Choices label="Método de pago de ejemplo" value={method} options={[["cash","Efectivo"],["check","Cheque"],["debit","Tarjeta de débito"],["credit","Tarjeta de crédito"],["transfer","Transferencia"]]} onChange={setMethod}/> : null}
         <ActionButton title="Seguir explorando" onPress={close} />
       </Card>
       </ScrollView>

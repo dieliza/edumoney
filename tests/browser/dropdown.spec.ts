@@ -1,0 +1,27 @@
+import { expect, test } from '@playwright/test';
+import { mkdirSync } from 'node:fs';
+import { AxeBuilder } from '@axe-core/playwright';
+test('selector compacto abre, elige y conserva el valor al cerrar sin cambiar', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.getByTestId('enter-demo').click();
+  await page.getByRole('button', { name: 'Registrar gasto', exact: true }).click();
+  await expect(page.getByRole('radio', { name: 'Cheque', exact: true })).not.toBeVisible();
+  await page.getByRole('button', { name: 'Método de pago de ejemplo: Efectivo', exact: true }).click();
+  await page.getByRole('radio', { name: 'Cheque', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Método de pago de ejemplo: Cheque', exact: true })).toBeVisible();
+  await expect(page.getByRole('radio', { name: 'Cheque', exact: true })).not.toBeVisible();
+  await page.getByRole('button', { name: 'Método de pago de ejemplo: Cheque', exact: true }).click();
+  await expect(page.getByRole('radio', { name: 'Cheque', exact: true })).toHaveAttribute('aria-checked', 'true');
+  mkdirSync('docs/stages/evidence/layers/web', { recursive: true });
+  await page.screenshot({ path: 'docs/stages/evidence/layers/web/selector-abierto.png' });
+  const result = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
+  expect(result.violations.map(v => v.id)).toEqual([]);
+  await page.getByRole('button', { name: 'Cerrar opciones de Método de pago de ejemplo', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Método de pago de ejemplo: Cheque', exact: true })).toBeVisible();
+  await page.screenshot({ path: 'docs/stages/evidence/layers/web/selector-cerrado.png' });
+  await page.getByRole('button', { name: 'Seguir explorando', exact: true }).click();
+  await page.getByText('Así se distribuyen tus gastos', { exact: true }).scrollIntoViewIfNeeded();
+  await page.getByText('Otros', { exact: true }).scrollIntoViewIfNeeded();
+  await page.screenshot({ path: 'docs/stages/evidence/layers/web/grafica-circular.png' });
+});

@@ -35,6 +35,14 @@ appId: com.edumoney.app
 - tapOn: Registrar gasto
 - assertVisible: Ocultar teclado del formulario
 - scrollUntilVisible:
+    element: 'Método de pago:.*'
+    direction: DOWN
+    centerElement: true
+- tapOn: 'Método de pago:.*'
+- tapOn: Cheque
+- assertVisible: 'Método de pago: Cheque'
+- takeScreenshot: design-expense-dropdown
+- scrollUntilVisible:
     element: Cerrar ficha
     direction: DOWN
 - tapOn: Cerrar ficha

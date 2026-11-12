@@ -2,7 +2,8 @@ import { fixed } from '../../design/tokens';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import Svg, { Circle } from 'react-native-svg';
+import { ExpenseDonut } from '../../ui/ExpenseDonut';
+import { parseAmount } from '../../core/money';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '../../design/ThemeProvider';
 import { ActionButton, Body, Card, DashboardAction, IconBadge, Screen, SectionHeading, ui } from '../../ui/components';
@@ -42,17 +43,8 @@ export default function Money() {
       </View>)}</Card>
       <SectionHeading title="Así se distribuyen tus gastos" />
       <Card>
-        <View style={{ height: 210, alignItems: 'center', justifyContent: 'center' }} accessible accessibilityLabel="Ejemplo de gastos: 1,954 dólares con 68 centavos. Distribución detallada a continuación.">
-          <Svg width={210} height={210} viewBox="0 0 210 210" aria-hidden>
-            {expenses.map((expense, index) => {
-              const circumference = 2 * Math.PI * 80;
-              const offset = expenses.slice(0, index).reduce((sum, item) => sum + item.percent, 0);
-              return <Circle key={expense.name} cx={105} cy={105} r={80} fill="none" stroke={expense.color} strokeWidth={26} strokeDasharray={`${circumference * expense.percent / 100} ${circumference}`} strokeDashoffset={-circumference * offset / 100} rotation={-90} origin="105,105" />;
-            })}
-          </Svg>
-          <View pointerEvents="none" style={{ position: 'absolute', alignItems: 'center' }}><Body muted style={ui.small}>Gastos de ejemplo</Body><Body style={{ fontSize: 23, fontWeight: '800' }}>$1,954.68</Body></View>
-        </View>
-        {expenses.map(expense => <View key={expense.name} style={ui.between}><View style={[ui.row, { flex: 1 }]}><View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: expense.color }} /><Body style={{ fontSize: 14, flex: 1 }}>{expense.name}</Body></View><Body muted style={{ fontSize: 13 }}>{expense.percent}%</Body><Body style={{ fontSize: 14, fontWeight: '600', minWidth: 75, textAlign: 'right' }}>{expense.amount}</Body></View>)}
+        <ExpenseDonut total={195468} items={expenses.map(item => ({ id: item.name, name: item.name, spent: parseAmount(item.amount.replace('$', '')) }))}/>
+
       </Card>
       <ActionButton secondary title="Para mi contable" icon="document-text-outline" onPress={() => setDetail('Para mi contable')} />
     </> : segment === 'Transacciones' ? <Card><Body style={ui.heading}>Movimientos de ejemplo</Body>

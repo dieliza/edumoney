@@ -5,7 +5,7 @@ import { router, useIsFocused } from 'expo-router';
 import { refreshBills } from '../bills/runtime';
 import { billStatus, outstanding } from '../bills/domain';
 import type { Bill } from '../bills/types';
-import Svg, { Circle } from 'react-native-svg';
+import { ExpenseDonut } from '../../ui/ExpenseDonut';
 import { useTheme } from '../../design/ThemeProvider';
 import { fixed } from '../../design/tokens';
 import { newId } from '../../core/id';
@@ -95,7 +95,7 @@ export default function LedgerScreen() {
     return <Screen title="Mi dinero" demo={false} subtitle="¡Hola! Aquí tienes tu resumen de hoy.">
   <ErrorNotice message={error}/>{notice ? <Card><Body>{notice}</Body></Card> : null}
   {!store ? <ActivityIndicator color={colors.accent} accessibilityLabel="Cargando registros cifrados"/> : <>
-   <Choices label="Vista de Mi dinero" value={segment} options={[['summary', 'Resumen'], ['history', 'Historial'], ['categories', 'Categorías']]} onChange={setSegment}/>
+   <Choices presentation="tabs" label="Vista de Mi dinero" value={segment} options={[['summary', 'Resumen'], ['history', 'Historial'], ['categories', 'Categorías']]} onChange={setSegment}/>
 
    {segment !== 'summary' ? <View style={{ gap: 12 }}><ActionButton title="Añadir ingreso" icon="add-circle-outline" onPress={() => setForm({ kind: 'income' })}/><ActionButton title="Registrar gasto" icon="receipt-outline" onPress={() => setForm({ kind: 'expense' })}/><ActionButton title="Registrar transferencia, préstamo o pago" secondary onPress={() => setForm({ kind: 'transfer' })}/></View> : null}
    {segment !== 'history' ? <SectionHeading title={month === localToday().slice(0, 7) ? 'Este mes' : month} action={showMonth ? 'Cerrar' : 'Cambiar mes'} onPress={() => setShowMonth(!showMonth)}/> : null}
@@ -123,7 +123,7 @@ export default function LedgerScreen() {
     </Card>
     <Card style={{ backgroundColor: colors.mint }}><View style={ui.row}><IconBadge icon="document-text"/><View style={{ flex: 1 }}><Body style={{ fontWeight: '700' }}>Para mi contable</Body><Body muted style={ui.small}>Marca y organiza tus gastos para revisión.</Body></View></View><ActionButton title="Abrir Para mi contable" testID="open-tax" secondary onPress={() => router.push('/tax')}/></Card>
     <SectionHeading title="Distribución de gastos"/>
-    <Distribution summary={summary}/>
+    <Distribution summary={summary} onSelect={id => { setFilterCategory(id === 'uncategorized' ? 'none' : id); setFilterKind('expense'); setFilterMethod('all'); setLimit(50); setDeleted('active'); setQuery(''); setFrom(`${month}-01`); setTo(`${month}-31`.replace(/31$/, String(new Date(Number(month.slice(0,4)), Number(month.slice(5,7)), 0).getDate()))); setSegment('history'); }}/>
     <ActionButton title="Ver todas las transacciones" secondary onPress={() => setSegment('history')}/>
     <ActionButton title="Registrar transferencia, préstamo o pago" secondary onPress={() => setForm({ kind: 'transfer' })}/>
     <ActionButton title={showCalculation ? 'Ocultar detalle del disponible' : 'Cómo se calcula el disponible'} secondary onPress={() => setShowCalculation(!showCalculation)}/>
@@ -175,22 +175,21 @@ export default function LedgerScreen() {
   </>}
  </Screen>;
 }
-function Distribution({ summary, budget = false }: {
+function Distribution({ summary, budget = false, onSelect }: {
     summary: ReturnType<typeof monthlySummary>;
     budget?: boolean;
+    onSelect?(id: string): void;
 }) {
     const { colors } = useTheme();
     const items = summary.distribution.filter(c => budget ? c.budget !== null || c.spent > 0 : c.spent > 0);
-    return <Card>{!items.length ? <Body>{budget ? 'Define un presupuesto para comparar tus gastos.' : 'Aún no hay gastos registrados en este mes.'}</Body> : null}
-  {!budget && summary.expenses > 0 ? <View accessible accessibilityLabel={`Gastos del mes: ${formatMoney(summary.expenses)}. Desglose a continuación.`} style={{ alignItems: 'center', justifyContent: 'center' }}><Svg width={190} height={190} viewBox="0 0 190 190" aria-hidden>
-   {items.map((item, index) => { const c = 2 * Math.PI * 70; const previous = items.slice(0, index).reduce((n, x) => n + BigInt(x.spent), 0n); return <Circle key={item.id} cx={95} cy={95} r={70} fill="none" stroke={[fixed.iconMint, fixed.iconBlue, fixed.iconCoral, fixed.iconViolet][index % 4]} strokeWidth={24} strokeDasharray={`${c * Number(BigInt(item.spent) * 10000n / BigInt(summary.expenses)) / 10000} ${c}`} strokeDashoffset={-c * Number(previous * 10000n / BigInt(summary.expenses)) / 10000} rotation={-90} origin="95,95"/>; })}
-  </Svg><View pointerEvents="none" style={{ position: 'absolute', alignItems: 'center' }}><Body muted style={ui.small}>Gastos</Body><Body style={{ fontWeight: '800', fontSize: 20 }}>{formatMoney(summary.expenses)}</Body></View></View> : null}
-  {items.map(item => {
+    return <Card>{budget && !items.length ? <Body>{budget ? 'Define un presupuesto para comparar tus gastos.' : 'Aún no hay gastos registrados en este mes.'}</Body> : null}
+  {!budget ? <ExpenseDonut items={items} total={summary.expenses} onSelect={onSelect}/> : null}
+  {budget ? items.map(item => {
             const pct = item.budget && item.budget > 0 ? Number(BigInt(item.spent) * 100n / BigInt(item.budget)) : 0;
             return <View key={item.id} style={{ gap: 8 }}><View style={ui.between}><Body style={{ flex: 1, fontWeight: '600' }}>{item.name}</Body><Body>{formatMoney(item.spent)}</Body></View>
    {budget ? <><Body muted>{item.budget === null ? 'Sin presupuesto definido' : `Presupuesto: ${formatMoney(item.budget)} · ${formatMoney(item.budget - item.spent)} restante`}</Body>{item.budget !== null ? <><View accessible accessibilityLabel={item.budget === 0 ? 'Presupuesto cero' : `${pct}% del presupuesto utilizado`} style={{ height: 10, borderRadius: 8, backgroundColor: colors.progressTrack, overflow: 'hidden' }}><View style={{ height: 10, width: `${Math.min(100, pct)}%`, backgroundColor: item.spent > item.budget ? fixed.expense : colors.primary }}/></View><Body muted>{item.budget === 0 ? (item.spent ? 'Hay gastos con presupuesto cero.' : 'Presupuesto cero, sin gastos.') : `${pct}% utilizado`}{item.spent > item.budget ? ' · Supera lo presupuestado' : ''}</Body></> : null}</> : <Body muted>{summary.expenses ? Number(BigInt(item.spent) * 10000n / BigInt(summary.expenses)) / 100 : 0}% del gasto mensual</Body>}
   </View>;
-        })}
+        }) : null}
  </Card>;
 }
 function CategoryForm({ initial, store, saved, close }: {

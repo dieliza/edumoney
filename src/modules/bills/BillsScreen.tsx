@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, AppState, Pressable, View } from 'react-native';
 import { router, useIsFocused } from 'expo-router';
 import { userMessage } from '../../core/errors';
-import { ActionButton, Body, Card, Screen, SectionHeading } from '../../ui/components';
+import { ActionButton, Body, Card, IconBadge, Screen, SectionHeading } from '../../ui/components';
 import { useTheme } from '../../design/ThemeProvider';
 import { formatMoney, localToday, validMonth } from '../money/domain';
 import { Choices, ErrorNotice, Field, Sheet } from '../money/fields';
@@ -28,11 +28,12 @@ export default function BillsScreen(){
  const rows=data.bills.filter(b=>tab==='paid'?!b.voidedAt && outstanding(b)===0:tab==='calendar'?validMonth(month)&&b.dueDate.startsWith(month):showVoided?!!b.voidedAt:!b.voidedAt&&outstanding(b)>0);
  const pendingGeneration=data.series.some(s=>s.active && s.nextDate<=(today>'9999-10-01'?'9999-12-31':shiftDays(today,90)));
  function open(b:Bill){setDetailId(b.id);setReason('');setRevisions([]);setError('');}
- function row(b:Bill){return <Pressable key={b.id} accessibilityRole="button" accessibilityLabel={`Factura ${b.provider}, ${billStatus(b,today)}, ${b.dueDate}, Importe: ${formatMoney(b.amountCents)}, Pendiente: ${formatMoney(outstanding(b))}`} onPress={()=>open(b)}><Card><Body style={{fontWeight:'700'}}>{b.provider}</Body><Body>{b.dueDate} · {billStatus(b,today)}</Body><Body>Importe: {formatMoney(b.amountCents)} · Pendiente: {formatMoney(outstanding(b))}</Body>{b.paidCents>0?<Body muted>Pagado: {formatMoney(b.paidCents)}</Body>:null}{b.seriesId?<Body muted>Factura recurrente · cada vencimiento se paga por separado</Body>:null}</Card></Pressable>;}
+ function row(b:Bill){return <Pressable key={b.id} accessibilityRole="button" accessibilityLabel={`Factura ${b.provider}, ${billStatus(b,today)}, ${b.dueDate}, Importe: ${formatMoney(b.amountCents)}, Pendiente: ${formatMoney(outstanding(b))}`} onPress={()=>open(b)}><Card><View style={{flexDirection:'row',alignItems:'center',gap:12}}><IconBadge icon={outstanding(b)===0?'checkmark-circle':'calendar'} tone={outstanding(b)===0?'mint':'blue'} size={42}/><View style={{flex:1}}><Body style={{fontWeight:'700'}}>{b.provider}</Body><Body muted style={{fontSize:13}}>{b.dueDate} · {billStatus(b,today)}</Body></View><Body style={{fontWeight:'800'}}>{formatMoney(outstanding(b))}</Body></View><Body muted>Importe: {formatMoney(b.amountCents)} · Pagado: {formatMoney(b.paidCents)}</Body>{b.seriesId?<Body muted>Factura recurrente · cada vencimiento se paga por separado</Body>:null}</Card></Pressable>;}
+
  return <Screen title="Mis facturas" demo={false} subtitle="Vencimientos y pagos que tú confirmas.">
   <ActionButton title="Volver a Mi dinero" secondary onPress={()=>router.dismissTo('/money')}/><ErrorNotice message={error}/>{notice?<Card><Body>{notice}</Body></Card>:null}
   <ActionButton title="Añadir factura" testID="add-bill" icon="add-circle-outline" onPress={()=>{setForm(true);setError('');}}/>
-  <Choices label="Vista de facturas" value={tab} options={[[ 'upcoming','Próximas'],['paid','Pagadas'],['calendar','Calendario']]} onChange={v=>{setTab(v);setLimit(50);}}/>
+  <Choices presentation="tabs" label="Vista de facturas" value={tab} options={[[ 'upcoming','Próximas'],['paid','Pagadas'],['calendar','Calendario']]} onChange={v=>{setTab(v);setLimit(50);}}/>
   {!store?<ActivityIndicator color={colors.accent} accessibilityLabel="Cargando facturas"/>:null}
   {tab==='calendar'?<><Field label="Mes del calendario (AAAA-MM)" value={month} onChangeText={setMonth}/><Body muted>Agenda mensual por vencimiento. Incluye facturas pendientes, pagadas y anuladas; un atraso conserva su fecha original.</Body>{!validMonth(month)?<ErrorNotice message="Escribe un mes válido en formato AAAA-MM."/>:null}</>:null}
   {tab==='upcoming'?<><Card><Body>Una factura programada no es un pago. Los atrasos conservan su vencimiento hasta que registres un cambio con motivo.</Body></Card><ActionButton title={showVoided?'Ver facturas pendientes':'Ver historial de anuladas'} secondary onPress={()=>{setShowVoided(!showVoided);setLimit(50);}}/></>:null}

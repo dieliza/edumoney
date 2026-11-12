@@ -1,10 +1,11 @@
+import { useTheme } from '../../design/ThemeProvider';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, AppState, Pressable } from 'react-native';
+import { ActivityIndicator, AppState, Pressable, View } from 'react-native';
 import { router, useIsFocused, useLocalSearchParams } from 'expo-router';
 import { newId } from '../../core/id';
 import { userMessage } from '../../core/errors';
 import { addAmounts } from '../../core/money';
-import { ActionButton, Body, Card, Screen, SectionHeading } from '../../ui/components';
+import { ActionButton, Body, Card, IconBadge, Screen, SectionHeading } from '../../ui/components';
 import { formatMoney, localToday } from '../money/domain';
 import { Choices, ErrorNotice, Field, Sheet } from '../money/fields';
 import { refreshBills } from '../bills/runtime';
@@ -19,6 +20,7 @@ import type { DebtStore } from './store';
 import { debtLabels, type Debt, type DebtPayment, type DebtSnapshot } from './types';
 const empty:DebtSnapshot={debts:[],payments:[],events:[],plans:[],movements:[],bills:[]};
 export default function DebtsScreen(){
+ const {colors}=useTheme();
  const focused=useIsFocused();const params=useLocalSearchParams<{debtId?:string;billId?:string}>();const handled=useRef('');
  const [store,setStore]=useState<DebtStore|null>(null);const [data,setData]=useState(empty);const [tab,setTab]=useState('debts');const [archived,setArchived]=useState(false);
  const [error,setError]=useState('');const [notice,setNotice]=useState('');const [busy,setBusy]=useState(false);const [form,setForm]=useState<Debt|true|null>(null);
@@ -39,14 +41,14 @@ export default function DebtsScreen(){
  async function action(task:()=>Promise<unknown>,message:string){if(busy)return;setBusy(true);setError('');try{await task();const warning=await refreshed();setNotice([message,warning].filter(Boolean).join(' '));}catch(e){setError(userMessage(e));}finally{setBusy(false);}}
  const summary=useMemo(()=>{try{const active=data.debts.filter(d=>!d.archived);return {total:addAmounts(...active.map(d=>d.balanceCents)),minimum:addAmounts(...active.map(d=>minimumRemaining(d)).filter(v=>v!==null)),unknown:active.filter(d=>d.balanceCents>0&&(d.minimumCents===null||!d.dueDate)).length,error:''};}catch{return {total:null,minimum:null,unknown:0,error:'El total excede el rango monetario. Revisa los saldos.'};}},[data.debts]);
  const detail=data.debts.find(d=>d.id===detailId);const today=localToday();const active=data.debts.filter(d=>!d.archived&&d.balanceCents>0);const plan=data.plans[0];
- function row(d:Debt){return <Pressable key={d.id} accessibilityRole="button" accessibilityLabel={`Deuda ${d.name}, saldo ${formatMoney(d.balanceCents)}, mínimo ${d.minimumCents===null?'desconocido':formatMoney(d.minimumCents)}, vencimiento ${d.dueDate??'desconocido'}`} onPress={()=>{setDetailId(d.id);setReason('');setError('');}}><Card><Body style={{fontWeight:'700'}}>{d.name} · {debtLabels[d.kind]}</Body><Body>Saldo registrado: {formatMoney(d.balanceCents)}</Body><Body>APR base: {d.annualRateBps===null?'Sin confirmar':`${(d.annualRateBps/100).toFixed(2)}%`} · Mínimo: {d.minimumCents===null?'Sin confirmar':formatMoney(d.minimumCents)}</Body><Body>Vencimiento: {d.dueDate??'Sin confirmar'}</Body>{debtWarnings(d,today).map(message=><Body key={message} muted>{message}</Body>)}</Card></Pressable>;}
+ function row(d:Debt){return <Pressable key={d.id} accessibilityRole="button" accessibilityLabel={`Deuda ${d.name}, saldo ${formatMoney(d.balanceCents)}, mínimo ${d.minimumCents===null?'desconocido':formatMoney(d.minimumCents)}, vencimiento ${d.dueDate??'desconocido'}`} onPress={()=>{setDetailId(d.id);setReason('');setError('');}}><Card><View style={{flexDirection:'row',alignItems:'center',gap:12}}><IconBadge icon="card" tone="coral"/><View style={{flex:1}}><Body style={{fontWeight:'800'}}>{d.name}</Body><Body muted>{debtLabels[d.kind]}</Body></View></View><Body>Saldo registrado: {formatMoney(d.balanceCents)}</Body><Body>APR base: {d.annualRateBps===null?'Sin confirmar':`${(d.annualRateBps/100).toFixed(2)}%`} · Mínimo: {d.minimumCents===null?'Sin confirmar':formatMoney(d.minimumCents)}</Body><Body>Vencimiento: {d.dueDate??'Sin confirmar'}</Body>{debtWarnings(d,today).map(message=><Body key={message} muted>{message}</Body>)}</Card></Pressable>;}
  return <Screen title="Ordenar mis pagos" demo={false} subtitle="Deudas registradas y alternativas para organizarlas.">
   <ActionButton title="Volver a Mi dinero" secondary onPress={()=>router.dismissTo('/money')}/><ErrorNotice message={error}/>{notice?<Card><Body>{notice}</Body></Card>:null}
   <ActionButton title="Añadir deuda" testID="add-debt" onPress={()=>setForm(true)}/>
-  <Choices label="Vista de deudas" value={tab} options={[[ 'debts','Deudas'],['calendar','Calendario de pagos'],['simulator','Simulador'],['plan','Plan de 30 días']]} onChange={setTab}/>
+  <Choices presentation="tabs" label="Vista de deudas" value={tab} options={[[ 'debts','Deudas'],['calendar','Calendario de pagos'],['simulator','Simulador'],['plan','Plan de 30 días']]} onChange={setTab}/>
   {!store?<ActivityIndicator accessibilityLabel="Cargando deudas cifradas"/>:null}
   {tab==='debts'?<>
-   <Card><Body style={{fontWeight:'700'}}>Total de deudas registradas</Body><Body style={{fontSize:30,lineHeight:40,fontWeight:'800'}}>{summary.total===null?'Revisar importes':formatMoney(summary.total)}</Body><Body>Mínimos pendientes conocidos del vencimiento actual: {summary.minimum===null?'Revisar importes':formatMoney(summary.minimum)}</Body>{summary.unknown?<Body>{summary.unknown} deuda(s) necesitan mínimo o vencimiento; el total de mínimos puede estar incompleto.</Body>:null}<Body muted>No es una consulta a tu entidad. Incluye el último saldo base que confirmaste y los pagos que indicaste que lo reducen. Las fechas no avanzan automáticamente.</Body><ErrorNotice message={summary.error}/></Card>
+   <Card style={{backgroundColor:colors.mint}}><Body style={{fontWeight:'700'}}>Total de deudas registradas</Body><Body style={{fontSize:30,lineHeight:40,fontWeight:'800'}}>{summary.total===null?'Revisar importes':formatMoney(summary.total)}</Body><Body>Mínimos pendientes conocidos del vencimiento actual: {summary.minimum===null?'Revisar importes':formatMoney(summary.minimum)}</Body>{summary.unknown?<Body>{summary.unknown} deuda(s) necesitan mínimo o vencimiento; el total de mínimos puede estar incompleto.</Body>:null}<Body muted>No es una consulta a tu entidad. Incluye el último saldo base que confirmaste y los pagos que indicaste que lo reducen. Las fechas no avanzan automáticamente.</Body><ErrorNotice message={summary.error}/></Card>
    <ActionButton title={archived?'Ver deudas actuales':'Ver deudas archivadas'} secondary onPress={()=>setArchived(!archived)}/>
    {data.debts.filter(d=>d.archived===archived).map(row)}{!data.debts.filter(d=>d.archived===archived).length?<Card><Body>{archived?'No hay deudas archivadas.':'Aún no has registrado deudas. Puedes dejar vacíos los datos que no conozcas.'}</Body></Card>:null}
   </>:null}
