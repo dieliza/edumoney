@@ -1,0 +1,819 @@
+appId: com.edumoney.app
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    timeout: 60000
+    visible: Abrir Mi dinero|Quickstep isn't responding
+- runFlow:
+    commands:
+    - runFlow:
+        commands:
+        - tapOn: Close app
+        when:
+          visible: Quickstep isn't responding
+    when:
+      platform: Android
+- extendedWaitUntil:
+    timeout: 60000
+    visible: Abrir Mi dinero
+- tapOn: Abrir Mi dinero
+- tapOn: Negocio.*
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element:
+      id: business-legal-name
+- tapOn:
+    id: business-legal-name
+- inputText: Titular FICTICIO panel completo
+- assertVisible: ^Titular FICTICIO panel completo$
+- tapOn:
+    id: form-dismiss-keyboard
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: Comerciante individual
+- runFlow:
+    commands:
+    - swipe:
+        duration: 600
+        end: 5%,60%
+        start: 5%,35%
+    when:
+      platform: iOS
+- tapOn: Comerciante individual
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: Clasificación contributiva de Puerto Rico
+- assertVisible: Clasificación contributiva de Puerto Rico
+- scrollUntilVisible:
+    element: ^Clasificación contributiva de Puerto Rico$
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      text: ^Individuo$
+      below: ^Clasificación contributiva de Puerto Rico$
+      index: 0
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    text: ^Individuo$
+    below: ^Clasificación contributiva de Puerto Rico$
+    index: 0
+- scrollUntilVisible:
+    element: ^Clasificación contributiva federal$
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      text: ^Individuo$
+      below: ^Clasificación contributiva federal$
+      index: 0
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    text: ^Individuo$
+    below: ^Clasificación contributiva federal$
+    index: 0
+- runFlow:
+    commands:
+    - scrollUntilVisible:
+        centerElement: true
+        direction: DOWN
+        element:
+          id: business-save
+        timeout: 60000
+    - tapOn:
+        id: business-save
+    when:
+      platform: Android
+- runFlow:
+    commands:
+    - scrollUntilVisible:
+        centerElement: false
+        direction: DOWN
+        element: Guardar perfil comercial
+        timeout: 60000
+    - waitForAnimationToEnd:
+        timeout: 5000
+    - tapOn: Guardar perfil comercial
+    when:
+      platform: iOS
+- scrollUntilVisible:
+    element: 'Movimientos y recibos: Titular FICTICIO panel completo'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn: 'Movimientos y recibos: Titular FICTICIO panel completo'
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: Ajustar reservas manuales
+    timeout: 60000
+- tapOn: Ajustar reservas manuales
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: ^Contribuciones$
+    timeout: 60000
+- tapOn: ^Contribuciones$
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element:
+      below: ^Cantidad total que mantienes reservada USD$
+      text: ^Cantidad total que mantienes reservada USD$
+    timeout: 60000
+- tapOn:
+    below: ^Cantidad total que mantienes reservada USD$
+    text: ^Cantidad total que mantienes reservada USD$
+- inputText: '200.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element:
+      below: ^Motivo del importe o cambio$
+      text: ^Motivo del importe o cambio$
+    timeout: 60000
+- tapOn:
+    below: ^Motivo del importe o cambio$
+    text: ^Motivo del importe o cambio$
+- inputText: RESERVA-FICTICIA-CONTRIBUCIONES
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: Guardar reserva manual
+    timeout: 60000
+- tapOn: Guardar reserva manual
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: Ajustar reservas manuales
+    timeout: 60000
+- tapOn: Ajustar reservas manuales
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: ^IVU$
+    timeout: 60000
+- tapOn: ^IVU$
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element:
+      below: ^Cantidad total que mantienes reservada USD$
+      text: ^Cantidad total que mantienes reservada USD$
+    timeout: 60000
+- tapOn:
+    below: ^Cantidad total que mantienes reservada USD$
+    text: ^Cantidad total que mantienes reservada USD$
+- inputText: '115.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element:
+      below: ^Motivo del importe o cambio$
+      text: ^Motivo del importe o cambio$
+    timeout: 60000
+- tapOn:
+    below: ^Motivo del importe o cambio$
+    text: ^Motivo del importe o cambio$
+- inputText: RESERVA-FICTICIA-IVU
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: Guardar reserva manual
+    timeout: 60000
+- tapOn: Guardar reserva manual
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: Ajustar reservas manuales
+    timeout: 60000
+- tapOn: Ajustar reservas manuales
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: ^Nómina$
+    timeout: 60000
+- tapOn: ^Nómina$
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element:
+      below: ^Cantidad total que mantienes reservada USD$
+      text: ^Cantidad total que mantienes reservada USD$
+    timeout: 60000
+- tapOn:
+    below: ^Cantidad total que mantienes reservada USD$
+    text: ^Cantidad total que mantienes reservada USD$
+- inputText: '0.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element:
+      below: ^Motivo del importe o cambio$
+      text: ^Motivo del importe o cambio$
+    timeout: 60000
+- tapOn:
+    below: ^Motivo del importe o cambio$
+    text: ^Motivo del importe o cambio$
+- inputText: RESERVA-FICTICIA-NOMINA
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: Guardar reserva manual
+    timeout: 60000
+- tapOn: Guardar reserva manual
+- scrollUntilVisible:
+    centerElement: true
+    direction: UP
+    element: '^Contribuciones: \$200\.00$'
+    timeout: 60000
+- assertVisible: '^Contribuciones: \$200\.00$'
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: '^IVU: \$115\.00$'
+    timeout: 60000
+- assertVisible: '^IVU: \$115\.00$'
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: '^Nómina: \$0\.00$'
+    timeout: 60000
+- assertVisible: '^Nómina: \$0\.00$'
+- takeScreenshot: manual-reserves
+- scrollUntilVisible:
+    element: Volver a Negocio
+    direction: UP
+    centerElement: false
+    timeout: 60000
+- tapOn: Volver a Negocio
+- scrollUntilVisible:
+    element: 'Panel y escenarios: Titular FICTICIO panel completo'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn: 'Panel y escenarios: Titular FICTICIO panel completo'
+- scrollUntilVisible:
+    element: Configurar efectivo y criterio de operaciones
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn: Configurar efectivo y criterio de operaciones
+- scrollUntilVisible:
+    element:
+      id: record-openingCashCents
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-openingCashCents
+- inputText: '1000.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: ^¿Conciliación de efectivo completa para este titular\?$
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      text: ^Sí, confirmado$
+      below: ^¿Conciliación de efectivo completa para este titular\?$
+      index: 0
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    text: ^Sí, confirmado$
+    below: ^¿Conciliación de efectivo completa para este titular\?$
+    index: 0
+- scrollUntilVisible:
+    element: ^¿Todos los registros sin clasificación especial son operaciones\?$
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      text: ^Sí, confirmado$
+      below: ^¿Todos los registros sin clasificación especial son operaciones\?$
+      index: 0
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    text: ^Sí, confirmado$
+    below: ^¿Todos los registros sin clasificación especial son operaciones\?$
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: record-notes
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-notes
+- inputText: EFECTIVO-FICTICIO-SIN-OTROS-MOVIMIENTOS
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-save
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- runFlow:
+    when:
+      platform: Android
+    commands:
+    - tapOn:
+        id: record-save
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - waitForAnimationToEnd:
+        timeout: 5000
+    - tapOn: Guardar registro local
+- scrollUntilVisible:
+    element: Registrar pago estimado
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn: Registrar pago estimado
+- scrollUntilVisible:
+    element:
+      id: record-date
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-date
+- inputText: '2026-10-05'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-amountCents
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-amountCents
+- inputText: '100.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: Pago realizado y confirmado
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn: Pago realizado y confirmado
+- scrollUntilVisible:
+    element: Pago separado, no incluido en otros registros
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn: Pago separado, no incluido en otros registros
+- scrollUntilVisible:
+    element:
+      id: record-reference
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-reference
+- inputText: ESTIMADA-FICTICIA-EXTERNA-100
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-note
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-note
+- inputText: PAGO-YA-REALIZADO-FUERA-DE-EDUMONEY
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-save
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- runFlow:
+    when:
+      platform: Android
+    commands:
+    - tapOn:
+        id: record-save
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - waitForAnimationToEnd:
+        timeout: 5000
+    - tapOn: Guardar registro local
+- scrollUntilVisible:
+    element: Configurar proyección contributiva documentada
+    direction: UP
+    centerElement: false
+    timeout: 60000
+- tapOn: Configurar proyección contributiva documentada
+- scrollUntilVisible:
+    element:
+      id: record-annualTaxCents
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-annualTaxCents
+- inputText: '800.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-taxBasis
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-taxBasis
+- inputText: IMPORTE-FICTICIO-NO-DETERMINACION-LEGAL
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-creditsCents
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-creditsCents
+- inputText: '50.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: ^¿Registraste todas las estimadas del año y alcance\?$
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      text: ^Sí, confirmado$
+      below: ^¿Registraste todas las estimadas del año y alcance\?$
+      index: 0
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    text: ^Sí, confirmado$
+    below: ^¿Registraste todas las estimadas del año y alcance\?$
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: record-taxReserveAllocatedCents
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-taxReserveAllocatedCents
+- inputText: '200.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-save
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- runFlow:
+    when:
+      platform: Android
+    commands:
+    - tapOn:
+        id: record-save
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - waitForAnimationToEnd:
+        timeout: 5000
+    - tapOn: Guardar registro local
+- scrollUntilVisible:
+    element: '^Pagos estimados registrados del alcance: \$100[.]00$'
+    direction: UP
+    centerElement: false
+    timeout: 60000
+- assertVisible: '^Pagos estimados registrados del alcance: \$100[.]00$'
+- scrollUntilVisible:
+    element: '^Saldo proyectado tras estimadas y otros créditos: \$650[.]00$'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: '^Saldo proyectado tras estimadas y otros créditos: \$650[.]00$'
+- scrollUntilVisible:
+    element: '^Faltaría reservar: \$450[.]00$'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: '^Faltaría reservar: \$450[.]00$'
+- takeScreenshot: estimated-paid-summary
+- scrollUntilVisible:
+    element: '^Ganancia / pérdida registrada: \$0[.]00$'
+    direction: UP
+    centerElement: false
+    timeout: 60000
+- assertVisible: '^Ganancia / pérdida registrada: \$0[.]00$'
+- scrollUntilVisible:
+    element: '^Efectivo estimado: \$900[.]00$'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: '^Efectivo estimado: \$900[.]00$'
+- scrollUntilVisible:
+    element: '^Reservas actuales: \$315[.]00$'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: '^Reservas actuales: \$315[.]00$'
+- scrollUntilVisible:
+    element: '^Disponible después de reservas: \$585[.]00$'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: '^Disponible después de reservas: \$585[.]00$'
+- takeScreenshot: cash-reserves-summary
+- scrollUntilVisible:
+    element: ^Comparar escenarios$
+    direction: UP
+    centerElement: false
+    timeout: 60000
+- tapOn: ^Comparar escenarios$
+- scrollUntilVisible:
+    element: Crear escenario
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn: Crear escenario
+- scrollUntilVisible:
+    element:
+      id: record-name
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-name
+- inputText: ESCENARIO-FICTICIO-COMPLETO
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-salesCents
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-salesCents
+- inputText: '500.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-expensesCents
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-expensesCents
+- inputText: '100.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-collectionsCents
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-collectionsCents
+- inputText: '300.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-paymentsCents
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-paymentsCents
+- inputText: '100.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-equipmentCostCents
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-equipmentCostCents
+- inputText: '500.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-equipmentCashCents
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-equipmentCashCents
+- inputText: '200.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-taxChangeCents
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-taxChangeCents
+- inputText: '80.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-assumptions
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-assumptions
+- inputText: SUPUESTOS-FICTICIOS-SIN-MOVER-DINERO
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: Simular con estos datos
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn: Simular con estos datos
+- scrollUntilVisible:
+    element: ^Resultado antes de depreciación \$400[.]00; cambio \$400[.]00[.]$
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: ^Resultado antes de depreciación \$400[.]00; cambio \$400[.]00[.]$
+- scrollUntilVisible:
+    element: ^Efectivo \$900[.]00; cambio \$0[.]00; disponible tras reservas \$585[.]00[.]$
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: ^Efectivo \$900[.]00; cambio \$0[.]00; disponible tras reservas \$585[.]00[.]$
+- scrollUntilVisible:
+    element: ^Saldo contributivo supuesto \$730[.]00; faltaría reservar \$530[.]00[.]
+      Equipo pendiente/financiado del escenario \$300[.]00[.]$
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: ^Saldo contributivo supuesto \$730[.]00; faltaría reservar \$530[.]00[.]
+    Equipo pendiente/financiado del escenario \$300[.]00[.]$
+- takeScreenshot: complete-simulation
+- scrollUntilVisible:
+    element:
+      id: record-save
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- runFlow:
+    when:
+      platform: Android
+    commands:
+    - tapOn:
+        id: record-save
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - waitForAnimationToEnd:
+        timeout: 5000
+    - tapOn: Guardar registro local
+- scrollUntilVisible:
+    element: ^ESCENARIO-FICTICIO-COMPLETO$
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: ^ESCENARIO-FICTICIO-COMPLETO$
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible: Abrir Mi dinero
+    timeout: 60000
+- tapOn: Abrir Mi dinero
+- tapOn: Negocio.*
+- scrollUntilVisible:
+    element: 'Panel y escenarios: Titular FICTICIO panel completo'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn: 'Panel y escenarios: Titular FICTICIO panel completo'
+- scrollUntilVisible:
+    element: '^Efectivo estimado: \$900[.]00$'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: '^Efectivo estimado: \$900[.]00$'
+- scrollUntilVisible:
+    element: '^Reservas actuales: \$315[.]00$'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: '^Reservas actuales: \$315[.]00$'
+- scrollUntilVisible:
+    element: '^Disponible después de reservas: \$585[.]00$'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: '^Disponible después de reservas: \$585[.]00$'
+- scrollUntilVisible:
+    element: '^Pagos estimados registrados del alcance: \$100[.]00$'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: '^Pagos estimados registrados del alcance: \$100[.]00$'
+- scrollUntilVisible:
+    element: '^Saldo proyectado tras estimadas y otros créditos: \$650[.]00$'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: '^Saldo proyectado tras estimadas y otros créditos: \$650[.]00$'
+- scrollUntilVisible:
+    element: '^Faltaría reservar: \$450[.]00$'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: '^Faltaría reservar: \$450[.]00$'
+- takeScreenshot: complete-panel-reopened
+- scrollUntilVisible:
+    element: ^Comparar escenarios$
+    direction: UP
+    centerElement: false
+    timeout: 60000
+- tapOn: ^Comparar escenarios$
+- scrollUntilVisible:
+    element: ^ESCENARIO-FICTICIO-COMPLETO$
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: ^ESCENARIO-FICTICIO-COMPLETO$
+- scrollUntilVisible:
+    element: ^Resultado \$400[.]00 · Cambio \$400[.]00$
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: ^Resultado \$400[.]00 · Cambio \$400[.]00$
+- scrollUntilVisible:
+    element: ^Efectivo \$900[.]00 · Cambio \$0[.]00$
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: ^Efectivo \$900[.]00 · Cambio \$0[.]00$
+- scrollUntilVisible:
+    element: ^Saldo contributivo del supuesto \$730[.]00 · Faltaría reservar \$530[.]00$
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: ^Saldo contributivo del supuesto \$730[.]00 · Faltaría reservar \$530[.]00$
+- scrollUntilVisible:
+    element: ^SUPUESTOS-FICTICIOS-SIN-MOVER-DINERO$
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: ^SUPUESTOS-FICTICIOS-SIN-MOVER-DINERO$
+- takeScreenshot: complete-scenario-reopened

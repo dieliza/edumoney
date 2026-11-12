@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { AxeBuilder } from '@axe-core/playwright';
 import { mkdirSync } from 'node:fs';
-const evidence = 'docs/stages/evidence';
+const evidence = process.env.EDUMONEY_EVIDENCE_DIR ?? 'docs/stages/evidence';
 mkdirSync(evidence, { recursive: true });
 test('navegación, temas, automático y persistencia', async ({ page }) => {
   const errors: string[] = [];

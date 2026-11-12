@@ -1,0 +1,18 @@
+{
+  "run_id": 43150441511,
+  "job_id": 130958070449,
+  "artifact_id": 13914192304,
+  "app_source": "7b918b9",
+  "result": "failed",
+  "command_statuses": {
+    "COMPLETED": 63,
+    "SKIPPED": 2,
+    "FAILED": 1
+  },
+  "driver_starts": [
+    "Test Case '-[maestro_driver_iosUITests.maestro_driver_iosUITests testHttpServer]' started."
+  ],
+  "failure": "Post-save scenario lookup failed; screenshot shows sheet still open without validation error",
+  "fix": "iOS waits for animation and taps Guardar registro local by text; no production data handling changed",
+  "post_flow_crypto_verified": false
+}

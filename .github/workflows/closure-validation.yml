@@ -20,4 +20,14 @@ jobs:
     uses: ./.github/workflows/planilla-validation.yml
     with:
       platform: both
+      scenario: business-planning-complete
+  export-android:
+    uses: ./.github/workflows/planilla-validation.yml
+    with:
+      platform: android
+      scenario: business-review-export
+  partial-ios:
+    uses: ./.github/workflows/planilla-validation.yml
+    with:
+      platform: ios
       scenario: business-planning-partial

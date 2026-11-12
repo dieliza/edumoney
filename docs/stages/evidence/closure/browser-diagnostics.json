@@ -1,0 +1,27 @@
+{
+  "first_attempt": {
+    "cases": 8,
+    "result": "Chromium could not launch under sandbox: setsockopt Operation not permitted"
+  },
+  "second_attempt": {
+    "cases_started": 0,
+    "conservative_attempts": 8,
+    "result": "ENOSPC before worker setup, no usable JSON report"
+  },
+  "development_attempt": {
+    "cases": 8,
+    "passed": 1,
+    "failed": 7,
+    "cause": "Expo development error-toast overlay from react-native-svg transform-origin warning; Axe button-name/nested-interactive refer to that overlay"
+  },
+  "interactive_diagnostics": 3,
+  "production_retry": {
+    "cases": 7,
+    "passed": 7,
+    "failed": 0,
+    "duration_ms": 59425,
+    "package": "production web export from source 7b918b9",
+    "fictitious_preview_only": true
+  },
+  "temporary_cleanup": "Removed extracted historical CI build copies; selected repository evidence retained"
+}

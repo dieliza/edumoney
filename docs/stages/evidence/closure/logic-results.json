@@ -1,0 +1,39 @@
+{
+  "executed_cases": 40,
+  "passed": 40,
+  "sets": [
+    {
+      "files": [
+        "theme",
+        "key",
+        "backup-native",
+        "documents-capture",
+        "documents-voice",
+        "business-recovery"
+      ],
+      "passed": 23
+    },
+    {
+      "file": "business-planning",
+      "selected_cases": 5,
+      "skipped": 36,
+      "passed": 5
+    },
+    {
+      "files": [
+        "bills",
+        "debts",
+        "goals",
+        "learning",
+        "tax",
+        "planilla"
+      ],
+      "selected_cases": 12,
+      "skipped": 102,
+      "passed": 12
+    }
+  ],
+  "lint": "passed",
+  "typecheck": "passed",
+  "general_suite_executed": false
+}

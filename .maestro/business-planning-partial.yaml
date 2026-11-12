@@ -190,8 +190,19 @@ appId: com.edumoney.app
     direction: DOWN
     centerElement: false
     timeout: 60000
-- tapOn:
-    id: record-save
+- runFlow:
+    when:
+      platform: Android
+    commands:
+    - tapOn:
+        id: record-save
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - waitForAnimationToEnd:
+        timeout: 5000
+    - tapOn: Guardar registro local
 - scrollUntilVisible:
     element: ^ESCENARIO-FICTICIO-PARCIAL$
     direction: DOWN

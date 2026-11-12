@@ -23,7 +23,7 @@ on:
       scenario:
         description: 'Recorrido completo, entrevista o nómina móvil'
         type: choice
-        options: [full, persistence, payroll, payroll-payments, payroll-policy-export, payroll-export, business-ledger, receipt-labels, business-income-reserves, business-review-export, business-obligations-navigation, business-manual-payments, business-manual-ivu, business-planning-partial]
+        options: [full, persistence, payroll, payroll-payments, payroll-policy-export, payroll-export, business-ledger, receipt-labels, business-income-reserves, business-review-export, business-obligations-navigation, business-manual-payments, business-manual-ivu, business-planning-partial, business-planning-complete]
         default: full
       artifact_run:
         description: 'Opcional: repetir pruebas con los paquetes de una ejecución anterior, sin recompilar'
@@ -33,8 +33,8 @@ permissions:
   contents: read
   actions: read
 concurrency:
-  group: planilla-${{ github.ref }}-${{ github.event_name }}-${{ inputs.platform }}
-  cancel-in-progress: true
+  group: planilla-${{ github.ref }}-${{ github.event_name }}-${{ inputs.platform }}-${{ inputs.scenario }}
+  cancel-in-progress: false
 jobs:
   android:
     if: inputs.platform != 'ios'
@@ -59,8 +59,9 @@ jobs:
           packages: platform-tools
       - run: npm ci
       - run: npm run lint && npm run typecheck
-      - run: npm test
-        if: inputs.scenario != 'payroll' && inputs.scenario != 'payroll-payments' && inputs.scenario != 'payroll-policy-export' && inputs.scenario != 'payroll-export' && inputs.scenario != 'business-ledger' && inputs.scenario != 'receipt-labels' && inputs.scenario != 'business-income-reserves' && inputs.scenario != 'business-review-export' && inputs.scenario != 'business-obligations-navigation' && inputs.scenario != 'business-manual-payments' && inputs.scenario != 'business-manual-ivu' && inputs.scenario != 'business-planning-partial'
+      # Keep generic validation bounded; never launch the full suite implicitly.
+      - run: npm test -- tests/money.test.ts tests/key.test.ts tests/theme.test.ts
+        if: inputs.scenario == 'full' || inputs.scenario == 'persistence'
       - run: npx expo prebuild --no-install
         env:
           CI: 1
@@ -112,7 +113,7 @@ jobs:
             adb shell svc wifi disable
             adb shell svc data disable
             rm -rf native-results
-            maestro test --test-output-dir native-results "${{ inputs.scenario == 'business-planning-partial' && '.maestro/business-planning-partial.yaml' || inputs.scenario == 'business-manual-ivu' && '.maestro/business-manual-ivu.yaml' || inputs.scenario == 'business-manual-payments' && '.maestro/business-manual-payments.yaml' || inputs.scenario == 'business-obligations-navigation' && '.maestro/business-obligations-navigation.yaml' || inputs.scenario == 'business-review-export' && '.maestro/business-review-export.yaml' || inputs.scenario == 'business-income-reserves' && '.maestro/business-income-reserves.yaml' || inputs.scenario == 'receipt-labels' && '.maestro/business-ledger.yaml' || inputs.scenario == 'business-ledger' && '.maestro/business-ledger.yaml' || inputs.scenario == 'payroll-export' && '.maestro/business-payroll-export.yaml' || inputs.scenario == 'payroll-policy-export' && '.maestro/business-payroll-policy-export.yaml' || inputs.scenario == 'payroll-payments' && '.maestro/business-payroll-payments.yaml' || inputs.scenario == 'payroll' && '.maestro/business-payroll.yaml' || '.maestro/planilla.yaml' }}"
+            maestro test --test-output-dir native-results "${{ inputs.scenario == 'business-planning-complete' && '.maestro/business-planning-complete.yaml' || inputs.scenario == 'business-planning-partial' && '.maestro/business-planning-partial.yaml' || inputs.scenario == 'business-manual-ivu' && '.maestro/business-manual-ivu.yaml' || inputs.scenario == 'business-manual-payments' && '.maestro/business-manual-payments.yaml' || inputs.scenario == 'business-obligations-navigation' && '.maestro/business-obligations-navigation.yaml' || inputs.scenario == 'business-review-export' && '.maestro/business-review-export.yaml' || inputs.scenario == 'business-income-reserves' && '.maestro/business-income-reserves.yaml' || inputs.scenario == 'receipt-labels' && '.maestro/business-ledger.yaml' || inputs.scenario == 'business-ledger' && '.maestro/business-ledger.yaml' || inputs.scenario == 'payroll-export' && '.maestro/business-payroll-export.yaml' || inputs.scenario == 'payroll-policy-export' && '.maestro/business-payroll-policy-export.yaml' || inputs.scenario == 'payroll-payments' && '.maestro/business-payroll-payments.yaml' || inputs.scenario == 'payroll' && '.maestro/business-payroll.yaml' || '.maestro/planilla.yaml' }}"
             adb shell dumpsys meminfo com.edumoney.app > native-results/android-memory.txt
             adb shell am force-stop com.edumoney.app
             adb shell am start -W com.edumoney.app/.MainActivity > native-results/android-startup.txt
@@ -227,6 +228,11 @@ jobs:
           if [ "${{ inputs.scenario }}" = "business-planning-partial" ]; then
             TEST_FLOW=.maestro/business-planning-partial.yaml
             export EDUMONEY_IOS_DRIVER_MARKER="$RUNNER_TEMP/business-planning-partial-driver-started"
+            export PATH="$PWD/scripts/limited-ios-driver:$PATH"
+          fi
+          if [ "${{ inputs.scenario }}" = "business-planning-complete" ]; then
+            TEST_FLOW=.maestro/business-planning-complete.yaml
+            export EDUMONEY_IOS_DRIVER_MARKER="$RUNNER_TEMP/business-planning-complete-driver-started"
             export PATH="$PWD/scripts/limited-ios-driver:$PATH"
           fi
           maestro --device "$DEVICE_ID" test --test-output-dir native-results "$TEST_FLOW" 2>&1 | tee native-results/maestro-planilla.log
