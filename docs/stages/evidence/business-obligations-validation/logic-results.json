@@ -1,0 +1,56 @@
+{
+  "fictitious": true,
+  "evidence_type": "Assertions in selected existing Vitest cases; not production transactions",
+  "unit_cases_executed": 6,
+  "first_selection": {
+    "passed": 5,
+    "skipped": 35
+  },
+  "second_selection": {
+    "passed": 1,
+    "skipped": 39
+  },
+  "repeated_cases": 0,
+  "ordinary_contractor_example": {
+    "payments_cents": [
+      30000,
+      40000
+    ],
+    "expected_withheld_cents": [
+      0,
+      2000
+    ],
+    "grouping": [
+      "legal payer",
+      "legal provider",
+      "calendar year"
+    ],
+    "relief": "none confirmed",
+    "scope": "ordinary PR services"
+  },
+  "sut_records_example": {
+    "merchant_collected_cents": 11500,
+    "marketplace_collected_cents": 11500,
+    "confirmed_state_remittance_cents": 10500,
+    "confirmed_municipal_remittance_cents": 1000,
+    "difference_cents": 0,
+    "filing_status": "pending",
+    "new_financial_movements": 0
+  },
+  "basic_scenario_separate_municipal_procedure": {
+    "base_cents": 100000,
+    "state_cents": 10500,
+    "municipal_cents": 1000,
+    "total_cents": 11500,
+    "municipality": "San Juan"
+  },
+  "other_checks": [
+    "pending remittance not counted as paid",
+    "unknown amount cannot confirm payment",
+    "filing cannot add another payment",
+    "SQLite reopen preserves records and audit",
+    "linking records keeps two financial movements and rejects excess allocations"
+  ],
+  "lint": "passed",
+  "typecheck": "passed"
+}

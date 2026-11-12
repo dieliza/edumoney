@@ -1,0 +1,20 @@
+{
+  "total_cases": 10,
+  "unit_cases_passed": 6,
+  "android_initial_failed_attempt": 1,
+  "android_retry_passed": 1,
+  "ios_app_passed": 1,
+  "ios_xctest_http_driver": 1,
+  "repeated_unit_cases": 0,
+  "runs": {
+    "initial": 43130563956,
+    "android_retry": 43131299392
+  },
+  "app_source": "905d96f",
+  "reused_app_run": 42948943240,
+  "lint": "passed",
+  "typecheck": "passed",
+  "main_modified": false,
+  "published": false,
+  "scope": "Logic/persistence + native navigation/blank forms only. Full financial data entry on mobile remains pending."
+}

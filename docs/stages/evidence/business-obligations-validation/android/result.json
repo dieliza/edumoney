@@ -1,0 +1,21 @@
+{
+  "run_id": 43131299392,
+  "job_id": 130895829167,
+  "artifact_id": 13906010861,
+  "procedure": "48121a6",
+  "app_source": "905d96f",
+  "result": "success",
+  "command_statuses": {
+    "COMPLETED": 62,
+    "SKIPPED": 8
+  },
+  "app_cases": 1,
+  "scope": "Navigation, sources/validity, open/cancel blank forms and holder reopened; no financial form entry",
+  "quickstep_recovery_branch_exercised": false,
+  "quickstep_recovery_note": "Both inner Quickstep conditions skipped on the successful retry; the launcher alert did not recur.",
+  "screenshots_reviewed": [
+    "ivu-blank-offer.png",
+    "contractor-blank-provider.png",
+    "obligations-reopened.png"
+  ]
+}

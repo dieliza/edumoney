@@ -1,0 +1,10 @@
+{
+  "run_id": 43130563956,
+  "job_id": 130893370147,
+  "artifact_id": 13904084154,
+  "app_cases": 1,
+  "result": "failed",
+  "cause": "Quickstep launcher ANR blocked welcome before business navigation",
+  "financial_records_created": false,
+  "recovery": "Guarded Android-only Close app for exact Quickstep dialog, then exact welcome assertion"
+}

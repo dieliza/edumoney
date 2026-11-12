@@ -1,0 +1,22 @@
+{
+  "run_id": 43130563956,
+  "job_id": 130893369891,
+  "artifact_id": 13904488775,
+  "procedure": "33ccc43",
+  "app_source": "905d96f",
+  "result": "success",
+  "command_statuses": {
+    "COMPLETED": 75
+  },
+  "app_cases": 1,
+  "xctest_cases": 1,
+  "xctest_starts": [
+    "Test Case '-[maestro_driver_iosUITests.maestro_driver_iosUITests testHttpServer]' started."
+  ],
+  "scope": "Navigation, sources/validity, open/cancel blank forms, holder reopened; no financial form entry",
+  "screenshots_reviewed": [
+    "ivu-blank-offer.png",
+    "contractor-blank-provider.png",
+    "ivu-source-and-validity.png"
+  ]
+}

@@ -94,3 +94,5 @@ Negocio: [estados de recibos en español; Recibido verificado en nuevas compilac
 [Ingresos y reservas manuales: verificación móvil](docs/stages/NEGOCIO-INGRESOS-RESERVAS-MOVIL.md).
 
 [Revisión comercial y exportación: evidencia móvil y pendiente de automatización](docs/stages/NEGOCIO-REVISION-EXPORTACION-MOVIL.md).
+
+[IVU y contratistas: validación de reglas, persistencia y navegación móvil](docs/stages/NEGOCIO-OBLIGACIONES-VALIDACION.md).
