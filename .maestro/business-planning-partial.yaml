@@ -123,11 +123,14 @@ appId: com.edumoney.app
     element:
       id: record-name
     direction: DOWN
-    centerElement: false
+    centerElement: true
     timeout: 60000
 - tapOn:
     id: record-name
 - inputText: ESCENARIO-FICTICIO-PARCIAL
+- assertVisible:
+    id: record-name
+    text: ^ESCENARIO-FICTICIO-PARCIAL$
 - tapOn:
     id: sheet-dismiss-keyboard
 - scrollUntilVisible:
@@ -156,11 +159,14 @@ appId: com.edumoney.app
     element:
       id: record-assumptions
     direction: DOWN
-    centerElement: false
+    centerElement: true
     timeout: 60000
 - tapOn:
     id: record-assumptions
 - inputText: VENTA-HIPOTETICA-COBRO-Y-TRIBUTACION-PENDIENTES
+- assertVisible:
+    id: record-assumptions
+    text: ^VENTA-HIPOTETICA-COBRO-Y-TRIBUTACION-PENDIENTES$
 - tapOn:
     id: sheet-dismiss-keyboard
 - scrollUntilVisible:
@@ -203,6 +209,18 @@ appId: com.edumoney.app
     - waitForAnimationToEnd:
         timeout: 5000
     - tapOn: Guardar registro local
+- runFlow:
+    when:
+      visible: Cerrar ficha
+    commands:
+    - scrollUntilVisible:
+        element:
+          id: record-name
+        direction: UP
+        centerElement: true
+        timeout: 60000
+    - takeScreenshot: scenario-save-validation-diagnostic
+    - assertNotVisible: Nombra el escenario y explica sus supuestos.
 - scrollUntilVisible:
     element: ^ESCENARIO-FICTICIO-PARCIAL$
     direction: DOWN
