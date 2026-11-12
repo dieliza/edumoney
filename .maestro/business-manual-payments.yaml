@@ -48,14 +48,30 @@ appId: com.edumoney.app
     direction: DOWN
     element: Clasificación contributiva de Puerto Rico
 - assertVisible: Clasificación contributiva de Puerto Rico
-- scrollUntilVisible:
-    centerElement: true
-    direction: DOWN
-    element:
-      id: business-save
-    timeout: 60000
-- tapOn:
-    id: business-save
+- runFlow:
+    when:
+      platform: Android
+    commands:
+    - scrollUntilVisible:
+        centerElement: true
+        direction: DOWN
+        element:
+          id: business-save
+        timeout: 60000
+    - tapOn:
+        id: business-save
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - scrollUntilVisible:
+        element: Guardar perfil comercial
+        direction: DOWN
+        centerElement: false
+        timeout: 60000
+    - waitForAnimationToEnd:
+        timeout: 5000
+    - tapOn: Guardar perfil comercial
 - scrollUntilVisible:
     centerElement: true
     direction: DOWN
