@@ -1,0 +1,280 @@
+appId: com.edumoney.app
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    timeout: 60000
+    visible: Abrir Mi dinero|Quickstep isn't responding
+- runFlow:
+    commands:
+    - runFlow:
+        commands:
+        - tapOn: Close app
+        when:
+          visible: Quickstep isn't responding
+    when:
+      platform: Android
+- extendedWaitUntil:
+    timeout: 60000
+    visible: Abrir Mi dinero
+- tapOn: Abrir Mi dinero
+- tapOn: Negocio.*
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element:
+      id: business-legal-name
+- tapOn:
+    id: business-legal-name
+- inputText: Titular FICTICIO panel incompleto
+- assertVisible: ^Titular FICTICIO panel incompleto$
+- tapOn:
+    id: form-dismiss-keyboard
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: Comerciante individual
+- runFlow:
+    commands:
+    - swipe:
+        duration: 600
+        end: 5%,60%
+        start: 5%,35%
+    when:
+      platform: iOS
+- tapOn: Comerciante individual
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: Clasificación contributiva de Puerto Rico
+- assertVisible: Clasificación contributiva de Puerto Rico
+- runFlow:
+    when:
+      platform: Android
+    commands:
+    - scrollUntilVisible:
+        centerElement: true
+        direction: DOWN
+        element:
+          id: business-save
+        timeout: 60000
+    - tapOn:
+        id: business-save
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - scrollUntilVisible:
+        element: Guardar perfil comercial
+        direction: DOWN
+        centerElement: false
+        timeout: 60000
+    - waitForAnimationToEnd:
+        timeout: 5000
+    - tapOn: Guardar perfil comercial
+- scrollUntilVisible:
+    element: 'Panel y escenarios: Titular FICTICIO panel incompleto'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn: 'Panel y escenarios: Titular FICTICIO panel incompleto'
+- extendedWaitUntil:
+    visible: Panel de Negocio
+    timeout: 60000
+- scrollUntilVisible:
+    element: '^Ganancia / pérdida registrada: \$0[.]00$'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: '^Ganancia / pérdida registrada: \$0[.]00$'
+- scrollUntilVisible:
+    element: '^Efectivo estimado: Pendiente de confirmar$'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: '^Efectivo estimado: Pendiente de confirmar$'
+- scrollUntilVisible:
+    element: '^Reservas actuales: Pendiente de confirmar$'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: '^Reservas actuales: Pendiente de confirmar$'
+- scrollUntilVisible:
+    element: '^Saldo proyectado tras estimadas y otros créditos: Pendiente de confirmar$'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: '^Saldo proyectado tras estimadas y otros créditos: Pendiente de
+    confirmar$'
+- takeScreenshot: panel-unknown-values
+- scrollUntilVisible:
+    element: ^Comparar escenarios$
+    direction: UP
+    centerElement: false
+    timeout: 60000
+- tapOn: ^Comparar escenarios$
+- scrollUntilVisible:
+    element: Crear escenario
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn: Crear escenario
+- scrollUntilVisible:
+    element:
+      id: record-name
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-name
+- inputText: ESCENARIO-FICTICIO-PARCIAL
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-salesCents
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-salesCents
+- inputText: '100.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-expensesCents
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-expensesCents
+- inputText: '0.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-assumptions
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-assumptions
+- inputText: VENTA-HIPOTETICA-COBRO-Y-TRIBUTACION-PENDIENTES
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: Simular con estos datos
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn: Simular con estos datos
+- scrollUntilVisible:
+    element: ^Resultado antes de depreciación \$100[.]00; cambio \$100[.]00[.]$
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: ^Resultado antes de depreciación \$100[.]00; cambio \$100[.]00[.]$
+- scrollUntilVisible:
+    element: ^Efectivo Pendiente de confirmar; cambio Pendiente de confirmar; disponible
+      tras reservas Pendiente de confirmar[.]$
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: ^Efectivo Pendiente de confirmar; cambio Pendiente de confirmar;
+    disponible tras reservas Pendiente de confirmar[.]$
+- takeScreenshot: scenario-partial-simulation
+- scrollUntilVisible:
+    element:
+      id: record-save
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-save
+- scrollUntilVisible:
+    element: ^ESCENARIO-FICTICIO-PARCIAL$
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: ^ESCENARIO-FICTICIO-PARCIAL$
+- scrollUntilVisible:
+    element: ^Resultado \$100[.]00 · Cambio \$100[.]00$
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: ^Resultado \$100[.]00 · Cambio \$100[.]00$
+- takeScreenshot: scenario-saved-partial
+- scrollUntilVisible:
+    element: ^Calendario$
+    direction: UP
+    centerElement: false
+    timeout: 60000
+- tapOn: ^Calendario$
+- scrollUntilVisible:
+    element: '^Estimada: confirmar calendario y régimen$'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: '^Estimada: confirmar calendario y régimen$'
+- takeScreenshot: calendar-regime-pending
+- stopApp: null
+- launchApp: null
+- extendedWaitUntil:
+    visible: Abrir Mi dinero
+    timeout: 60000
+- tapOn: Abrir Mi dinero
+- tapOn: Negocio.*
+- scrollUntilVisible:
+    element: 'Panel y escenarios: Titular FICTICIO panel incompleto'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn: 'Panel y escenarios: Titular FICTICIO panel incompleto'
+- extendedWaitUntil:
+    visible: Panel de Negocio
+    timeout: 60000
+- scrollUntilVisible:
+    element: ^Comparar escenarios$
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn: ^Comparar escenarios$
+- scrollUntilVisible:
+    element: ^ESCENARIO-FICTICIO-PARCIAL$
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: ^ESCENARIO-FICTICIO-PARCIAL$
+- scrollUntilVisible:
+    element: ^Resultado \$100[.]00 · Cambio \$100[.]00$
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: ^Resultado \$100[.]00 · Cambio \$100[.]00$
+- scrollUntilVisible:
+    element: ^VENTA-HIPOTETICA-COBRO-Y-TRIBUTACION-PENDIENTES$
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: ^VENTA-HIPOTETICA-COBRO-Y-TRIBUTACION-PENDIENTES$
+- takeScreenshot: scenario-reopened
+- scrollUntilVisible:
+    element: ^Resultado y efectivo$
+    direction: UP
+    centerElement: false
+    timeout: 60000
+- tapOn: ^Resultado y efectivo$
+- scrollUntilVisible:
+    element: '^Ganancia / pérdida registrada: \$0[.]00$'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: '^Ganancia / pérdida registrada: \$0[.]00$'
+- scrollUntilVisible:
+    element: '^Efectivo estimado: Pendiente de confirmar$'
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- assertVisible: '^Efectivo estimado: Pendiente de confirmar$'
+- takeScreenshot: panel-not-modified-by-scenario

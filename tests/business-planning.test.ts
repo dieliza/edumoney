@@ -2,7 +2,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { mkdtempSync,rmSync,writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { describe,expect,it } from 'vitest';
+import { afterEach,beforeEach,describe,expect,it,vi } from 'vitest';
 import { migrate } from '../src/storage/migrate';
 import { MoneyStore,type SqlDb } from '../src/modules/money/store';
 import { inputAmount } from '../src/modules/money/domain';
@@ -14,6 +14,9 @@ import { panel,calendar,compareScenario } from '../src/modules/business/planning
 import { BackupStore,BACKUP_TABLES_V12 } from '../src/modules/backup/store';
 import type { EntryInput } from '../src/modules/business/ledgerTypes';
 const today=()=> '2026-11-09';
+// Align persisted timestamps with the fixture cutoff, independently of execution day.
+beforeEach(()=>{vi.useFakeTimers({toFake:['Date']});vi.setSystemTime(new Date('2026-11-09T12:00:00.000Z'));});
+afterEach(()=>{vi.useRealTimers();});
 function adapter(db:DatabaseSync):SqlDb{return {execAsync:async s=>{db.exec(s);},runAsync:async(s,...p)=>({changes:Number(db.prepare(s).run(...p).changes)}),getAllAsync:async<T>(s:string,...p:(string|number|null)[])=>db.prepare(s).all(...p) as T[],getFirstAsync:async<T>(s:string,...p:(string|number|null)[])=>db.prepare(s).get(...p) as T??null};}
 async function profile(ledger:MoneyStore,id='h',pr:'individual'|'corporation'|'pending'='individual',version=0){await new BusinessStore(ledger).save({holder:{id,legalName:'Titular ficticio '+id,legalForm:pr==='corporation'?'corporation':'individual',municipality:'Ponce',merchantNumber:'',llcJurisdiction:null,llcMembers:null,prClassification:pr,federalClassification:pr==='corporation'?'corporation':'individual'},dbas:[],projects:[{id:id+'-p',holderId:id,dbaId:null,name:'Proyecto ficticio'}]},version);}
 async function setup(path=':memory:'){const db=new DatabaseSync(path);await migrate(adapter(db));const ledger=new MoneyStore(adapter(db));await profile(ledger);return {db,ledger,store:new PlanningStore(ledger,today),business:new BusinessLedgerStore(ledger,today)};}
