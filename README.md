@@ -96,3 +96,7 @@ Negocio: [estados de recibos en español; Recibido verificado en nuevas compilac
 [Revisión comercial y exportación: evidencia móvil y pendiente de automatización](docs/stages/NEGOCIO-REVISION-EXPORTACION-MOVIL.md).
 
 [IVU y contratistas: validación de reglas, persistencia y navegación móvil](docs/stages/NEGOCIO-OBLIGACIONES-VALIDACION.md).
+
+### Alcance de pagos y cobros
+
+EduMoney registra pagos y cobros realizados fuera de la aplicación. El usuario introduce o confirma fecha, importe y comprobante; los cálculos estimados permanecen separados de los importes realmente pagados, retenidos o depositados. No ejecuta transferencias, cargos, depósitos bancarios ni pagos a empleados, proveedores o Hacienda. No requiere pasarela de pagos ni conectar cuentas bancarias para estos registros.

@@ -1,0 +1,633 @@
+appId: com.edumoney.app
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    timeout: 60000
+    visible: Abrir Mi dinero|Quickstep isn't responding
+- runFlow:
+    commands:
+    - runFlow:
+        commands:
+        - tapOn: Close app
+        when:
+          visible: Quickstep isn't responding
+    when:
+      platform: Android
+- extendedWaitUntil:
+    timeout: 60000
+    visible: Abrir Mi dinero
+- tapOn: Abrir Mi dinero
+- tapOn: Negocio.*
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element:
+      id: business-legal-name
+- tapOn:
+    id: business-legal-name
+- inputText: Titular FICTICIO pagos externos
+- assertVisible: ^Titular FICTICIO pagos externos$
+- tapOn:
+    id: form-dismiss-keyboard
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: Comerciante individual
+- runFlow:
+    commands:
+    - swipe:
+        duration: 600
+        end: 5%,60%
+        start: 5%,35%
+    when:
+      platform: iOS
+- tapOn: Comerciante individual
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: Clasificación contributiva de Puerto Rico
+- assertVisible: Clasificación contributiva de Puerto Rico
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element:
+      id: business-save
+    timeout: 60000
+- tapOn:
+    id: business-save
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: 'IVU y contratistas: Titular FICTICIO pagos externos'
+    timeout: 60000
+- runFlow:
+    commands:
+    - swipe:
+        duration: 600
+        end: 5%,55%
+        start: 5%,70%
+    - waitForAnimationToEnd:
+        timeout: 5000
+    when:
+      platform: iOS
+- tapOn: 'IVU y contratistas: Titular FICTICIO pagos externos'
+- extendedWaitUntil:
+    timeout: 60000
+    visible: IVU y contratistas
+- scrollUntilVisible:
+    element: ^Contratistas$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,35%
+        end: 5%,60%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
+- tapOn: ^Contratistas$
+- scrollUntilVisible:
+    element: Añadir proveedor legal
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Añadir proveedor legal
+- scrollUntilVisible:
+    element:
+      id: record-name
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-name
+- inputText: Proveedor FICTICIO externo
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-reference
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-reference
+- inputText: REF-FICTICIA-EXTERNA-01
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: Individuo residente PR
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Individuo residente PR
+- scrollUntilVisible:
+    element:
+      id: record-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-save
+- scrollUntilVisible:
+    element: ^Proveedor FICTICIO externo$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,35%
+        end: 5%,60%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
+- tapOn: ^Proveedor FICTICIO externo$
+- scrollUntilVisible:
+    element:
+      text: ^Año natural de consulta AAAA$
+      below: ^Año natural de consulta AAAA$
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^Año natural de consulta AAAA$
+    below: ^Año natural de consulta AAAA$
+- inputText: '2026'
+- tapOn:
+    id: form-dismiss-keyboard
+- scrollUntilVisible:
+    element: Simular o registrar pago al contratista
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Simular o registrar pago al contratista
+- scrollUntilVisible:
+    element:
+      id: record-date
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-date
+- inputText: '2026-10-01'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-servicesCents
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-servicesCents
+- inputText: '300.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-ivuCents
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-ivuCents
+- inputText: '0.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-reimbursedCents
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-reimbursedCents
+- inputText: '0.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: Servicio ordinario PR
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Servicio ordinario PR
+- scrollUntilVisible:
+    element: Sin relevo aplicable confirmado
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Sin relevo aplicable confirmado
+- scrollUntilVisible:
+    element:
+      id: record-actualWithheldCents
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-actualWithheldCents
+- inputText: '0.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-actualNetCents
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-actualNetCents
+- inputText: '300.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-note
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-note
+- inputText: PAGO-FICTICIO-EXTERNO-300
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-save
+- scrollUntilVisible:
+    element: '^Servicios registrados: \$300\.00[.] Retención estimada: \$0\.00[.] Retención real: \$0\.00[.]$'
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Servicios registrados: \$300\.00[.] Retención estimada: \$0\.00[.] Retención real: \$0\.00[.]$'
+- scrollUntilVisible:
+    element: Simular o registrar pago al contratista
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,35%
+        end: 5%,60%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
+- tapOn: Simular o registrar pago al contratista
+- scrollUntilVisible:
+    element:
+      id: record-date
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-date
+- inputText: '2026-10-02'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-servicesCents
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-servicesCents
+- inputText: '400.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-ivuCents
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-ivuCents
+- inputText: '0.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-reimbursedCents
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-reimbursedCents
+- inputText: '0.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: Servicio ordinario PR
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Servicio ordinario PR
+- scrollUntilVisible:
+    element: Sin relevo aplicable confirmado
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Sin relevo aplicable confirmado
+- scrollUntilVisible:
+    element: Simular con estos datos
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Simular con estos datos
+- scrollUntilVisible:
+    element: ^Retención del escenario \$20\.00[.] Retención real Pendiente de confirmar[.] Diferencia Pendiente de confirmar[.]$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: ^Retención del escenario \$20\.00[.] Retención real Pendiente de confirmar[.] Diferencia Pendiente de confirmar[.]$
+- takeScreenshot: manual-payment-simulation-not-confirmed
+- scrollUntilVisible:
+    element:
+      id: record-actualWithheldCents
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-actualWithheldCents
+- inputText: '20.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-actualNetCents
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-actualNetCents
+- inputText: '380.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-note
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-note
+- inputText: PAGO-FICTICIO-EXTERNO-400
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-save
+- scrollUntilVisible:
+    element: '^Servicios registrados: \$700\.00[.] Retención estimada: \$20\.00[.] Retención real: \$20\.00[.]$'
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Servicios registrados: \$700\.00[.] Retención estimada: \$20\.00[.] Retención real: \$20\.00[.]$'
+- scrollUntilVisible:
+    element: '^Casos pendientes: 0; pagos registrados: 2[.].*$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Casos pendientes: 0; pagos registrados: 2[.].*$'
+- takeScreenshot: manual-payments-recorded
+- scrollUntilVisible:
+    element: Registrar depósito de retenciones
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Registrar depósito de retenciones
+- scrollUntilVisible:
+    element:
+      id: record-period
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-period
+- inputText: 2026-10
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-amountCents
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-amountCents
+- inputText: '20.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: Pagada, con confirmación
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Pagada, con confirmación
+- scrollUntilVisible:
+    element:
+      id: record-date
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-date
+- inputText: '2026-11-01'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-reference
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-reference
+- inputText: DEPOSITO-FICTICIO-EXTERNO
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-note
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-note
+- inputText: REALIZADO-FUERA-DE-EDUMONEY
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-save
+- scrollUntilVisible:
+    element: ^Confirmado · \$20\.00$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: ^Confirmado · \$20\.00$
+- scrollUntilVisible:
+    element: ^DEPOSITO-FICTICIO-EXTERNO · REALIZADO-FUERA-DE-EDUMONEY$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: ^DEPOSITO-FICTICIO-EXTERNO · REALIZADO-FUERA-DE-EDUMONEY$
+- takeScreenshot: manual-deposit-recorded
+- scrollUntilVisible:
+    element: '^Servicios registrados: \$700\.00[.] Retención estimada: \$20\.00[.] Retención real: \$20\.00[.]$'
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Servicios registrados: \$700\.00[.] Retención estimada: \$20\.00[.] Retención real: \$20\.00[.]$'
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    timeout: 60000
+    visible: Abrir Mi dinero|Quickstep isn't responding
+- runFlow:
+    commands:
+    - runFlow:
+        commands:
+        - tapOn: Close app
+        when:
+          visible: Quickstep isn't responding
+    when:
+      platform: Android
+- extendedWaitUntil:
+    timeout: 60000
+    visible: Abrir Mi dinero
+- tapOn: Abrir Mi dinero
+- tapOn: Negocio.*
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: 'IVU y contratistas: Titular FICTICIO pagos externos'
+    timeout: 60000
+- runFlow:
+    commands:
+    - swipe:
+        duration: 600
+        end: 5%,55%
+        start: 5%,70%
+    - waitForAnimationToEnd:
+        timeout: 5000
+    when:
+      platform: iOS
+- tapOn: 'IVU y contratistas: Titular FICTICIO pagos externos'
+- extendedWaitUntil:
+    timeout: 60000
+    visible: IVU y contratistas
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: ^Contratistas$
+    timeout: 60000
+- runFlow:
+    commands:
+    - swipe:
+        duration: 600
+        end: 5%,60%
+        start: 5%,35%
+    - waitForAnimationToEnd:
+        timeout: 5000
+    when:
+      platform: iOS
+- tapOn: ^Contratistas$
+- scrollUntilVisible:
+    element: ^Proveedor FICTICIO externo$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,35%
+        end: 5%,60%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
+- tapOn: ^Proveedor FICTICIO externo$
+- scrollUntilVisible:
+    element:
+      text: ^Año natural de consulta AAAA$
+      below: ^Año natural de consulta AAAA$
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^Año natural de consulta AAAA$
+    below: ^Año natural de consulta AAAA$
+- inputText: '2026'
+- tapOn:
+    id: form-dismiss-keyboard
+- scrollUntilVisible:
+    element: '^Servicios registrados: \$700\.00[.] Retención estimada: \$20\.00[.] Retención real: \$20\.00[.]$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Servicios registrados: \$700\.00[.] Retención estimada: \$20\.00[.] Retención real: \$20\.00[.]$'
+- scrollUntilVisible:
+    element: '^Casos pendientes: 0; pagos registrados: 2[.].*$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Casos pendientes: 0; pagos registrados: 2[.].*$'
+- takeScreenshot: manual-payments-reopened
+- scrollUntilVisible:
+    element: ^2026-10-01 · Servicios \$300\.00 · Neto real \$300\.00$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: ^2026-10-01 · Servicios \$300\.00 · Neto real \$300\.00$
+- scrollUntilVisible:
+    element: ^2026-10-02 · Servicios \$400\.00 · Neto real \$380\.00$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: ^2026-10-02 · Servicios \$400\.00 · Neto real \$380\.00$
+- scrollUntilVisible:
+    element: ^Retenido realmente \$20\.00 · Simulación actual \$20\.00[.]$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: ^Retenido realmente \$20\.00 · Simulación actual \$20\.00[.]$
+- scrollUntilVisible:
+    element: ^Confirmado · \$20\.00$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: ^Confirmado · \$20\.00$
+- scrollUntilVisible:
+    element: ^DEPOSITO-FICTICIO-EXTERNO · REALIZADO-FUERA-DE-EDUMONEY$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: ^DEPOSITO-FICTICIO-EXTERNO · REALIZADO-FUERA-DE-EDUMONEY$
+- takeScreenshot: manual-deposit-reopened
