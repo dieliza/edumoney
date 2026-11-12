@@ -439,6 +439,8 @@ appId: com.edumoney.app
         point: 5%,20%
     - assertNotVisible:
         id: ActivityListView
-- extendedWaitUntil:
-    visible: Compartir CSV de movimientos
+- scrollUntilVisible:
+    element: Compartir CSV de movimientos
+    direction: DOWN
+    centerElement: true
     timeout: 60000
