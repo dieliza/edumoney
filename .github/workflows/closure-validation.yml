@@ -21,13 +21,16 @@ jobs:
     with:
       platform: both
       scenario: business-planning-complete
+      artifact_suffix: business-planning-complete
   export-android:
     uses: ./.github/workflows/planilla-validation.yml
     with:
       platform: android
       scenario: business-review-export
+      artifact_suffix: business-review-export
   partial-ios:
     uses: ./.github/workflows/planilla-validation.yml
     with:
       platform: ios
       scenario: business-planning-partial
+      artifact_suffix: business-planning-partial

@@ -13,6 +13,9 @@ on:
       artifact_run:
         type: string
         default: ''
+      artifact_suffix:
+        type: string
+        default: ''
   workflow_dispatch:
     inputs:
       platform:
@@ -34,7 +37,8 @@ permissions:
   actions: read
 concurrency:
   group: planilla-${{ github.ref }}-${{ github.event_name }}-${{ inputs.platform }}-${{ inputs.scenario }}
-  cancel-in-progress: false
+  # Only replace a run explicitly identified as invalid; normal pushes never cancel it.
+  cancel-in-progress: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[replace-invalid-ci]') }}
 jobs:
   android:
     if: inputs.platform != 'ios'
@@ -120,7 +124,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: android-etapa-10
+          name: ${{ inputs.artifact_suffix && format('android-{0}', inputs.artifact_suffix) || 'android-etapa-10' }}
           path: |
             android/app/build/outputs/apk/release/*.apk
             native-results/
@@ -241,7 +245,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ios-etapa-10
+          name: ${{ inputs.artifact_suffix && format('ios-{0}', inputs.artifact_suffix) || 'ios-etapa-10' }}
           path: |
             build/Build/Products/Release-iphonesimulator/EduMoney.app
             native-results/
