@@ -1,0 +1,23 @@
+name: EduMoney - Verificación de cierre
+on:
+  push:
+    branches: [cierre-edumoney]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - '.maestro/**'
+      - 'scripts/**'
+      - 'app.json'
+      - 'package*.json'
+      - '.github/workflows/closure-validation.yml'
+      - '.github/workflows/planilla-validation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  mobile:
+    uses: ./.github/workflows/planilla-validation.yml
+    with:
+      platform: both
+      scenario: business-planning-partial

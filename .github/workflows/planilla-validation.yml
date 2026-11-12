@@ -2,6 +2,17 @@ name: Etapa 10 - Cierre, laboratorio y respaldo
 on:
   push:
     branches: [etapa-10-planilla]
+  workflow_call:
+    inputs:
+      platform:
+        type: string
+        default: both
+      scenario:
+        type: string
+        default: persistence
+      artifact_run:
+        type: string
+        default: ''
   workflow_dispatch:
     inputs:
       platform:
