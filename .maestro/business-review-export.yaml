@@ -167,7 +167,7 @@ appId: com.edumoney.app
 - tapOn:
     text: ^Justificación del porcentaje comercial$
     below: ^Justificación del porcentaje comercial$
-- inputText: USO-FICTICIO-37.5-PORCIENTO
+- inputText: INICIAL
 - tapOn:
     id: sheet-dismiss-keyboard
 - scrollUntilVisible:
@@ -232,7 +232,7 @@ appId: com.edumoney.app
 - tapOn:
     text: ^Justificación del porcentaje comercial$
     below: ^Justificación del porcentaje comercial$
-- eraseText: 27
+- eraseText: 7
 - inputText: REVISION-FICTICIA-50
 - tapOn:
     id: sheet-dismiss-keyboard
