@@ -22,6 +22,8 @@ Revisar `QUALITY_RELEASE.md`, completar los datos de contacto de privacidad, com
 
 ## APK interno Android disponible
 
-[Descargar ZIP de prueba](https://github.com/dieliza/edumoney/actions/runs/43157032505/artifacts/13917325324) (retención hasta 2026-11-19). Dentro está `EduMoney-android-arm64-prueba.apk`. Se instala desde un teléfono Android arm64 compatible; no se abre como aplicación de iPhone/iPad. Usa primero datos ficticios. No requiere Metro, cuenta en EduMoney ni Google Play para una instalación interna.
+[Descargar ZIP de prueba](https://github.com/dieliza/edumoney/actions/runs/43191749565/artifacts/13931512804) (retención hasta 2026-11-19). Dentro está `EduMoney-android-arm64-prueba.apk`. Se instala desde un teléfono Android arm64 compatible; no se abre como aplicación de iPhone/iPad. Usa primero datos ficticios. No requiere Metro, cuenta en EduMoney ni Google Play para una instalación interna.
 
 La compilación directa de CI usa el proyecto nativo generado, firma de prueba y `EXPO_PUBLIC_PLANILLA_TESTS=0`. Se verificaron ABI, manifest, JavaScript y huella del archivo. No se afirma ejecución física, estabilidad de la firma para futuras actualizaciones ni preparación para tienda. Las pruebas iOS se realizaron con una aplicación de simulador; la firma física requiere su aprovisionamiento de Apple.
+
+Actualización del logo oficial: [integración, comprobación y APK](stages/LOGO-OFICIAL.md).

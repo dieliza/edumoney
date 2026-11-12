@@ -32,10 +32,12 @@ Los módulos no ejecutan cobros, transferencias, pagos a empleados/proveedores n
 
 Hay compilaciones de emulador Android y simulador iOS, más un APK interno arm64 para probar en un teléfono Android. Para una instalación física iOS se necesitan firma y aprovisionamiento de Apple; Google Play necesita su preparación de cuenta/firma. No hay credenciales de distribución configuradas en este entorno. Preparar perfiles no equivale a generar paquetes físicos firmados.
 
-El logo oficial sigue pendiente: los bocetos compuestos contienen la marca, pero no existe un archivo original separado en el repositorio. No se recreó ni se presenta el nombre en texto como si fuera ese logo.
+El logo oficial fue recibido como archivo PNG e integrado en bienvenida e icono. Se conserva el archivo original completo, sin recortes, filtros ni regeneración. Ver [actualización del logo](stages/LOGO-OFICIAL.md).
 
 Faltan comprobaciones en dispositivos: cámara/modelos de voz, permisos, avisos/calendario, lectores de pantalla, tamaño máximo de letra, batería y respaldo/recuperación entre instalaciones mediante Archivos. No se sustituyen con resultados del simulador o navegador.
 
 La planilla 2026 no reutiliza fórmulas 2025. Los componentes no soportados o desconocidos permanecen pendientes. Los borradores no son emisión oficial ni radicación; no se afirma certificación de Hacienda. Las validaciones de formato y trámites oficiales siguen siendo independientes del uso autónomo de cálculos.
 
-El panel completo y el escenario parcial aprobaron los recorridos seleccionados Android/iOS. La regresión Android cerró el retorno de exportación CSV. Resultados, capturas y conteo conservador de 95 casos/intentos se conservan en [CIERRE-APP.md](stages/CIERRE-APP.md). El [APK interno Android arm64](https://github.com/dieliza/edumoney/actions/runs/43157032505/artifacts/13917325324) compiló correctamente; contiene JavaScript y no requiere Metro. Usar datos ficticios: no se ha ejecutado en un teléfono físico y no es una firma de distribución oficial.
+El panel completo y el escenario parcial aprobaron los recorridos seleccionados Android/iOS. La regresión Android cerró el retorno de exportación CSV. Resultados, capturas y conteo conservador de 95 casos/intentos se conservan en [CIERRE-APP.md](stages/CIERRE-APP.md). El [APK interno Android arm64](https://github.com/dieliza/edumoney/actions/runs/43191749565/artifacts/13931512804) compiló correctamente; contiene JavaScript y no requiere Metro. Usar datos ficticios: no se ha ejecutado en un teléfono físico y no es una firma de distribución oficial.
+
+Actualización del logo oficial: [integración, comprobación y APK](stages/LOGO-OFICIAL.md).

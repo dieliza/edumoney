@@ -16,5 +16,6 @@
   "lint": "passed",
   "typecheck": "passed",
   "native_financial_cases_repeated": 0,
-  "apk_build": "pending"
+  "apk_build": "success",
+  "apk_result": "apk.json"
 }

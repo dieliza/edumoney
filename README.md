@@ -24,7 +24,7 @@ SQLCipher requiere compilación nativa: **Expo Go y la web no son destinos compa
 No se necesita cuenta Expo/EAS para compilar localmente. El modo desarrollo usa Metro; una compilación release no lo necesita.
 
 La Etapa 2 incorpora bienvenida, cuatro pestañas y temas Claro/Oscuro/Automático con ejemplos ficticios.
-La preferencia se guarda localmente. En la Etapa 3, Mi dinero permite registrar ingresos, gastos, transferencias, préstamos y pagos, gestionar categorías y presupuestos y corregir/restaurar movimientos en la base cifrada. El navegador conserva vistas informativas con datos ficticios identificados; los módulos financieros funcionan en la aplicación nativa. El archivo original separado del logo sigue pendiente de integración.
+La preferencia se guarda localmente. En la Etapa 3, Mi dinero permite registrar ingresos, gastos, transferencias, préstamos y pagos, gestionar categorías y presupuestos y corregir/restaurar movimientos en la base cifrada. El navegador conserva vistas informativas con datos ficticios identificados; los módulos financieros funcionan en la aplicación nativa. El logo oficial recibido se integra completo y sin modificar su archivo original.
 
 La Etapa 4 añade facturas, pagos parciales, recurrencias y avisos locales, con acceso desde Mi dinero. [Guía de Mis facturas](docs/USAR_MIS_FACTURAS.md).
 
@@ -111,3 +111,5 @@ EduMoney registra pagos y cobros realizados fuera de la aplicación. El usuario 
 [Panel y escenario parcial: Android verificado, repetición iOS pendiente de autenticación](docs/stages/NEGOCIO-PANEL-ESCENARIOS-MOVIL.md).
 
 [Cierre del panel y exportaciones: resultados finales seleccionados y preparación de entrega](docs/stages/CIERRE-APP.md).
+
+[Logo oficial integrado: archivo original, comprobación visual y APK actualizado](docs/stages/LOGO-OFICIAL.md).

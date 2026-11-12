@@ -1,0 +1,22 @@
+{
+  "run_id": 43191749565,
+  "job_id": 131092535883,
+  "artifact_id": 13931512804,
+  "build_commit": "ae1c3d9",
+  "result": "success",
+  "filename": "EduMoney-android-arm64-prueba.apk",
+  "bytes": 56461653,
+  "sha256": "64b3b885165fd4a5a308610f7ba64041ba50e66bf49c2c5d7068a7ee76a91622",
+  "checksum_matches": true,
+  "abis": [
+    "arm64-v8a"
+  ],
+  "logo_pixels_match_original": true,
+  "logo_asset": "res/Mi.png",
+  "package_note": "Android shortens resource names; pixel comparison used after original-name lookup found no match",
+  "signing_certificate_sha256": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c",
+  "same_signing_certificate_as_previous_apk": true,
+  "download": "https://github.com/dieliza/edumoney/actions/runs/43191749565/artifacts/13931512804",
+  "expires_at": "2026-11-19T09:38:20Z",
+  "physical_device_tested": false
+}

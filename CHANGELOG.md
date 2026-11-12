@@ -272,3 +272,11 @@
 - 40 casos de lógica aprobados; navegador de producción y recorridos finales aprobados. Conteo conservador de cierre: 95 casos/intentos, incluidos fallos, diagnósticos y controladores.
 - Guía de uso, preparación de firma, perfiles EAS y APK interno Android arm64 sin controles sintéticos. No se publicó ni se fusionó main.
 - Logo original separado, identidad/contacto de privacidad, firma iOS física y revisión en dispositivos siguen pendientes de recursos externos.
+
+
+## Logo oficial — 12 de noviembre de 2026
+
+- Archivo original PNG integrado sin cambios en bienvenida e icono; proporciones conservadas en ambos temas.
+- Bienvenida nativa actualizada para describir los módulos operativos.
+- Un recorrido visual aprobado; ESLint/TypeScript aprobados. APK arm64 reconstruido sin controles sintéticos y con la misma firma de prueba anterior.
+- Main intacto; no se publicaron versiones de tienda.

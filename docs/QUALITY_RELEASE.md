@@ -59,3 +59,5 @@ Los números de pruebas de los informes históricos corresponden a sus bloques a
 [Panel y escenario parcial — evidencia Android y limitación de acceso iOS](stages/NEGOCIO-PANEL-ESCENARIOS-MOVIL.md).
 
 [Cierre técnico — resultados seleccionados, capturas y preparación de entrega](stages/CIERRE-APP.md).
+
+[Logo oficial recibido e integrado sin modificar: un recorrido visual aprobado y APK actualizado](stages/LOGO-OFICIAL.md).
