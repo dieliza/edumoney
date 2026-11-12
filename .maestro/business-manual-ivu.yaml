@@ -1,0 +1,644 @@
+appId: com.edumoney.app
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    timeout: 60000
+    visible: Abrir Mi dinero|Quickstep isn't responding
+- runFlow:
+    commands:
+    - runFlow:
+        commands:
+        - tapOn: Close app
+        when:
+          visible: Quickstep isn't responding
+    when:
+      platform: Android
+- extendedWaitUntil:
+    timeout: 60000
+    visible: Abrir Mi dinero
+- tapOn: Abrir Mi dinero
+- tapOn: Negocio.*
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element:
+      id: business-legal-name
+- tapOn:
+    id: business-legal-name
+- inputText: Titular FICTICIO IVU externo
+- assertVisible: ^Titular FICTICIO IVU externo$
+- tapOn:
+    id: form-dismiss-keyboard
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: Comerciante individual
+- runFlow:
+    commands:
+    - swipe:
+        duration: 600
+        end: 5%,60%
+        start: 5%,35%
+    when:
+      platform: iOS
+- tapOn: Comerciante individual
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: Clasificación contributiva de Puerto Rico
+- assertVisible: Clasificación contributiva de Puerto Rico
+- runFlow:
+    commands:
+    - scrollUntilVisible:
+        centerElement: true
+        direction: DOWN
+        element:
+          id: business-save
+        timeout: 60000
+    - tapOn:
+        id: business-save
+    when:
+      platform: Android
+- runFlow:
+    commands:
+    - scrollUntilVisible:
+        centerElement: false
+        direction: DOWN
+        element: Guardar perfil comercial
+        timeout: 60000
+    - waitForAnimationToEnd:
+        timeout: 5000
+    - tapOn: Guardar perfil comercial
+    when:
+      platform: iOS
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: 'IVU y contratistas: Titular FICTICIO IVU externo'
+    timeout: 60000
+- runFlow:
+    commands:
+    - swipe:
+        duration: 600
+        end: 5%,55%
+        start: 5%,70%
+    - waitForAnimationToEnd:
+        timeout: 5000
+    when:
+      platform: iOS
+- tapOn: 'IVU y contratistas: Titular FICTICIO IVU externo'
+- extendedWaitUntil:
+    timeout: 60000
+    visible: IVU y contratistas
+- scrollUntilVisible:
+    element: Añadir oferta de IVU
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Añadir oferta de IVU
+- scrollUntilVisible:
+    element:
+      id: record-name
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-name
+- inputText: OFERTA-FICTICIA-IVU
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: ^Escenario básico 11[.]5% [(]10[.]5% [+] 1%[)]$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: ^Escenario básico 11[.]5% [(]10[.]5% [+] 1%[)]$
+- scrollUntilVisible:
+    element:
+      id: record-validFrom
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-validFrom
+- inputText: '2026-10-01'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-save
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-save
+- scrollUntilVisible:
+    element:
+      text: ^Mes de consulta AAAA-MM$
+      below: ^Mes de consulta AAAA-MM$
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^Mes de consulta AAAA-MM$
+    below: ^Mes de consulta AAAA-MM$
+- inputText: 2026-10
+- tapOn:
+    id: form-dismiss-keyboard
+- scrollUntilVisible:
+    element: 'Simular o registrar IVU: OFERTA-FICTICIA-IVU'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: 'Simular o registrar IVU: OFERTA-FICTICIA-IVU'
+- scrollUntilVisible:
+    element:
+      id: record-date
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-date
+- inputText: '2026-10-01'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-baseCents
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-baseCents
+- inputText: '1000.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: Simular con estos datos
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Simular con estos datos
+- scrollUntilVisible:
+    element: '^Simulación: estatal \$105\.00, municipal \$10\.00, total \$115\.00[.]$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Simulación: estatal \$105\.00, municipal \$10\.00, total \$115\.00[.]$'
+- scrollUntilVisible:
+    element: '^Responsable de cobro y remisión del escenario: pendiente[.]$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Responsable de cobro y remisión del escenario: pendiente[.]$'
+- takeScreenshot: ivu-simulation-classification-pending
+- scrollUntilVisible:
+    element:
+      id: record-collectedCents
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-collectedCents
+- inputText: '115.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-stateCents
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-stateCents
+- inputText: '105.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-municipalCents
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-municipalCents
+- inputText: '10.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: Este titular
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Este titular
+- scrollUntilVisible:
+    element:
+      id: record-reference
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-reference
+- inputText: RECIBO-FICTICIO-EXTERNO
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-note
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-note
+- inputText: COBRO-FICTICIO-FUERA-DE-EDUMONEY
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-save
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-save
+- scrollUntilVisible:
+    element: '^IVU cobrado por el titular: \$115\.00[.] Remitido confirmado: \$0\.00[.]$'
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^IVU cobrado por el titular: \$115\.00[.] Remitido confirmado: \$0\.00[.]$'
+- scrollUntilVisible:
+    element: '^Diferencia entre registros: \$115\.00; no representa deuda contributiva final[.]$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Diferencia entre registros: \$115\.00; no representa deuda contributiva final[.]$'
+- takeScreenshot: ivu-collected-not-remitted
+- scrollUntilVisible:
+    element: Registrar remesa de IVU
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Registrar remesa de IVU
+- scrollUntilVisible:
+    element:
+      id: record-period
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-period
+- inputText: 2026-10
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-amountCents
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-amountCents
+- inputText: '105.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: Pagada, con confirmación
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Pagada, con confirmación
+- scrollUntilVisible:
+    element:
+      id: record-date
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-date
+- inputText: '2026-11-01'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-reference
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-reference
+- inputText: REMESA-ESTATAL-FICTICIA
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-note
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-note
+- inputText: REMITIDO-FUERA-DE-EDUMONEY
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-save
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-save
+- scrollUntilVisible:
+    element: '^IVU cobrado por el titular: \$115\.00[.] Remitido confirmado: \$105\.00[.]$'
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^IVU cobrado por el titular: \$115\.00[.] Remitido confirmado: \$105\.00[.]$'
+- scrollUntilVisible:
+    element: '^Diferencia entre registros: \$10\.00; no representa deuda contributiva final[.]$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Diferencia entre registros: \$10\.00; no representa deuda contributiva final[.]$'
+- takeScreenshot: ivu-state-only
+- scrollUntilVisible:
+    element: Registrar remesa de IVU
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Registrar remesa de IVU
+- scrollUntilVisible:
+    element:
+      id: record-period
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-period
+- inputText: 2026-10
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: ^Municipal$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: ^Municipal$
+- scrollUntilVisible:
+    element:
+      id: record-municipality
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-municipality
+- inputText: Ponce
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-amountCents
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-amountCents
+- inputText: '10.00'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: Pagada, con confirmación
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Pagada, con confirmación
+- scrollUntilVisible:
+    element:
+      id: record-date
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-date
+- inputText: '2026-11-01'
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-reference
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-reference
+- inputText: REMESA-MUNICIPAL-FICTICIA
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-note
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-note
+- inputText: REMITIDO-FUERA-DE-EDUMONEY
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-save
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-save
+- scrollUntilVisible:
+    element: '^IVU cobrado por el titular: \$115\.00[.] Remitido confirmado: \$115\.00[.]$'
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^IVU cobrado por el titular: \$115\.00[.] Remitido confirmado: \$115\.00[.]$'
+- scrollUntilVisible:
+    element: '^Diferencia entre registros: \$0\.00; no representa deuda contributiva final[.]$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Diferencia entre registros: \$0\.00; no representa deuda contributiva final[.]$'
+- takeScreenshot: ivu-both-remittances
+- scrollUntilVisible:
+    element: Registrar presentación de formulario
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Registrar presentación de formulario
+- scrollUntilVisible:
+    element:
+      id: record-period
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-period
+- inputText: 2026-10
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element: Planilla consolidada
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Planilla consolidada
+- scrollUntilVisible:
+    element:
+      id: record-note
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-note
+- inputText: PRESENTACION-PENDIENTE-SIN-PAGO
+- tapOn:
+    id: sheet-dismiss-keyboard
+- scrollUntilVisible:
+    element:
+      id: record-save
+    direction: DOWN
+    centerElement: false
+    timeout: 60000
+- tapOn:
+    id: record-save
+- scrollUntilVisible:
+    element: ^Pendiente · Radicación, sin registrar otro pago$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: ^Pendiente · Radicación, sin registrar otro pago$
+- takeScreenshot: ivu-filing-still-pending
+- scrollUntilVisible:
+    element: '^IVU cobrado por el titular: \$115\.00[.] Remitido confirmado: \$115\.00[.]$'
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^IVU cobrado por el titular: \$115\.00[.] Remitido confirmado: \$115\.00[.]$'
+- scrollUntilVisible:
+    element: '^Diferencia entre registros: \$0\.00; no representa deuda contributiva final[.]$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Diferencia entre registros: \$0\.00; no representa deuda contributiva final[.]$'
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    timeout: 60000
+    visible: Abrir Mi dinero|Quickstep isn't responding
+- runFlow:
+    commands:
+    - runFlow:
+        commands:
+        - tapOn: Close app
+        when:
+          visible: Quickstep isn't responding
+    when:
+      platform: Android
+- extendedWaitUntil:
+    timeout: 60000
+    visible: Abrir Mi dinero
+- tapOn: Abrir Mi dinero
+- tapOn: Negocio.*
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: 'IVU y contratistas: Titular FICTICIO IVU externo'
+    timeout: 60000
+- runFlow:
+    commands:
+    - swipe:
+        duration: 600
+        end: 5%,55%
+        start: 5%,70%
+    - waitForAnimationToEnd:
+        timeout: 5000
+    when:
+      platform: iOS
+- tapOn: 'IVU y contratistas: Titular FICTICIO IVU externo'
+- extendedWaitUntil:
+    timeout: 60000
+    visible: IVU y contratistas
+- scrollUntilVisible:
+    element:
+      text: ^Mes de consulta AAAA-MM$
+      below: ^Mes de consulta AAAA-MM$
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    text: ^Mes de consulta AAAA-MM$
+    below: ^Mes de consulta AAAA-MM$
+- inputText: 2026-10
+- tapOn:
+    id: form-dismiss-keyboard
+- scrollUntilVisible:
+    element: '^IVU cobrado por el titular: \$115\.00[.] Remitido confirmado: \$115\.00[.]$'
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^IVU cobrado por el titular: \$115\.00[.] Remitido confirmado: \$115\.00[.]$'
+- scrollUntilVisible:
+    element: '^Diferencia entre registros: \$0\.00; no representa deuda contributiva final[.]$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^Diferencia entre registros: \$0\.00; no representa deuda contributiva final[.]$'
+- takeScreenshot: ivu-summary-reopened
+- scrollUntilVisible:
+    element: '^OFERTA-FICTICIA-IVU · 2026-10-01 · Cobrado: \$115\.00$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '^OFERTA-FICTICIA-IVU · 2026-10-01 · Cobrado: \$115\.00$'
+- scrollUntilVisible:
+    element: ^Titular · COBRO-FICTICIO-FUERA-DE-EDUMONEY$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: ^Titular · COBRO-FICTICIO-FUERA-DE-EDUMONEY$
+- scrollUntilVisible:
+    element: ^Confirmado · \$105\.00$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: ^Confirmado · \$105\.00$
+- scrollUntilVisible:
+    element: ^REMESA-ESTATAL-FICTICIA · REMITIDO-FUERA-DE-EDUMONEY$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: ^REMESA-ESTATAL-FICTICIA · REMITIDO-FUERA-DE-EDUMONEY$
+- scrollUntilVisible:
+    element: ^Confirmado · \$10\.00$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: ^Confirmado · \$10\.00$
+- scrollUntilVisible:
+    element: ^REMESA-MUNICIPAL-FICTICIA · REMITIDO-FUERA-DE-EDUMONEY$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: ^REMESA-MUNICIPAL-FICTICIA · REMITIDO-FUERA-DE-EDUMONEY$
+- scrollUntilVisible:
+    element: ^Pendiente · Radicación, sin registrar otro pago$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: ^Pendiente · Radicación, sin registrar otro pago$
+- scrollUntilVisible:
+    element: ^[ ]*· PRESENTACION-PENDIENTE-SIN-PAGO$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: ^[ ]*· PRESENTACION-PENDIENTE-SIN-PAGO$
+- takeScreenshot: ivu-records-reopened
