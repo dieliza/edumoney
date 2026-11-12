@@ -1,0 +1,22 @@
+{
+  "scenario": "business-planning-partial",
+  "initial_procedure": "9d1dceb",
+  "corrected_procedure": "6fe7609",
+  "app_source": "905d96f",
+  "binary_run": 42948943240,
+  "conservative_cases_and_startup_attempts": 9,
+  "breakdown": {
+    "unit_initial_passed": 2,
+    "unit_initial_failed": 2,
+    "unit_corrected_passed": 2,
+    "invalid_format_startup_attempts": 2,
+    "android_corrected_passed": 1,
+    "ios_driver_cases_started": 0
+  },
+  "android_run": 43149314846,
+  "ios_corrected_run": null,
+  "ios_blocker": "Two workflow_dispatch requests rejected with HTTP 401 Bad credentials; no run started",
+  "main_modified": false,
+  "published": false,
+  "production_code_changed": false
+}

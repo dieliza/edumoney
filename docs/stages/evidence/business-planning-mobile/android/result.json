@@ -1,0 +1,29 @@
+{
+  "run_id": 43149314846,
+  "job_id": 130954477425,
+  "artifact_id": 13913810042,
+  "procedure": "6fe7609",
+  "app_source": "905d96f",
+  "result": "success",
+  "command_statuses": {
+    "COMPLETED": 95,
+    "SKIPPED": 3
+  },
+  "app_cases": 1,
+  "expected": {
+    "base_profit_cents": 0,
+    "base_cash_cents": null,
+    "base_reserves_cents": null,
+    "scenario_sales_delta_cents": 10000,
+    "scenario_operating_expense_delta_cents": 0,
+    "scenario_profit_cents": 10000,
+    "scenario_cash_cents": null,
+    "scenario_tax_due_cents": null
+  },
+  "scope": "Partial scenario saved and reopened; no financial movements generated; legal classification and calendar regime pending",
+  "visually_reviewed_screenshots": [
+    "scenario-partial-simulation.png",
+    "scenario-reopened.png",
+    "panel-not-modified-by-scenario.png"
+  ]
+}

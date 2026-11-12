@@ -1,0 +1,22 @@
+{
+  "executed_cases": 6,
+  "initial": {
+    "passed": 2,
+    "failed": 2,
+    "skipped": 37
+  },
+  "focused_retry": {
+    "passed": 2,
+    "skipped": 39
+  },
+  "cause": "Real persisted reserve timestamps fell after fixed 2026-11-09 cutoff; fixed test Date only, preserving historical reserve rule",
+  "checks": [
+    "Profit/cash/reserves and paid estimated taxes remain separate",
+    "Incomplete profile preserves partial calculations without CPA gate",
+    "Scenario separates sales/collections, expenses/payments and equipment",
+    "Unknown scenario inputs remain pending"
+  ],
+  "lint": "passed",
+  "typecheck": "passed",
+  "production_code_changed": false
+}

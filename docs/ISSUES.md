@@ -31,3 +31,8 @@ Se reutilizan las etiquetas de `statusOptions` en la ficha y los botones: Recibi
 Estado: **ajuste de automatización aplicado; reejecución pendiente**. En 43124881691, JSON y CSV comerciales se recibieron y validaron correctamente, y la aplicación volvió al formulario. La última aserción esperaba el botón CSV visible sin desplazar, pero estaba debajo de la vista. 4a2e38c añade scrollUntilVisible; no se ejecutó de nuevo para cerrar el presupuesto de diez casos conservadores de este bloque. No se declara aprobado ese trabajo Android ni se bloquea el cálculo o la exportación de la aplicación. iOS aprobó el mismo recorrido en 43125832018.
 
 [Informe, capturas y presupuesto cerrado](stages/NEGOCIO-REVISION-EXPORTACION-MOVIL.md). No repetir los casos de este bloque ni reiniciar su contador.
+
+
+## UI-NEGOCIO-03 — Texto del calendario comercial sobre nómina
+
+Estado: **pendiente de corrección de texto y verificación en nueva compilación**. El módulo de nómina ya existe, pero `planning/Forms.tsx` y `planning/domain.ts` todavía lo anuncian como próximo bloque. No afecta importes, almacenamiento ni ejecución de pagos. Detectado durante la revisión del panel; el bloque actual solo cambia automatización y pruebas y reutiliza binarios existentes.

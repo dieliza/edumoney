@@ -104,3 +104,5 @@ EduMoney registra pagos y cobros realizados fuera de la aplicación. El usuario 
 [Registro manual de pagos realizados fuera de EduMoney: evidencia móvil](docs/stages/NEGOCIO-PAGOS-MANUALES-MOVIL.md).
 
 [Registro manual de IVU cobrado, remesas externas y presentación pendiente: evidencia Android/iOS](docs/stages/NEGOCIO-IVU-MANUAL-MOVIL.md).
+
+[Panel y escenario parcial: Android verificado, repetición iOS pendiente de autenticación](docs/stages/NEGOCIO-PANEL-ESCENARIOS-MOVIL.md).

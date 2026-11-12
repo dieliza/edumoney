@@ -36,7 +36,7 @@ No existe radicación automática ni certificación de Hacienda. Las compilacion
 | Ingreso con desglose y reservas manuales | Neto, componentes, reparto y reservas conservados tras reiniciar en Android/iOS; reservas sin gastos adicionales | Otros casos y teléfonos físicos |
 | Revisión comercial y exportación | Nota, porcentaje y reparto conservados; Android JSON/CSV recibidos y validados; iOS apertura/cancelación aprobada | QA-NEGOCIO-02: reejecución del último desplazamiento Android; comprobantes/imágenes, destinos externos iOS y teléfonos físicos |
 | IVU y contratistas | Seis fuentes y casos seleccionados de lógica/persistencia; navegación, formularios, pagos externos de contratista/depósito y cobro/remesas IVU declarados reabiertos en Android/iOS; presentación IVU sigue pendiente sin sumar pago | Relevos, casos especiales y plataformas de venta desde la interfaz; teléfonos físicos |
-| Panel y escenarios comerciales | Dominio y almacenamiento implementados; informe propio con alcance y fuentes | Interacción nativa completa y pruebas físicas |
+| Panel y escenarios comerciales | Cálculos seleccionados y escenario parcial guardado/reabierto en Android; simular conserva el panel | Repetición iOS corregida pendiente por HTTP 401; flujo nativo completo con estimadas/proyección, texto antiguo de nómina y pruebas físicas |
 
 [Pagos móviles](stages/NEGOCIO-05-PAGOS-MOVIL.md) · [Tasas y exportaciones móviles](stages/NEGOCIO-05-TASAS-EXPORTACION-MOVIL.md) · [Recuperación integrada](stages/CIERRE-RESPALDO-NEGOCIO.md).
 
@@ -55,3 +55,5 @@ Los números de pruebas de los informes históricos corresponden a sus bloques a
 [Pagos externos de contratistas y depósito declarado — registro manual verificado](stages/NEGOCIO-PAGOS-MANUALES-MOVIL.md).
 
 [IVU externo — cobro, remesas y presentación pendiente verificados en Android/iOS](stages/NEGOCIO-IVU-MANUAL-MOVIL.md).
+
+[Panel y escenario parcial — evidencia Android y limitación de acceso iOS](stages/NEGOCIO-PANEL-ESCENARIOS-MOVIL.md).

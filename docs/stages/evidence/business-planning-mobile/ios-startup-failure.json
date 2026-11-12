@@ -1,0 +1,11 @@
+{
+  "run_id": 43148887073,
+  "job_id": 130953123798,
+  "artifact_id": 13912638503,
+  "procedure": "9d1dceb",
+  "failure": "Incorrect Command Format: stopApp at .maestro/business-planning-partial.yaml:221:16",
+  "app_cases_started": 0,
+  "driver_cases_started": 0,
+  "conservative_attempt_count": 1,
+  "fix": "6fe7609"
+}
