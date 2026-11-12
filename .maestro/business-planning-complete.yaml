@@ -285,8 +285,18 @@ appId: com.edumoney.app
 - scrollUntilVisible:
     element: 'Panel y escenarios: Titular FICTICIO panel completo'
     direction: DOWN
-    centerElement: false
+    centerElement: true
     timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,70%
+        end: 5%,55%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
 - tapOn: 'Panel y escenarios: Titular FICTICIO panel completo'
 - scrollUntilVisible:
     element: Configurar efectivo y criterio de operaciones
@@ -583,8 +593,18 @@ appId: com.edumoney.app
 - scrollUntilVisible:
     element: ^Comparar escenarios$
     direction: UP
-    centerElement: false
+    centerElement: true
     timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,35%
+        end: 5%,60%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
 - tapOn: ^Comparar escenarios$
 - scrollUntilVisible:
     element: Crear escenario
@@ -759,8 +779,18 @@ appId: com.edumoney.app
 - scrollUntilVisible:
     element: 'Panel y escenarios: Titular FICTICIO panel completo'
     direction: DOWN
-    centerElement: false
+    centerElement: true
     timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,70%
+        end: 5%,55%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
 - tapOn: 'Panel y escenarios: Titular FICTICIO panel completo'
 - scrollUntilVisible:
     element: '^Efectivo estimado: \$900[.]00$'
@@ -802,8 +832,18 @@ appId: com.edumoney.app
 - scrollUntilVisible:
     element: ^Comparar escenarios$
     direction: UP
-    centerElement: false
+    centerElement: true
     timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,35%
+        end: 5%,60%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
 - tapOn: ^Comparar escenarios$
 - scrollUntilVisible:
     element: ^ESCENARIO-FICTICIO-COMPLETO$

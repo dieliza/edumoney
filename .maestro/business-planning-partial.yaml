@@ -75,8 +75,18 @@ appId: com.edumoney.app
 - scrollUntilVisible:
     element: 'Panel y escenarios: Titular FICTICIO panel incompleto'
     direction: DOWN
-    centerElement: false
+    centerElement: true
     timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,70%
+        end: 5%,55%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
 - tapOn: 'Panel y escenarios: Titular FICTICIO panel incompleto'
 - extendedWaitUntil:
     visible: Panel de Negocio
@@ -110,8 +120,18 @@ appId: com.edumoney.app
 - scrollUntilVisible:
     element: ^Comparar escenarios$
     direction: UP
-    centerElement: false
+    centerElement: true
     timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,35%
+        end: 5%,60%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
 - tapOn: ^Comparar escenarios$
 - scrollUntilVisible:
     element: Crear escenario
@@ -237,8 +257,18 @@ appId: com.edumoney.app
 - scrollUntilVisible:
     element: ^Calendario$
     direction: UP
-    centerElement: false
+    centerElement: true
     timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,35%
+        end: 5%,60%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
 - tapOn: ^Calendario$
 - scrollUntilVisible:
     element: '^Estimada: confirmar calendario y régimen$'
@@ -257,8 +287,18 @@ appId: com.edumoney.app
 - scrollUntilVisible:
     element: 'Panel y escenarios: Titular FICTICIO panel incompleto'
     direction: DOWN
-    centerElement: false
+    centerElement: true
     timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,70%
+        end: 5%,55%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
 - tapOn: 'Panel y escenarios: Titular FICTICIO panel incompleto'
 - extendedWaitUntil:
     visible: Panel de Negocio
@@ -266,8 +306,14 @@ appId: com.edumoney.app
 - scrollUntilVisible:
     element: ^Comparar escenarios$
     direction: DOWN
-    centerElement: false
+    centerElement: true
     timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - waitForAnimationToEnd:
+        timeout: 5000
 - tapOn: ^Comparar escenarios$
 - scrollUntilVisible:
     element: ^ESCENARIO-FICTICIO-PARCIAL$
@@ -291,8 +337,18 @@ appId: com.edumoney.app
 - scrollUntilVisible:
     element: ^Resultado y efectivo$
     direction: UP
-    centerElement: false
+    centerElement: true
     timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,35%
+        end: 5%,60%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
 - tapOn: ^Resultado y efectivo$
 - scrollUntilVisible:
     element: '^Ganancia / pérdida registrada: \$0[.]00$'
