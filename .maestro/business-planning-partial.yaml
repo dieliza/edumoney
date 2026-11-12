@@ -218,8 +218,8 @@ appId: com.edumoney.app
     timeout: 60000
 - assertVisible: '^Estimada: confirmar calendario y régimen$'
 - takeScreenshot: calendar-regime-pending
-- stopApp: null
-- launchApp: null
+- stopApp
+- launchApp
 - extendedWaitUntil:
     visible: Abrir Mi dinero
     timeout: 60000
