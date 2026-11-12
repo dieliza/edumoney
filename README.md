@@ -92,3 +92,5 @@ Negocio: [gasto mixto por proyecto y recibo manual verificados en Android/iOS](d
 Negocio: [estados de recibos en español; Recibido verificado en nuevas compilaciones Android/iOS](docs/stages/UI-NEGOCIO-01-VISUAL.md).
 
 [Ingresos y reservas manuales: verificación móvil](docs/stages/NEGOCIO-INGRESOS-RESERVAS-MOVIL.md).
+
+[Revisión comercial y exportación: evidencia móvil y pendiente de automatización](docs/stages/NEGOCIO-REVISION-EXPORTACION-MOVIL.md).

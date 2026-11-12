@@ -1,0 +1,29 @@
+{
+  "case_budget": 10,
+  "total_conservative": 10,
+  "unit_cases": 2,
+  "cancelled_attempts_counted": 2,
+  "app_flows": {
+    "android_first_failed": 1,
+    "ios_first_failed": 1,
+    "android_retry_final_visibility_failed": 1,
+    "ios_retry_passed": 1
+  },
+  "xctest_http_driver_cases": 2,
+  "cancelled_run_xctest_starts": 0,
+  "runs": {
+    "cancelled": 43123115399,
+    "initial": 43123264346,
+    "android_retry": 43124881691,
+    "ios_retry": 43125832018
+  },
+  "app_source": "905d96f",
+  "reused_app_run": 42948943240,
+  "tested_procedure": "c09c67d",
+  "final_scroll_fix_not_reexecuted": "4a2e38c",
+  "lint": "passed",
+  "typecheck": "passed",
+  "main_modified": false,
+  "published": false,
+  "status": "Functional review/export evidence recorded; Android final visibility automation fix pending re-execution. No more cases in this block."
+}

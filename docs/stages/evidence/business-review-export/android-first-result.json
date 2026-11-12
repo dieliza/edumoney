@@ -1,0 +1,18 @@
+{
+  "run_id": 43123264346,
+  "job_id": 130868993023,
+  "artifact_id": 13902271474,
+  "result": "failed",
+  "app_cases": 1,
+  "failure": "La automatización dejó -PORCIENTO al reemplazar la nota; no coincidió la aserción exacta REVISION-FICTICIA-50",
+  "confirmed_before_failure": {
+    "expense_cents": 5500,
+    "commercial_cents": 2750,
+    "allocations_cents": [
+      3000,
+      2500
+    ],
+    "cpa_status": "changes"
+  },
+  "fix_commit": "c09c67d"
+}

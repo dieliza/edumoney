@@ -1,0 +1,23 @@
+{
+  "run_id": 43125832018,
+  "job_id": 130877541772,
+  "artifact_id": 13902979479,
+  "procedure": "c09c67d",
+  "app_source": "905d96f",
+  "command_statuses": {
+    "COMPLETED": 146,
+    "SKIPPED": 2
+  },
+  "app_cases": 1,
+  "xctest_cases": 1,
+  "xctest_starts": [
+    "Test Case '-[maestro_driver_iosUITests.maestro_driver_iosUITests testHttpServer]' started."
+  ],
+  "scope": "Revisión y reapertura; apertura/cancelación de compartir JSON/CSV; no recepción externa iOS",
+  "workflow_result": "success",
+  "screenshots_reviewed": [
+    "commercial-review-reopened.png",
+    "commercial-share-json.png",
+    "commercial-share-csv.png"
+  ]
+}

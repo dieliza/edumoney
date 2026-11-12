@@ -1,0 +1,13 @@
+{
+  "run_id": 43123264346,
+  "job_id": 130868993316,
+  "artifact_id": 13901854457,
+  "result": "failed",
+  "app_cases": 1,
+  "xctest_cases": 1,
+  "xctest_started": [
+    "testHttpServer"
+  ],
+  "failure": "La automatización dejó -PORCIENTO al reemplazar la nota; la aserción exacta falló",
+  "fix_commit": "c09c67d"
+}

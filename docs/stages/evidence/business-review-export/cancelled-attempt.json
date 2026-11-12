@@ -1,0 +1,9 @@
+{
+  "run_id": 43123115399,
+  "procedure": "15fcca2",
+  "reason": "Selector del receptor debía admitir saltos de línea; corregido en be399b1",
+  "android": {"job_id": 130868326936, "result": "cancelled", "native_step": "skipped"},
+  "ios": {"job_id": 130868326448, "result": "cancelled", "native_step": "cancelled during simulator startup", "xctest_started_observed": 0},
+  "conservative_attempt_count": 2,
+  "successful_app_cases": 0
+}

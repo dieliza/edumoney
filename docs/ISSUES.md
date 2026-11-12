@@ -24,3 +24,10 @@ Estado: **resuelta en nuevas compilaciones de emulador Android y simulador iOS**
 Se reutilizan las etiquetas de `statusOptions` en la ficha y los botones: Recibido, Pendiente, Corregido y No aplica. Retirado conserva prioridad para documentos retirados; un código desconocido muestra Estado por confirmar. No se modifican códigos persistidos ni referencias. El recorrido Maestro exige Recibido en botón y ficha. Las nuevas compilaciones lo aprobaron: Android job 130288423060 y iOS job 130295486009. [Captura iOS](stages/evidence/business-ledger-mobile/ios-business-receipt-reopened.png) · [Informe](stages/NEGOCIO-MOVIMIENTOS-MOVIL.md).
 
 [Implementación de UI-NEGOCIO-01](stages/UI-NEGOCIO-01.md) · [Verificación visual y capturas nuevas](stages/UI-NEGOCIO-01-VISUAL.md). Las capturas históricas anteriores muestran el estado previo a la corrección.
+
+
+## QA-NEGOCIO-02 — Visibilidad del botón al volver de compartir en Android
+
+Estado: **ajuste de automatización aplicado; reejecución pendiente**. En 43124881691, JSON y CSV comerciales se recibieron y validaron correctamente, y la aplicación volvió al formulario. La última aserción esperaba el botón CSV visible sin desplazar, pero estaba debajo de la vista. 4a2e38c añade scrollUntilVisible; no se ejecutó de nuevo para cerrar el presupuesto de diez casos conservadores de este bloque. No se declara aprobado ese trabajo Android ni se bloquea el cálculo o la exportación de la aplicación. iOS aprobó el mismo recorrido en 43125832018.
+
+[Informe, capturas y presupuesto cerrado](stages/NEGOCIO-REVISION-EXPORTACION-MOVIL.md). No repetir los casos de este bloque ni reiniciar su contador.

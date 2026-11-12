@@ -1,0 +1,28 @@
+{
+  "run_id": 43124881691,
+  "job_id": 130874326198,
+  "artifact_id": 13902618193,
+  "procedure": "c09c67d",
+  "app_source": "905d96f",
+  "workflow_result": "failure",
+  "command_statuses": {
+    "COMPLETED": 135,
+    "SKIPPED": 7,
+    "FAILED": 1
+  },
+  "functional_checks": {
+    "review_persisted": true,
+    "json_received_and_validated": true,
+    "csv_received_and_validated": true,
+    "expense_cents": 5500,
+    "commercial_cents": 2750,
+    "personal_cents": 2750,
+    "rows": 2,
+    "unique_movement_ids": 1,
+    "allocation_cents": [
+      3000,
+      2500
+    ]
+  },
+  "remaining_failure": "Última aserción pedía botón CSV visible sin desplazar; captura confirma vuelta al formulario con botón fuera de la vista. Corrección de desplazamiento no reejecutada en este bloque."
+}
