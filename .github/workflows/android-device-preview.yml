@@ -1,0 +1,67 @@
+name: EduMoney - APK interno Android arm64
+on:
+  push:
+    branches: [cierre-edumoney]
+    paths:
+      - '.github/workflows/android-device-preview.yml'
+      - 'src/**'
+      - 'assets/**'
+      - 'modules/**'
+      - 'plugins/**'
+      - 'app.json'
+      - 'package*.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: android-device-preview-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  apk:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      CI: 1
+      EXPO_PUBLIC_PLANILLA_TESTS: '0'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+      - run: npm ci
+      - run: npm run lint && npm run typecheck
+      - run: npx expo prebuild --no-install
+      - run: node scripts/verify-native.mjs
+      - name: Compilar APK interno arm64 sin controles de prueba
+        working-directory: android
+        run: |
+          sed -i 's/^networkTimeout=.*/networkTimeout=120000/' gradle/wrapper/gradle-wrapper.properties
+          ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a --no-daemon
+      - name: Identificar paquete de prueba
+        run: |
+          mkdir -p device-preview
+          cp android/app/build/outputs/apk/release/app-release.apk device-preview/EduMoney-android-arm64-prueba.apk
+          sha256sum device-preview/EduMoney-android-arm64-prueba.apk > device-preview/SHA256SUMS.txt
+          cat > device-preview/LEEME.txt <<'TEXT'
+          EduMoney — compilación interna de prueba Android arm64.
+          No es una publicación de Google Play ni usa una clave de distribución oficial.
+          Firma de prueba generada por el proyecto. No necesita Metro ni cuenta en EduMoney.
+          Sin controles de prueba o recibos sintéticos en la interfaz (EXPO_PUBLIC_PLANILLA_TESTS=0).
+          No ejecuta cobros, transferencias ni pagos. Probar primero con datos ficticios.
+          Deben verificarse permisos, cifrado, respaldo/recuperación y accesibilidad en un teléfono.
+          El logo oficial separado continúa pendiente; se muestra el nombre EduMoney en texto.
+          No instalar una compilación con firma distinta sobre datos importantes sin respaldo recuperable.
+          TEXT
+      - uses: actions/upload-artifact@v4
+        with:
+          name: EduMoney-Android-arm64-prueba
+          path: device-preview/
+          retention-days: 7
