@@ -1,0 +1,69 @@
+appId: com.edumoney.app
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    timeout: 60000
+    visible: Abrir Mi dinero|Quickstep isn't responding
+- runFlow:
+    when:
+      visible: Quickstep isn't responding
+    commands:
+      - tapOn: Close app
+- extendedWaitUntil:
+    timeout: 60000
+    visible: Abrir Mi dinero
+- tapOn:
+    id: theme-picker-open
+- tapOn:
+    id: theme-choice-light
+- takeScreenshot: design-welcome-light
+- tapOn: Abrir Mi dinero
+- extendedWaitUntil:
+    timeout: 60000
+    visible: Disponible estimado del mes
+- scrollUntilVisible:
+    element: Añadir ingreso
+    centerElement: true
+- takeScreenshot: design-money-light
+- tapOn: Añadir ingreso
+- assertVisible: Ocultar teclado del formulario
+- scrollUntilVisible:
+    element: Cerrar ficha
+    direction: DOWN
+- tapOn: Cerrar ficha
+- tapOn: Registrar gasto
+- assertVisible: Ocultar teclado del formulario
+- scrollUntilVisible:
+    element: Cerrar ficha
+    direction: DOWN
+- tapOn: Cerrar ficha
+- scrollUntilVisible:
+    element:
+      id: open-documents
+    centerElement: true
+- tapOn:
+    id: open-documents
+- assertVisible: Escaneo y documentos
+- tapOn: Volver a Mi dinero
+- scrollUntilVisible:
+    element:
+      id: open-debts
+    centerElement: true
+- tapOn:
+    id: open-debts
+- assertVisible: Ordenar mis pagos
+- back
+- tapOn:
+    id: theme-picker-open
+- tapOn:
+    id: theme-choice-dark
+- takeScreenshot: design-money-dark
+- tapOn: Mis metas.*
+- assertVisible: Crear nueva meta
+- tapOn: Aprende.*
+- assertVisible: Antes de decidir
+- tapOn: Mi progreso.*
+- assertVisible: Mi progreso
+- tapOn: Negocio.*
+- assertVisible: Negocio

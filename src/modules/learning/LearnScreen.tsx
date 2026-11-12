@@ -2,6 +2,7 @@ import { useCallback,useEffect,useRef,useState } from 'react';
 import { ActivityIndicator,AppState,Pressable,View } from 'react-native';
 import { router,useIsFocused } from 'expo-router';
 import { newId } from '../../core/id';
+import { useTheme } from '../../design/ThemeProvider';
 import { userMessage } from '../../core/errors';
 import { ActionButton,Body,Card,IconBadge,ProgressBar,Screen,ui } from '../../ui/components';
 import { Choices,ErrorNotice,Sheet } from '../money/fields';
@@ -11,6 +12,7 @@ import type { LearningSnapshot,LearningStore } from './store';
 import { readLesson,stopReading } from './speech';
 const empty:LearningSnapshot={completed:[],attempts:[],scenarios:[]};
 export default function LearnScreen(){
+ const {colors}=useTheme();
  const focused=useIsFocused();const [store,setStore]=useState<LearningStore|null>(null);const [data,setData]=useState(empty);const [lessonId,setLessonId]=useState<string|null>(null);const [answer,setAnswer]=useState('');const [feedback,setFeedback]=useState('');const [error,setError]=useState('');const [voiceMessage,setVoiceMessage]=useState('');const [busy,setBusy]=useState(false);const voiceRequest=useRef(0);
  const load=useCallback(async()=>{const s=await getLearningStore();const d=await s.snapshot();setStore(s);setData(d);},[]);
  const stop=useCallback(()=>{voiceRequest.current++;void stopReading().catch(()=>undefined);},[]);
@@ -22,7 +24,7 @@ export default function LearnScreen(){
  <ErrorNotice message={error}/>{!store?<ActivityIndicator accessibilityLabel="Cargando lecciones locales"/>:null}
  <Card><Body style={{fontWeight:'700'}}>{completed} de {lessons.length} lecciones completadas</Body><ProgressBar value={completed/lessons.length*100} label={`Lecciones completadas: ${completed} de ${lessons.length}`}/><Body muted>Contenido educativo general. Los ejemplos están identificados como ficticios y no sustituyen una revisión de tus condiciones reales.</Body></Card>
  <ActionButton title="Antes de decidir" testID="open-decisions" icon="git-compare-outline" onPress={()=>{stop();router.push('/decisions');}}/>
- {lessons.map(l=>{const done=data.completed.some(c=>c.lessonId===l.id&&c.version===l.version);return <Pressable key={l.id} testID={`lesson-${l.id}`} accessibilityRole="button" accessibilityLabel={`${l.title}, ${done?'completada':'por aprender'}`} onPress={()=>{setLessonId(l.id);setAnswer('');setFeedback('');setVoiceMessage('');setError('');}}><Card><View style={ui.row}><IconBadge icon={done?'checkmark-circle-outline':'book-outline'}/><View style={{flex:1,gap:6}}><Body style={{fontWeight:'700',fontSize:18}}>{l.title}</Body><Body>{l.summary}</Body><Body muted>{done?'Completada':'Por aprender'} · Lección breve</Body></View></View></Card></Pressable>;})}
+ {lessons.map((l,index)=>{const done=data.completed.some(c=>c.lessonId===l.id&&c.version===l.version);return <Pressable key={l.id} testID={`lesson-${l.id}`} accessibilityRole="button" accessibilityLabel={`${l.title}, ${done?'completada':'por aprender'}`} onPress={()=>{setLessonId(l.id);setAnswer('');setFeedback('');setVoiceMessage('');setError('');}}><Card style={{backgroundColor:[colors.mint,colors.blue,colors.violet,colors.surfaceAlt][index%4]}}><View style={ui.row}><IconBadge tone={(['mint','blue','violet','coral'] as const)[index%4]} icon={done?'checkmark-circle-outline':'book-outline'}/><View style={{flex:1,gap:6}}><Body style={{fontWeight:'700',fontSize:18}}>{l.title}</Body><Body>{l.summary}</Body><Body muted>{done?'Completada':'Por aprender'} · Lección breve</Body></View></View></Card></Pressable>;})}
  {lesson&&store?<Sheet title={lesson.title} busy={busy} close={()=>{stop();setLessonId(null);}}>
  {lesson.paragraphs.map(p=><Body key={p}>{p}</Body>)}<ActionButton title="Leer en voz alta local" testID="lesson-read" secondary onPress={()=>void read()}/><ActionButton title="Detener lectura" secondary onPress={()=>{stop();setVoiceMessage('Lectura detenida.');}}/>{voiceMessage?<Body>{voiceMessage}</Body>:null}
  <Body style={{fontWeight:'700'}}>Practica: {lesson.question}</Body><Choices label="Tu respuesta" value={answer} options={lesson.options.map((o,i)=>[String(i),o] as const)} onChange={v=>{setAnswer(v);setFeedback('');}}/>

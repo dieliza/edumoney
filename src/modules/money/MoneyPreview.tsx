@@ -5,7 +5,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import Svg, { Circle } from 'react-native-svg';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '../../design/ThemeProvider';
-import { ActionButton, Body, Card, IconBadge, Screen, SectionHeading, ui } from '../../ui/components';
+import { ActionButton, Body, Card, DashboardAction, IconBadge, Screen, SectionHeading, ui } from '../../ui/components';
 import { bills, expenses } from '../../preview/data';
 import { PreviewModal } from '../../preview/PreviewModal';
 const segments = ['Resumen', 'Transacciones', 'Categorías'] as const;
@@ -33,9 +33,7 @@ export default function Money() {
         {([
           ['Añadir ingreso', 'add-circle-outline', 'mint'], ['Registrar gasto', 'receipt-outline', 'coral'],
           ['Escanear recibo', 'camera-outline', 'blue'], ['Ordenar mis pagos', 'calendar-outline', 'violet'],
-        ] as const).map(([title, icon, tone]) => <Pressable key={title} accessibilityRole="button" accessibilityLabel={title} onPress={() => setDetail(title)} style={({ pressed }) => ({ width: '47%', flexGrow: 1, backgroundColor: colors[tone], borderWidth: 1, borderColor: colors.line, borderRadius: 20, padding: 18, minHeight: 112, alignItems: 'center', gap: 10, opacity: pressed ? 0.7 : 1 })}>
-          <IconBadge icon={icon} tone={tone} size={40} /><Body style={{ textAlign: 'center', fontSize: 14, fontWeight: '700' }}>{title}</Body>
-        </Pressable>)}
+        ] as const).map(([title, icon, tone]) => <DashboardAction key={title} title={title} icon={icon} tone={tone} onPress={() => setDetail(title)}/>)}
       </View>
       <SectionHeading title="Próximas facturas" action="Ver todas" onPress={() => setDetail('Mis facturas')} />
       <Card>{bills.slice(0, 2).map((bill, index) => <View key={bill.title} style={[ui.row, { paddingBottom: index === 0 ? 16 : 0, borderBottomWidth: index === 0 ? 1 : 0, borderBottomColor: colors.line }]}>

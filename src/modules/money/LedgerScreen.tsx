@@ -10,7 +10,7 @@ import { useTheme } from '../../design/ThemeProvider';
 import { fixed } from '../../design/tokens';
 import { newId } from '../../core/id';
 import { parseAmount } from '../../core/money';
-import { ActionButton, Body, Card, Screen, SectionHeading, ui } from '../../ui/components';
+import { ActionButton, Body, Card, DashboardAction, IconBadge, Screen, SectionHeading, ui } from '../../ui/components';
 import { localToday, formatMoney, monthlySummary, validDate, validMonth } from './domain';
 import { getMoneyStore } from './localStore';
 import type { MoneyStore } from './store';
@@ -25,6 +25,8 @@ export default function LedgerScreen() {
     const [store, setStore] = useState<MoneyStore | null>(null);
     const [data, setData] = useState(empty);
     const [error, setError] = useState('');
+    const [showCalculation, setShowCalculation] = useState(false);
+    const [showMonth, setShowMonth] = useState(false);
     const [segment, setSegment] = useState('summary');
     const [month, setMonth] = useState(localToday().slice(0, 7));
     const [form, setForm] = useState<{
@@ -90,35 +92,50 @@ export default function LedgerScreen() {
     const filterError = (from && !validDate(from)) || (to && !validDate(to)) || (from && to && from > to) ? 'Revisa el rango de fechas (AAAA-MM-DD).' : '';
     const rows = filterError ? [] : data.movements.filter(m => (deleted === 'deleted' ? !!m.deletedAt : !m.deletedAt) && (filterKind === 'all' || m.kind === filterKind) && (filterCategory === 'all' || (m.categoryId ?? 'none') === filterCategory) && (filterMethod === 'all' || m.paymentMethod === filterMethod) && (!from || m.date >= from) && (!to || m.date <= to) && normalize(m.description).includes(normalize(query)));
     const categoryName = (id: string | null) => data.categories.find(c => c.id === id)?.name ?? 'Sin categoría';
-    return <Screen title="Mi dinero" demo={false} subtitle="Tus registros, solo en este dispositivo.">
+    return <Screen title="Mi dinero" demo={false} subtitle="¡Hola! Aquí tienes tu resumen de hoy.">
   <ErrorNotice message={error}/>{notice ? <Card><Body>{notice}</Body></Card> : null}
   {!store ? <ActivityIndicator color={colors.accent} accessibilityLabel="Cargando registros cifrados"/> : <>
    <Choices label="Vista de Mi dinero" value={segment} options={[['summary', 'Resumen'], ['history', 'Historial'], ['categories', 'Categorías']]} onChange={setSegment}/>
 
    {segment !== 'summary' ? <View style={{ gap: 12 }}><ActionButton title="Añadir ingreso" icon="add-circle-outline" onPress={() => setForm({ kind: 'income' })}/><ActionButton title="Registrar gasto" icon="receipt-outline" onPress={() => setForm({ kind: 'expense' })}/><ActionButton title="Registrar transferencia, préstamo o pago" secondary onPress={() => setForm({ kind: 'transfer' })}/></View> : null}
-   {segment !== 'history' ? <Field label="Mes (AAAA-MM)" value={month} onChangeText={setMonth}/> : null}
+   {segment !== 'history' ? <SectionHeading title={month === localToday().slice(0, 7) ? 'Este mes' : month} action={showMonth ? 'Cerrar' : 'Cambiar mes'} onPress={() => setShowMonth(!showMonth)}/> : null}
+   {segment !== 'history' && showMonth ? <Field label="Mes (AAAA-MM)" value={month} onChangeText={setMonth}/> : null}
    {segment !== 'history' ? <ErrorNotice message={summaryError}/> : null}
    {segment === 'summary' && summary ? <>
-    <Card style={{ backgroundColor: colors.mint }}><Body style={{ fontWeight: '700' }}>Disponible estimado del mes</Body><Body style={{ fontSize: 32, lineHeight: 40, fontWeight: '800' }}>{formatMoney(summary.available)}</Body><Body muted>Estimación basada en los registros del mes completo, incluidas fechas futuras. Parte de cero; no representa el saldo de tus cuentas bancarias.</Body></Card>
-   <View style={{ gap: 12 }}><ActionButton title="Añadir ingreso" icon="add-circle-outline" onPress={() => setForm({ kind: 'income' })}/><ActionButton title="Registrar gasto" icon="receipt-outline" onPress={() => setForm({ kind: 'expense' })}/><ActionButton title="Registrar transferencia, préstamo o pago" secondary onPress={() => setForm({ kind: 'transfer' })}/></View>
-    <Card>{[['Ingresos recibidos', summary.income], ['Gastos registrados', summary.expenses], ['Préstamos recibidos (no son ingresos)', summary.loans], ['Pagos de tarjeta o deuda', summary.payments], ['Aportaciones a metas', summary.contributions], ['Compromisos de facturas registrados', summary.commitments]].map(([label, value]) => <View key={label} style={ui.between}><Body style={{ flex: 1 }}>{label}</Body><Body style={{ fontWeight: '700' }}>{formatMoney(value as number)}</Body></View>)}
-     <Body muted>Disponible = ingresos + préstamos − gastos pagados sin crédito − pagos de deuda − aportaciones − compromisos pendientes. Las transferencias propias no alteran el total. Las compras con crédito consumen presupuesto; su pago reduce el disponible una sola vez.</Body>
-     {!data.commitments.length ? <Body muted>No hay facturas pendientes registradas. Añade una factura para preparar tus vencimientos.</Body> : null}
+    <Card style={{ padding: 0, overflow: 'hidden' }}>
+     <View style={{ backgroundColor: colors.mint, padding: 20, gap: 4 }}><Body style={{ fontWeight: '700' }}>Disponible estimado del mes</Body><Body style={{ fontSize: 36, lineHeight: 44, fontWeight: '800', color: fixed.balance }}>{formatMoney(summary.available)}</Body><Body muted style={ui.small}>Según tus registros · No es un saldo bancario confirmado</Body></View>
+     <View style={{ flexDirection: 'row', flexWrap: 'wrap', padding: 18, gap: 16 }}>
+      <View style={[ui.row, { flex: 1, minWidth: 125 }]}><IconBadge icon="arrow-up-circle" size={36}/><View><Body muted style={ui.small}>Ingresos</Body><Body style={{ fontWeight: '700' }}>{formatMoney(summary.income)}</Body></View></View>
+      <View style={[ui.row, { flex: 1, minWidth: 125 }]}><IconBadge icon="arrow-down-circle" tone="coral" size={36}/><View><Body muted style={ui.small}>Gastos</Body><Body style={{ fontWeight: '700' }}>{formatMoney(summary.expenses)}</Body></View></View>
+     </View>
     </Card>
-    <ActionButton title="Escanear, dictar y documentos" testID="open-documents" icon="camera-outline" secondary onPress={()=>router.push('/documents')}/>
-    <ActionButton title="Ordenar mis pagos" testID="open-debts" icon="card-outline" secondary onPress={() => router.push('/debts')}/>
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
+     <DashboardAction title="Añadir ingreso" icon="add-circle" onPress={() => setForm({ kind: 'income' })}/>
+     <DashboardAction title="Registrar gasto" icon="receipt" tone="coral" onPress={() => setForm({ kind: 'expense' })}/>
+     <DashboardAction title="Escanear recibo" testID="open-documents" icon="camera" tone="blue" onPress={() => router.push('/documents')}/>
+     <DashboardAction title="Ordenar mis pagos" testID="open-debts" icon="calendar" tone="violet" onPress={() => router.push('/debts')}/>
+    </View>
     <SectionHeading title="Próximas facturas" action="Ver todas" onPress={() => router.push('/bills')}/>
-    <ActionButton title="Mis facturas" testID="open-bills" icon="calendar-outline" secondary onPress={() => router.push('/bills')}/>
-    {bills.filter(b => !b.voidedAt && outstanding(b)>0).slice(0,5).map(b => <Card key={b.id}><Body style={{fontWeight:'700'}}>{b.provider}</Body><Body>{b.dueDate} · {billStatus(b,localToday())}</Body><Body>Pendiente: {formatMoney(outstanding(b))}</Body></Card>)}
+    <Card>
+     {bills.filter(b => !b.voidedAt && outstanding(b) > 0).sort((a, b) => a.dueDate.localeCompare(b.dueDate)).slice(0, 3).map(b => <Pressable key={b.id} accessibilityRole="button" accessibilityLabel={`Abrir factura de ${b.provider}, ${formatMoney(outstanding(b))}, vence ${b.dueDate}`} onPress={() => router.push('/bills')} style={[ui.row, { minHeight: 56 }]}><IconBadge icon="flash" size={38}/><View style={{ flex: 1 }}><Body style={{ fontWeight: '700' }}>{b.provider}</Body><Body muted style={ui.small}>{b.dueDate} · {billStatus(b, localToday())}</Body></View><Body style={{ fontWeight: '700' }}>{formatMoney(outstanding(b))}</Body></Pressable>)}
+     {!bills.some(b => !b.voidedAt && outstanding(b) > 0) ? <Body muted>No tienes facturas pendientes. Añade la primera para organizar tus vencimientos.</Body> : null}
+     <ActionButton title="Mis facturas" testID="open-bills" icon="calendar-outline" secondary onPress={() => router.push('/bills')}/>
+    </Card>
+    <Card style={{ backgroundColor: colors.mint }}><View style={ui.row}><IconBadge icon="document-text"/><View style={{ flex: 1 }}><Body style={{ fontWeight: '700' }}>Para mi contable</Body><Body muted style={ui.small}>Marca y organiza tus gastos para revisión.</Body></View></View><ActionButton title="Abrir Para mi contable" testID="open-tax" secondary onPress={() => router.push('/tax')}/></Card>
     <SectionHeading title="Distribución de gastos"/>
     <Distribution summary={summary}/>
+    <ActionButton title="Ver todas las transacciones" secondary onPress={() => setSegment('history')}/>
+    <ActionButton title="Registrar transferencia, préstamo o pago" secondary onPress={() => setForm({ kind: 'transfer' })}/>
+    <ActionButton title={showCalculation ? 'Ocultar detalle del disponible' : 'Cómo se calcula el disponible'} secondary onPress={() => setShowCalculation(!showCalculation)}/>
+    {showCalculation ? <Card>{[['Ingresos recibidos', summary.income], ['Gastos registrados', summary.expenses], ['Préstamos recibidos (no son ingresos)', summary.loans], ['Pagos de tarjeta o deuda', summary.payments], ['Aportaciones a metas', summary.contributions], ['Compromisos de facturas registrados', summary.commitments]].map(([label, value]) => <View key={label} style={ui.between}><Body style={{ flex: 1 }}>{label}</Body><Body style={{ fontWeight: '700' }}>{formatMoney(value as number)}</Body></View>)}<Body muted>Disponible = ingresos + préstamos − gastos pagados sin crédito − pagos de deuda − aportaciones − compromisos pendientes. Incluye fechas futuras del mes y parte de cero. Las transferencias propias no alteran el total. Las compras con crédito consumen presupuesto; su pago reduce el disponible una sola vez.</Body></Card> : null}
     <SectionHeading title="Ingresos recurrentes"/>
     <Card><Body muted>Las fechas previstas no son dinero recibido. Confirma cada cobro una sola vez; editar un cobro pasado no cambia su programación.</Body></Card>
     {!data.schedules.length ? <Card><Body>Añade un ingreso y elige Recurrente para preparar tus siguientes cobros.</Body></Card> : data.schedules.map(s => <Card key={s.id}><Body style={{ fontWeight: '700' }}>{s.description}</Body><Body>{formatMoney(s.amountCents)} · {s.active ? 'Próximo previsto' : 'En pausa'}: {s.nextDate}</Body><Body muted>Cada {s.intervalCount} {s.cadence === 'weekly' ? 'semana(s)' : 'mes(es)'}</Body>
      {s.active && s.nextDate <= localToday() && !busy ? <ActionButton title={`Confirmar cobro: ${s.description}`} onPress={() => void action(() => store.confirmSchedule(s.id, s.nextDate, newId(), localToday()), 'Cobro registrado. Los siguientes permanecen previstos.')}/> : null}
      {!busy ? <ActionButton title={s.active ? `Pausar: ${s.description}` : `Reanudar: ${s.description}`} secondary onPress={() => void action(() => store.toggleSchedule(s.id, !s.active), 'Programación actualizada. Los movimientos anteriores se conservan.')}/> : null}
     </Card>)}
-    <Card><Body style={{ fontWeight: '700' }}>Para mi contable</Body><Body>Organiza movimientos, informativas, comprobantes y pendientes para revisión profesional. Marcar un gasto no confirma deducibilidad.</Body><ActionButton title="Respaldo y recuperación" testID="open-backup" secondary onPress={()=>router.push('/backup')}/><ActionButton title="Abrir Para mi contable" testID="open-tax" secondary onPress={()=>router.push('/tax')}/></Card>
+    <ActionButton title="Respaldo y recuperación" testID="open-backup" secondary onPress={() => router.push('/backup')}/>
+
    </> : null}
    {segment === 'history' ? <>
     <Field label="Buscar descripción" value={query} onChangeText={v => { setQuery(v); setLimit(50); }}/>
@@ -165,9 +182,9 @@ function Distribution({ summary, budget = false }: {
     const { colors } = useTheme();
     const items = summary.distribution.filter(c => budget ? c.budget !== null || c.spent > 0 : c.spent > 0);
     return <Card>{!items.length ? <Body>{budget ? 'Define un presupuesto para comparar tus gastos.' : 'Aún no hay gastos registrados en este mes.'}</Body> : null}
-  {!budget && summary.expenses > 0 ? <View accessible accessibilityLabel={`Gastos del mes: ${formatMoney(summary.expenses)}. Desglose a continuación.`} style={{ alignItems: 'center' }}><Svg width={190} height={190} viewBox="0 0 190 190" aria-hidden>
+  {!budget && summary.expenses > 0 ? <View accessible accessibilityLabel={`Gastos del mes: ${formatMoney(summary.expenses)}. Desglose a continuación.`} style={{ alignItems: 'center', justifyContent: 'center' }}><Svg width={190} height={190} viewBox="0 0 190 190" aria-hidden>
    {items.map((item, index) => { const c = 2 * Math.PI * 70; const previous = items.slice(0, index).reduce((n, x) => n + BigInt(x.spent), 0n); return <Circle key={item.id} cx={95} cy={95} r={70} fill="none" stroke={[fixed.iconMint, fixed.iconBlue, fixed.iconCoral, fixed.iconViolet][index % 4]} strokeWidth={24} strokeDasharray={`${c * Number(BigInt(item.spent) * 10000n / BigInt(summary.expenses)) / 10000} ${c}`} strokeDashoffset={-c * Number(previous * 10000n / BigInt(summary.expenses)) / 10000} rotation={-90} origin="95,95"/>; })}
-  </Svg></View> : null}
+  </Svg><View pointerEvents="none" style={{ position: 'absolute', alignItems: 'center' }}><Body muted style={ui.small}>Gastos</Body><Body style={{ fontWeight: '800', fontSize: 20 }}>{formatMoney(summary.expenses)}</Body></View></View> : null}
   {items.map(item => {
             const pct = item.budget && item.budget > 0 ? Number(BigInt(item.spent) * 100n / BigInt(item.budget)) : 0;
             return <View key={item.id} style={{ gap: 8 }}><View style={ui.between}><Body style={{ flex: 1, fontWeight: '600' }}>{item.name}</Body><Body>{formatMoney(item.spent)}</Body></View>

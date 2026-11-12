@@ -1,7 +1,6 @@
 import { fixed } from '../design/tokens';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '../design/ThemeProvider';
 import { ActionButton, Body, Card, IconBadge, Screen } from '../ui/components';
 import { isPreview } from '../modules/money/localStore';
@@ -9,12 +8,11 @@ import { Brand } from '../ui/Brand';
 export default function Welcome() {
   const { name, colors } = useTheme();
   return <Screen title="EduMoney" welcome>
-    <View style={{ paddingVertical: 24, gap: 28, alignItems: 'center' }}>
-      <LinearGradient colors={name === 'dark' ? [fixed.heroDarkStart, fixed.heroDarkEnd] : [fixed.heroLightStart, fixed.heroLightEnd]} style={{ padding: 32, borderRadius: 40, width: '100%', alignItems: 'center', gap: 24 }}>
-        <View style={{ backgroundColor: colors.surface, borderRadius: 100, paddingHorizontal: 16, paddingVertical: 8 }}><Body style={{ fontSize: 12, fontWeight: '700', letterSpacing: 1.2 }}>TU DINERO. TUS DECISIONES.</Body></View>
-        <Brand large onDark={name === 'dark'} />
-        <Body style={{ textAlign: 'center', fontSize: 21, lineHeight: 30, color: name === 'dark' ? fixed.white : colors.text }}>Toma el control de tu dinero con decisiones informadas</Body>
-      </LinearGradient>
+    <View style={{ paddingVertical: 12, gap: 24, alignItems: 'center' }}>
+      <View style={{ width: '100%', alignItems: 'center', gap: 18, paddingVertical: 12 }}>
+        <Brand large onDark={name === 'dark'}/>
+        <Body style={{ textAlign: 'center', fontSize: 20, lineHeight: 28, color: name === 'dark' ? fixed.white : colors.text }}>Toma el control de tu dinero con decisiones informadas</Body>
+      </View>
       <View style={{ width: '100%', gap: 14 }}>
         <ActionButton testID="enter-demo" title={isPreview ? "Explorar demostración" : "Abrir Mi dinero"} icon="arrow-forward" onPress={() => router.replace('/(tabs)/money')} />
         <Body style={{ textAlign: 'center', color: name === 'dark' ? fixed.welcomeMutedDark : colors.muted, fontSize: 14 }}>{isPreview ? "Vista preliminar con datos ficticios. No necesitas crear una cuenta." : "Registra tu dinero y tu negocio en este dispositivo, sin crear una cuenta."}</Body>
