@@ -102,3 +102,5 @@ Negocio: [estados de recibos en español; Recibido verificado en nuevas compilac
 EduMoney registra pagos y cobros realizados fuera de la aplicación. El usuario introduce o confirma fecha, importe y comprobante; los cálculos estimados permanecen separados de los importes realmente pagados, retenidos o depositados. No ejecuta transferencias, cargos, depósitos bancarios ni pagos a empleados, proveedores o Hacienda. No requiere pasarela de pagos ni conectar cuentas bancarias para estos registros.
 
 [Registro manual de pagos realizados fuera de EduMoney: evidencia móvil](docs/stages/NEGOCIO-PAGOS-MANUALES-MOVIL.md).
+
+[Registro manual de IVU cobrado, remesas externas y presentación pendiente: evidencia Android/iOS](docs/stages/NEGOCIO-IVU-MANUAL-MOVIL.md).

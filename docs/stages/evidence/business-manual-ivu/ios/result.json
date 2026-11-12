@@ -1,0 +1,44 @@
+{
+  "run_id": 43145093757,
+  "job_id": 130940953851,
+  "artifact_id": 13911724669,
+  "procedure": "343a062",
+  "app_source": "905d96f",
+  "result": "success",
+  "command_statuses": {
+    "COMPLETED": 219,
+    "SKIPPED": 3
+  },
+  "app_cases": 1,
+  "expected": {
+    "simulated_base_cents": 100000,
+    "simulated_state_cents": 10500,
+    "simulated_municipal_cents": 1000,
+    "scenario_responsible": "pending",
+    "collected_cents": 11500,
+    "confirmed_state_remittance_cents": 10500,
+    "confirmed_municipal_remittance_cents": 1000,
+    "difference_progression_cents": [
+      11500,
+      1000,
+      0
+    ],
+    "filing_status": "pending",
+    "filing_amount_cents": null
+  },
+  "scope": "User-declared external records; no collection execution, remittance transfer or filing in SURI",
+  "visually_reviewed_screenshots": [
+    "ivu-summary-reopened.png",
+    "ivu-records-reopened.png"
+  ],
+  "driver_cases": 1,
+  "driver_test": "testHttpServer",
+  "encrypted_database": {
+    "encrypted_header": true,
+    "plain_sqlite_rejected": true,
+    "sha256": "f98d92d9596b10933548a8a1ea031c0e7d7102c8732393ae550b9f59ac8ad3ff",
+    "size": 569344
+  },
+  "database_hash_unchanged_after_reopen": true,
+  "backup_exclusion": "verified by successful ios-smoke.sh"
+}

@@ -1,0 +1,16 @@
+{
+  "run_id": 43142494462,
+  "job_id": 130932541178,
+  "artifact_id": 13911251155,
+  "app_cases": 1,
+  "result": "failed",
+  "failed_step": "After restart, scrollUntilVisible month with UP while field was below the initial viewport",
+  "confirmed_before_failure": [
+    "simulation with classification pending",
+    "manual collection 115",
+    "confirmed state remittance 105 and remaining 10",
+    "confirmed municipal remittance 10 and difference 0",
+    "filing remains pending without another payment"
+  ],
+  "correction": "Only the second month lookup scrolls DOWN; financial assertions unchanged"
+}

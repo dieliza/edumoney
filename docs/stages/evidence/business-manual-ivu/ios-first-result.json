@@ -1,0 +1,20 @@
+{
+  "run_id": 43142494462,
+  "job_id": 130932540977,
+  "artifact_id": 13910583859,
+  "app_cases": 1,
+  "xctest_cases": 1,
+  "xctest_starts": [
+    "testHttpServer"
+  ],
+  "result": "failed",
+  "failed_step": "After restart, month lookup scrolled UP while field was below initial viewport",
+  "confirmed_before_failure": [
+    "simulation with classification pending",
+    "manual collection 115",
+    "confirmed state remittance 105 and remaining 10",
+    "confirmed municipal remittance 10 and difference 0",
+    "filing remains pending without another payment"
+  ],
+  "correction": "343a062 uses DOWN for the second month lookup only"
+}

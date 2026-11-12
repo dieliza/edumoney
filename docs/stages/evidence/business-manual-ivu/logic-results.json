@@ -1,0 +1,12 @@
+{
+  "fictitious": true,
+  "unit_cases_passed": 2,
+  "unit_cases_skipped": 38,
+  "checks": [
+    "Unknown IVU total can be reconstructed only when both actual components are known; an unknown component keeps the total unknown",
+    "A changed offer preserves the historical classification snapshot of an existing collection; stale version updates are rejected"
+  ],
+  "repeated_previous_cases": 0,
+  "lint": "passed",
+  "typecheck": "passed"
+}

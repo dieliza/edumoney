@@ -1,0 +1,35 @@
+{
+  "run_id": 43144248581,
+  "job_id": 130938228694,
+  "artifact_id": 13910294779,
+  "procedure": "343a062",
+  "app_source": "905d96f",
+  "result": "success",
+  "command_statuses": {
+    "COMPLETED": 214,
+    "SKIPPED": 5
+  },
+  "app_cases": 1,
+  "expected": {
+    "simulated_base_cents": 100000,
+    "simulated_state_cents": 10500,
+    "simulated_municipal_cents": 1000,
+    "scenario_responsible": "pending",
+    "collected_cents": 11500,
+    "confirmed_state_remittance_cents": 10500,
+    "confirmed_municipal_remittance_cents": 1000,
+    "difference_progression_cents": [
+      11500,
+      1000,
+      0
+    ],
+    "filing_status": "pending",
+    "filing_amount_cents": null
+  },
+  "scope": "User-declared external records; no collection execution, remittance transfer or filing in SURI",
+  "visually_reviewed_screenshots": [
+    "ivu-state-only.png",
+    "ivu-summary-reopened.png",
+    "ivu-records-reopened.png"
+  ]
+}

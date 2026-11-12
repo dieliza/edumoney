@@ -1,0 +1,23 @@
+{
+  "scenario": "business-manual-ivu",
+  "app_source": "905d96f",
+  "procedure_initial": "4c471b0",
+  "procedure_corrected": "343a062",
+  "reused_binary_run": 42948943240,
+  "executed_cases": 8,
+  "breakdown": {
+    "selected_unit_passed": 2,
+    "initial_app_failed": 2,
+    "corrected_app_passed": 2,
+    "ios_http_driver_passed": 2
+  },
+  "initial_run": 43142494462,
+  "android_corrected_run": 43144248581,
+  "ios_corrected_run": 43145093757,
+  "failure": "Post-restart month lookup scrolled UP although field was below; changed only second lookup to DOWN",
+  "lint": "passed",
+  "typecheck": "passed",
+  "main_modified": false,
+  "published": false,
+  "external_payment_execution": false
+}
