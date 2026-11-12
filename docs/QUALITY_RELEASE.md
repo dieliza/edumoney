@@ -21,7 +21,7 @@
 
 ## Límites vigentes
 
-No existe radicación automática ni certificación de Hacienda. Las compilaciones disponibles son para emulador Android x86_64 y simulador iOS; todavía no son paquetes firmados para teléfonos ni TestFlight. Las tablas 2025 no se aplican a 2026. La determinación de elegibilidad e importes de crédito por trabajo, contribución básica alterna y demás anejos no está automatizada. El saldo de la línea 31 sí se calcula con todos los componentes declarados; sus campos vacíos quedan pendientes. PDF de borrador y exportaciones son documentos legibles por elección del usuario; un respaldo de recuperación es un archivo distinto y cifrado.
+No existe radicación automática ni certificación de Hacienda. Las compilaciones de validación son para emulador Android x86_64 y simulador iOS. También se generó un APK interno Android arm64 con firma de prueba y controles sintéticos desactivados; falta comprobarlo en teléfono. No existe todavía un paquete iOS físico firmado ni TestFlight. Las tablas 2025 no se aplican a 2026. La determinación de elegibilidad e importes de crédito por trabajo, contribución básica alterna y demás anejos no está automatizada. El saldo de la línea 31 sí se calcula con todos los componentes declarados; sus campos vacíos quedan pendientes. PDF de borrador y exportaciones son documentos legibles por elección del usuario; un respaldo de recuperación es un archivo distinto y cifrado.
 
 
 ## Seguimientos actuales de Negocio
@@ -34,9 +34,9 @@ No existe radicación automática ni certificación de Hacienda. Las compilacion
 | Recuperación con Negocio y nómina | Prueba integrada de archivo cifrado hacia base SQLite vacía, imagen y relaciones; reapertura y continuación de depósitos | Selección/guardado desde Archivos y recuperación entre teléfonos físicos |
 | Gasto mixto y recibo manual | Reparto y parte comercial por titular/proyecto, recibo y nota exacta tras reiniciar en Android/iOS | Otros flujos comerciales, imagen/cámara, otras etiquetas/casos documentales y pruebas físicas |
 | Ingreso con desglose y reservas manuales | Neto, componentes, reparto y reservas conservados tras reiniciar en Android/iOS; reservas sin gastos adicionales | Otros casos y teléfonos físicos |
-| Revisión comercial y exportación | Nota, porcentaje y reparto conservados; Android JSON/CSV recibidos y validados; iOS apertura/cancelación aprobada | QA-NEGOCIO-02: reejecución del último desplazamiento Android; comprobantes/imágenes, destinos externos iOS y teléfonos físicos |
+| Revisión comercial y exportación | Nota, porcentaje y reparto conservados; Android JSON/CSV recibidos y validados; iOS apertura/cancelación aprobada | Comprobantes/imágenes, destinos externos iOS y teléfonos físicos; QA-NEGOCIO-02 cerrado en la regresión de cierre Android |
 | IVU y contratistas | Seis fuentes y casos seleccionados de lógica/persistencia; navegación, formularios, pagos externos de contratista/depósito y cobro/remesas IVU declarados reabiertos en Android/iOS; presentación IVU sigue pendiente sin sumar pago | Relevos, casos especiales y plataformas de venta desde la interfaz; teléfonos físicos |
-| Panel y escenarios comerciales | Cálculos seleccionados y escenario parcial guardado/reabierto en Android; simular conserva el panel | Repetición iOS corregida pendiente por HTTP 401; flujo nativo completo con estimadas/proyección, texto antiguo de nómina y pruebas físicas |
+| Panel y escenarios comerciales | Panel completo con estimada pagada, reservas, proyección y escenario conservados en Android/iOS; perfil incompleto conserva pendientes en ambos; texto de nómina corregido | Teléfonos físicos, lectores de pantalla, más tamaños de letra y casos fuera del recorrido seleccionado |
 
 [Pagos móviles](stages/NEGOCIO-05-PAGOS-MOVIL.md) · [Tasas y exportaciones móviles](stages/NEGOCIO-05-TASAS-EXPORTACION-MOVIL.md) · [Recuperación integrada](stages/CIERRE-RESPALDO-NEGOCIO.md).
 
@@ -57,3 +57,5 @@ Los números de pruebas de los informes históricos corresponden a sus bloques a
 [IVU externo — cobro, remesas y presentación pendiente verificados en Android/iOS](stages/NEGOCIO-IVU-MANUAL-MOVIL.md).
 
 [Panel y escenario parcial — evidencia Android y limitación de acceso iOS](stages/NEGOCIO-PANEL-ESCENARIOS-MOVIL.md).
+
+[Cierre técnico — resultados seleccionados, capturas y preparación de entrega](stages/CIERRE-APP.md).

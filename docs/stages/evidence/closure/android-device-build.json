@@ -1,0 +1,22 @@
+{
+  "run_id": 43157032505,
+  "job_id": 130979239645,
+  "artifact_id": 13917325324,
+  "build_commit": "c92e384",
+  "result": "success",
+  "filename": "EduMoney-android-arm64-prueba.apk",
+  "bytes": 54652801,
+  "sha256": "0da24083ff919486f08ad03f7ac37f7e064a610f2682617c00a063e2e2a4f6f0",
+  "checksum_matches": true,
+  "abis": [
+    "arm64-v8a"
+  ],
+  "manifest_present": true,
+  "bundled_javascript_present": true,
+  "test_controls": "EXPO_PUBLIC_PLANILLA_TESTS=0; guards require exact string 1",
+  "tests_executed": 0,
+  "physical_execution_verified": false,
+  "signing": "Internal test signing from generated project, not official store distribution",
+  "download": "https://github.com/dieliza/edumoney/actions/runs/43157032505/artifacts/13917325324",
+  "expires_at": "2026-11-19T04:57:21Z"
+}

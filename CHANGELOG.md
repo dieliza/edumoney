@@ -262,3 +262,13 @@
 - Nuevas aplicaciones compiladas con el código corregido. Primer arranque iOS fallido por una opción de Xcode corregido sin repetir el Android aprobado.
 - Controlador iOS limitado efectivamente a un caso XCTest, sin las seis pruebas internas. Total conservador 7 de 10, contando las tres pruebas de código previas y el arranque fallido. Sin suite completa ni nuevas pruebas al finalizar. [Informe y capturas](docs/stages/UI-NEGOCIO-01-VISUAL.md).
 - UI-NEGOCIO-01 cerrada para simuladores; sin cambios en main ni publicación.
+
+
+## Cierre técnico — 12 de noviembre de 2026
+
+- Texto de nómina actualizado en panel y calendario comercial.
+- Panel completo con estimadas, efectivo, reservas y escenario guardado/reabierto en Android/iOS; perfil incompleto mantiene datos pendientes.
+- QA-NEGOCIO-02 cerrado en una regresión de exportación Android, sin alterar su presupuesto histórico.
+- 40 casos de lógica aprobados; navegador de producción y recorridos finales aprobados. Conteo conservador de cierre: 95 casos/intentos, incluidos fallos, diagnósticos y controladores.
+- Guía de uso, preparación de firma, perfiles EAS y APK interno Android arm64 sin controles sintéticos. No se publicó ni se fusionó main.
+- Logo original separado, identidad/contacto de privacidad, firma iOS física y revisión en dispositivos siguen pendientes de recursos externos.

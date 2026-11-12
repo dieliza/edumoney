@@ -1,0 +1,17 @@
+{
+  "run_id": 43152429446,
+  "job_id": 130964538172,
+  "artifact_id": 13914987180,
+  "procedure": "b650274",
+  "app_source": "7b918b9",
+  "result": "failed",
+  "command_statuses": {
+    "COMPLETED": 81,
+    "SKIPPED": 2,
+    "FAILED": 1
+  },
+  "app_cases": 1,
+  "driver_cases": 1,
+  "failure": "Return-to-business tap did not navigate; screenshot still shows ledger and persisted reserves 200/115/0. Panel controls were then searched on the wrong screen.",
+  "fix": "d419929: reveal return control using iOS gutter swipe, wait for animation, assert arrival at Negocio before opening planning"
+}

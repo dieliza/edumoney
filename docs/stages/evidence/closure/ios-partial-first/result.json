@@ -12,7 +12,7 @@
   "driver_starts": [
     "Test Case '-[maestro_driver_iosUITests.maestro_driver_iosUITests testHttpServer]' started."
   ],
-  "failure": "Post-save scenario lookup failed; screenshot shows sheet still open without validation error",
-  "fix": "iOS waits for animation and taps Guardar registro local by text; no production data handling changed",
+  "failure": "Sheet remained open after save attempt; validation area was above the captured viewport, so the cause is not established by that screenshot",
+  "fix": "Automation changed to wait and text tap; subsequent run still left sheet open. Next diagnostic centers and asserts required name and assumptions.",
   "post_flow_crypto_verified": false
 }

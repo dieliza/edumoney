@@ -1,0 +1,17 @@
+{
+  "run_id": 43154464084,
+  "job_id": 130971052071,
+  "artifact_id": 13915642434,
+  "procedure": "f4644be",
+  "app_source": "7b918b9",
+  "result": "failed",
+  "command_statuses": {
+    "COMPLETED": 74,
+    "SKIPPED": 4,
+    "FAILED": 1
+  },
+  "app_cases": 1,
+  "driver_cases": 1,
+  "progress": "Exact name/assumptions assertions passed, scenario saved and result $100 verified; calendar selection then failed while scenario screen remained visible",
+  "fix": "55af861 centers section controls and reveals them via the iOS margin before tapping"
+}

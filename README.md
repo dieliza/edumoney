@@ -1,6 +1,8 @@
 # EduMoney — Dinero local y presupuesto
 
-Base móvil local para iOS y Android. React Native 0.88, Expo SDK 58 y TypeScript estricto.
+Aplicación móvil local para iOS y Android. React Native 0.88, Expo SDK 58 y TypeScript estricto.
+
+[Estado de entrega y límites](docs/ENTREGA.md) · [Guía de uso](docs/GUIA_USO.md) · [Compilaciones y firma](docs/COMPILACIONES.md).
 El repositorio remoto inspeccionado estaba vacío: sin ramas, archivos ni funciones previas que preservar.
 
 ## Ejecutar
@@ -9,7 +11,8 @@ Requisitos: Node 24, npm; para Android, JDK y Android SDK; para iOS, macOS y Xco
 
 ```sh
 npm ci
-npm run check
+npm run typecheck
+npm test -- tests/money.test.ts tests/key.test.ts tests/theme.test.ts
 npm run lint
 npm run android
 # En macOS:
@@ -21,7 +24,7 @@ SQLCipher requiere compilación nativa: **Expo Go y la web no son destinos compa
 No se necesita cuenta Expo/EAS para compilar localmente. El modo desarrollo usa Metro; una compilación release no lo necesita.
 
 La Etapa 2 incorpora bienvenida, cuatro pestañas y temas Claro/Oscuro/Automático con ejemplos ficticios.
-La preferencia se guarda localmente. En la Etapa 3, Mi dinero permite registrar ingresos, gastos, transferencias, préstamos y pagos, gestionar categorías y presupuestos y corregir/restaurar movimientos en la base cifrada. Las pestañas pendientes conservan datos ficticios identificados. El archivo separado del logo sigue pendiente de integración.
+La preferencia se guarda localmente. En la Etapa 3, Mi dinero permite registrar ingresos, gastos, transferencias, préstamos y pagos, gestionar categorías y presupuestos y corregir/restaurar movimientos en la base cifrada. El navegador conserva vistas informativas con datos ficticios identificados; los módulos financieros funcionan en la aplicación nativa. El archivo original separado del logo sigue pendiente de integración.
 
 La Etapa 4 añade facturas, pagos parciales, recurrencias y avisos locales, con acceso desde Mi dinero. [Guía de Mis facturas](docs/USAR_MIS_FACTURAS.md).
 
@@ -71,7 +74,7 @@ Las capturas y el estado de verificación se documentan en [Etapa 2](docs/stages
 
 [Segunda entrega: funcionamiento, pruebas y límites](docs/stages/NEGOCIO-02.md) · [Ejemplo ficticio para revisión del CPA](docs/stages/evidence/business02/README.md).
 
-Negocio incorpora flujos separados para IVU y contratistas, con simuladores locales y registros de cobros, retenciones, remesas y formularios. [Entrega Negocio 3](docs/stages/NEGOCIO-03.md) · [Fuentes oficiales y alcance 2026](docs/tax/business-2026/SOURCES.md). El esquema 12 incluye estos registros en el respaldo cifrado; se conservan las restauraciones 9–11 con advertencias de reemplazo. La interacción de los nuevos formularios en dispositivos queda pendiente.
+Negocio incorpora flujos separados para IVU y contratistas, con simuladores locales y registros de cobros, retenciones, remesas y formularios. [Entrega Negocio 3](docs/stages/NEGOCIO-03.md) · [Fuentes oficiales y alcance 2026](docs/tax/business-2026/SOURCES.md). El esquema 12 incluye estos registros en el respaldo cifrado; se conservan las restauraciones 9–11 con advertencias de reemplazo. Los recorridos de simulador se documentan en los seguimientos; la revisión física permanece pendiente.
 
 [Reparaciones de teclado, entrevista y límites comerciales](docs/stages/REPARACIONES-01.md).
 
@@ -106,3 +109,5 @@ EduMoney registra pagos y cobros realizados fuera de la aplicación. El usuario 
 [Registro manual de IVU cobrado, remesas externas y presentación pendiente: evidencia Android/iOS](docs/stages/NEGOCIO-IVU-MANUAL-MOVIL.md).
 
 [Panel y escenario parcial: Android verificado, repetición iOS pendiente de autenticación](docs/stages/NEGOCIO-PANEL-ESCENARIOS-MOVIL.md).
+
+[Cierre del panel y exportaciones: resultados finales seleccionados y preparación de entrega](docs/stages/CIERRE-APP.md).

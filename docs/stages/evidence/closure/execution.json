@@ -1,0 +1,46 @@
+{
+  "status": "selected functional verification completed; internal Android arm64 APK built",
+  "max_cases": 100,
+  "logic_passed": 40,
+  "browser_conservative_count": 34,
+  "browser_breakdown": {
+    "sandbox_launch_failures": 8,
+    "disk_space_startup_allowance": 8,
+    "development_cases": 8,
+    "production_cases": 7,
+    "interactive_diagnostics": 3
+  },
+  "initial_native_run": 43150441511,
+  "initial_native_count": 3,
+  "replaced_run": 43152289668,
+  "replaced_conservative_count": 6,
+  "current_run": 43152429446,
+  "current_reserved_cases": 6,
+  "planned_conservative_total": 95,
+  "remaining_before_any_new_retries": 5,
+  "general_suite_executed": false,
+  "main_modified": false,
+  "published": false,
+  "additional_partial_ios_run": 43154464084,
+  "additional_partial_ios_reserved_cases": 2,
+  "additional_complete_ios_procedure": "d419929",
+  "additional_complete_ios_reserved_cases": 2,
+  "additional_partial_ios_procedure": "55af861",
+  "additional_partial_ios_radio_retry_reserved_cases": 2,
+  "conservative_total": 95,
+  "final_native_runs": {
+    "android_partial": 43150441511,
+    "android_complete_and_export": 43152429446,
+    "ios_complete": 43154938658,
+    "ios_partial": 43156189480
+  },
+  "device_build_run": 43157032505,
+  "device_build_tests": 0,
+  "device_build_result": "success",
+  "remaining_external": [
+    "Original separate official logo file",
+    "Privacy owner/contact",
+    "Apple signing/provisioning for physical iOS",
+    "Physical device checks and official tax issuance validation"
+  ]
+}

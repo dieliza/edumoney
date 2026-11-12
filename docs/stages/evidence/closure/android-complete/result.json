@@ -1,0 +1,29 @@
+{
+  "run_id": 43152429446,
+  "artifact_id": 13915840017,
+  "procedure": "b650274",
+  "app_source": "7b918b9",
+  "result": "success",
+  "command_statuses": {
+    "COMPLETED": 252,
+    "SKIPPED": 7
+  },
+  "job_id": 130964538262,
+  "visually_reviewed_screenshots": [
+    "complete-panel-reopened.png",
+    "complete-scenario-reopened.png"
+  ],
+  "expected": {
+    "cash_cents": 90000,
+    "reserved_cents": 31500,
+    "available_cents": 58500,
+    "paid_estimates_cents": 10000,
+    "due_cents": 65000,
+    "need_reserve_cents": 45000,
+    "scenario_profit_cents": 40000,
+    "scenario_cash_cents": 90000,
+    "scenario_due_cents": 73000,
+    "scenario_need_reserve_cents": 53000,
+    "scenario_financed_equipment_cents": 30000
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "run_id": 43150441511,
+  "job_id": 130958070716,
+  "artifact_id": 13914775365,
+  "app_source": "7b918b9",
+  "result": "success",
+  "command_statuses": {
+    "COMPLETED": 95,
+    "SKIPPED": 3
+  },
+  "app_cases": 1
+}

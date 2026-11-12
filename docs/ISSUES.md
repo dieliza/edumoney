@@ -28,11 +28,23 @@ Se reutilizan las etiquetas de `statusOptions` en la ficha y los botones: Recibi
 
 ## QA-NEGOCIO-02 — Visibilidad del botón al volver de compartir en Android
 
-Estado: **ajuste de automatización aplicado; reejecución pendiente**. En 43124881691, JSON y CSV comerciales se recibieron y validaron correctamente, y la aplicación volvió al formulario. La última aserción esperaba el botón CSV visible sin desplazar, pero estaba debajo de la vista. 4a2e38c añade scrollUntilVisible; no se ejecutó de nuevo para cerrar el presupuesto de diez casos conservadores de este bloque. No se declara aprobado ese trabajo Android ni se bloquea el cálculo o la exportación de la aplicación. iOS aprobó el mismo recorrido en 43125832018.
+Estado histórico del bloque anterior: **ajuste de automatización aplicado; reejecución pendiente**. En 43124881691, JSON y CSV comerciales se recibieron y validaron correctamente, y la aplicación volvió al formulario. La última aserción esperaba el botón CSV visible sin desplazar, pero estaba debajo de la vista. 4a2e38c añade scrollUntilVisible; no se ejecutó de nuevo para cerrar el presupuesto de diez casos conservadores de este bloque. No se declara aprobado ese trabajo Android ni se bloquea el cálculo o la exportación de la aplicación. iOS aprobó el mismo recorrido en 43125832018.
 
 [Informe, capturas y presupuesto cerrado](stages/NEGOCIO-REVISION-EXPORTACION-MOVIL.md). No repetir los casos de este bloque ni reiniciar su contador.
 
 
+### Cierre de QA-NEGOCIO-02 en la regresión de entrega
+
+Estado actual: **resuelta en Android de emulador**, ejecución [43152429446](https://github.com/dieliza/edumoney/actions/runs/43152429446), job 130964538115, artefacto 13913919237, aplicación `7b918b9`. El recorrido completo terminó success: 136 comandos completados y 7 omitidos, incluido el desplazamiento final hasta Compartir CSV de movimientos después de volver del receptor. Se revisaron las capturas del CSV validado y del gasto reabierto: $55, 50% comercial/$27.50, repartos $30/$25 y un movimiento. El receptor local no guarda archivos ni usa red.
+
+Es un caso nuevo de regresión del cierre autorizado, contado en `evidence/closure/execution.json`; no se reinicia ni altera el presupuesto histórico del bloque anterior. Destinos reales y teléfonos físicos continúan pendientes.
+
+
 ## UI-NEGOCIO-03 — Texto del calendario comercial sobre nómina
 
-Estado: **pendiente de corrección de texto y verificación en nueva compilación**. El módulo de nómina ya existe, pero `planning/Forms.tsx` y `planning/domain.ts` todavía lo anuncian como próximo bloque. No afecta importes, almacenamiento ni ejecución de pagos. Detectado durante la revisión del panel; el bloque actual solo cambia automatización y pruebas y reutiliza binarios existentes.
+Estado al detectarlo: **pendiente de corrección de texto y verificación en nueva compilación**. El módulo de nómina ya existe, pero `planning/Forms.tsx` y `planning/domain.ts` todavía lo anuncian como próximo bloque. No afecta importes, almacenamiento ni ejecución de pagos. Detectado durante la revisión del panel; el bloque actual solo cambia automatización y pruebas y reutiliza binarios existentes.
+
+
+### Resolución de UI-NEGOCIO-03
+
+Texto corregido en `7b918b9`: Forms y calendario remiten a Nómina existente y a obligaciones por confirmar. Las nuevas aplicaciones Android/iOS compilaron con ese código; la corrección no cambia importes ni registros. No se presenta como una evaluación física de accesibilidad.

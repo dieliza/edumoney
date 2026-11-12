@@ -1,0 +1,11 @@
+{
+  "run_id": 43152289668,
+  "procedure": "8a7c04c",
+  "replacement_procedure": "b650274",
+  "reason": "Concurrent reusable jobs would upload identical platform artifact names; corrected per-scenario suffixes before relying on results",
+  "conservative_attempts": 4,
+  "conservative_ios_driver_allowance": 2,
+  "conservative_budget_consumed": 6,
+  "native_outcomes": "cancelled; no success claimed",
+  "replacement_only": "Explicit replace-invalid-ci marker; normal pushes retain cancel-in-progress false"
+}

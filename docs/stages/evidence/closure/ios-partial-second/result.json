@@ -1,0 +1,16 @@
+{
+  "run_id": 43152429446,
+  "artifact_id": 13914733144,
+  "procedure": "b650274",
+  "app_source": "7b918b9",
+  "result": "failed",
+  "command_statuses": {
+    "COMPLETED": 65,
+    "SKIPPED": 3,
+    "FAILED": 1
+  },
+  "job_id": 130964537853,
+  "failure": "Sheet still open after wait/text save attempt; next run centers and asserts name/assumptions and reveals validation area",
+  "driver_cases": 1,
+  "app_cases": 1
+}

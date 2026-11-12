@@ -1,0 +1,41 @@
+{
+  "run_id": 43154938658,
+  "job_id": 130972568402,
+  "artifact_id": 13915948386,
+  "procedure": "d419929",
+  "app_source": "7b918b9",
+  "result": "success",
+  "command_statuses": {
+    "COMPLETED": 264,
+    "SKIPPED": 6
+  },
+  "app_cases": 1,
+  "driver_starts": [
+    "Test Case '-[maestro_driver_iosUITests.maestro_driver_iosUITests testHttpServer]' started."
+  ],
+  "encrypted_database": {
+    "encrypted_header": true,
+    "plain_sqlite_rejected": true,
+    "sha256": "4bdc670fd5872ed27c978a7bba3f883e0f7721729ef3c0f90cd2c7de786360f6",
+    "size": 569344
+  },
+  "unchanged_after_reopen": true,
+  "backup_exclusion": "verified by successful ios-smoke.sh",
+  "visually_reviewed_screenshots": [
+    "complete-panel-reopened.png",
+    "complete-scenario-reopened.png"
+  ],
+  "expected": {
+    "cash_cents": 90000,
+    "reserved_cents": 31500,
+    "available_cents": 58500,
+    "paid_estimates_cents": 10000,
+    "due_cents": 65000,
+    "need_reserve_cents": 45000,
+    "scenario_profit_cents": 40000,
+    "scenario_cash_cents": 90000,
+    "scenario_due_cents": 73000,
+    "scenario_need_reserve_cents": 53000,
+    "scenario_financed_equipment_cents": 30000
+  }
+}

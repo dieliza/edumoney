@@ -1,0 +1,25 @@
+{
+  "run_id": 43152429446,
+  "job_id": 130964538115,
+  "artifact_id": 13913919237,
+  "procedure": "b650274",
+  "app_source": "7b918b9",
+  "result": "success",
+  "command_statuses": {
+    "COMPLETED": 136,
+    "SKIPPED": 7
+  },
+  "app_cases": 1,
+  "issue": "QA-NEGOCIO-02 final CSV button visibility after sharing passed in closure regression",
+  "visually_reviewed_screenshots": [
+    "commercial-received-csv.png",
+    "commercial-review-reopened.png"
+  ],
+  "validated_export": {
+    "expense_cents": 5500,
+    "commercial_cents": 2750,
+    "allocation_rows": 2,
+    "financial_movements": 1,
+    "fixture": "isolated in-memory local receiver, no network or saved files"
+  }
+}
