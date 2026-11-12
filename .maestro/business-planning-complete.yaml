@@ -268,7 +268,20 @@ appId: com.edumoney.app
     direction: UP
     centerElement: false
     timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,35%
+        end: 5%,60%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
 - tapOn: Volver a Negocio
+- extendedWaitUntil:
+    visible: ^Negocio$
+    timeout: 60000
 - scrollUntilVisible:
     element: 'Panel y escenarios: Titular FICTICIO panel completo'
     direction: DOWN
@@ -583,11 +596,14 @@ appId: com.edumoney.app
     element:
       id: record-name
     direction: DOWN
-    centerElement: false
+    centerElement: true
     timeout: 60000
 - tapOn:
     id: record-name
 - inputText: ESCENARIO-FICTICIO-COMPLETO
+- assertVisible:
+    id: record-name
+    text: ^ESCENARIO-FICTICIO-COMPLETO$
 - tapOn:
     id: sheet-dismiss-keyboard
 - scrollUntilVisible:
@@ -671,11 +687,14 @@ appId: com.edumoney.app
     element:
       id: record-assumptions
     direction: DOWN
-    centerElement: false
+    centerElement: true
     timeout: 60000
 - tapOn:
     id: record-assumptions
 - inputText: SUPUESTOS-FICTICIOS-SIN-MOVER-DINERO
+- assertVisible:
+    id: record-assumptions
+    text: ^SUPUESTOS-FICTICIOS-SIN-MOVER-DINERO$
 - tapOn:
     id: sheet-dismiss-keyboard
 - scrollUntilVisible:
