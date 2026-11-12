@@ -571,7 +571,7 @@ appId: com.edumoney.app
     element:
       text: ^Mes de consulta AAAA-MM$
       below: ^Mes de consulta AAAA-MM$
-    direction: UP
+    direction: DOWN
     centerElement: true
     timeout: 60000
 - tapOn:
