@@ -1,0 +1,207 @@
+appId: com.edumoney.app
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    timeout: 60000
+    visible: Abrir Mi dinero
+- tapOn: Abrir Mi dinero
+- tapOn: Negocio.*
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element:
+      id: business-legal-name
+- tapOn:
+    id: business-legal-name
+- inputText: Titular FICTICIO obligaciones
+- assertVisible: ^Titular FICTICIO obligaciones$
+- tapOn:
+    id: form-dismiss-keyboard
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: Comerciante individual
+- runFlow:
+    commands:
+    - swipe:
+        duration: 600
+        end: 5%,60%
+        start: 5%,35%
+    when:
+      platform: iOS
+- tapOn: Comerciante individual
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element: Clasificación contributiva de Puerto Rico
+- assertVisible: Clasificación contributiva de Puerto Rico
+- scrollUntilVisible:
+    centerElement: true
+    direction: DOWN
+    element:
+      id: business-save
+    timeout: 60000
+- tapOn:
+    id: business-save
+- scrollUntilVisible:
+    element: 'IVU y contratistas: Titular FICTICIO obligaciones'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,70%
+        end: 5%,55%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
+- tapOn: 'IVU y contratistas: Titular FICTICIO obligaciones'
+- extendedWaitUntil:
+    visible: IVU y contratistas
+    timeout: 60000
+- scrollUntilVisible:
+    element: '(?s)^PR-NEGOCIO-2026[.]1 · Fuentes verificadas: 2026-11-09[.].*$'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: '(?s)^PR-NEGOCIO-2026[.]1 · Fuentes verificadas: 2026-11-09[.].*$'
+- scrollUntilVisible:
+    element: Ver fuentes y vigencia
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Ver fuentes y vigencia
+- scrollUntilVisible:
+    element: (?s)^SC 2915, julio 2026 en adelante · Períodos desde 2026-07.*$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: (?s)^SC 2915, julio 2026 en adelante · Períodos desde 2026-07.*$
+- takeScreenshot: ivu-source-and-validity
+- scrollUntilVisible:
+    element: Ocultar fuentes oficiales
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,35%
+        end: 5%,60%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
+- tapOn: Ocultar fuentes oficiales
+- scrollUntilVisible:
+    element: Añadir oferta de IVU
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Añadir oferta de IVU
+- extendedWaitUntil:
+    visible:
+      id: record-name
+    timeout: 60000
+- assertVisible:
+    id: record-name
+- takeScreenshot: ivu-blank-offer
+- scrollUntilVisible:
+    element:
+      id: record-cancel
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-cancel
+- scrollUntilVisible:
+    element: ^Contratistas$
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,35%
+        end: 5%,60%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
+- tapOn: ^Contratistas$
+- scrollUntilVisible:
+    element: Añadir proveedor legal
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn: Añadir proveedor legal
+- extendedWaitUntil:
+    visible:
+      id: record-name
+    timeout: 60000
+- assertVisible:
+    id: record-reference
+- takeScreenshot: contractor-blank-provider
+- scrollUntilVisible:
+    element:
+      id: record-cancel
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: record-cancel
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible: Abrir Mi dinero
+    timeout: 60000
+- tapOn: Abrir Mi dinero
+- tapOn: Negocio.*
+- scrollUntilVisible:
+    element: 'IVU y contratistas: Titular FICTICIO obligaciones'
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,70%
+        end: 5%,55%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
+- tapOn: 'IVU y contratistas: Titular FICTICIO obligaciones'
+- extendedWaitUntil:
+    visible: IVU y contratistas
+    timeout: 60000
+- scrollUntilVisible:
+    element: ^Contratistas$
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+    - swipe:
+        start: 5%,35%
+        end: 5%,60%
+        duration: 600
+    - waitForAnimationToEnd:
+        timeout: 5000
+- tapOn: ^Contratistas$
+- scrollUntilVisible:
+    element: Añadir proveedor legal
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: Añadir proveedor legal
+- takeScreenshot: obligations-reopened
