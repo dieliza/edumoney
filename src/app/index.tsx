@@ -17,7 +17,7 @@ export default function Welcome() {
       </LinearGradient>
       <View style={{ width: '100%', gap: 14 }}>
         <ActionButton testID="enter-demo" title={isPreview ? "Explorar demostración" : "Abrir Mi dinero"} icon="arrow-forward" onPress={() => router.replace('/(tabs)/money')} />
-        <Body style={{ textAlign: 'center', color: name === 'dark' ? fixed.welcomeMutedDark : colors.muted, fontSize: 14 }}>{isPreview ? "Vista preliminar con datos ficticios. No necesitas crear una cuenta." : "Registra tu dinero en este dispositivo, sin crear una cuenta. Las demás pestañas siguen en demostración."}</Body>
+        <Body style={{ textAlign: 'center', color: name === 'dark' ? fixed.welcomeMutedDark : colors.muted, fontSize: 14 }}>{isPreview ? "Vista preliminar con datos ficticios. No necesitas crear una cuenta." : "Registra tu dinero y tu negocio en este dispositivo, sin crear una cuenta."}</Body>
       </View>
       <Card style={{ width: '100%', gap: 18 }}>
         <Body style={{ fontSize: 19, fontWeight: '700' }}>Tu tranquilidad va primero</Body>

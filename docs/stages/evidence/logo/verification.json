@@ -1,0 +1,20 @@
+{
+  "original_filename": "Archivo.jpg.PNG",
+  "asset": "assets/edumoney-official-logo.png",
+  "format": "PNG",
+  "dimensions": [
+    1254,
+    1254
+  ],
+  "bytes": 1558958,
+  "sha256": "d3dda9b9e02535e8cfe8c452caaefa6274da7adc9ac8ca33c7fba9bbfc099bb9",
+  "byte_identical_to_upload": true,
+  "edits_to_image": null,
+  "rendering": "contain, square responsive container; original image in both themes",
+  "browser_cases": 1,
+  "browser_passed": 1,
+  "lint": "passed",
+  "typecheck": "passed",
+  "native_financial_cases_repeated": 0,
+  "apk_build": "pending"
+}

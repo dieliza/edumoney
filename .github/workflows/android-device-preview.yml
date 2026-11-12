@@ -57,7 +57,7 @@ jobs:
           Sin controles de prueba o recibos sintéticos en la interfaz (EXPO_PUBLIC_PLANILLA_TESTS=0).
           No ejecuta cobros, transferencias ni pagos. Probar primero con datos ficticios.
           Deben verificarse permisos, cifrado, respaldo/recuperación y accesibilidad en un teléfono.
-          El logo oficial separado continúa pendiente; se muestra el nombre EduMoney en texto.
+          Incluye el logo oficial proporcionado por el usuario, conservado sin modificaciones.
           No instalar una compilación con firma distinta sobre datos importantes sin respaldo recuperable.
           TEXT
       - uses: actions/upload-artifact@v4

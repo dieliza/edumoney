@@ -66,7 +66,7 @@
         "expo-speech-recognition",
         {
           "microphonePermission": "Dicta datos para revisarlos antes de guardar. No conservamos grabaciones de audio.",
-          "speechRecognitionPermission": "Usa reconocimiento de voz en el dispositivo cuando esté disponible.",
+          "speechRecognitionPermission": "Usa reconocimiento de voz en el dispositivo cuando est\u00e9 disponible.",
           "androidSpeechServicePackages": [
             "com.google.android.as"
           ]
@@ -87,7 +87,9 @@
     "web": {
       "bundler": "metro",
       "output": "single",
-      "lang": "es"
-    }
+      "lang": "es",
+      "favicon": "./assets/edumoney-official-logo.png"
+    },
+    "icon": "./assets/edumoney-official-logo.png"
   }
 }

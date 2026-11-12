@@ -17,21 +17,21 @@ permissions:
   actions: read
 jobs:
   mobile:
-    if: ${{ !contains(github.event.head_commit.message, '[partial-ios-only]') }}
+    if: ${{ !contains(github.event.head_commit.message, '[logo-only]') && !contains(github.event.head_commit.message, '[partial-ios-only]') }}
     uses: ./.github/workflows/planilla-validation.yml
     with:
       platform: ${{ contains(github.event.head_commit.message, '[full-ios-only]') && 'ios' || 'both' }}
       scenario: business-planning-complete
       artifact_suffix: business-planning-complete
   export-android:
-    if: ${{ !contains(github.event.head_commit.message, '[partial-ios-only]') && !contains(github.event.head_commit.message, '[full-ios-only]') }}
+    if: ${{ !contains(github.event.head_commit.message, '[logo-only]') && !contains(github.event.head_commit.message, '[partial-ios-only]') && !contains(github.event.head_commit.message, '[full-ios-only]') }}
     uses: ./.github/workflows/planilla-validation.yml
     with:
       platform: android
       scenario: business-review-export
       artifact_suffix: business-review-export
   partial-ios:
-    if: ${{ !contains(github.event.head_commit.message, '[full-ios-only]') }}
+    if: ${{ !contains(github.event.head_commit.message, '[logo-only]') && !contains(github.event.head_commit.message, '[full-ios-only]') }}
     uses: ./.github/workflows/planilla-validation.yml
     with:
       platform: ios
