@@ -39,6 +39,10 @@ appId: com.edumoney.app
     direction: DOWN
     centerElement: true
 - tapOn: 'Método de pago:.*'
+- scrollUntilVisible:
+    element: Cheque
+    direction: DOWN
+    centerElement: true
 - tapOn: Cheque
 - assertVisible: 'Método de pago: Cheque'
 - takeScreenshot: design-expense-dropdown
