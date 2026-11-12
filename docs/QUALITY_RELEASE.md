@@ -35,7 +35,7 @@ No existe radicación automática ni certificación de Hacienda. Las compilacion
 | Gasto mixto y recibo manual | Reparto y parte comercial por titular/proyecto, recibo y nota exacta tras reiniciar en Android/iOS | Otros flujos comerciales, imagen/cámara, otras etiquetas/casos documentales y pruebas físicas |
 | Ingreso con desglose y reservas manuales | Neto, componentes, reparto y reservas conservados tras reiniciar en Android/iOS; reservas sin gastos adicionales | Otros casos y teléfonos físicos |
 | Revisión comercial y exportación | Nota, porcentaje y reparto conservados; Android JSON/CSV recibidos y validados; iOS apertura/cancelación aprobada | QA-NEGOCIO-02: reejecución del último desplazamiento Android; comprobantes/imágenes, destinos externos iOS y teléfonos físicos |
-| IVU y contratistas | Seis casos seleccionados de lógica/persistencia, seis fuentes oficiales contrastadas; navegación y formularios en blanco aprobados en Android/iOS | Captura completa de pagos/cobros/remesas/relevos desde la interfaz y teléfonos físicos |
+| IVU y contratistas | Seis fuentes y casos seleccionados de lógica/persistencia; navegación, formularios y pagos externos de contratista/depósito declarado reabiertos en Android/iOS | Registro manual de cobros/remesas IVU, relevos y casos especiales desde la interfaz; teléfonos físicos |
 | Panel y escenarios comerciales | Dominio y almacenamiento implementados; informe propio con alcance y fuentes | Interacción nativa completa y pruebas físicas |
 
 [Pagos móviles](stages/NEGOCIO-05-PAGOS-MOVIL.md) · [Tasas y exportaciones móviles](stages/NEGOCIO-05-TASAS-EXPORTACION-MOVIL.md) · [Recuperación integrada](stages/CIERRE-RESPALDO-NEGOCIO.md).
@@ -51,3 +51,5 @@ Los números de pruebas de los informes históricos corresponden a sus bloques a
 [Revisión comercial y exportación — evidencia y límite de automatización](stages/NEGOCIO-REVISION-EXPORTACION-MOVIL.md).
 
 [IVU y contratistas — cálculos, fuentes y navegación móvil](stages/NEGOCIO-OBLIGACIONES-VALIDACION.md).
+
+[Pagos externos de contratistas y depósito declarado — registro manual verificado](stages/NEGOCIO-PAGOS-MANUALES-MOVIL.md).

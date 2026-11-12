@@ -1,0 +1,26 @@
+{
+  "total_cases": 7,
+  "unit_cases_passed": 2,
+  "android_app_passed": 1,
+  "ios_first_app_failed": 1,
+  "ios_retry_app_passed": 1,
+  "ios_http_driver_cases": 2,
+  "unit_skipped": 38,
+  "repeated_unit_cases": 0,
+  "runs": {
+    "initial": 43133138099,
+    "ios_retry": 43135367385
+  },
+  "tested_procedures": {
+    "android": "fa16afb",
+    "ios": "df57452"
+  },
+  "app_source": "905d96f",
+  "reused_app_run": 42948943240,
+  "lint": "passed",
+  "typecheck": "passed",
+  "main_modified": false,
+  "published": false,
+  "payment_execution_added": false,
+  "payment_gateway_added": false
+}

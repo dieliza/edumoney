@@ -1,0 +1,14 @@
+{
+  "run_id": 43133138099,
+  "job_id": 130901913900,
+  "artifact_id": 13906134381,
+  "result": "failed",
+  "app_cases": 1,
+  "xctest_cases": 1,
+  "xctest_starts": [
+    "testHttpServer"
+  ],
+  "failed_step": "scrollUntilVisible business-save with centerElement true",
+  "observation": "Save profile button and business-save ID present in failure screenshot/hierarchy; no profile saved yet",
+  "change": "iOS-only visible text locator and no forced centering; Android path untouched"
+}
