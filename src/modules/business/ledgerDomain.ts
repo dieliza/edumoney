@@ -28,7 +28,7 @@ export function distribute(total:number,allocations:Allocation[]):number[] {
 }
 export function validateEntry(p:EntryInput,today:string) {
  if(!p.id||p.id.length>100||!p.holderId||!['income','expense'].includes(p.kind)||!validDate(p.date)||p.date>today||!p.description.trim()||p.description.length>240||cents(p.amountCents)<=0)throw new UserInputError('Revisa titular, descripción, fecha no futura e importe positivo.');
- if(!['cash','bank','debit','credit','other'].includes(p.paymentMethod)||(p.kind==='income'&&p.paymentMethod==='credit'))throw new UserInputError('Elige un método válido; una venta no se registra como recibida con crédito.');
+ if(!['cash','check','bank','debit','credit','other'].includes(p.paymentMethod)||(p.kind==='income'&&p.paymentMethod==='credit'))throw new UserInputError('Elige un método válido; una venta no se registra como recibida con crédito.');
  if(!Object.hasOwn(useLabels,p.useKind)||!Object.hasOwn(cpaLabels,p.cpaStatus)||p.justification.length>2000)throw new UserInputError('Revisa uso y estado de revisión.');
  if(p.kind==='expense') {
   if([p.grossCents,p.commissionCents,p.refundCents,p.ivuCents].some(v=>v!==null))throw new UserInputError('El desglose de venta corresponde a ingresos.');

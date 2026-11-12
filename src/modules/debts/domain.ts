@@ -13,7 +13,7 @@ export function validateDebt(d:DebtInput,today:string){
  if(d.rateChangeDate && (!d.balanceAsOf||d.rateChangeDate<=d.balanceAsOf))throw new UserInputError('La tasa futura debe entrar en vigor después de la fecha del saldo base.');
 }
 export function validateDebtPayment(p:DebtPaymentInput,today:string){
- if(!p.id||!validDate(p.date)||p.date>today||cents(p.amountCents)<=0||!['cash','debit','bank','other'].includes(p.paymentMethod)||typeof p.applyToBalance!=='boolean')throw new UserInputError('Revisa importe, fecha y método del pago. Un pago de deuda no usa crédito como compra.');
+ if(!p.id||!validDate(p.date)||p.date>today||cents(p.amountCents)<=0||!['cash','check','debit','bank','other'].includes(p.paymentMethod)||typeof p.applyToBalance!=='boolean')throw new UserInputError('Revisa importe, fecha y método del pago. Un pago de deuda no usa crédito como compra.');
  if(p.cycleDueDate!==null&&!validDate(p.cycleDueDate))throw new UserInputError('Vencimiento del pago no válido.');
  const values=[p.principalCents,p.interestCents,p.feesCents];for(const v of values)if(v!==null&&cents(v)<0)throw new UserInputError('El desglose no puede ser negativo.');
  const known=values.reduce((n,v)=>n+BigInt(v??0),0n);

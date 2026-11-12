@@ -190,3 +190,25 @@ it('parametriza nombres y descripciones sin interpretar SQL del usuario',async()
 it('resta solo la parte pendiente de una factura vinculada a un pago existente',async()=>{
  const {db,store}=await setup();try{await store.create(entry('income',{kind:'income',categoryId:null,amountCents:cents(10000)}));await store.create(entry('payment',{amountCents:cents(4000)}));db.exec("INSERT INTO bills(id,provider,amount_cents,due_date,recurrence) VALUES('bill','Proveedor',10000,'2026-11-30',NULL); INSERT INTO bill_payments(id,bill_id,movement_id,amount_cents) VALUES('part','bill','payment',4000)");const summary=monthlySummary(await store.snapshot(),'2026-11');expect(summary.commitments).toBe(6000);expect(summary.available).toBe(0);}finally{db.close();}
 });
+
+it('persiste ingresos y gastos por cheque al reabrir sin alterar sus cálculos', async () => {
+    const folder = mkdtempSync(join(tmpdir(), 'edumoney-check-'));
+    const path = join(folder, 'ledger.db');
+    let db = new DatabaseSync(path);
+    try {
+        await migrate(adapter(db));
+        let store = new MoneyStore(adapter(db));
+        await store.create(entry('cheque-ingreso', { kind: 'income', amountCents: cents(100000), categoryId: 'income-salary', paymentMethod: 'check' }));
+        await store.create(entry('cheque-gasto', { amountCents: cents(20000), paymentMethod: 'check' }));
+        db.close();
+        db = new DatabaseSync(path);
+        store = new MoneyStore(adapter(db));
+        const data = await store.snapshot();
+        expect(data.movements).toHaveLength(2);
+        expect(data.movements.every(m => m.paymentMethod === 'check')).toBe(true);
+        expect(monthlySummary(data, '2026-11')).toMatchObject({ income: 100000, expenses: 20000, available: 80000 });
+    } finally {
+        db.close();
+        rmSync(folder, { recursive: true, force: true });
+    }
+});

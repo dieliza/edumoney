@@ -32,7 +32,7 @@ export class GoalStore {
  await db.runAsync('UPDATE goals SET name=?,kind=?,target_cents=?,opening_cents=?,desired_date=?,cadence=?,archived=?,version=version+1 WHERE id=?',g.name.trim(),g.kind,g.targetCents,g.openingCents,g.desiredDate,g.cadence,Number(archived),g.id);
  });}
  async contribute(p:ContributionInput){
- if(!p.id||cents(p.amountCents)<=0||!validDate(p.date)||p.date>this.today()||!['cash','debit','bank','other'].includes(p.paymentMethod))throw new UserInputError('Revisa importe positivo, fecha no futura y método sin crédito.');
+ if(!p.id||cents(p.amountCents)<=0||!validDate(p.date)||p.date>this.today()||!['cash','check','debit','bank','other'].includes(p.paymentMethod))throw new UserInputError('Revisa importe positivo, fecha no futura y método sin crédito.');
  return this.ledger.transaction(async db=>{
  const old=await db.getFirstAsync<Contribution>(contributionSelect+' WHERE c.id=?',p.id);
  if(old){if(!old.reversedAt&&old.goalId===p.goalId&&old.amountCents===p.amountCents&&old.date===p.date&&old.movementId===(p.existingMovementId??`goal-movement:${p.id}`)){const m=await db.getFirstAsync<{method:string}>('SELECT payment_method AS method FROM movements WHERE id=?',old.movementId);if(m?.method===p.paymentMethod)return;}throw new UserInputError('Este identificador ya pertenece a otra aportación.');}

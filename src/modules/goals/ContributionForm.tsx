@@ -16,7 +16,7 @@ export function ContributionForm({goal,data,store,saved,close}:{goal:Goal;data:G
  {available.length?<Choices label="Origen" value={existing} options={[[ '', 'Nueva aportación'],...available.map(m=>[m.id,`${m.date} · ${formatMoney(m.amountCents)} · ${m.description}`] as const)]} onChange={id=>{setExisting(id);const m=available.find(m=>m.id===id);if(m){setAmount(inputAmount(m.amountCents));setDate(m.date);setMethod(m.paymentMethod??'bank');}}}/>:null}
  <Field label="Importe de aportación" testID="goal-contribution-amount" decimal value={amount} onChangeText={setAmount}/>
  <Field label="Fecha de aportación AAAA-MM-DD" value={date} onChangeText={setDate}/>
- <Choices label="Método de aportación" value={method} options={[[ 'bank','Transferencia bancaria'],['cash','Efectivo'],['debit','Tarjeta de débito'],['other','Otro']]} onChange={setMethod}/>
+ <Choices label="Método de aportación" value={method} options={[[ 'bank','Transferencia bancaria'],['cash','Efectivo'],['check','Cheque'],['debit','Tarjeta de débito'],['other','Otro']]} onChange={setMethod}/>
  <Choices label="Si existe otra aportación similar" value={confirm} options={[[ 'no','Revisar antes de duplicar'],['yes','Confirmo que es otra aportación distinta']]} onChange={setConfirm}/><ErrorNotice message={error}/>
  {!busy?<ActionButton title="Guardar aportación" testID="goal-contribution-save" onPress={()=>void save()}/>:null}
  </Sheet>;

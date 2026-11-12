@@ -41,7 +41,7 @@ export function BusinessEntryForm({holderId,kind,initial,data,store,done,close}:
    <Field label="Fecha AAAA-MM-DD" testID="business-entry-date" value={date} onChangeText={setDate}/>
    <Field label="Descripción" testID="business-entry-description" value={description} onChangeText={setDescription} maxLength={240}/>
    <Field label={kind==='income'?'Depósito neto recibido USD':'Importe total del gasto USD'} testID="business-entry-amount" value={amount} onChangeText={setAmount} decimal/>
-   <Choices label="Método de pago" value={method} options={[["","Seleccionar método"],["bank","Transferencia bancaria"],["cash","Efectivo"],["debit","Tarjeta de débito"],["other","Otro"],...(kind==='expense'?[["credit","Tarjeta de crédito"]] as const:[])]} onChange={setMethod}/>
+   <Choices label="Método de pago" value={method} options={[["","Seleccionar método"],["bank","Transferencia bancaria"],["cash","Efectivo"],["check","Cheque"],["debit","Tarjeta de débito"],["other","Otro"],...(kind==='expense'?[["credit","Tarjeta de crédito"]] as const:[])]} onChange={setMethod}/>
   </>}
   {kind==='income'?<>
    <Body>El neto se registra una vez en Mi dinero. Este desglose explica el mismo cobro: brutas − comisiones − devoluciones + IVU. No calcula una tasa ni determina si debes cobrar IVU.</Body>

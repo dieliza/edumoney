@@ -1,7 +1,7 @@
 import type { Movement, MovementKind } from '../../core/models';
 import type { Cents } from '../../core/money';
 export type IncomeType = 'manual' | 'recurring' | 'extraordinary';
-export type PaymentMethod = 'cash' | 'debit' | 'credit' | 'bank' | 'other';
+export type PaymentMethod = 'cash' | 'check' | 'debit' | 'credit' | 'bank' | 'other';
 export interface LedgerMovement extends Movement {
     incomeType: IncomeType;
     scheduleId: string | null;
@@ -44,4 +44,4 @@ export interface Snapshot {
 }
 export type EntryKind = Exclude<MovementKind, 'goal_contribution'>;
 export const kindLabels: Record<EntryKind, string> = { income: 'Ingreso', expense: 'Gasto', transfer: 'Transferencia propia', loan: 'Préstamo recibido', debt_payment: 'Pago de tarjeta o deuda' };
-export const paymentLabels: Record<PaymentMethod, string> = { cash: 'Efectivo', debit: 'Tarjeta de débito', credit: 'Tarjeta de crédito', bank: 'Transferencia bancaria', other: 'Otro' };
+export const paymentLabels: Record<PaymentMethod, string> = { cash: 'Efectivo', check: 'Cheque', debit: 'Tarjeta de débito', credit: 'Tarjeta de crédito', bank: 'Transferencia bancaria', other: 'Otro' };

@@ -107,7 +107,7 @@ export class BillsStore {
  }
  async toggleSeries(id:string,active:boolean){return this.ledger.transaction(async db=>{await db.runAsync('UPDATE bill_series SET active=? WHERE id=?',Number(active),id);});}
  async pay(p:PaymentInput){
-  if(!p.id || !validDate(p.date) || p.date>this.today() || cents(p.amountCents)<=0 || !['cash','debit','credit','bank','other'].includes(p.paymentMethod))throw new UserInputError('Revisa importe, fecha y método del pago.');
+  if(!p.id || !validDate(p.date) || p.date>this.today() || cents(p.amountCents)<=0 || !['cash','check','debit','credit','bank','other'].includes(p.paymentMethod))throw new UserInputError('Revisa importe, fecha y método del pago.');
   return this.ledger.transaction(async db=>{
    const previous=await db.getFirstAsync<BillPayment>(selectPayment+' WHERE p.id=?',p.id);
    if(previous){
