@@ -50,3 +50,12 @@ Sombras, reflejos, papel curvado, desenfoque o resolución insuficiente pueden i
 ## Remitente confirmado
 
 El usuario confirmó acceso@prbudget.org para los futuros correos de EduMoney. Esta entrega mejora OCR; no activa ni afirma haber enviado correos de recuperación, cuyo trabajo de autenticación sigue separado.
+
+## Publicación
+
+Publicación verificada por Sites: succeeded, versión alojada 12, 2026-11-13 14:11 UTC.
+URL: https://edumoney-web.diegoluissantospabon.chatgpt.site
+Despliegue: appgdep_6af71a85bdb881918e45d813990a0fe8.
+Fuente alojada: 87eec0989ae4d0550fd30266519d2bf2b91447e5.
+Versión guardada: appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_80e3e52a9d088191ab83c05622929f10.
+Implementación local: 2df6f4e en web-edumoney; GitHub main permanece sin cambios.
