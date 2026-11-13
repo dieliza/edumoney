@@ -60,3 +60,10 @@ Casos destacados: $1,500 × 8% = $120; neto $1,380; 3.5% = $52.50; coma decimal;
 - Corregir un pago anterior no recalcula los posteriores: revisarlos es una acción explícita. Se muestra esa advertencia en el editor de umbrales.
 - El registro financiero conserva la regla existente de neto positivo. Si el neto es cero o negativo, debe revisarse antes de guardar como ingreso recibido.
 - El cambio de contraseña/recuperación por correo pertenece a otro trabajo y no se modifica en esta entrega, conforme al alcance solicitado.
+
+## Publicación
+
+- URL pública conservada: https://edumoney-web.diegoluissantospabon.chatgpt.site
+- Versión alojada 11, despliegue appgdep_6af7187ebe348191b4de4db705ebdcf7: succeeded, 2026-11-13 14:02 UTC.
+- Fuente alojada: 48929e2ee5a8670a3cfb8c674a3e4a6ae8876872. Versión guardada: appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_74358a4e90e48191bc22b120964bcb82.
+- Implementación en rama local web-edumoney, commit 45a5bf6. Publicación realizada mediante Sites; no se modificó GitHub main ni se afirma haber enviado esta rama a GitHub.
