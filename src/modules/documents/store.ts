@@ -13,6 +13,10 @@ const target=(p:DocumentInput)=>({movementId:p.kind==='paid_expense'||p.kind==='
 const canonical=(d:Pick<StoredDocument,'description'|'date'|'amountCents'|'notes'|'kind'|'source'|'supersedesId'|'movementId'|'billId'>)=>JSON.stringify([d.description.trim(),d.date,d.amountCents,d.notes.trim(),d.kind,d.source,d.supersedesId,d.movementId,d.billId]);
 export class DocumentStore {
  constructor(private ledger:MoneyStore,private digest:(text:string)=>Promise<string>,private today=localToday){}
+ async findImageDuplicate(image:NonNullable<DocumentInput['image']>){
+ validateImage(image);const sha=await this.digest(`image:${image.mime}:${image.base64}`);
+ return this.ledger.read(async db=>(await db.getFirstAsync<{id:string}>('SELECT id FROM documents WHERE sha256=?',sha))?.id??null);
+ }
  async snapshot():Promise<DocumentsSnapshot>{return this.ledger.read(async db=>({documents:await db.getAllAsync<StoredDocument>(select+' ORDER BY rowid DESC'),movements:(await db.getAllAsync<LedgerMovement>(movementSelect+' ORDER BY date DESC')).map(readMovement),bills:await db.getAllAsync('SELECT id,provider,amount_cents AS amountCents,due_date AS dueDate,version FROM bills WHERE voided_at IS NULL ORDER BY due_date DESC'),categories:(await db.getAllAsync<{id:string;name:string;kind:'income'|'expense';archived:number}>('SELECT id,name,kind,archived FROM categories')).map(c=>({...c,archived:!!c.archived}))}));}
  async save(p:DocumentInput){
  if(!p.id||!p.reviewed||!p.description.trim()||p.description.length>240||p.notes.length>20000||(p.rawText?.length??0)>20000)throw new UserInputError('Revisa la descripción y confirma que comprobaste todos los datos.');
@@ -31,6 +35,7 @@ export class DocumentStore {
  const old=await db.getFirstAsync<StoredDocument>(select+' WHERE id=?',p.id);
  if(old){if(old.sha256===sha&&canonical(old)===canonical({...p,...links})){const original=await db.getFirstAsync<{text:string|null}>('SELECT raw_text AS text FROM documents WHERE id=?',old.id);if(original?.text!==p.rawText)throw new UserInputError('El texto del reintento no coincide.');if(p.kind==='pending_bill'){const bill=await db.getFirstAsync<{category:string|null}>('SELECT category_id AS category FROM bills WHERE id=?',old.billId);if(bill?.category!==p.categoryId)throw new UserInputError('La categoría del reintento no coincide.');}if(p.kind==='paid_expense'||p.kind==='paid_income'){const m=await db.getFirstAsync<{method:string;category:string|null}>('SELECT payment_method AS method,category_id AS category FROM movements WHERE id=?',old.movementId);if(m?.method!==p.paymentMethod||m?.category!==p.categoryId)throw new UserInputError('El reintento no coincide con el movimiento original.');}return old.id;}throw new UserInputError('El identificador ya corresponde a otro documento.');}
  const duplicate=await db.getFirstAsync<{id:string}>('SELECT id FROM documents WHERE sha256=?',sha);if(duplicate)throw new DuplicateDocumentError(duplicate.id);
+ if(!p.supersedesId&&!p.confirmSimilar&&p.date&&p.amountCents!==null&&await db.getFirstAsync('SELECT id FROM documents WHERE lower(trim(description))=lower(?) AND document_date=? AND amount_cents=? AND record_kind=?',p.description.trim(),p.date,p.amountCents,p.kind))throw new UserInputError('Hay un recibo similar con el mismo comercio, fecha y total. Revisa el existente; confirma una operación distinta solo si lo verificaste.');
  if(p.supersedesId){
  const previous=await db.getFirstAsync<StoredDocument>(select+' WHERE id=?',p.supersedesId);
  if(!previous||previous.deletedAt||previous.version!==p.expectedDocumentVersion)throw new UserInputError('El documento anterior cambió. Vuelve a abrirlo.');

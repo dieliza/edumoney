@@ -93,3 +93,20 @@ it('serializa la actualización del enlace junto con la rotación de contraseña
   vi.resetModules();vault=await import('../src/web/vault');await vault.unlockWebVault('Nueva-FICTICIA-2026');
   expect(await vault.getWebSettings()).toEqual({code:'ENLACE-NUEVO-FICTICIO'});
 });
+it('recupera una foto, total y deuda tras cerrar la bóveda web; detecta el recibo repetido',async()=>{
+  let vault=await import('../src/web/vault');await vault.unlockWebVault('Recibos-FICTICIOS-2026');
+  let ledger=new MoneyStore(await vault.webDatabase());
+  const {readFileSync}=await import('node:fs');const {createHash}=await import('node:crypto');
+  const {DocumentStore,DuplicateDocumentError}=await import('../src/modules/documents/store');const {DebtStore}=await import('../src/modules/debts/store');
+  const hash=async(s:string)=>createHash('sha256').update(s).digest('hex');const image={mime:'image/jpeg' as const,base64:readFileSync('assets/tests/receipt.jpg').toString('base64')};
+  let documents=new DocumentStore(ledger,hash,()=> '2026-11-13');
+  const receipt={id:'foto-ficticia',kind:'paid_expense' as const,source:'library' as const,description:'Comercio FICTICIO',date:'2026-11-13',amountCents:5500,notes:'',rawText:null,image,keepImage:true,movementId:null,billId:null,expectedMovementVersion:null,expectedBillVersion:null,categoryId:null,paymentMethod:'cash',supersedesId:null,expectedDocumentVersion:null,confirmSimilar:false,reviewed:true};
+  await documents.save(receipt);expect(await documents.findImageDuplicate(image)).toBe(receipt.id);
+  await expect(documents.save({...receipt,id:'repetido'})).rejects.toBeInstanceOf(DuplicateDocumentError);
+  const debts=new DebtStore(ledger,()=> '2026-11-13');
+  await debts.create({id:'deuda-ficticia',name:'Tarjeta de crédito',kind:'credit_card',balanceCents:cents(23400),balanceAsOf:'2026-11-13',annualRateBps:null,minimumCents:null,dueDate:'2026-12-13',closingDate:null,feesCents:null,futureRateBps:null,rateChangeDate:null});
+  vi.resetModules();vault=await import('../src/web/vault');await vault.unlockWebVault('Recibos-FICTICIOS-2026');ledger=new MoneyStore(await vault.webDatabase());documents=new DocumentStore(ledger,hash);
+  expect((await documents.snapshot()).documents).toHaveLength(1);expect((await documents.content(receipt.id))?.base64).toBe(image.base64);
+  expect((await documents.snapshot()).documents[0].amountCents).toBe(5500);
+  expect((await new DebtStore(ledger).snapshot()).debts[0]).toMatchObject({balanceCents:23400,dueDate:'2026-12-13'});
+});

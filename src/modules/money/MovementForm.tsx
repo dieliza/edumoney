@@ -1,3 +1,5 @@
+import { DateField } from '../../ui/DateField';
+import { CategoryPicker } from './CategoryPicker';
 import { userMessage, UserInputError } from '../../core/errors';
 import { useState } from 'react';
 import { View } from 'react-native';
@@ -23,6 +25,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
     const [description, setDescription] = useState(initial?.description ?? '');
     const [date, setDate] = useState(initial?.date ?? localToday());
     const [category, setCategory] = useState(initial?.categoryId ?? '');
+    const [categoryName,setCategoryName] = useState(categories.find(c=>c.id===initial?.categoryId)?.name??'');
     const [method, setMethod] = useState<PaymentMethod>((initial ? (initial.paymentMethod ?? '') : 'bank') as PaymentMethod);
     const [incomeType, setIncomeType] = useState(initial?.incomeType ?? 'manual');
     const [cadence, setCadence] = useState<'weekly' | 'monthly'>('monthly');
@@ -43,9 +46,10 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
         setBusy(true);
         setError('');
         try {
+            if(type==='expense'&&!category)throw new UserInputError('Elige o crea una categoría para el gasto.');
             const now = new Date().toISOString();
             const scheduleId = !initial && type === 'income' && incomeType === 'recurring' ? identity.schedule : initial?.scheduleId ?? null;
-            const m: LedgerMovement = { id: identity.id, idempotencyKey: identity.operation, kind: type, amountCents: parseAmount(amount.trim()), currency: 'USD', date, description: description.trim(), categoryId: category || null, paymentMethod: method, taxReview: tax === 'yes', useKind: use, grossCents: type === 'income' && gross.trim() ? parseAmount(gross.trim()) : null, withholdingCents: type === 'income' && withholding.trim() ? parseAmount(withholding.trim()) : null, createdAt: initial?.createdAt ?? now, updatedAt: now, deletedAt: null, incomeType: type === 'income' ? incomeType : 'manual', scheduleId, occurrenceDate: initial?.occurrenceDate ?? (scheduleId ? date : null), version: initial?.version ?? 1 };
+            const m: LedgerMovement = { id: identity.id, idempotencyKey: identity.operation, kind: type, amountCents: parseAmount(amount.trim()), currency: 'USD', date, description: type==='expense'?(initial?.description||categoryName||categories.find(c=>c.id===category)?.name||'Gasto'):description.trim(), categoryId: category || null, paymentMethod: method, taxReview: tax === 'yes', useKind: use, grossCents: type === 'income' && gross.trim() ? parseAmount(gross.trim()) : null, withholdingCents: type === 'income' && withholding.trim() ? parseAmount(withholding.trim()) : null, createdAt: initial?.createdAt ?? now, updatedAt: now, deletedAt: null, incomeType: type === 'income' ? incomeType : 'manual', scheduleId, occurrenceDate: initial?.occurrenceDate ?? (scheduleId ? date : null), version: initial?.version ?? 1 };
             let schedule: IncomeSchedule | undefined;
             if (!initial && scheduleId) {
                 if (!/^\d+$/.test(interval))
@@ -74,9 +78,9 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
         string
     ][]} onChange={changeType}/> : <Body>Ingreso vinculado a una recurrencia. Esta corrección no modifica los próximos cobros.</Body>}
   <Field label={type === 'income' ? 'Importe recibido o neto (USD)' : 'Importe (USD)'} value={amount} onChangeText={v => { setAmount(v); setDuplicate(false); }} decimal testID="movement-amount"/>
-  <Field label="Fecha (AAAA-MM-DD)" value={date} onChangeText={v => { setDate(v); setDuplicate(false); }} testID="movement-date"/>
-  <Field label="Descripción" value={description} onChangeText={v => { setDescription(v); setDuplicate(false); }} multiline testID="movement-description"/>
-  {(type === 'income' || type === 'expense') ? <Choices label="Categoría" value={category} options={[['', 'Sin categoría'], ...categories.filter(c => c.kind === type && (!c.archived || c.id === initial?.categoryId)).map(c => [c.id, c.name] as const)]} onChange={setCategory}/> : null}
+  <DateField required label="Fecha" value={date} onChangeText={v => { setDate(v); setDuplicate(false); }} testID="movement-date"/>
+  {type!=='expense'?<Field label="Descripción" value={description} onChangeText={v => { setDescription(v); setDuplicate(false); }} multiline testID="movement-description"/>:null}
+  {(type === 'income' || type === 'expense') ? <CategoryPicker required={type==='expense'} categories={categories} kind={type} value={category} onChange={(id,name)=>{setCategory(id);setCategoryName(name??'');setDuplicate(false);}}/> : null}
   <Choices<PaymentMethod> label="Método de pago" value={method} options={(Object.entries(paymentLabels) as [
         PaymentMethod,
         string

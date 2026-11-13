@@ -1,3 +1,4 @@
+import { WEB_BUILD } from './buildVersion';
 import { useEffect, useState, type PropsWithChildren } from 'react';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
 import { hasWebVault, unlockWebVault, resetWebVault } from '../web/vault';
@@ -26,6 +27,7 @@ export function StorageGate({ children }: PropsWithChildren) {
       {exists && !resetting ? <ActionButton title="Olvidé mi contraseña" secondary onPress={() => { setResetting(true); setError(''); }}/> : null}
       {error ? <View accessibilityRole="alert"><Body>{error}</Body></View> : null}
       {exists === undefined && error ? <ActionButton title="Reintentar apertura" onPress={() => window.location.reload()}/> : resetting ? (busy ? <ActivityIndicator accessibilityLabel="Restableciendo espacio local"/> : null) : busy || exists === undefined ? <ActivityIndicator accessibilityLabel="Preparando espacio cifrado"/> : <ActionButton title={exists ? 'Desbloquear' : 'Crear espacio local'} testID="web-unlock" onPress={() => void open()}/>}
+      <Body muted>Versión web {WEB_BUILD}</Body>
     </Card>
   </View></ScrollView>;
 }

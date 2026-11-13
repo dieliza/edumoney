@@ -1,3 +1,4 @@
+import { moneyKeystroke, moneyDisplay } from '../../ui/moneyInput';
 import { isRequiredField, isCalculationField, missingField } from '../../ui/requiredFields';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Modal, Pressable, ScrollView, TextInput, View, KeyboardAvoidingView, Keyboard, Platform } from 'react-native';
@@ -20,7 +21,7 @@ export function Sheet({ title, close, children, busy = false }: PropsWithChildre
   </Card></ScrollView>
  </View></KeyboardAvoidingView></Modal>;
 }
-export function Field({ label, value, onChangeText, decimal = false, multiline = false, testID, maxLength, secure = false, required, calculationRequired = isCalculationField(label) }: {
+export function Field({ label, value, onChangeText, decimal = false, multiline = false, testID, maxLength, secure = false, required, money, calculationRequired = isCalculationField(label) }: {
     label: string;
     value: string;
     onChangeText(value: string): void;
@@ -29,14 +30,16 @@ export function Field({ label, value, onChangeText, decimal = false, multiline =
     testID?: string;
     maxLength?: number;
     secure?: boolean;
+    money?: boolean;
     required?: boolean;
     calculationRequired?: boolean;
 }) {
     const { colors } = useTheme();
     const [visible, setVisible] = useState(false);
+    const monetary = money ?? (decimal && !/%|APR|tasa|porcentaje/i.test(label));
     const needed = required ?? isRequiredField(label);
     const missing = missingField(value, needed || calculationRequired);
-    return <View style={{ gap: 6, padding: 12, borderRadius: 16, backgroundColor: colors.surface }}><Body style={{ fontSize: 14, fontWeight: '600' }}>{label}</Body><TextInput secureTextEntry={secure && !visible} autoCorrect={secure ? false : undefined} autoCapitalize={secure ? 'none' : undefined} testID={testID} accessibilityLabel={label} accessibilityHint={missing ? (calculationRequired ? 'Necesario para calcular. Completa este dato.' : 'Campo obligatorio sin completar.') : undefined} aria-invalid={missing} value={value} onChangeText={onChangeText} keyboardType={decimal ? 'decimal-pad' : 'default'} multiline={multiline} maxLength={maxLength ?? (multiline ? 240 : 100)} style={{ minHeight: 50, borderWidth: missing ? 2 : 1, borderColor: missing ? fixed.expense : colors.line, borderRadius: 12, padding: 12, color: colors.text, backgroundColor: colors.surfaceAlt, fontSize: 17 }} placeholderTextColor={colors.muted}/>{secure ? <Pressable accessibilityRole="button" accessibilityLabel={visible ? "Ocultar contraseña" : "Mostrar contraseña"} onPress={() => setVisible(!visible)} style={{minHeight:44,justifyContent:"center",alignSelf:"flex-start",paddingHorizontal:12}}><Ionicons name={visible ? "eye-off-outline" : "eye-outline"} size={24} color={colors.primary}/></Pressable> : null}{missing ? <Body style={{fontSize:12,lineHeight:18,color:fixed.expense}}>{calculationRequired ? 'Necesario para calcular' : 'Obligatorio'}</Body> : null}</View>;
+    return <View style={{ gap: 6, padding: 12, borderRadius: 16, backgroundColor: colors.surface }}><Body style={{ fontSize: 14, fontWeight: '600' }}>{label}</Body><TextInput secureTextEntry={secure && !visible} autoCorrect={secure ? false : undefined} autoCapitalize={secure ? 'none' : undefined} testID={testID} accessibilityLabel={label} accessibilityHint={missing ? (calculationRequired ? 'Necesario para calcular. Completa este dato.' : 'Campo obligatorio sin completar.') : undefined} aria-invalid={missing} placeholder={monetary?'0.00':undefined} value={monetary?moneyDisplay(value):value} onChangeText={monetary?text=>{if(text.replace(/\D/g,'').length<=15)onChangeText(moneyKeystroke(text));}:onChangeText} keyboardType={decimal ? 'decimal-pad' : 'default'} multiline={multiline} maxLength={maxLength ?? (multiline ? 240 : 100)} style={{ minHeight: 50, borderWidth: missing ? 2 : 1, borderColor: missing ? fixed.expense : colors.line, borderRadius: 12, padding: 12, color: colors.text, backgroundColor: colors.surfaceAlt, fontSize: 17 }} placeholderTextColor={colors.muted}/>{monetary?<><Body muted style={{fontSize:12}}>Escribe los dígitos de derecha a izquierda: 100 → 1.00 USD.</Body><Pressable accessibilityRole="button" accessibilityLabel={`Limpiar ${label}`} onPress={()=>onChangeText('')} style={{minHeight:44,justifyContent:"center"}}><Body>Limpiar importe</Body></Pressable></>:null}{secure ? <Pressable accessibilityRole="button" accessibilityLabel={visible ? "Ocultar contraseña" : "Mostrar contraseña"} onPress={() => setVisible(!visible)} style={{minHeight:44,justifyContent:"center",alignSelf:"flex-start",paddingHorizontal:12}}><Ionicons name={visible ? "eye-off-outline" : "eye-outline"} size={24} color={colors.primary}/></Pressable> : null}{missing ? <Body style={{fontSize:12,lineHeight:18,color:fixed.expense}}>{calculationRequired ? 'Necesario para calcular' : 'Obligatorio'}</Body> : null}</View>;
 }
 export function Choices<T extends string>({ label, value, options, onChange, presentation = 'select', required = false }: {
     label: string;

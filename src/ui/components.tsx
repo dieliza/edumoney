@@ -102,3 +102,7 @@ export function CloseButton({ onPress, label = 'Cerrar ficha', testID }: { onPre
   const { colors } = useTheme();
   return <Pressable testID={testID} accessibilityRole="button" accessibilityLabel={label} onPress={onPress} style={{ width:48,height:48,borderRadius:16,backgroundColor:colors.primary,alignItems:'center',justifyContent:'center',alignSelf:'flex-end' }}><Ionicons name="close" size={28} color={fixed.white} accessible={false} aria-hidden/></Pressable>;
 }
+
+export function BackButton({beforeBack}: {beforeBack?:()=>void}) {
+  return <ActionButton title="Atrás" icon="arrow-back-outline" secondary onPress={()=>{beforeBack?.();if(router.canGoBack())router.back();else router.replace('/money');}}/>;
+}

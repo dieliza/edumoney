@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
-import { ActionButton, Body, Card, Screen } from '../ui/components';
+import {BackButton, ActionButton, Body, Card, Screen } from '../ui/components';
 import { ErrorNotice, Field } from '../modules/money/fields';
 import { connectCode, disconnectSync, deleteRemoteCopy, newPairingCode, resolveSync, synchronize, syncSettings, type SyncConflict } from './sync';
 export default function SyncScreen() {
@@ -8,7 +8,7 @@ export default function SyncScreen() {
   useEffect(() => { void syncSettings().then(s => { setCode(s?.code ?? ''); setLinked(!!s); }).catch(() => setError('No se pudo abrir la configuración cifrada.')); }, []);
   async function act(task: () => Promise<void>) { if (busy) return; setBusy(true); setError(''); try { await task(); } catch (e) { setError(e instanceof Error ? e.message : 'No se pudo completar la sincronización.'); } finally { setBusy(false); } }
   return <Screen title="Sincronizar dispositivos" demo={false}>
-    <ActionButton title="Volver a Mi dinero" secondary onPress={() => router.dismissTo('/money')}/>
+    <BackButton/>
     <Card><Body style={{ fontSize: 21, fontWeight: '800' }}>Android y Apple, los mismos registros</Body><Body>La sincronización es opcional. Solo se envía una copia cifrada; el servidor no recibe tu contraseña local ni la clave que descifra los datos. Pulsa Sincronizar ahora en cada dispositivo para intercambiar cambios.</Body><Body muted>Las copias sincronizadas admiten hasta 16 MB cifrados, incluidos comprobantes. Si exceden el límite, conserva un respaldo y revisa las imágenes guardadas.</Body><Body muted>El código privado permite acceder a tus copias. Compártelo solo con tus propios dispositivos. No lo envíes a soporte ni lo publiques. Conserva también respaldos propios.</Body></Card>
     <ErrorNotice message={error}/>{notice ? <Card><Body>{notice}</Body></Card> : null}
     <Card><Field label="Código privado de enlace" testID="sync-code" secure={!show} value={code} onChangeText={value => { setCode(value); setLinked(false); }} maxLength={160}/><ActionButton title="Copiar código privado" secondary onPress={() => void act(async () => { if (!navigator.clipboard) throw Error('Muestra el código y cópialo desde el campo.'); await navigator.clipboard.writeText(code); setNotice('Código copiado. Pégalo solo en tu otro dispositivo.'); })}/><ActionButton title={show ? 'Ocultar código' : 'Mostrar código'} secondary onPress={() => setShow(!show)}/>
