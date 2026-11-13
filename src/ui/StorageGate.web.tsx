@@ -1,6 +1,6 @@
 import { useEffect, useState, type PropsWithChildren } from 'react';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
-import { hasWebVault, unlockWebVault } from '../web/vault';
+import { hasWebVault, unlockWebVault, resetWebVault } from '../web/vault';
 import { useTheme } from '../design/ThemeProvider';
 import { router } from 'expo-router';
 import { Brand } from './Brand';
@@ -9,6 +9,7 @@ import { Field } from '../modules/money/fields';
 export function StorageGate({ children }: PropsWithChildren) {
   const { colors } = useTheme();
   const [exists, setExists] = useState<boolean>(); const [password, setPassword] = useState(''); const [repeat, setRepeat] = useState('');
+  const [resetting, setResetting] = useState(false); const [confirmation, setConfirmation] = useState('');
   const [ready, setReady] = useState(false); const [busy, setBusy] = useState(false); const [error, setError] = useState('');
   useEffect(() => { void hasWebVault().then(setExists).catch(() => setError('El navegador bloqueó el almacenamiento local. Abre la app en una pestaña normal.')); }, []);
   async function open() { if (busy) return; setError(''); if (!exists && password !== repeat) { setError('Las contraseñas no coinciden.'); return; } setBusy(true); try { await unlockWebVault(password); setPassword(''); setRepeat(''); setReady(true); } catch (e) { setError(e instanceof Error ? e.message : 'No se pudo abrir tu espacio local.'); } finally { setBusy(false); } }
@@ -17,11 +18,14 @@ export function StorageGate({ children }: PropsWithChildren) {
     <View style={{ alignItems: 'center' }}><Brand large/></View>
     <Card><Body style={{ fontSize: 24, fontWeight: '800' }}>{exists ? 'Desbloquear EduMoney' : 'Tu espacio privado'}</Body>
       <Body>Tu dinero y tu negocio, también desde el navegador. Los datos se guardan cifrados en este dispositivo.</Body>
-      <Body muted>Esta contraseña es local; no crea una cuenta en línea. Consérvala: EduMoney no puede recuperarla. Guarda respaldos porque borrar los datos del navegador elimina la copia local.</Body>
-      <Field label="Contraseña local" testID="web-password" secure value={password} onChangeText={setPassword}/>
+      <Body muted>Usa al menos 12 caracteres. Esta contraseña es local; no crea una cuenta en línea. Consérvala: EduMoney no puede recuperarla. Guarda respaldos porque borrar los datos del navegador elimina la copia local.</Body>
+      {resetting ? <><Body>Restablecer crea un espacio vacío con una contraseña nueva. No recupera los datos con la contraseña nueva. Conservaremos la copia anterior cifrada; para leerla hace falta su contraseña original. Un respaldo o la sincronización pueden permitir recuperar tus registros después. La copia del servidor no se borra.</Body><Field label="Escribe RESTABLECER" value={confirmation} onChangeText={setConfirmation}/><ActionButton title="Restablecer espacio local" onPress={() => { if (busy) return; setBusy(true); setError(''); void resetWebVault(confirmation).then(() => { setExists(false); setPassword(''); setRepeat(''); setResetting(false); setConfirmation(''); }).catch(e => setError(e.message)).finally(() => setBusy(false)); }}/><ActionButton title="Cancelar restablecimiento" secondary onPress={() => setResetting(false)}/></> : null}
+      {!resetting ? <><Field label="Contraseña local" testID="web-password" secure value={password} onChangeText={setPassword}/>
       {exists === false ? <Field label="Repetir contraseña local" testID="web-password-repeat" secure value={repeat} onChangeText={setRepeat}/> : null}
+      </> : null}
+      {exists && !resetting ? <ActionButton title="Olvidé mi contraseña" secondary onPress={() => { setResetting(true); setError(''); }}/> : null}
       {error ? <View accessibilityRole="alert"><Body>{error}</Body></View> : null}
-      {exists === undefined && error ? <ActionButton title="Reintentar apertura" onPress={() => window.location.reload()}/> : busy || exists === undefined ? <ActivityIndicator accessibilityLabel="Preparando espacio cifrado"/> : <ActionButton title={exists ? 'Desbloquear' : 'Crear espacio local'} testID="web-unlock" onPress={() => void open()}/>}
+      {exists === undefined && error ? <ActionButton title="Reintentar apertura" onPress={() => window.location.reload()}/> : resetting ? (busy ? <ActivityIndicator accessibilityLabel="Restableciendo espacio local"/> : null) : busy || exists === undefined ? <ActivityIndicator accessibilityLabel="Preparando espacio cifrado"/> : <ActionButton title={exists ? 'Desbloquear' : 'Crear espacio local'} testID="web-unlock" onPress={() => void open()}/>}
     </Card>
   </View></ScrollView>;
 }

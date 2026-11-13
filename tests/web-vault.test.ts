@@ -27,8 +27,8 @@ it('revierte operaciones fallidas sin persistir escrituras parciales', async () 
   expect((await store.snapshot()).categories.some(c => c.id === 'fallo')).toBe(false);
 });
 it('no abre otra pestaña escritora ni admite una contraseña inicial corta', async () => {
-  const vault = await import('../src/web/vault'); await expect(vault.unlockWebVault('corta')).rejects.toThrow('12 caracteres'); denied = true;
-  await expect(vault.unlockWebVault('Contraseña-FICTICIA-2026')).rejects.toThrow('otra pestaña');
+  const vault = await import('../src/web/vault'); await expect(vault.unlockWebVault('corta')).rejects.toThrow('12 caracteres'); denied = true; vi.resetModules(); const other = await import('../src/web/vault');
+  await expect(other.unlockWebVault('Contraseña-FICTICIA-2026')).rejects.toThrow('otra pestaña');
 });
 it('protege el código de enlace con la clave local y lo conserva al reabrir', async () => {
   let vault = await import('../src/web/vault'); await vault.unlockWebVault('Contraseña-FICTICIA-2026'); await vault.setWebSettings({ code: 'CODIGO-FICTICIO' });
@@ -44,4 +44,26 @@ it('impide reemplazar datos si una operación local cambió durante la sincroniz
   const { BackupStore } = await import('../src/modules/backup/store'); const backup = new BackupStore(ledger); const previous = await backup.snapshot();
   await ledger.create({ ...movement, id: 'cambio-ficticio', idempotencyKey: 'cambio-ficticio', description: 'Cambio FICTICIO durante red', amountCents: cents(20000) });
   await expect(backup.restore(previous, 'RESTAURAR', JSON.stringify(previous.tables))).rejects.toThrow('cambiaron'); expect((await ledger.snapshot()).movements).toHaveLength(2);
+});
+it('restablece solo con confirmación y permite una nueva contraseña tras cerrar', async () => {
+  let vault = await import('../src/web/vault'); await vault.unlockWebVault('Anterior-FICTICIA-2026');
+  await new MoneyStore(await vault.webDatabase()).create(movement);
+  vi.resetModules(); vault = await import('../src/web/vault');
+  await expect(vault.resetWebVault('')).rejects.toThrow('RESTABLECER');
+  expect(await vault.hasWebVault()).toBe(true);
+  await vault.resetWebVault('RESTABLECER'); expect(await vault.hasWebVault()).toBe(false);
+  await vault.unlockWebVault('Nueva-FICTICIA-2026');
+  expect((await new MoneyStore(await vault.webDatabase()).snapshot()).movements).toHaveLength(0);
+  vi.resetModules(); vault = await import('../src/web/vault');
+  await vault.unlockWebVault('Nueva-FICTICIA-2026');
+  expect(await vault.hasWebVault()).toBe(true);
+});
+it('rechaza una segunda apertura que podría conservar una clave obsoleta', async () => {
+  const vault = await import('../src/web/vault'); await vault.unlockWebVault('Inicial-FICTICIA-2026');
+  await expect(vault.unlockWebVault('Otra-FICTICIA-2026')).rejects.toThrow('ya está abierto');
+  await expect(vault.resetWebVault('RESTABLECER')).rejects.toThrow('Bloquea');
+  await new MoneyStore(await vault.webDatabase()).create(movement);
+  vi.resetModules(); const reopened = await import('../src/web/vault');
+  await reopened.unlockWebVault('Inicial-FICTICIA-2026');
+  expect((await new MoneyStore(await reopened.webDatabase()).snapshot()).movements).toHaveLength(1);
 });

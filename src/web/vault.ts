@@ -34,8 +34,16 @@ async function exclusiveTab() {
   });
 }
 let tabLocked = false;
+let unlocking = false;
 export async function unlockWebVault(password: string) {
+  if (unlocking) throw Error('Hay una apertura en curso. Espera antes de volver a entrar.');
+  unlocking = true;
+  try { await openWebVault(password); } finally { unlocking = false; }
+}
+async function openWebVault(password: string) {
   if (!globalThis.isSecureContext || !crypto.subtle) throw Error('Abre EduMoney mediante HTTPS para proteger los datos.');
+  if (connection) throw Error('El espacio ya está abierto. Bloquéalo antes de volver a entrar.');
+  if (!tabLocked) { await exclusiveTab(); tabLocked = true; }
   const saved = await record<Envelope | undefined>('readonly', s => s.get('database'));
   if (!saved && password.length < 12) throw Error('Usa una contraseña local de al menos 12 caracteres.');
   const salt = saved?.salt ?? crypto.getRandomValues(new Uint8Array(16));
@@ -97,4 +105,26 @@ export async function setWebSettings(value: unknown) {
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const ciphertext = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, settingsKey, new TextEncoder().encode(JSON.stringify(value)));
   await record('readwrite', s => s.put({ version: 1, salt, iv, ciphertext } satisfies Envelope, 'sync-settings'));
+}
+
+// Reset only after explicit on-screen confirmation. Keep the old encrypted copy
+// for later recovery; never overwrite it with an empty database or a new key.
+export async function resetWebVault(confirmation: string) {
+  if (confirmation !== 'RESTABLECER') throw Error('Escribe RESTABLECER para confirmar.');
+  if (connection || unlocking) throw Error('Bloquea EduMoney antes de restablecer.');
+  if (!tabLocked) { await exclusiveTab(); tabLocked = true; }
+  await new Promise<void>((resolve, reject) => {
+    const opening = indexedDB.open(DB_NAME, 1);
+    opening.onerror = () => reject(Error('No se pudo abrir el almacenamiento.'));
+    opening.onsuccess = () => {
+      const db = opening.result; const tx = db.transaction('vault', 'readwrite'); const store = tx.objectStore('vault');
+      const recoveryId = 'recovery-' + crypto.randomUUID();
+      const old = store.get('database'); const settings = store.get('sync-settings');
+      old.onsuccess = () => { if (old.result) store.put(old.result, recoveryId + '-database'); };
+      settings.onsuccess = () => { if (settings.result) store.put(settings.result, recoveryId + '-settings'); };
+      store.delete('database'); store.delete('sync-settings');
+      tx.oncomplete = () => { db.close(); resolve(); };
+      tx.onabort = tx.onerror = () => { db.close(); reject(Error('No se pudo restablecer. Los datos no se cambiaron.')); };
+    };
+  });
 }
