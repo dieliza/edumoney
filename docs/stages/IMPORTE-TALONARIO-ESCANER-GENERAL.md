@@ -41,3 +41,12 @@ Sin migración ni cambios en GitHub main.
 La imagen privada se suministra por variable de entorno; no se agrega a fixtures públicos ni al despliegue. Pillow sustituye operaciones de Canvas en la comprobación local; no es una prueba de Safari/iPad físico.
 
 TypeScript, ESLint, git diff --check y compilación web correctos. No hay herramienta interactiva de navegador en este entorno; no se afirma haber reproducido la experiencia del usuario en su dispositivo ni haber corregido errores de otra foto todavía no aportada.
+
+## Publicación
+
+Sites confirmó succeeded para la versión alojada 15, el 2026-11-13 a las 21:47 UTC.
+URL pública: https://edumoney-web.diegoluissantospabon.chatgpt.site
+Despliegue: appgdep_6af785805ab081919036fcf7ea4cabfd.
+Fuente alojada: 80756fab17863336c942f6048f9510c261b7c80b.
+Versión guardada: appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_98afe5c316bc8191881d0715f64ecb34.
+Implementación local: 8f6ed6c en web-edumoney. GitHub main permanece sin cambios.
