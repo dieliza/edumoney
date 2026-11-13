@@ -1,0 +1,11 @@
+# Menús compactos y calendarios — 2026.11.13.5
+
+Cheques y talonarios agrupa seleccionar foto, entrada manual, añadir deducción, crear categoría y abrir documentos/expediente en un único menú Opciones. El botón Foto ocupa el 25% del ancho anterior, con icono y etiqueta compactos, área táctil mínima accesible y etiqueta completa para el lector de pantalla. Crear categoría muestra su formulario junto al menú para que se encuentre sin recorrer el desglose.
+
+Documentos y recibos comerciales usan el mismo patrón compacto para sus acciones de entrada. Se mantienen guardar, cancelar y los controles condicionados que confirman una operación. Las preguntas de selección de la aplicación usan los selectores desplegables comunes. La auditoría de los controles de opciones en pestañas encontró solo las vistas de navegación (Mi dinero, Facturas, Deudas y expediente), que conservan esa función.
+
+Field reconoce las fechas completas y las presenta mediante DateField, incluso cuando el campo procede de un formulario dinámico. Esto incluye Desde/Hasta de Mi dinero y campos de pagos, facturas, metas y Negocio, además de los calendarios ya existentes en documentos y talonarios. Las búsquedas que mencionan fecha, porcentajes con la palabra hasta y selectores de mes/año no se convierten en fecha diaria. Los valores conservan el formato interno ISO; no cambian modelos, claves, cantidades ni relaciones. El calendario web declara el rango 1900–9999 compatible con las validaciones de la aplicación.
+
+Validación: un caso de regresión pasado con etiquetas positivas y negativas para el selector de calendario; TypeScript y ESLint completados, incluida revisión de los archivos ajustados. No se repitieron las pruebas financieras históricas porque no cambian cálculos o almacenamiento. Exportación y empaquetado web preparados para el mismo sitio privado. No se afirma comprobación visual en un iPad físico.
+
+Publicación privada succeeded en https://edumoney-web.diegoluissantospabon.chatgpt.site. Fuente bcf439e782f622306ab5aab81800a076e4faa3e6; deployment appgdep_6af704a64f0c819182722c87a02fa1e8. Se conserva la identidad y audiencia existentes. La copia de código de aplicación queda en commit local de web-edumoney; la autenticación Git de GitHub seguía pendiente y no afecta a la publicación del sitio. Sin cambios en main ni APK nueva.

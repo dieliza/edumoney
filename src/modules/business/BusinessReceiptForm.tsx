@@ -1,6 +1,7 @@
+import {ActionMenu,CameraActionButton} from '../../ui/ActionMenu';
 import { proposeFields } from '../documents/domain';
 import { useState } from 'react';
-import { Image } from 'react-native';
+import { Image, View } from 'react-native';
 import { newId } from '../../core/id';
 import { parseAmount } from '../../core/money';
 import { formatMoney } from '../money/domain';
@@ -25,7 +26,10 @@ export function BusinessReceiptForm({movement,done,close}:{movement:LedgerMoveme
  }catch(e){setError(userMessage(e));}finally{setBusy(false);}}
  return <Sheet title="Recibo del registro comercial" close={close} busy={busy}>
   <Body>Se adjunta a {movement.description} · {movement.date} · {formatMoney(movement.amountCents)}. No crea otro ingreso ni gasto. Si el recibo incluye uso personal y comercial, conserva el importe completo y revisa el porcentaje en el registro comercial.</Body>
-  {!busy?<><ActionButton title="Seleccionar imagen del recibo" secondary onPress={()=>void capture('library')}/><ActionButton title="Tomar foto del recibo" secondary onPress={()=>void capture('camera')}/></>:null}
+  {!busy?<View style={{flexDirection:'row',alignItems:'flex-start',gap:12}}><CameraActionButton label="Tomar foto del recibo" onPress={()=>void capture('camera')}/><ActionMenu actions={[
+ {id:'library',label:'Seleccionar imagen del recibo',run:()=>void capture('library')},
+ {id:'manual',label:'Entrada manual sin imagen',run:()=>{setImage(null);setSource('manual');setKeep('no');}},
+ ]}/></View>:null}
   {recognition?<Body>{recognition}</Body>:null}
   {image?<><Image source={{uri:`data:${image.mime};base64,${image.base64}`}} accessibilityLabel="Recibo que estás revisando" style={{width:'100%',height:260}} resizeMode="contain"/><Choices label="Copia del recibo" value={keep} options={[["","Decidir antes de guardar"],["yes","Conservar imagen local cifrada"],["no","Guardar solo datos confirmados"]]} onChange={setKeep}/></>:<Body>Puedes registrar los datos manualmente sin conservar una imagen.</Body>}
   <Field label="Descripción del recibo" value={description} onChangeText={setDescription} maxLength={240}/>

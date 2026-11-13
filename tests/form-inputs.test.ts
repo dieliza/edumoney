@@ -24,3 +24,8 @@ it('calcula el ingreso sin un segundo campo neto y no supone cero si faltan rete
  expect(()=>incomeFromBreakdown('1000.00','')).toThrow('un blanco no significa cero');
  expect(()=>incomeFromBreakdown('1000.00','1001.00')).toThrow('positivo');
 });
+it('activa calendario para fechas y rangos sin afectar búsquedas, porcentajes ni meses',async()=>{
+ const {isCalendarField}=await import('../src/ui/dateInput');
+ for(const label of ['Desde (AAAA-MM-DD, opcional)','Hasta (AAAA-MM-DD, opcional)','Fecha del pago','Fecha real AAAA-MM-DD','Vencimiento (AAAA-MM-DD)','Inicio del período'])expect(isCalendarField(label)).toBe(true);
+ for(const label of ['Porcentaje comercial (hasta dos decimales)','Buscar registro por fecha o descripción','Descripción','Mes (AAAA-MM)','Año contributivo','Primer mes del escenario (AAAA-MM)'])expect(isCalendarField(label)).toBe(false);
+});

@@ -1,7 +1,8 @@
+import {ActionMenu,CameraActionButton} from '../../ui/ActionMenu';
 import { DateField } from '../../ui/DateField';
 import { documentMatches, validDocumentRange } from './filters';
 import { useCallback,useEffect,useRef,useState } from 'react';
-import { ActivityIndicator,AppState,Image,Pressable } from 'react-native';
+import { ActivityIndicator,AppState,Image,Pressable,View } from 'react-native';
 import { useIsFocused } from 'expo-router';
 import { userMessage } from '../../core/errors';
 import { ActionButton,Body,Card,Screen,SectionHeading } from '../../ui/components';
@@ -35,7 +36,11 @@ export default function DocumentsScreen(){
  {parent?<Card><Body>Corrección de: {parent.description}. Mantendremos su vínculo original.</Body><ActionButton title="Cancelar corrección" secondary onPress={()=>setParent(undefined)}/></Card>:null}
  <Card><Body>La imagen y el dictado proponen información. Tú confirmas si es un gasto, ingreso, factura pendiente, adjunto o nota. No se guarda un pago por reconocer un recibo.</Body><Body muted>La cámara y el micrófono se solicitan solo cuando los usas. Las fotos elegidas pueden seguir existiendo en tu fototeca; EduMoney solo controla su copia.</Body></Card>
  {!store?<ActivityIndicator accessibilityLabel="Cargando documentos cifrados"/>:null}
- {!busy?<><ActionButton title="Tomar foto de comprobante" testID="document-camera" icon="camera-outline" onPress={()=>void capture('camera')}/><ActionButton title="Seleccionar imagen de comprobante" testID="document-library" secondary onPress={()=>void capture('library')}/><ActionButton title="Escribir o pegar información" testID="document-manual" secondary onPress={()=>setReview({source:'manual',text:'',image:null,warning:'Entrada manual: confirma los campos antes de guardar.',parent})}/><ActionButton title="Dictar información localmente" testID="document-voice" secondary onPress={()=>void dictate()}/></>:<Card><Body>Procesando imagen localmente…</Body></Card>}
+ {!busy?<View style={{flexDirection:'row',alignItems:'flex-start',gap:12}}><CameraActionButton label="Tomar foto de comprobante" testID="document-camera" onPress={()=>void capture('camera')}/><ActionMenu actions={[
+ {id:'library',testID:'document-library',label:'Seleccionar imagen de comprobante',run:()=>void capture('library')},
+ {id:'manual',testID:'document-manual',label:'Escribir o pegar información',run:()=>setReview({source:'manual',text:'',image:null,warning:'Entrada manual: confirma los campos antes de guardar.',parent})},
+ {id:'voice',testID:'document-voice',label:'Dictar información localmente',run:()=>void dictate()},
+ ]}/></View>:<Card><Body>Procesando imagen localmente…</Body></Card>}
  {listening?<><Body>Escuchando en el dispositivo. El audio no se conserva.</Body><ActionButton title="Detener dictado" onPress={()=>voice.current?.stop()}/><ActionButton title="Cancelar dictado" secondary onPress={()=>{abort();setListening(false);setVoiceText('');}}/></>:null}
  {voiceText?<Card><Body>Texto reconocido: {voiceText}</Body><ActionButton title="Revisar texto dictado" testID="document-review-voice" onPress={()=>{abort();setListening(false);setReview({source:'voice',text:voiceText,image:null,warning:'Confirma las palabras, fecha, importe y tipo. No se conserva audio.',parent});setVoiceText('');}}/></Card>:null}
  {process.env.EXPO_PUBLIC_STAGE8_TESTS==='1'&&!busy?<ActionButton title="Cargar comprobante ficticio de prueba" testID="document-fixture" secondary onPress={()=>{setBusy(true);setError('');void loadOCRFixture().then(result=>{if(live.current)setReview({source:'library',text:result.text,image:result.image,warning:result.warning,needsAmountReview:result.needsAmountReview,parent});}).catch(()=>setError('No se pudo leer la imagen ficticia local.')).finally(()=>setBusy(false));}}/>:null}
