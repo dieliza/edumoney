@@ -5,7 +5,7 @@ import { router, useIsFocused } from 'expo-router';
 import { refreshBills } from '../bills/runtime';
 import { billStatus, outstanding } from '../bills/domain';
 import type { Bill } from '../bills/types';
-import { ExpenseDonut } from '../../ui/ExpenseDonut';
+import { MonthlyCharts } from '../../ui/MonthlyCharts';
 import { useTheme } from '../../design/ThemeProvider';
 import { fixed } from '../../design/tokens';
 import { newId } from '../../core/id';
@@ -122,8 +122,8 @@ export default function LedgerScreen() {
      <ActionButton title="Mis facturas" testID="open-bills" icon="calendar-outline" secondary onPress={() => router.push('/bills')}/>
     </Card>
     <Card style={{ backgroundColor: colors.mint }}><View style={ui.row}><IconBadge icon="document-text"/><View style={{ flex: 1 }}><Body style={{ fontWeight: '700' }}>Para mi contable</Body><Body muted style={ui.small}>Marca y organiza tus gastos para revisión.</Body></View></View><ActionButton title="Abrir Para mi contable" testID="open-tax" secondary onPress={() => router.push('/tax')}/></Card>
-    <SectionHeading title="Distribución de gastos"/>
-    <Distribution summary={summary} onSelect={id => { setFilterCategory(id === 'uncategorized' ? 'none' : id); setFilterKind('expense'); setFilterMethod('all'); setLimit(50); setDeleted('active'); setQuery(''); setFrom(`${month}-01`); setTo(`${month}-31`.replace(/31$/, String(new Date(Number(month.slice(0,4)), Number(month.slice(5,7)), 0).getDate()))); setSegment('history'); }}/>
+    <SectionHeading title="Ingresos y gastos del mes"/>
+    <Distribution summary={summary} movements={data.movements} month={month} onSelect={id => { setFilterCategory(id === 'uncategorized' ? 'none' : id); setFilterKind('expense'); setFilterMethod('all'); setLimit(50); setDeleted('active'); setQuery(''); setFrom(`${month}-01`); setTo(`${month}-31`.replace(/31$/, String(new Date(Number(month.slice(0,4)), Number(month.slice(5,7)), 0).getDate()))); setSegment('history'); }}/>
     <ActionButton title="Ver todas las transacciones" secondary onPress={() => setSegment('history')}/>
     <ActionButton title="Registrar transferencia, préstamo o pago" secondary onPress={() => setForm({ kind: 'transfer' })}/>
     <ActionButton title={showCalculation ? 'Ocultar detalle del disponible' : 'Cómo se calcula el disponible'} secondary onPress={() => setShowCalculation(!showCalculation)}/>
@@ -175,15 +175,17 @@ export default function LedgerScreen() {
   </>}
  </Screen>;
 }
-function Distribution({ summary, budget = false, onSelect }: {
+function Distribution({ summary, budget = false, onSelect, movements = [], month = localToday().slice(0,7) }: {
     summary: ReturnType<typeof monthlySummary>;
+    movements?: LedgerMovement[];
+    month?: string;
     budget?: boolean;
     onSelect?(id: string): void;
 }) {
     const { colors } = useTheme();
     const items = summary.distribution.filter(c => budget ? c.budget !== null || c.spent > 0 : c.spent > 0);
     return <Card>{budget && !items.length ? <Body>{budget ? 'Define un presupuesto para comparar tus gastos.' : 'Aún no hay gastos registrados en este mes.'}</Body> : null}
-  {!budget ? <ExpenseDonut items={items} total={summary.expenses} onSelect={onSelect}/> : null}
+  {!budget ? <MonthlyCharts summary={summary} movements={movements} month={month} onSelect={onSelect}/> : null}
   {budget ? items.map(item => {
             const pct = item.budget && item.budget > 0 ? Number(BigInt(item.spent) * 100n / BigInt(item.budget)) : 0;
             return <View key={item.id} style={{ gap: 8 }}><View style={ui.between}><Body style={{ flex: 1, fontWeight: '600' }}>{item.name}</Body><Body>{formatMoney(item.spent)}</Body></View>

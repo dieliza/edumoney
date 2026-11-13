@@ -1,0 +1,11 @@
+# Gráficas de ingresos y gastos — 2026.11.13.6
+
+La tarjeta de Mi dinero muestra ingresos netos registrados y gastos del mes en dos anillos sobre una misma escala: exterior verde para ingresos e interior rojo para gastos. Incluye importes, leyenda textual y lectura accesible. Préstamos y transferencias no se presentan como ingresos; la diferencia ingresos menos gastos no se presenta como saldo disponible, pues otros movimientos y compromisos se consideran en el resumen existente.
+
+Un botón compacto de capas y un control anterior recorren las vistas dentro de la misma tarjeta: comparación general, distribución circular por categorías y barras de los gastos de cada categoría activa. Cada categoría nueva con gastos añade una vista. Los nuevos gastos en una categoría existente actualizan su vista y el total; no generan categorías artificiales. Las vistas usan los mismos registros del mes que el resumen. Se conservan selección de categorías y acceso al historial filtrado.
+
+La vista individual muestra hasta diez gastos recientes, con importes y fecha, y acceso a todos sus movimientos en el historial. Su total incluye todos los gastos del mes. No hay datos de relleno. Cuando una categoría deja de aparecer o cambia el mes, la selección se resuelve a una vista válida. La preparación de datos se memoiza y agrupa registros por categoría.
+
+Validación: cuatro pruebas pasadas para escala común, no contar préstamos como ingreso, páginas por categoría, gastos individuales, registros eliminados/fuera del mes, ceros y gastos mayores que ingresos. TypeScript, ESLint y compilación web preparados para la entrega. No se repitieron pruebas financieras históricas porque no cambia el almacenamiento ni la aritmética contable. No se afirma verificación visual en un iPad físico.
+
+Publicación privada succeeded en https://edumoney-web.diegoluissantospabon.chatgpt.site. Fuente 06a9281a0c27873092427c97f24d0db18c064b6d; deployment appgdep_6af70b28199481919a6444c9985a8298. TypeScript, ESLint, exportación y empaquetado completados. Se conserva la audiencia y el origen para mantener los datos locales. Código de aplicación comprometido localmente en web-edumoney; el acceso Git a GitHub seguía pendiente, sin afectar a esta publicación ni modificar main.
