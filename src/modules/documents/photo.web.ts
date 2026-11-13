@@ -1,3 +1,4 @@
+import {proposeFields} from './domain';
 import {zeroCellTargets,clearCellRules,addVerifiedZero} from './zeroCells';
 import {createWorker,PSM,type Page} from 'tesseract.js';
 import {receiptContrast,receiptBands,type ReceiptFragment} from './receiptImage';
@@ -50,7 +51,7 @@ export async function readReceiptPhoto(file:File){
     try{const {data}=await worker.recognize(rowCanvas,{}, {text:true});if(/^0(?:[.,]00)?$/.test(data.text.trim())&&data.confidence>=85){addVerifiedZero(readings,cell.y);warning+='Se recuperó un cero impreso de una celda; confírmalo contra la foto. ';}}catch{warning+='Una celda aislada requiere revisión manual. ';}
    }
   }
-  const selected=reconcilePhotoReadings(readings);text=selected.text||fallback;needsAmountReview=selected.needsAmountReview;
+  const selected=reconcilePhotoReadings(readings);text=selected.text||fallback;needsAmountReview=selected.needsAmountReview&&!proposeFields(text).amount;
   if(needsAmountReview)warning+='Las lecturas discrepan en cifras. Los importes afectados requieren revisión contra la foto; no se adivinan. ';
   if(!printedAmounts(text).length)warning+='Se reconocieron palabras pero no importes claros. Fotografía más cerca, con el papel plano y sin reflejos, o escribe los importes. ';
   if(selected.confidence<75)warning+='Verifica especialmente fechas, decimales e importes: la confianza de lectura es limitada. ';

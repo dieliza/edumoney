@@ -24,3 +24,15 @@ export function paystubTable(text:string){
  if(header>=0){const candidates=lines.slice(header+1,header+3).flatMap(l=>[...l.matchAll(/\b(\d{1,2})\/(\d{1,2})\/(\d{4})\b/g)]);if(candidates.length===3){const us=candidates.some(m=>Number(m[2])>12),international=candidates.some(m=>Number(m[1])>12);if(us!==international){const dates=candidates.map(m=>`${m[3]}-${(us?m[1]:m[2]).padStart(2,'0')}-${(us?m[2]:m[1]).padStart(2,'0')}`);if(dates.every(validDate))[date,periodStart,periodEnd]=dates;}}}
  return {lines,earnings,date,periodStart,periodEnd};
 }
+
+/** Selección semántica para cuando un talonario entra por el escáner general de documentos. */
+export function paystubNetProposal(text:string){
+ const table=paystubTable(text);const gross=/GROSS\s*(?:WAGES|PAY|EARNINGS)|SALARIO BRUTO|INGRESOS? BRUTO/i;const net=/\bNET\s*(?:WAGES|PAY)|PAGO NETO|NETO A PAGAR|SALARIO NETO/i;
+ const detected=table.lines.some(l=>gross.test(l))&&table.lines.some(l=>net.test(l));if(!detected)return {detected:false,amount:'',date:'',conflicted:false};
+ let order:'first'|'last'|'unknown'='unknown',conflicted=false;const amounts:string[]=[];
+ for(const line of table.lines){const current=line.search(/CURRENT|ACTUAL|PERIODO|\bPERIOD\b/i),annual=line.search(/\bYTD\b|YEAR TO DATE|ACUMULAD/i);if(/AMOUNT.*YEAR TO DATE/i.test(line))order='first';if(current>=0&&annual>=0)order=current<annual?'first':'last';if(!net.test(line)||annual>=0&&current<0)continue;
+ if(/importe por confirmar/i.test(line)){conflicted=true;continue;}
+ const values=printedAmounts(line).map(v=>v.amount);if(values.length===1&&(order==='unknown'||current>=0))amounts.push(values[0]);else if(values.length===2&&order!=='unknown')amounts.push(values[order==='first'?0:1]);
+ }
+ const unique=[...new Set(amounts)];return {detected:true,amount:!conflicted&&unique.length===1?unique[0]:'',date:table.date,conflicted};
+}
