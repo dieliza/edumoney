@@ -62,3 +62,12 @@ Compilación web, TypeScript, ESLint y git diff --check: correctos. Sin nueva mi
 No se promete extraer el 100% de cualquier talonario. Las celdas vacías y ambiguas requieren revisión; no se deducen importes faltantes por diferencia. La recuperación de ceros exige geometría y trazo verificables. El trabajo se limita a lectura local, propuestas revisables y guardado confirmado.
 
 No se probó la cámara de un iPad/Android físico ni hubo QA visual en navegador: el entorno Sites administrado carece de cua_repl.js. No se generó APK. Los modelos siguen siendo locales spa+eng; las fotos no se envían a servicios de OCR ni IA externa.
+
+## Publicación
+
+Sites confirmó estado succeeded para la versión alojada 13, el 2026-11-13 a las 15:33 UTC.
+URL pública conservada: https://edumoney-web.diegoluissantospabon.chatgpt.site
+Despliegue: appgdep_6af72da90cec8191865c18ab1c132ffc.
+Versión guardada: appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_40f0dbfcbb4c819193de73a51457f522.
+Fuente alojada: 09087189c7f6a30bf53c92156084b1043a230017.
+Implementación local: b05ce7d, rama web-edumoney. Sin cambios en GitHub main.
