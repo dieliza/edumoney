@@ -1,0 +1,13 @@
+# Configuración y cambio de contraseña — 2026-11-13
+
+Ruta `/settings`, accesible por el engranaje en las pantallas compartidas. Reutiliza los temas, selectores y componentes de EduMoney. No añade otra pestaña inferior ni cuentas nuevas.
+
+Incluye apariencia Claro/Oscuro/Automático con la persistencia existente; información de accesibilidad; acceso a respaldo y restauración; acceso a sincronización; gestión de recordatorios desde facturas; privacidad de fotos, voz y documentos; ayuda sobre navegadores, datos y estimaciones. Explica las diferencias entre web y aplicación nativa y no promete avisos con la web cerrada ni notificaciones push.
+
+En web se puede cambiar la contraseña actual por una nueva corroborada de al menos 12 caracteres, sin perder movimientos o ajustes cifrados de sincronización. Se verifica la contraseña actual y se recifran ambos registros en una única transacción de IndexedDB. La clave en memoria solo se actualiza después de completar esa transacción. Persistencia y ajustes se serializan junto con el cambio de clave para evitar escrituras con claves anteriores. Los campos usan mostrar/ocultar. Bloquear lleva al acceso, donde está el restablecimiento explícito «Olvidé mi contraseña» implementado previamente. La instalación nativa sigue utilizando su clave protegida por el dispositivo.
+
+Verificación: TypeScript y ESLint pasados; exportación web y empaquetado correctos. Once casos de bóveda cubren contraseña incorrecta, cierre/apertura, restablecimiento, cambio conservando datos y enlace, escrituras posteriores y actualización concurrente de ajustes. Se ejecutaron doce casos contando la repetición de uno: el dato ficticio del segundo movimiento activó inicialmente la prevención de duplicados; se cambió su descripción y ese caso pasó. No hubo controlador cua_repl.js para comprobación visual.
+
+Publicación pendiente. Sites ahora devuelve `auth_mode: codex_auth`, pero el entorno no tiene un helper Git disponible para su origen: `could not read Username for https://git.chatgpt-team.site: terminal prompts disabled`. No se alteró la audiencia privada, la URL, el almacenamiento R2 ni la versión publicada. El artefacto local está preparado. No se presentó la compilación como publicada.
+
+Trabajo Android solicitado previamente: APK de acceso web independiente `com.edumoney.web`, con logo oficial y navegador real, compilada y verificada en el run `43358494776`, fuente `207749ca60fc90d184151346f545571c6db65b75`, artifact `14007525684` (EduMoney-Web-APK). Abre la web publicada; no adelanta cambios pendientes ni sustituye la APK nativa. La recepción de cambios requiere que se publiquen y abrir/recargar el navegador. No se comprobó en dispositivo físico. En iPad se usa Safari o Chrome sin APK.

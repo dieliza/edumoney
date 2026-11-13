@@ -6,6 +6,18 @@ type Envelope = { version: 1; salt: Uint8Array; iv: Uint8Array; ciphertext: Arra
 const DB_NAME = 'edumoney-encrypted-web-v1';
 let connection: SqlDb | undefined;
 let sqlEngine: Promise<SqlJsStatic> | undefined;
+let writes: Promise<unknown> = Promise.resolve();
+function vaultWrite<T>(action: () => Promise<T>): Promise<T> {
+  const next = writes.then(action); writes = next.catch(() => undefined); return next;
+}
+let rotatePassword: ((current: string, next: string) => Promise<void>) | undefined;
+export async function changeWebPassword(current: string, next: string, repeat: string) {
+  if (!rotatePassword) throw Error('Desbloquea EduMoney antes de cambiar la contraseña.');
+  if (next.length < 12) throw Error('Usa al menos 12 caracteres.');
+  if (next !== repeat) throw Error('Las contraseñas nuevas no coinciden.');
+  await vaultWrite(() => rotatePassword!(current, next));
+}
+
 function record<T>(mode: IDBTransactionMode, operation: (store: IDBObjectStore) => IDBRequest<T>): Promise<T> {
   return new Promise((resolve, reject) => {
     const opening = indexedDB.open(DB_NAME, 1);
@@ -46,8 +58,8 @@ async function openWebVault(password: string) {
   if (!tabLocked) { await exclusiveTab(); tabLocked = true; }
   const saved = await record<Envelope | undefined>('readonly', s => s.get('database'));
   if (!saved && password.length < 12) throw Error('Usa una contraseña local de al menos 12 caracteres.');
-  const salt = saved?.salt ?? crypto.getRandomValues(new Uint8Array(16));
-  const key = await keyFor(password, salt);
+  let salt = saved?.salt ?? crypto.getRandomValues(new Uint8Array(16));
+  let key = await keyFor(password, salt);
   let bytes: Uint8Array | undefined;
   if (saved) {
     if (saved.version !== 1) throw Error('Versión de datos web no compatible. Conserva tu respaldo.');
@@ -60,11 +72,11 @@ async function openWebVault(password: string) {
   db.run('PRAGMA foreign_keys=ON');
   let before: Uint8Array | undefined; let recoveredRollback = false;
   const exportBytes = () => { const data = db.export(); db.run('PRAGMA foreign_keys=ON'); return data; };
-  const persist = async () => {
+  const persist = () => vaultWrite(async () => {
     const iv = crypto.getRandomValues(new Uint8Array(12));
     const ciphertext = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new Uint8Array(exportBytes()));
     await record('readwrite', s => s.put({ version: 1, salt, iv, ciphertext } satisfies Envelope, 'database'));
-  };
+  });
   const query = <T>(sql: string, params: (string | number | null)[]) => {
     const statement = db.prepare(sql); try { statement.bind(params); const rows: T[] = []; while (statement.step()) rows.push(statement.getAsObject() as T); return rows; } finally { statement.free(); }
   };
@@ -83,6 +95,27 @@ async function openWebVault(password: string) {
     async getFirstAsync<T>(sql: string, ...params: (string | number | null)[]) { return query<T>(sql, params)[0] ?? null; },
   };
   await migrate(adapter); if (!saved) await persist(); connection = adapter; settingsKey = key; settingsSalt = salt;
+  rotatePassword = async (current, next) => {
+    const stored = await record<Envelope>('readonly', s => s.get('database'));
+    const oldKey = await keyFor(current, stored.salt);
+    let plain: ArrayBuffer;
+    try { plain = await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(stored.iv)}, oldKey, stored.ciphertext); }
+    catch { throw Error('La contraseña actual no coincide. No se cambiaron los datos.'); }
+    const oldSettings = await record<Envelope | undefined>('readonly', s => s.get('sync-settings'));
+    const settings = oldSettings ? await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(oldSettings.iv)},oldKey,oldSettings.ciphertext) : undefined;
+    const newSalt = crypto.getRandomValues(new Uint8Array(16)); const newKey = await keyFor(next,newSalt);
+    const encrypt = async (data: ArrayBuffer): Promise<Envelope> => {
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      return {version:1,salt:newSalt,iv,ciphertext:await crypto.subtle.encrypt({name:'AES-GCM',iv},newKey,data)};
+    };
+    const database = await encrypt(plain); const sync = settings ? await encrypt(settings) : undefined;
+    await new Promise<void>((resolve,reject)=>{
+      const opening=indexedDB.open(DB_NAME,1); opening.onerror=()=>reject(Error('No se pudo abrir el almacenamiento.'));
+      opening.onsuccess=()=>{const handle=opening.result;const tx=handle.transaction('vault','readwrite');const store=tx.objectStore('vault');store.put(database,'database');if(sync)store.put(sync,'sync-settings');
+        tx.oncomplete=()=>{handle.close();resolve();};tx.onabort=tx.onerror=()=>{handle.close();reject(Error('No se cambió la contraseña. Conserva la anterior.'));};};
+    });
+    key=newKey;salt=newSalt;settingsKey=newKey;settingsSalt=newSalt;
+  };
   void navigator.storage?.persist?.().catch(() => false);
 }
 export async function webDatabase(): Promise<SqlDb> {
@@ -92,20 +125,20 @@ export async function webDatabase(): Promise<SqlDb> {
 
 let settingsKey: CryptoKey | undefined;
 let settingsSalt: Uint8Array | undefined;
-export async function getWebSettings<T>(): Promise<T | undefined> {
+export function getWebSettings<T>(): Promise<T | undefined> { return vaultWrite(async () => {
   if (!settingsKey) throw Error('Desbloquea EduMoney.');
   const envelope = await record<Envelope | undefined>('readonly', s => s.get('sync-settings'));
   if (!envelope) return undefined;
   const bytes = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: new Uint8Array(envelope.iv) }, settingsKey, envelope.ciphertext);
   return JSON.parse(new TextDecoder().decode(bytes)) as T;
-}
-export async function setWebSettings(value: unknown) {
+}); }
+export function setWebSettings(value: unknown) { return vaultWrite(async () => {
   if (!settingsKey || !settingsSalt) throw Error('Desbloquea EduMoney.');
   const salt = settingsSalt;
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const ciphertext = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, settingsKey, new TextEncoder().encode(JSON.stringify(value)));
   await record('readwrite', s => s.put({ version: 1, salt, iv, ciphertext } satisfies Envelope, 'sync-settings'));
-}
+}); }
 
 // Reset only after explicit on-screen confirmation. Keep the old encrypted copy
 // for later recovery; never overwrite it with an empty database or a new key.

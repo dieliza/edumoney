@@ -1,5 +1,5 @@
 import { fixed } from '../design/tokens';
-import { useIsFocused } from 'expo-router';
+import { useIsFocused, router } from 'expo-router';
 import { type ComponentProps, type PropsWithChildren } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View, KeyboardAvoidingView, Keyboard, Platform, useWindowDimensions, type StyleProp, type ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -80,6 +80,7 @@ export function Screen({ children, title, subtitle, welcome = false, demo = true
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 70, gap: 10 }}>
           {!welcome && title === 'Mi dinero' ? <Brand onDark={name === 'dark'}/> : null}
           {welcome ? <Brand onDark={name === 'dark'} /> : <Text accessibilityRole="header" style={{ fontSize: 27, fontWeight: '800', letterSpacing: -0.5, color: headerInk, flex: 1 }}>{title}</Text>}
+          {title !== 'Configuración' ? <Pressable accessibilityRole="button" accessibilityLabel="Abrir configuración" onPress={()=>router.push('/settings')} style={{minWidth:48,minHeight:48,alignItems:'center',justifyContent:'center'}}><Ionicons name="settings-outline" size={25} color={headerInk}/></Pressable> : null}
           <ThemePicker color={headerInk} />
         </View>
         {keyboardForm?<Pressable testID="form-dismiss-keyboard" accessibilityRole="button" accessibilityLabel="Ocultar teclado" onPress={()=>Keyboard.dismiss()} style={{minHeight:48,justifyContent:'center',alignItems:'flex-end',paddingVertical:8}}><Text style={{color:headerInk,fontSize:16,fontWeight:'600'}}>Ocultar teclado</Text></Pressable>:null}

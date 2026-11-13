@@ -67,3 +67,29 @@ it('rechaza una segunda apertura que podría conservar una clave obsoleta', asyn
   await reopened.unlockWebVault('Inicial-FICTICIA-2026');
   expect((await new MoneyStore(await reopened.webDatabase()).snapshot()).movements).toHaveLength(1);
 });
+it('cambia contraseña conservando movimientos, enlace y escrituras posteriores', async () => {
+  let vault=await import('../src/web/vault');await vault.unlockWebVault('Original-FICTICIA-2026');
+  const ledger=new MoneyStore(await vault.webDatabase());await ledger.create(movement);
+  await vault.setWebSettings({code:'ENLACE-FICTICIO'});
+  await vault.changeWebPassword('Original-FICTICIA-2026','Nueva-FICTICIA-2026','Nueva-FICTICIA-2026');
+  expect(await vault.getWebSettings()).toEqual({code:'ENLACE-FICTICIO'});
+  await ledger.create({...movement,id:'segundo',idempotencyKey:'segundo',description:'Segundo ingreso FICTICIO'});
+  vi.resetModules();vault=await import('../src/web/vault');
+  await expect(vault.unlockWebVault('Original-FICTICIA-2026')).rejects.toThrow('Contraseña incorrecta');
+  await vault.unlockWebVault('Nueva-FICTICIA-2026');
+  expect((await new MoneyStore(await vault.webDatabase()).snapshot()).movements).toHaveLength(2);
+  expect(await vault.getWebSettings()).toEqual({code:'ENLACE-FICTICIO'});
+});
+it('no cambia contraseña con contraseña actual incorrecta o confirmación distinta', async()=>{
+  let vault=await import('../src/web/vault');await vault.unlockWebVault('Original-FICTICIA-2026');
+  await expect(vault.changeWebPassword('incorrecta','Nueva-FICTICIA-2026','Nueva-FICTICIA-2026')).rejects.toThrow('actual no coincide');
+  await expect(vault.changeWebPassword('Original-FICTICIA-2026','Nueva-FICTICIA-2026','distinta')).rejects.toThrow('no coinciden');
+  await expect(vault.changeWebPassword('Original-FICTICIA-2026','corta','corta')).rejects.toThrow('12 caracteres');
+  vi.resetModules();vault=await import('../src/web/vault');await vault.unlockWebVault('Original-FICTICIA-2026');
+});
+it('serializa la actualización del enlace junto con la rotación de contraseña',async()=>{
+  let vault=await import('../src/web/vault');await vault.unlockWebVault('Original-FICTICIA-2026');
+  await Promise.all([vault.changeWebPassword('Original-FICTICIA-2026','Nueva-FICTICIA-2026','Nueva-FICTICIA-2026'),vault.setWebSettings({code:'ENLACE-NUEVO-FICTICIO'})]);
+  vi.resetModules();vault=await import('../src/web/vault');await vault.unlockWebVault('Nueva-FICTICIA-2026');
+  expect(await vault.getWebSettings()).toEqual({code:'ENLACE-NUEVO-FICTICIO'});
+});
