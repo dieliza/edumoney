@@ -66,7 +66,7 @@ export function Waves() {
     </Svg>
   </View>;
 }
-export function Screen({ children, title, subtitle, welcome = false, demo = true, keyboardForm = false }: PropsWithChildren<{ title: string; subtitle?: string; welcome?: boolean; demo?: boolean; keyboardForm?: boolean }>) {
+export function Screen({ children, title, subtitle, welcome = false, demo = true, keyboardForm = false, back = false, beforeBack }: PropsWithChildren<{ title: string; subtitle?: string; welcome?: boolean; demo?: boolean; keyboardForm?: boolean; back?: boolean; beforeBack?:()=>void }>) {
   const { name, colors, notice } = useTheme();
   const { width } = useWindowDimensions();
   const focused = useIsFocused();
@@ -76,7 +76,9 @@ export function Screen({ children, title, subtitle, welcome = false, demo = true
     <StatusBar style={name === 'dark' ? 'light' : 'dark'} />
     <Waves />
     <SafeAreaView edges={['top', 'left', 'right']} style={{ flex: 1 }}>
-      <View style={{ width: '100%', maxWidth: 700, alignSelf: 'center', paddingHorizontal: width < 370 ? 16 : 24 }}>
+      <View style={{width:'100%',position:'relative'}}>
+      {back?<View style={{position:'absolute',left:width>800?24:8,top:11,zIndex:2}}><ArrowBack beforeBack={beforeBack} color={headerInk}/></View>:null}
+      <View style={{ width: '100%', maxWidth: 700, alignSelf: 'center', paddingLeft: back&&width<=800?64:width<370?16:24,paddingRight:width<370?16:24 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 70, gap: 10 }}>
           {!welcome && title === 'Mi dinero' ? <Brand onDark={name === 'dark'}/> : null}
           {welcome ? <Brand onDark={name === 'dark'} /> : <Text accessibilityRole="header" style={{ fontSize: 27, fontWeight: '800', letterSpacing: -0.5, color: headerInk, flex: 1 }}>{title}</Text>}
@@ -84,7 +86,7 @@ export function Screen({ children, title, subtitle, welcome = false, demo = true
           <ThemePicker color={headerInk} />
         </View>
         {keyboardForm?<Pressable testID="form-dismiss-keyboard" accessibilityRole="button" accessibilityLabel="Ocultar teclado" onPress={()=>Keyboard.dismiss()} style={{minHeight:48,justifyContent:'center',alignItems:'flex-end',paddingVertical:8}}><Text style={{color:headerInk,fontSize:16,fontWeight:'600'}}>Ocultar teclado</Text></Pressable>:null}
-      </View>
+      </View></View>
       <KeyboardAvoidingView enabled={keyboardForm} behavior={Platform.OS==='ios'?'padding':'height'} style={{flex:1}}><ScrollView keyboardDismissMode="on-drag" tabIndex={0} accessibilityLabel={`Contenido de ${title}`} contentContainerStyle={{ flexGrow: 1, paddingBottom: 32 }} keyboardShouldPersistTaps="handled">
         <View style={{ width: '100%', maxWidth: 700, alignSelf: 'center', paddingHorizontal: width < 370 ? 16 : 24, gap: 18 }}>
           {!welcome && demo ? <View style={{ backgroundColor: colors.warning, borderRadius: 12, paddingVertical: 8, paddingHorizontal: 12 }}><Text style={{ color: colors.warningText, fontSize: 12, fontWeight: '600', textAlign: 'center' }}>DEMOSTRACIÓN · DATOS FICTICIOS</Text></View> : null}
@@ -103,6 +105,10 @@ export function CloseButton({ onPress, label = 'Cerrar ficha', testID }: { onPre
   return <Pressable testID={testID} accessibilityRole="button" accessibilityLabel={label} onPress={onPress} style={{ width:48,height:48,borderRadius:16,backgroundColor:colors.primary,alignItems:'center',justifyContent:'center',alignSelf:'flex-end' }}><Ionicons name="close" size={28} color={fixed.white} accessible={false} aria-hidden/></Pressable>;
 }
 
+function ArrowBack({beforeBack,color}:{beforeBack?:()=>void;color?:string}){
+  const {colors}=useTheme();
+  return <Pressable accessibilityRole="button" accessibilityLabel="Volver a la pantalla anterior" onPress={()=>{beforeBack?.();if(router.canGoBack())router.back();else router.replace('/money');}} style={{width:48,minHeight:48,alignItems:'center',justifyContent:'center',flexShrink:0}}><Ionicons name="arrow-back" size={28} color={color??colors.primary}/></Pressable>;
+}
 export function BackButton({beforeBack}: {beforeBack?:()=>void}) {
-  return <ActionButton title="Atrás" icon="arrow-back-outline" secondary onPress={()=>{beforeBack?.();if(router.canGoBack())router.back();else router.replace('/money');}}/>;
+  return <ArrowBack beforeBack={beforeBack}/>;
 }

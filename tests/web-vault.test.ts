@@ -110,3 +110,11 @@ it('recupera una foto, total y deuda tras cerrar la bóveda web; detecta el reci
   expect((await documents.snapshot()).documents[0].amountCents).toBe(5500);
   expect((await new DebtStore(ledger).snapshot()).debts[0]).toMatchObject({balanceCents:23400,dueDate:'2026-12-13'});
 });
+it('guarda y reabre ingresos y recibos sin descripción obligatoria',async()=>{
+ let vault=await import('../src/web/vault');await vault.unlockWebVault('Opcional-FICTICIO-2026');let ledger=new MoneyStore(await vault.webDatabase());
+ await ledger.create({...movement,description:''});
+ const {DocumentStore}=await import('../src/modules/documents/store');const {createHash}=await import('node:crypto');const hash=async(s:string)=>createHash('sha256').update(s).digest('hex');
+ await new DocumentStore(ledger,hash).save({id:'sin-descripcion',kind:'attachment',source:'manual',description:'',date:null,amountCents:null,notes:'',rawText:null,image:null,keepImage:false,movementId:movement.id,billId:null,expectedMovementVersion:1,expectedBillVersion:null,categoryId:null,paymentMethod:null,supersedesId:null,expectedDocumentVersion:null,confirmSimilar:false,reviewed:true});
+ vi.resetModules();vault=await import('../src/web/vault');await vault.unlockWebVault('Opcional-FICTICIO-2026');ledger=new MoneyStore(await vault.webDatabase());
+ expect((await ledger.snapshot()).movements[0].description).toBe('');expect((await new DocumentStore(ledger,hash).snapshot()).documents[0].description).toBe('');
+});

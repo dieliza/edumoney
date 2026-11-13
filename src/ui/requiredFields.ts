@@ -27,7 +27,7 @@ const requiredLabels = new Set([
   'Nombre de la oferta','Nombre del proveedor','Referencia única del proveedor',
 
 ]);
-export function isRequiredField(label: string) { return requiredLabels.has(label) || /^DBA \d+$|^Nombre del proyecto \d+$|^Realmente retenido /.test(label); }
+export function isRequiredField(label: string) { if (/descripci[oó]n/i.test(label)) return false; return requiredLabels.has(label) || /^DBA \d+$|^Nombre del proyecto \d+$|^Realmente retenido /.test(label); }
 export function missingField(value: string, required: boolean) { return required && value.trim().length === 0; }
 
 const calculationLabels = new Set(['Ventas brutas USD','Comisiones descontadas USD','Devoluciones descontadas USD','IVU registrado en este cobro USD','Salarios verificados, encasillado 11 (USD)','Retención verificada, encasillado 13 (USD)','Salario del período o tarifa por hora','Dependientes con exención completa (cantidad entera)','Dependientes con mitad de exención (cantidad entera)','Concesiones por deducciones (cantidad entera)','Retención PR adicional por período','Salarios de este patrono ANTES de empezar a registrar aquí este año (0 si confirmado)','Otras deducciones autorizadas del empleado','Ingreso bruto informado (USD)','Retención informada (USD)']);

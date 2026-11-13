@@ -1,6 +1,6 @@
 import { useCallback,useEffect,useState } from 'react';
 import { Image } from 'react-native';
-import { router,useIsFocused,useLocalSearchParams } from 'expo-router';
+import { useIsFocused,useLocalSearchParams } from 'expo-router';
 import { userMessage } from '../../core/errors';
 import { ActionButton,Body,Card,Screen,SectionHeading } from '../../ui/components';
 import { Choices,ErrorNotice,Sheet } from '../money/fields';
@@ -39,8 +39,8 @@ export default function BusinessLedgerScreen() {
  let totals:ReturnType<typeof businessTotals>|null=null,totalsError='';
  try{totals=businessTotals(entries,projectId||undefined);}catch(e){totalsError=userMessage(e);}
  async function saved(){await load();setNotice('Información comercial guardada localmente.');}
- return <Screen title="Movimientos de Negocio" demo={false} subtitle="Ingresos, gastos, recibos y reservas locales." keyboardForm>
-  <ActionButton title="Volver a Negocio" secondary onPress={()=>router.dismissTo('/business')}/><ErrorNotice message={error}/>{notice?<Card><Body>{notice}</Body></Card>:null}
+ return <Screen back title="Movimientos de Negocio" demo={false} subtitle="Ingresos, gastos, recibos y reservas locales." keyboardForm>
+  <ErrorNotice message={error}/>{notice?<Card><Body>{notice}</Body></Card>:null}
   {!store?<Card><Body>Abriendo registros comerciales…</Body></Card>:null}
   <Choices label="Vista por titular legal" value={holderId} options={[["","Seleccionar titular"],...data.holders.map(h=>[h.id,h.legalName] as const)]} onChange={id=>{setHolder(id);setProject('');setNotice('');setLimit(30);}}/>
   {holder?<>

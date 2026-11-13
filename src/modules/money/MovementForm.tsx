@@ -1,3 +1,4 @@
+import { incomeFromBreakdown } from './incomeInput';
 import { DateField } from '../../ui/DateField';
 import { CategoryPicker } from './CategoryPicker';
 import { userMessage, UserInputError } from '../../core/errors';
@@ -20,7 +21,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
     documentReview?: { id: string; version: number };
 }) {
     const [identity] = useState(() => ({ id: initial?.id ?? newId(), operation: initial?.idempotencyKey ?? newId(), schedule: newId() }));
-    const [type, setType] = useState<EntryKind>(initial?.kind as EntryKind ?? kind);
+    const [type,setType] = useState<EntryKind>(initial?.kind as EntryKind ?? kind);
     const [amount, setAmount] = useState(initial ? inputAmount(initial.amountCents) : '');
     const [description, setDescription] = useState(initial?.description ?? '');
     const [date, setDate] = useState(initial?.date ?? localToday());
@@ -38,8 +39,10 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState('');
     const [duplicate, setDuplicate] = useState(false);
-    function changeType(value: EntryKind) { setType(value); setCategory(''); setIncomeType('manual'); if (value !== 'expense' && method === 'credit')
-        setMethod('bank'); }
+    const preserveExisting=!!initial&&gross===(initial.grossCents==null?'':inputAmount(initial.grossCents))&&withholding===(initial.withholdingCents==null?'':inputAmount(initial.withholdingCents));
+    const needBreakdown=!initial||(!preserveExisting&&!!(gross.trim()||withholding.trim()));
+    let netPreview:ReturnType<typeof incomeFromBreakdown>|null=null;
+    if(type==='income'){try{netPreview=preserveExisting?initial!.amountCents:incomeFromBreakdown(gross,withholding,initial?.amountCents);}catch{}}
     async function submit(allowDuplicate = false) {
         if (busy)
             return;
@@ -49,7 +52,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
             if(type==='expense'&&!category)throw new UserInputError('Elige o crea una categoría para el gasto.');
             const now = new Date().toISOString();
             const scheduleId = !initial && type === 'income' && incomeType === 'recurring' ? identity.schedule : initial?.scheduleId ?? null;
-            const m: LedgerMovement = { id: identity.id, idempotencyKey: identity.operation, kind: type, amountCents: parseAmount(amount.trim()), currency: 'USD', date, description: type==='expense'?(initial?.description||categoryName||categories.find(c=>c.id===category)?.name||'Gasto'):description.trim(), categoryId: category || null, paymentMethod: method, taxReview: tax === 'yes', useKind: use, grossCents: type === 'income' && gross.trim() ? parseAmount(gross.trim()) : null, withholdingCents: type === 'income' && withholding.trim() ? parseAmount(withholding.trim()) : null, createdAt: initial?.createdAt ?? now, updatedAt: now, deletedAt: null, incomeType: type === 'income' ? incomeType : 'manual', scheduleId, occurrenceDate: initial?.occurrenceDate ?? (scheduleId ? date : null), version: initial?.version ?? 1 };
+            const m: LedgerMovement = { id: identity.id, idempotencyKey: identity.operation, kind: type, amountCents: type==='income'?(preserveExisting?initial!.amountCents:incomeFromBreakdown(gross,withholding,initial?.amountCents)):parseAmount(amount.trim()), currency: 'USD', date, description: type==='expense'?(initial?.description||categoryName||categories.find(c=>c.id===category)?.name||'Gasto'):(description.trim()||categoryName||categories.find(c=>c.id===category)?.name||kindLabels[type]), categoryId: category || null, paymentMethod: method, taxReview: tax === 'yes', useKind: use, grossCents: type === 'income' && gross.trim() ? parseAmount(gross.trim()) : null, withholdingCents: type === 'income' && withholding.trim() ? parseAmount(withholding.trim()) : null, createdAt: initial?.createdAt ?? now, updatedAt: now, deletedAt: null, incomeType: type === 'income' ? incomeType : 'manual', scheduleId, occurrenceDate: initial?.occurrenceDate ?? (scheduleId ? date : null), version: initial?.version ?? 1 };
             let schedule: IncomeSchedule | undefined;
             if (!initial && scheduleId) {
                 if (!/^\d+$/.test(interval))
@@ -73,11 +76,9 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
     }
     return <Sheet title={initial ? 'Corregir movimiento' : kind === 'income' ? 'Añadir ingreso' : kind === 'expense' ? 'Registrar gasto' : 'Registrar otro movimiento'} close={close} busy={busy}>
   <Body muted>USD · Datos guardados únicamente en la base cifrada de este dispositivo.</Body>
-  {!initial?.scheduleId ? <Choices label="Tipo de movimiento" value={type} options={Object.entries(kindLabels) as [
-        EntryKind,
-        string
-    ][]} onChange={changeType}/> : <Body>Ingreso vinculado a una recurrencia. Esta corrección no modifica los próximos cobros.</Body>}
-  <Field label={type === 'income' ? 'Importe recibido o neto (USD)' : 'Importe (USD)'} value={amount} onChangeText={v => { setAmount(v); setDuplicate(false); }} decimal testID="movement-amount"/>
+  {!initial&&kind!=='income'&&kind!=='expense'?<Choices<EntryKind> label="Operación" value={type} options={(['transfer','loan','debt_payment'] as EntryKind[]).map(key=>[key,kindLabels[key]] as const)} onChange={setType}/>:null}
+  {initial?.scheduleId?<Body>Ingreso vinculado a una recurrencia. Esta corrección no modifica los próximos cobros.</Body>:null}
+  {type!=='income'?<Field label="Importe (USD)" value={amount} onChangeText={v => { setAmount(v); setDuplicate(false); }} decimal testID="movement-amount"/>:null}
   <DateField required label="Fecha" value={date} onChangeText={v => { setDate(v); setDuplicate(false); }} testID="movement-date"/>
   {type!=='expense'?<Field label="Descripción" value={description} onChangeText={v => { setDescription(v); setDuplicate(false); }} multiline testID="movement-description"/>:null}
   {(type === 'income' || type === 'expense') ? <CategoryPicker required={type==='expense'} categories={categories} kind={type} value={category} onChange={(id,name)=>{setCategory(id);setCategoryName(name??'');setDuplicate(false);}}/> : null}
@@ -92,9 +93,10 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
   {type === 'income' ? <>
    {!initial?.scheduleId ? <Choices<LedgerMovement['incomeType']> label="Clase de ingreso" value={incomeType} options={initial ? [['manual', 'Manual'], ['extraordinary', 'Extraordinario']] : [['manual', 'Manual'], ['recurring', 'Recurrente'], ['extraordinary', 'Extraordinario']]} onChange={setIncomeType}/> : null}
    {!initial && incomeType === 'recurring' ? <View style={{ gap: 14 }}><Choices<'weekly' | 'monthly'> label="Frecuencia" value={cadence} options={[['weekly', 'Semanas'], ['monthly', 'Meses']]} onChange={setCadence}/><Field label="Cada cuántas semanas o meses (1–120)" value={interval} onChangeText={setInterval}/><Body>Al guardar confirmas el primer cobro. Los siguientes aparecerán como previstos y solo se sumarán cuando confirmes que los recibiste.</Body></View> : null}
-   <Field label="Ingreso bruto (opcional, USD)" value={gross} onChangeText={setGross} decimal testID="movement-gross"/>
-   <Field label="Retención (opcional, USD)" value={withholding} onChangeText={setWithholding} decimal testID="movement-withheld"/>
-   <Body muted>El resumen usa el importe recibido. Bruto y retención se conservan para revisión; no se suman otra vez ni se calcula una planilla.</Body>
+   <Field required={needBreakdown} label="Ingreso bruto (USD)" value={gross} onChangeText={setGross} decimal testID="movement-gross"/>
+   <Field required={needBreakdown} label="Retención (USD; escribe cero si no hubo)" value={withholding} onChangeText={setWithholding} decimal testID="movement-withheld"/>
+   <Body>{netPreview===null?'Completa bruto y retención para calcular el ingreso.':`Ingreso neto ${initial&&(preserveExisting||(!gross&&!withholding))?'registrado':'calculado'}: ${formatMoney(netPreview)}`}</Body>
+   <Body muted>El neto es bruto menos retención. Este formulario supone que no hubo otras deducciones. Confirma que el resultado coincide con lo recibido antes de guardar; no se calcula una planilla. En registros anteriores, dejar ambos campos vacíos conserva el importe conocido.</Body>
   </> : null}
   <Choices label="Para revisión de mi contable" value={tax} options={[['no', 'No marcar'], ['yes', 'Marcar para revisión']]} onChange={setTax}/>
   <Choices<LedgerMovement['useKind']> label="Uso del movimiento" value={use} options={[['unknown', 'Sin clasificar'], ['personal', 'Personal'], ['business', 'Comercial'], ['mixed', 'Mixto']]} onChange={setUse}/>

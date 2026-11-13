@@ -1,5 +1,5 @@
 import { useCallback,useEffect,useState } from 'react';
-import { router,useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { Linking } from 'react-native';
 import { userMessage } from '../../../core/errors';
 import { ActionButton,Body,Card,Screen } from '../../../ui/components';
@@ -30,8 +30,8 @@ export default function ObligationsScreen(){
  const contractors=data&&providerId&&/^\d{4}$/.test(year)?contractorSummary(data,holderId,providerId,year):undefined;
  function open(kind:Editor,o?:SUTOffer){setOffer(o);setEditor(kind);}
  const voidButton=(kind:'collection'|'payment'|'obligation',id:string)=><ActionButton title="Anular este registro" secondary onPress={()=>{setReason('');setVoidError('');setVoiding({kind,id});}}/>;
- return <Screen title="IVU y contratistas" subtitle="Simuladores y registros de obligaciones locales." demo={false} keyboardForm>
- <ActionButton title="Volver a Negocio" secondary onPress={()=>router.dismissTo('/business')}/><ErrorNotice message={error}/>
+ return <Screen back title="IVU y contratistas" subtitle="Simuladores y registros de obligaciones locales." demo={false} keyboardForm>
+ <ErrorNotice message={error}/>
  <Card><Body>{RULE_VERSION} · Fuentes verificadas: {VERIFIED_ON}. Cada simulación muestra supuestos y datos pendientes. Las cifras calculadas no confirman cobro, retención, depósito ni radicación. No se exige revisión de CPA para simular.</Body><ActionButton title={sources?'Ocultar fuentes oficiales':'Ver fuentes y vigencia'} secondary onPress={()=>setSources(!sources)}/></Card>
  {sources?ruleSources.filter(s=>flow==='ivu'?['ivu2026','monthly','municipal','digital','marketplace','b2b'].includes(s.id):['sp2026','sp2','deposits','exceptions'].includes(s.id)).map(s=><Card key={s.id}><Body>{s.name} · {s.effective}</Body><Body>{s.summary}</Body><ActionButton title={`Abrir fuente: ${s.name}`} secondary onPress={()=>void Linking.openURL(s.url).catch(e=>setError(userMessage(e)))}/></Card>):null}
  {data?<Choices label="Titular legal pagador / vendedor" value={holderId} options={data.holders.map(h=>[h.id,h.legalName] as const)} onChange={h=>{setHolderId(h);setEditor(undefined);}}/>:<Body>Abriendo registros locales…</Body>}

@@ -19,7 +19,7 @@ export class DocumentStore {
  }
  async snapshot():Promise<DocumentsSnapshot>{return this.ledger.read(async db=>({documents:await db.getAllAsync<StoredDocument>(select+' ORDER BY rowid DESC'),movements:(await db.getAllAsync<LedgerMovement>(movementSelect+' ORDER BY date DESC')).map(readMovement),bills:await db.getAllAsync('SELECT id,provider,amount_cents AS amountCents,due_date AS dueDate,version FROM bills WHERE voided_at IS NULL ORDER BY due_date DESC'),categories:(await db.getAllAsync<{id:string;name:string;kind:'income'|'expense';archived:number}>('SELECT id,name,kind,archived FROM categories')).map(c=>({...c,archived:!!c.archived}))}));}
  async save(p:DocumentInput){
- if(!p.id||!p.reviewed||!p.description.trim()||p.description.length>240||p.notes.length>20000||(p.rawText?.length??0)>20000)throw new UserInputError('Revisa la descripción y confirma que comprobaste todos los datos.');
+ if(!p.id||!p.reviewed||p.description.length>240||p.notes.length>20000||(p.rawText?.length??0)>20000)throw new UserInputError('Revisa la descripción y confirma que comprobaste todos los datos.');
  if(!['paid_expense','paid_income','pending_bill','attachment','note'].includes(p.kind)||!['manual','camera','library','voice'].includes(p.source))throw new UserInputError('Elige cómo se guardará este documento.');
  if(p.date!==null&&!validDate(p.date)||p.amountCents!==null&&cents(p.amountCents)<=0)throw new UserInputError('Revisa la fecha AAAA-MM-DD y el importe positivo.');
  if(p.image)validateImage(p.image);if(p.keepImage&&!p.image)throw new UserInputError('No hay imagen para conservar.');
@@ -54,7 +54,7 @@ export class DocumentStore {
  if(!p.confirmSimilar&&await db.getFirstAsync('SELECT id FROM movements WHERE deleted_at IS NULL AND kind=? AND date=? AND amount_cents=?',kind,p.date,p.amountCents))throw new UserInputError('Hay un movimiento similar. Revisa si debes adjuntar al existente o confirma que es otro distinto.');
  await new MovementRepository(db).create(m);
  }else if(p.kind==='pending_bill'){
- const b={id:links.billId!,provider:p.description.trim(),amountCents:cents(p.amountCents!),dueDate:p.date!,categoryId:p.categoryId,paymentKind:'expense' as const,reminderDays:null};validateBill(b);
+ const b={id:links.billId!,provider:p.description.trim()||'Proveedor por confirmar',amountCents:cents(p.amountCents!),dueDate:p.date!,categoryId:p.categoryId,paymentKind:'expense' as const,reminderDays:null};validateBill(b);
  if(p.categoryId){const c=await db.getFirstAsync<{kind:string;archived:number}>('SELECT kind,archived FROM categories WHERE id=?',p.categoryId);if(!c||c.archived||c.kind!=='expense')throw new UserInputError('Selecciona una categoría activa de gasto.');}
  if(!p.confirmSimilar&&await db.getFirstAsync('SELECT id FROM bills WHERE voided_at IS NULL AND lower(trim(provider))=lower(?) AND amount_cents=? AND due_date=?',b.provider,b.amountCents,b.dueDate))throw new UserInputError('Ya hay una factura similar. Revisa la existente o confirma que es otra distinta.');
  await db.runAsync('INSERT INTO bills(id,provider,amount_cents,due_date,category_id,payment_kind,reminder_days,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?)',b.id,b.provider,b.amountCents,b.dueDate,b.categoryId,b.paymentKind,null,now,now);

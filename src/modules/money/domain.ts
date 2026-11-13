@@ -25,8 +25,8 @@ export function formatMoney(value: number): string {
     return `${n < 0n ? '−' : ''}$${(abs / 100n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.${(abs % 100n).toString().padStart(2, '0')}`;
 }
 export function validateMovement(m: LedgerMovement) {
-    if (!m.id || !m.idempotencyKey || !m.description.trim() || m.description.length > 240 || !validDate(m.date))
-        throw new UserInputError('Revisa la descripción y la fecha (AAAA-MM-DD).');
+    if (!m.id || !m.idempotencyKey || m.description.length > 240 || !validDate(m.date))
+        throw new UserInputError('Revisa la fecha (AAAA-MM-DD) y que la descripción no supere 240 caracteres.');
     if (cents(m.amountCents) <= 0 || m.currency !== 'USD')
         throw new UserInputError('El importe debe ser positivo y en dólares.');
     if (!['income', 'expense', 'transfer', 'loan', 'debt_payment'].includes(m.kind))

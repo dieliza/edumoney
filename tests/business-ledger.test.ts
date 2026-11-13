@@ -52,3 +52,6 @@ describe('Negocio 2: movimientos, repartos, documentos y CPA',()=>{
  }finally{db.close();}});
 
 });
+it('permite registrar un movimiento comercial sin descripción',async()=>{
+ const {db,store,ledger}=await setup();try{await store.save(entry({description:''}));expect((await ledger.snapshot()).movements[0].description).toBe('');}finally{db.close();}
+});

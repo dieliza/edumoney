@@ -17,3 +17,10 @@ it('admite rangos abiertos y rechaza fechas invertidas sin inventar fecha a un d
  expect(validDocumentRange('','2026-11-13')).toBe(true);expect(validDocumentRange('2026-12-01','2026-11-01')).toBe(false);expect(validDocumentRange('2026-02-30','')).toBe(false);
  expect(documentMatches({...doc,date:null},'','','')).toBe(true);expect(documentMatches({...doc,date:null},'','2026-01-01','')).toBe(false);
 });
+it('calcula el ingreso sin un segundo campo neto y no supone cero si faltan retenciones',async()=>{
+ const {incomeFromBreakdown}=await import('../src/modules/money/incomeInput');
+ expect(incomeFromBreakdown('1000.00','125.25')).toBe(87475);
+ expect(incomeFromBreakdown('1000.00','0.00')).toBe(100000);
+ expect(()=>incomeFromBreakdown('1000.00','')).toThrow('un blanco no significa cero');
+ expect(()=>incomeFromBreakdown('1000.00','1001.00')).toThrow('positivo');
+});

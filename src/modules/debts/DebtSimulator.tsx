@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { userMessage } from '../../core/errors';
-import { parseAmount, cents } from '../../core/money';
+import { parseAmount, cents, addAmounts } from '../../core/money';
 import { ActionButton, Body, Card, SectionHeading } from '../../ui/components';
 import { formatMoney, localToday } from '../money/domain';
 import { ErrorNotice, Field } from '../money/fields';
@@ -8,6 +8,9 @@ import { addMonths, project } from './domain';
 import type { Debt, Method, Projection } from './types';
 export function DebtSimulator({debts}:{debts:Debt[]}){
  const [extra,setExtra]=useState('0.00');const [first,setFirst]=useState(()=>addMonths(localToday().slice(0,7),1));const [request,setRequest]=useState<{extra:string;first:string}|null>(null);
+ const active=debts.filter(d=>!d.archived&&d.balanceCents>0);
+ let monthlyBase:number|null=null;try{if(active.length&&active.every(d=>d.minimumCents!==null))monthlyBase=addAmounts(...active.map(d=>d.minimumCents!));}catch{}
+ let monthlyScenario:number|null=null;try{if(monthlyBase!==null)monthlyScenario=addAmounts(cents(monthlyBase),parseAmount(extra));}catch{}
  const result=useMemo(()=>{
   if(!request)return null;
   try{
@@ -18,11 +21,12 @@ export function DebtSimulator({debts}:{debts:Debt[]}){
   }catch(e){return {snowball:null,avalanche:null,baseSnow:null,baseAvalanche:null,error:userMessage(e)};}
  },[debts,request]);
  return <>
-  <Card><Body style={{fontWeight:'700'}}>Dos maneras de ordenar tus pagos</Body><Body>Bola de nieve: tras cubrir los mínimos, dirige el dinero disponible al saldo más pequeño. Puede ayudar a ver avances tempranos.</Body><Body>Avalancha: tras cubrir los mínimos, prioriza la tasa más alta del mes. Puede reducir intereses bajo los supuestos de este cálculo.</Body><Body muted>El cálculo usa todas tus deudas activas con saldo pendiente. Ambas alternativas conservan el mismo presupuesto mensual y reutilizan los mínimos liberados. Tú eliges; no se recomienda un préstamo ni se garantizan resultados.</Body></Card>
-  <Field label="Aporte adicional mensual (USD)" testID="debt-extra" value={extra} onChangeText={v=>{setExtra(v);setRequest(null);}} decimal/>
+  <Card><Body style={{fontWeight:'700'}}>¿Para qué sirve este simulador?</Body><Body>Compara cuánto tiempo e intereses podrías reducir al añadir dinero a tus pagos mensuales. Solo prueba escenarios: no realiza pagos ni cambia tus deudas.</Body><Body style={{fontWeight:'700'}}>Bola de nieve</Body><Body>Bola de nieve: tras cubrir los mínimos, dirige el dinero disponible al saldo más pequeño. Ejemplo ficticio: entre saldos de $200 y $1,000, empiezas por el de $200. Cuando terminas una deuda, sumas su pago a la siguiente; así crece la «bola». Puede ayudar a ver avances tempranos.</Body><Body style={{fontWeight:'700'}}>Avalancha</Body><Body>Avalancha: tras cubrir los mínimos, prioriza la tasa más alta del mes. Ejemplo ficticio: entre tasas de 10% y 25%, empiezas por la de 25%, aunque su saldo sea mayor. Busca reducir intereses bajo los supuestos de este cálculo.</Body><Body muted>El cálculo usa todas tus deudas activas con saldo pendiente. Ambas alternativas conservan el mismo presupuesto mensual y reutilizan los mínimos liberados. Tú eliges; no se recomienda un préstamo ni se garantizan resultados.</Body></Card>
+  <Card><Body style={{fontWeight:'700'}}>¿Qué pasa si añado dinero a mi pago actual?</Body><Body>Escribe solo lo que puedes añadir cada mes, además de los mínimos registrados de todas tus deudas. Si hoy tus mínimos suman $200 y añades $50, el simulador usa $250 al mes; no $50 en total. Ejemplo ficticio.</Body><Body>{monthlyBase===null?'Completa el pago mínimo de cada deuda para conocer tu base mensual.':`Tus mínimos registrados suman: ${formatMoney(monthlyBase)} al mes.`}</Body>{monthlyScenario!==null?<Body>Con el adicional escrito, pagarías {formatMoney(monthlyScenario)} al mes en el escenario.</Body>:null}<Body muted>Con 0.00 comparas pagar solo los mínimos. El objetivo es ver la diferencia en tiempo e intereses y decidir qué cantidad cabe en tu presupuesto. No se envía dinero ni se cambia tu pago real.</Body></Card>
+  <Field label="Dinero adicional sobre mis mínimos cada mes (USD)" required testID="debt-extra" value={extra} onChangeText={v=>{setExtra(v);setRequest(null);}} decimal/>
   <Field label="Primer mes del escenario (AAAA-MM)" value={first} onChangeText={v=>{setFirst(v);setRequest(null);}}/>
   <Card><Body style={{fontWeight:'700'}}>Supuestos del escenario</Body><Body>Un pago mensual, mínimos fijos, interés APR/12 con redondeo a centavos y presupuesto constante. Sin nuevas compras ni cargos futuros. Los cargos facturados ya forman parte del saldo; no se suman otra vez.</Body><Body muted>Una nueva APR conocida se aplica desde el mes de su fecha efectiva. No se modela interés diario, días de gracia, promociones ni cambios del mínimo. El escenario parte del saldo mostrado, con una cuota desde el mes que indiques. El mes inicial predeterminado es el siguiente; los pagos ya realizados no consumen ese presupuesto futuro. Las cifras son estimaciones, no un estado de la entidad.</Body></Card>
-  <ActionButton title="Calcular con estos supuestos" testID="debt-calculate" onPress={()=>setRequest({extra,first})}/>
+  <ActionButton title="Comparar qué pasa si añado este dinero" testID="debt-calculate" onPress={()=>setRequest({extra,first})}/>
   <ErrorNotice message={result?.error??''}/>
   {result?.snowball&&result.avalanche?<>
    <ProjectionCard method="snowball" result={result.snowball} baseline={result.baseSnow} debts={debts}/>

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, AppState, Pressable, View } from 'react-native';
 import { router, useIsFocused } from 'expo-router';
 import { userMessage } from '../../core/errors';
-import {BackButton, ActionButton, Body, Card, IconBadge, Screen, SectionHeading } from '../../ui/components';
+import { ActionButton, Body, Card, IconBadge, Screen, SectionHeading } from '../../ui/components';
 import { useTheme } from '../../design/ThemeProvider';
 import { formatMoney, localToday, validMonth } from '../money/domain';
 import { Choices, ErrorNotice, Field, Sheet } from '../money/fields';
@@ -30,8 +30,8 @@ export default function BillsScreen(){
  function open(b:Bill){setDetailId(b.id);setReason('');setRevisions([]);setError('');}
  function row(b:Bill){return <Pressable key={b.id} accessibilityRole="button" accessibilityLabel={`Factura ${b.provider}, ${billStatus(b,today)}, ${b.dueDate}, Importe: ${formatMoney(b.amountCents)}, Pendiente: ${formatMoney(outstanding(b))}`} onPress={()=>open(b)}><Card><View style={{flexDirection:'row',alignItems:'center',gap:12}}><IconBadge icon={outstanding(b)===0?'checkmark-circle':'calendar'} tone={outstanding(b)===0?'mint':'blue'} size={42}/><View style={{flex:1}}><Body style={{fontWeight:'700'}}>{b.provider}</Body><Body muted style={{fontSize:13}}>{b.dueDate} · {billStatus(b,today)}</Body></View><Body style={{fontWeight:'800'}}>{formatMoney(outstanding(b))}</Body></View><Body muted>Importe: {formatMoney(b.amountCents)} · Pagado: {formatMoney(b.paidCents)}</Body>{b.seriesId?<Body muted>Factura recurrente · cada vencimiento se paga por separado</Body>:null}</Card></Pressable>;}
 
- return <Screen title="Mis facturas" demo={false} subtitle="Vencimientos y pagos que tú confirmas.">
-  <BackButton/><ErrorNotice message={error}/>{notice?<Card><Body>{notice}</Body></Card>:null}
+ return <Screen back title="Mis facturas" demo={false} subtitle="Vencimientos y pagos que tú confirmas.">
+  <ErrorNotice message={error}/>{notice?<Card><Body>{notice}</Body></Card>:null}
   <ActionButton title="Añadir factura" testID="add-bill" icon="add-circle-outline" onPress={()=>{setForm(true);setError('');}}/>
   <Choices presentation="tabs" label="Vista de facturas" value={tab} options={[[ 'upcoming','Próximas'],['paid','Pagadas'],['calendar','Calendario']]} onChange={v=>{setTab(v);setLimit(50);}}/>
   {!store?<ActivityIndicator color={colors.accent} accessibilityLabel="Cargando facturas"/>:null}

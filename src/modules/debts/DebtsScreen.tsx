@@ -5,7 +5,7 @@ import { router, useIsFocused, useLocalSearchParams } from 'expo-router';
 import { newId } from '../../core/id';
 import { userMessage } from '../../core/errors';
 import { addAmounts } from '../../core/money';
-import {BackButton, ActionButton, Body, Card, IconBadge, Screen, SectionHeading } from '../../ui/components';
+import { ActionButton, Body, Card, IconBadge, Screen, SectionHeading } from '../../ui/components';
 import { formatMoney, localToday } from '../money/domain';
 import { Choices, ErrorNotice, Field, Sheet } from '../money/fields';
 import { refreshBills } from '../bills/runtime';
@@ -42,8 +42,8 @@ export default function DebtsScreen(){
  const summary=useMemo(()=>{try{const active=data.debts.filter(d=>!d.archived);return {total:addAmounts(...active.map(d=>d.balanceCents)),minimum:addAmounts(...active.map(d=>minimumRemaining(d)).filter(v=>v!==null)),unknown:active.filter(d=>d.balanceCents>0&&(d.minimumCents===null||!d.dueDate)).length,error:''};}catch{return {total:null,minimum:null,unknown:0,error:'El total excede el rango monetario. Revisa los saldos.'};}},[data.debts]);
  const detail=data.debts.find(d=>d.id===detailId);const today=localToday();const active=data.debts.filter(d=>!d.archived&&d.balanceCents>0);const plan=data.plans[0];
  function row(d:Debt){return <Pressable key={d.id} accessibilityRole="button" accessibilityLabel={`Deuda ${d.name}, saldo ${formatMoney(d.balanceCents)}, mínimo ${d.minimumCents===null?'desconocido':formatMoney(d.minimumCents)}, vencimiento ${d.dueDate??'desconocido'}`} onPress={()=>{setDetailId(d.id);setReason('');setError('');}}><Card><View style={{flexDirection:'row',alignItems:'center',gap:12}}><IconBadge icon="card" tone="coral"/><View style={{flex:1}}><Body style={{fontWeight:'800'}}>{d.name}</Body><Body muted>{debtLabels[d.kind]}</Body></View></View><Body>Saldo registrado: {formatMoney(d.balanceCents)}</Body><Body>APR base: {d.annualRateBps===null?'Sin confirmar':`${(d.annualRateBps/100).toFixed(2)}%`} · Mínimo: {d.minimumCents===null?'Sin confirmar':formatMoney(d.minimumCents)}</Body><Body>Vencimiento: {d.dueDate??'Sin confirmar'}</Body>{debtWarnings(d,today).map(message=><Body key={message} muted>{message}</Body>)}</Card></Pressable>;}
- return <Screen title="Ordenar mis pagos" demo={false} subtitle="Deudas registradas y alternativas para organizarlas.">
-  <BackButton/><ErrorNotice message={error}/>{notice?<Card><Body>{notice}</Body></Card>:null}
+ return <Screen back title="Ordenar mis pagos" demo={false} subtitle="Deudas registradas y alternativas para organizarlas.">
+  <ErrorNotice message={error}/>{notice?<Card><Body>{notice}</Body></Card>:null}
   <ActionButton title="Añadir deuda" testID="add-debt" onPress={()=>setForm(true)}/>
   <Choices presentation="tabs" label="Vista de deudas" value={tab} options={[[ 'debts','Deudas'],['calendar','Calendario de pagos'],['simulator','Simulador'],['plan','Plan de 30 días']]} onChange={setTab}/>
   {!store?<ActivityIndicator accessibilityLabel="Cargando deudas cifradas"/>:null}

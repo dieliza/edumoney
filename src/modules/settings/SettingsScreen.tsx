@@ -2,14 +2,14 @@ import { WEB_BUILD } from '../../ui/buildVersion';
 import { Platform } from 'react-native';
 import { router } from 'expo-router';
 import { useTheme } from '../../design/ThemeProvider';
-import {BackButton, ActionButton, Body, Card, Screen, SectionHeading } from '../../ui/components';
+import { ActionButton, Body, Card, Screen, SectionHeading } from '../../ui/components';
 import { Choices } from '../money/fields';
 import { SecuritySettings } from './SecuritySettings';
 export default function SettingsScreen() {
   const { preference, setPreference } = useTheme();
   const web = Platform.OS === 'web';
-  return <Screen title="Configuración" demo={false} subtitle="Tu apariencia, seguridad y datos, bajo tu control.">
-    <BackButton/>
+  return <Screen back title="Configuración" demo={false} subtitle="Tu apariencia, seguridad y datos, bajo tu control.">
+
     <SectionHeading title="Apariencia y accesibilidad"/>
     <Card><Choices label="Tema" value={preference} onChange={setPreference} options={[[ 'light','Claro'],['dark','Oscuro'],['automatic','Automático']]}/><Body>La preferencia se guarda en este dispositivo. Automático sigue el tema del sistema.</Body><Body muted>La letra respeta el tamaño del dispositivo o el zoom del navegador. Puedes usar VoiceOver o TalkBack con los controles etiquetados.</Body></Card>
     <SectionHeading title="Seguridad y contraseña"/><Card><SecuritySettings/></Card>
