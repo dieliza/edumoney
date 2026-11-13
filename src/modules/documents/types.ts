@@ -6,4 +6,4 @@ export interface DocumentInput {incomeStatement?:import('../income/domain').Inco
 export interface StoredDocument {id:string;movementId:string|null;billId:string|null;sha256:string;encryptedPath:string|null;supersedesId:string|null;status:string;source:Source;kind:RecordKind;description:string;date:string|null;amountCents:number|null;notes:string;mime:string|null;createdAt:string|null;deletedAt:string|null;copyDeletedAt:string|null;version:number}
 export interface DocumentsSnapshot {documents:StoredDocument[];movements:LedgerMovement[];bills:{id:string;provider:string;amountCents:number;dueDate:string;version:number}[];categories:Category[]}
 
-export interface CaptureResult { image: ImageData; text: string; warning: string; needsAmountReview?: boolean }
+export interface CaptureResult { structured?:import('./ai/types').GeminiReading; image: ImageData; text: string; warning: string; needsAmountReview?: boolean }

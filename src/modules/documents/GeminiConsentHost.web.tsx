@@ -1,0 +1,5 @@
+import {useSyncExternalStore} from 'react';
+import {geminiConsentOpen,subscribeGeminiConsent,answerGeminiConsent} from '../../web/geminiConsent';
+import {Sheet} from '../money/fields';
+import {Body,ActionButton} from '../../ui/components';
+export function GeminiConsentHost(){const open=useSyncExternalStore(subscribeGeminiConsent,geminiConsentOpen,()=>false);return open?<Sheet title="Autorizar lectura con Google Gemini" busy={false} close={()=>answerGeminiConsent(false)}><Body>Esta foto pasará por el servidor de EduMoney y Google Gemini para proponer sus datos. Las condiciones del nivel gratuito permiten usar datos para mejorar productos. Google procesa la imagen según esas condiciones; EduMoney no la guarda en el servidor.</Body><Body>Si cancelas, se conservan los datos escritos y no se envía la foto. Nada se registra como pagado por autorizar una lectura.</Body><ActionButton title="Enviar esta foto a Gemini" onPress={()=>answerGeminiConsent(true)}/><ActionButton title="Cancelar y conservar datos" secondary onPress={()=>answerGeminiConsent(false)}/></Sheet>:null;}
