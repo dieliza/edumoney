@@ -113,3 +113,9 @@ EduMoney registra pagos y cobros realizados fuera de la aplicación. El usuario 
 [Cierre del panel y exportaciones: resultados finales seleccionados y preparación de entrega](docs/stages/CIERRE-APP.md).
 
 [Logo oficial integrado: archivo original, comprobación visual y APK actualizado](docs/stages/LOGO-OFICIAL.md).
+
+## Enlace web compartible
+
+https://edumoney-web.diegoluissantospabon.chatgpt.site
+
+Acceso público solicitado por el propietario, sin iniciar sesión en ChatGPT. El alojamiento sigue siendo Sites. Cada navegador crea o desbloquea su espacio local cifrado; compartir la dirección no comparte registros ni códigos de sincronización. Funciona en Safari y Chrome sin APK. Se conserva el mismo origen para mantener los datos existentes.

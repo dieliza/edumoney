@@ -19,3 +19,7 @@ En la web, la base funciona en memoria y se guarda cifrada en IndexedDB mediante
 Si el usuario activa el enlace y pulsa Sincronizar ahora, se envía una copia cifrada a su servicio de EduMoney. El secreto de acceso y la clave de descifrado son independientes; la clave de descifrado no se envía al servidor. Se guardan el objeto cifrado y metadatos técnicos de versión, tamaño y conexión. El proveedor de alojamiento procesa las conexiones HTTPS según su servicio. No se envían registros legibles ni se usan servicios externos de IA.
 
 El código privado de enlace permite acceder a las copias: se comparte únicamente con dispositivos propios. Se puede desvincular el dispositivo o retirar la copia remota desde la app. Las exportaciones PDF/CSV/JSON de revisión siguen siendo legibles y se descargan solo cuando el usuario las solicita. La captura web propone una imagen para revisión manual; no añade reconocimiento remoto ni dictado en servidores.
+
+## Acceso compartible sin cuenta de ChatGPT
+
+Por petición del usuario, el código de la web se ofrece mediante enlace público, sin autenticación de ChatGPT. El alojamiento continúa en Sites (dominio chatgpt.site). Compartir la dirección no comparte el espacio local cifrado ni el código de sincronización. Cada navegador mantiene su propio espacio y contraseña; en un mismo perfil de navegador se trata del mismo espacio local. El servidor de sincronización sigue exigiendo el secreto privado de enlace y entrega únicamente su copia cifrada. No hay listado público de registros ni de copias.

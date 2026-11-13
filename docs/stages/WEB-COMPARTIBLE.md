@@ -1,0 +1,13 @@
+# Web compartible — 2026.11.13.8
+
+El usuario solicita una versión que pueda compartir y abrir sin ChatGPT. Se reutiliza el mismo sitio y origen para conservar los espacios locales y enlaces de sincronización; no se migra almacenamiento ni se publican registros. La audiencia cambia de custom/propietario a public por instrucción expresa del usuario. Public significa que cualquier persona con la URL abre el código de la aplicación sin autenticarse en ChatGPT; el proveedor y dominio siguen siendo Sites/chatgpt.site, no un alojamiento externo independiente.
+
+El acceso local conserva contraseña, AES-GCM e IndexedDB. Un navegador sin datos crea su propio espacio; un perfil que ya tiene registros sigue solicitando su contraseña. El servicio de sincronización mantiene autorización por secreto de enlace independiente y entrega únicamente copias cifradas. No requiere identidad de ChatGPT para autorizar esos objetos ni ofrece listado de los de otros usuarios. No se comparte el secreto de sincronización al compartir la URL.
+
+Se actualizan las instrucciones de acceso, privacidad y ayuda. La prueba adicional comprueba que un secreto distinto no puede leer la copia de otro, junto con las cuatro pruebas existentes del servicio. Se ejecutan TypeScript, ESLint y exportación/empaquetado. La comprobación de acceso final se hará mediante solicitudes sin cookies ni credenciales a la portada y al endpoint de sincronización. No se afirma prueba visual en Safari físico.
+
+Entrega completada: versión 2026.11.13.8 publicada (`succeeded`), fuente 94eeaea258c768b5cbd5773f00d8e3a32bea6e0c y deployment appgdep_6af70fafc04481918c24db4b58523c72. Después de preparar la versión se aplicó el cambio de audiencia expresamente solicitado: public, revisión de política 2. URL: https://edumoney-web.diegoluissantospabon.chatgpt.site.
+
+Verificación real sin cookies ni Authorization: GET / → HTTP 200, título EduMoney, código de la app presente y sin cabecera de redirección a login. GET /api/sync sin secreto → HTTP 401. El primer intento dentro del sandbox no conectó con el proxy; la misma comprobación desde el ejecutor autorizado completó ambas solicitudes. Cinco casos del servicio pasados, TypeScript, ESLint, exportación y empaquetado completados.
+
+La audiencia actual es PÚBLICA. Las publicaciones siguientes deben preservarla y usar save_site_version + deploy_site_version; no usar despliegue owner-private ni volver a custom sin nueva instrucción del usuario. No se modificó GitHub main. La copia de código de aplicación queda en commit local de web-edumoney; su envío a GitHub seguía pendiente de acceso Git, sin afectar al sitio público verificado.

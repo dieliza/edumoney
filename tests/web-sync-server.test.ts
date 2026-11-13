@@ -22,3 +22,8 @@ it('elimina la copia de forma condicional y deja el enlace retirado', async () =
   const env = { BUCKET: bucket() }; const first = await handleSync(req('PUT', { 'If-None-Match': '*' }, encrypted), env);
   expect((await handleSync(req('DELETE', { 'If-Match': first.headers.get('ETag')! }), env)).status).toBe(204); expect((await handleSync(req(), env)).status).toBe(410);
 });
+it('separa las copias por secreto aunque la aplicación se abra sin identidad ChatGPT',async()=>{
+ const env={BUCKET:bucket()};await handleSync(req('PUT',{'If-None-Match':'*'},encrypted),env);
+ const other=await handleSync(req('GET',{Authorization:`Bearer ${'b'.repeat(64)}`}),env);expect(other.status).toBe(404);
+ expect((await handleSync(req(),env)).status).toBe(200);expect(env.BUCKET.rows.size).toBe(1);
+});
