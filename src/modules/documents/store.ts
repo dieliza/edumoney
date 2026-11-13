@@ -1,4 +1,5 @@
-import {statementTotals,deductionCategories} from '../income/domain';
+import {validateStatementRules} from '../income/store';
+import {statementTotals} from '../income/domain';
 import { UserInputError } from '../../core/errors';
 import { cents } from '../../core/money';
 import { localToday,validDate,validateMovement } from '../money/domain';
@@ -57,7 +58,7 @@ export class DocumentStore {
  if(p.movementId){const m=await db.getFirstAsync<LedgerMovement>(movementSelect+' WHERE id=?',p.movementId);if(!m||m.deletedAt||m.version!==p.expectedMovementVersion)throw new UserInputError('El movimiento cambió o está eliminado. Vuelve a revisarlo.');}
  if(p.billId){const b=await db.getFirstAsync<{version:number;voided:string|null}>('SELECT version,voided_at AS voided FROM bills WHERE id=?',p.billId);if(!b||b.voided||b.version!==p.expectedBillVersion)throw new UserInputError('La factura cambió. Vuelve a revisarla.');}
  }
- if(p.incomeStatement){const custom=await db.getAllAsync<{id:string}>('SELECT id FROM income_deduction_categories');const allowed=new Set([...deductionCategories.map(c=>c.id),...custom.map(c=>c.id)]);if(p.incomeStatement.deductions.some(d=>!allowed.has(d.categoryId)))throw new UserInputError('Elige una categoría de deducción existente.');}
+ if(p.incomeStatement)await validateStatementRules(db,p.incomeStatement,p.date!);
  const now=new Date().toISOString();
  if(p.kind==='paid_expense'||p.kind==='paid_income'){
  const kind=p.kind==='paid_expense'?'expense':'income';

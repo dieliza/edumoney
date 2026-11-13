@@ -2,6 +2,9 @@ import { expect, it, vi } from 'vitest';
 import { IDBFactory } from 'fake-indexeddb';
 import { cents } from '../src/core/money';
 import type { LedgerMovement } from '../src/modules/money/types';
+import {IncomeStore} from '../src/modules/income/store';
+import {DocumentStore} from '../src/modules/documents/store';
+import {blankRule,calculateDeduction} from '../src/modules/income/calculation';
 import { handleSync } from '../web-server/sync.mjs';
 
 it('sincroniza dos dispositivos cifrados, detecta conflicto y conserva la elección confirmada', async () => {
@@ -12,13 +15,17 @@ it('sincroniza dos dispositivos cifrados, detecta conflicto y conserva la elecci
   async function device() { vi.resetModules(); const idb = new IDBFactory(); vi.stubGlobal('indexedDB', idb); const vault = await import('../src/web/vault'); await vault.unlockWebVault('Contraseña-FICTICIA-2026'); const sync = await import('../src/web/sync'); const { getMoneyStore } = await import('../src/modules/money/localStore'); return { idb, sync, store: await getMoneyStore() }; }
   const a = await device(); const code = a.sync.newPairingCode(); await a.sync.connectCode(code);
   const entry = (id: string, kind: 'income' | 'expense', amount: number): LedgerMovement => ({ id, idempotencyKey: id, kind, amountCents: cents(amount), currency: 'USD', date: '2026-11-13', description: id, categoryId: null, paymentMethod: 'check', taxReview: false, useKind: 'personal', grossCents: null, withholdingCents: null, createdAt: '2026-11-13T00:00:00Z', updatedAt: '2026-11-13T00:00:00Z', deletedAt: null, incomeType: 'manual', scheduleId: null, occurrenceDate: null, version: 1 });
-  await a.store.create(entry('Ingreso FICTICIO A', 'income', 10000)); await a.sync.synchronize();
+  await a.store.create(entry('Ingreso FICTICIO A', 'income', 10000));
+  const rule={...blankRule(),mode:'percentage' as const,percentage:'8'};await new IncomeStore(a.store).saveCategory('custom-sync','Categoría FICTICIA sincronizada',rule);
+  const calculation=calculateDeduction(rule,150000);
+  await new DocumentStore(a.store,async s=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s))),b=>b.toString(16).padStart(2,'0')).join('')).save({id:'cheque-sync',kind:'paid_income',source:'manual',description:'Pagador FICTICIO',date:'2026-11-13',amountCents:138000,notes:'',rawText:null,image:null,keepImage:false,movementId:null,billId:null,expectedMovementVersion:null,expectedBillVersion:null,categoryId:null,paymentMethod:'check',supersedesId:null,expectedDocumentVersion:null,confirmSimilar:false,reviewed:true,incomeStatement:{version:1,kind:'check',issuer:'Pagador FICTICIO',reference:'SYNC-FICTICIO',periodStart:null,periodEnd:null,grossCents:150000,netCents:138000,complete:true,deductions:[{id:'d',categoryId:'custom-sync',label:'Categoría FICTICIA sincronizada',amountCents:12000,calculation}]}});
+  await a.sync.synchronize();
   expect(new TextDecoder().decode([...rows.values()][0].bytes)).not.toContain('Ingreso FICTICIO');
   const b = await device(); await b.sync.connectCode(code); const first = await b.sync.synchronize(); expect(first.conflict).toBeTruthy();
   await expect(b.sync.resolveSync(first.conflict!, 'remote', 'NO')).rejects.toThrow('REEMPLAZAR');
-  await b.sync.resolveSync(first.conflict!, 'remote', 'REEMPLAZAR'); expect((await b.store.snapshot()).movements).toHaveLength(1);
+  await b.sync.resolveSync(first.conflict!, 'remote', 'REEMPLAZAR'); expect((await b.store.snapshot()).movements).toHaveLength(2);const received=await new IncomeStore(b.store).snapshot();expect(received.categories.find(c=>c.id==='custom-sync')?.rule).toEqual(rule);expect(received.statements[0].statement.deductions[0].calculation).toEqual(calculation);
   await b.store.create(entry('Gasto FICTICIO B', 'expense', 2000)); await b.sync.synchronize();
-  vi.stubGlobal('indexedDB', a.idb); expect((await a.sync.synchronize()).conflict).toBeUndefined(); expect((await a.store.snapshot()).movements).toHaveLength(2);
+  vi.stubGlobal('indexedDB', a.idb); expect((await a.sync.synchronize()).conflict).toBeUndefined(); expect((await a.store.snapshot()).movements).toHaveLength(3);
   await a.store.create(entry('Cambio FICTICIO A', 'expense', 1000)); await a.sync.synchronize();
   vi.stubGlobal('indexedDB', b.idb); await b.store.create(entry('Cambio FICTICIO B', 'income', 5000)); const conflict = await b.sync.synchronize(); expect(conflict.conflict).toBeTruthy();
   expect((await b.store.snapshot()).movements.some(m => m.description === 'Cambio FICTICIO B')).toBe(true);

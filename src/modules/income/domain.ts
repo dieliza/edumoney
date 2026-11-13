@@ -1,7 +1,9 @@
+import {calculateDeduction,type AppliedCalculation} from './calculation';
 import {UserInputError} from '../../core/errors';
 import {cents,addAmounts} from '../../core/money';
 export const deductionCategories = [
  {id:'pr-tax',name:'Contribución sobre ingresos de Puerto Rico',kind:'pr_tax'},
+ {id:'pr-services',name:'Retención por servicios profesionales (PR)',kind:'pr_tax'},
  {id:'federal-tax',name:'Contribución federal sobre ingresos (si aparece)',kind:'federal_tax'},
  {id:'social-security',name:'Seguro Social',kind:'social_security'},
  {id:'medicare',name:'Medicare',kind:'medicare'},
@@ -16,9 +18,9 @@ export const deductionCategories = [
  {id:'loan',name:'Descuento de préstamo',kind:'other'},
  {id:'other',name:'Otra deducción',kind:'other'},
 ] as const;
-export type DeductionCategory={id:string;name:string;kind:string};
-export type DeductionLine={id:string;categoryId:string;label:string;amountCents:number|null};
-export type IncomeStatement={version:1;kind:'paystub'|'check';issuer:string;reference:string;periodStart:string|null;periodEnd:string|null;grossCents:number|null;netCents:number;deductions:DeductionLine[];complete:boolean};
+export type DeductionCategory={id:string;name:string;kind:string;rule?:import('./calculation').DeductionRule};
+export type DeductionLine={id:string;categoryId:string;label:string;amountCents:number|null;calculation?:AppliedCalculation};
+export type IncomeStatement={version:1;kind:'paystub'|'check';issuer:string;reference:string;periodStart:string|null;periodEnd:string|null;grossCents:number|null;netCents:number;deductions:DeductionLine[];totalDeductionsCents?:number|null;complete:boolean};
 export function statementTotals(p:IncomeStatement){
  const net=cents(p.netCents);if(net<=0)throw new UserInputError('Confirma el importe neto positivo del cheque o talonario.');
  if(p.version!==1||!['paystub','check'].includes(p.kind)||p.issuer.length>240||p.reference.length>100||p.deductions.length>100)throw new UserInputError('Revisa el comprobante de ingreso.');
@@ -27,9 +29,11 @@ export function statementTotals(p:IncomeStatement){
  if(p.grossCents!==null&&cents(p.grossCents)<net)throw new UserInputError('El neto supera el bruto. Revisa si hay reembolsos u otros conceptos; no se adivinan.');
  const known=addAmounts(...p.deductions.map(d=>cents(d.amountCents??0))); // Subtotal conocido, no reemplaza campos desconocidos.
  const allKnown=p.deductions.every(d=>d.amountCents!==null);
+ if(p.totalDeductionsCents!==undefined&&p.totalDeductionsCents!==(allKnown?known:null))throw new UserInputError('El total guardado de deducciones no coincide con el desglose.');
  const difference=p.grossCents===null?null:cents(p.grossCents-net-known);
  if(p.complete&&(p.grossCents===null||!allKnown||difference!==0))throw new UserInputError('El desglose completo debe cuadrar: bruto menos todas las deducciones = neto. Revisa campos vacíos y cifras.');
- const pr=p.deductions.filter(d=>d.categoryId==='pr-tax');
+ for(const d of p.deductions)if(d.calculation){const c=d.calculation;const expected=calculateDeduction(c.rule,p.grossCents,c.rule.base==='threshold'?cents((c.priorCents??0)-(c.rule.openingCents??0)):0);if(expected.amountCents!==c.amountCents||expected.baseCents!==c.baseCents||expected.grossCents!==c.grossCents||expected.priorCents!==c.priorCents||d.amountCents!==c.amountCents)throw new UserInputError('La deducción calculada no coincide con su regla, base o importe.');}
+ const pr=p.deductions.filter(d=>d.categoryId==='pr-tax'||d.categoryId==='pr-services');
  const withholding=pr.length&&pr.every(d=>d.amountCents!==null)?addAmounts(...pr.map(d=>cents(d.amountCents!))):p.complete?cents(0):null;
  return {known,allKnown,difference,withholding};
 }
