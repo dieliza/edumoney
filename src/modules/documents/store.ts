@@ -1,3 +1,4 @@
+import {statementTotals,deductionCategories} from '../income/domain';
 import { UserInputError } from '../../core/errors';
 import { cents } from '../../core/money';
 import { localToday,validDate,validateMovement } from '../money/domain';
@@ -23,18 +24,28 @@ export class DocumentStore {
  if(!['paid_expense','paid_income','pending_bill','attachment','note'].includes(p.kind)||!['manual','camera','library','voice'].includes(p.source))throw new UserInputError('Elige cómo se guardará este documento.');
  if(p.date!==null&&!validDate(p.date)||p.amountCents!==null&&cents(p.amountCents)<=0)throw new UserInputError('Revisa la fecha AAAA-MM-DD y el importe positivo.');
  if(p.image)validateImage(p.image);if(p.keepImage&&!p.image)throw new UserInputError('No hay imagen para conservar.');
+ if(p.incomeStatement){
+ const statement=p.incomeStatement;statementTotals(statement);
+ if(p.kind!=='paid_income'||p.amountCents!==statement.netCents||p.supersedesId)throw new UserInputError('El talonario debe vincularse una sola vez a su ingreso neto.');
+ for(const date of [statement.periodStart,statement.periodEnd])if(date!==null&&!validDate(date))throw new UserInputError('Revisa las fechas del período.');
+ if(statement.periodStart&&statement.periodEnd&&statement.periodStart>statement.periodEnd)throw new UserInputError('El inicio del período supera su fin.');
+ }
  const financial=['paid_expense','paid_income','pending_bill'].includes(p.kind);
  if(financial&&(!p.date||p.amountCents===null))throw new UserInputError('Confirma fecha e importe antes de crear el registro financiero.');
  if((p.kind==='paid_expense'||p.kind==='paid_income')&&p.date!>this.today())throw new UserInputError('No se confirma como recibido o pagado un movimiento futuro.');
  if(financial&&(p.movementId||p.billId))throw new UserInputError('Para vincular un registro existente elige Adjuntar; no crees otro.');
  if(p.kind==='attachment'&&Number(!!p.movementId)+Number(!!p.billId)!==1)throw new UserInputError('Elige un movimiento o una factura existente, solo uno.');
  if(p.kind==='note'&&(p.movementId||p.billId||!p.notes.trim()))throw new UserInputError('Una nota necesita texto confirmado y no crea movimientos.');
- const links=target(p);const material=p.image?`image:${p.image.mime}:${p.image.base64}`:`text:${JSON.stringify([p.description.trim(),p.date,p.amountCents,p.notes.trim(),p.rawText,p.kind])}`;const sha=await this.digest(material);
+ const links=target(p);const material=p.image?`image:${p.image.mime}:${p.image.base64}`:`text:${JSON.stringify([p.description.trim(),p.date,p.amountCents,p.notes.trim(),p.rawText,p.kind,...(p.incomeStatement?['income-statement',p.incomeStatement.reference]:[])])}`;const sha=await this.digest(material);
  if(!/^[a-f0-9]{64}$/.test(sha))throw new Error('Huella no válida');
  return this.ledger.transaction(async db=>{
  const old=await db.getFirstAsync<StoredDocument>(select+' WHERE id=?',p.id);
- if(old){if(old.sha256===sha&&canonical(old)===canonical({...p,...links})){const original=await db.getFirstAsync<{text:string|null}>('SELECT raw_text AS text FROM documents WHERE id=?',old.id);if(original?.text!==p.rawText)throw new UserInputError('El texto del reintento no coincide.');if(p.kind==='pending_bill'){const bill=await db.getFirstAsync<{category:string|null}>('SELECT category_id AS category FROM bills WHERE id=?',old.billId);if(bill?.category!==p.categoryId)throw new UserInputError('La categoría del reintento no coincide.');}if(p.kind==='paid_expense'||p.kind==='paid_income'){const m=await db.getFirstAsync<{method:string;category:string|null}>('SELECT payment_method AS method,category_id AS category FROM movements WHERE id=?',old.movementId);if(m?.method!==p.paymentMethod||m?.category!==p.categoryId)throw new UserInputError('El reintento no coincide con el movimiento original.');}return old.id;}throw new UserInputError('El identificador ya corresponde a otro documento.');}
+ if(old){const detail=await db.getFirstAsync<{json:string}>('SELECT record_json AS json FROM income_statements WHERE document_id=?',p.id);if((detail?.json??null)!==(p.incomeStatement?JSON.stringify(p.incomeStatement):null))throw new UserInputError('El desglose del reintento no coincide.');if(old.sha256===sha&&canonical(old)===canonical({...p,...links})){const original=await db.getFirstAsync<{text:string|null}>('SELECT raw_text AS text FROM documents WHERE id=?',old.id);if(original?.text!==p.rawText)throw new UserInputError('El texto del reintento no coincide.');if(p.kind==='pending_bill'){const bill=await db.getFirstAsync<{category:string|null}>('SELECT category_id AS category FROM bills WHERE id=?',old.billId);if(bill?.category!==p.categoryId)throw new UserInputError('La categoría del reintento no coincide.');}if(p.kind==='paid_expense'||p.kind==='paid_income'){const m=await db.getFirstAsync<{method:string;category:string|null}>('SELECT payment_method AS method,category_id AS category FROM movements WHERE id=?',old.movementId);if(m?.method!==p.paymentMethod||m?.category!==p.categoryId)throw new UserInputError('El reintento no coincide con el movimiento original.');}return old.id;}throw new UserInputError('El identificador ya corresponde a otro documento.');}
  const duplicate=await db.getFirstAsync<{id:string}>('SELECT id FROM documents WHERE sha256=?',sha);if(duplicate)throw new DuplicateDocumentError(duplicate.id);
+ if(p.incomeStatement?.reference.trim()&&p.incomeStatement.issuer.trim()){
+ const prior=await db.getAllAsync<{id:string;json:string}>('SELECT i.document_id AS id,i.record_json AS json FROM income_statements i JOIN movements m ON m.id=i.movement_id WHERE substr(m.date,1,4)=?',p.date!.slice(0,4));
+ const same=prior.find(row=>{const before=JSON.parse(row.json);return String(before.reference).trim().toLocaleLowerCase('es')===p.incomeStatement!.reference.trim().toLocaleLowerCase('es')&&String(before.issuer).trim().toLocaleLowerCase('es')===p.incomeStatement!.issuer.trim().toLocaleLowerCase('es');});if(same)throw new DuplicateDocumentError(same.id);
+ }
  if(!p.supersedesId&&!p.confirmSimilar&&p.date&&p.amountCents!==null&&await db.getFirstAsync('SELECT id FROM documents WHERE lower(trim(description))=lower(?) AND document_date=? AND amount_cents=? AND record_kind=?',p.description.trim(),p.date,p.amountCents,p.kind))throw new UserInputError('Hay un recibo similar con el mismo comercio, fecha y total. Revisa el existente; confirma una operación distinta solo si lo verificaste.');
  if(p.supersedesId){
  const previous=await db.getFirstAsync<StoredDocument>(select+' WHERE id=?',p.supersedesId);
@@ -46,10 +57,11 @@ export class DocumentStore {
  if(p.movementId){const m=await db.getFirstAsync<LedgerMovement>(movementSelect+' WHERE id=?',p.movementId);if(!m||m.deletedAt||m.version!==p.expectedMovementVersion)throw new UserInputError('El movimiento cambió o está eliminado. Vuelve a revisarlo.');}
  if(p.billId){const b=await db.getFirstAsync<{version:number;voided:string|null}>('SELECT version,voided_at AS voided FROM bills WHERE id=?',p.billId);if(!b||b.voided||b.version!==p.expectedBillVersion)throw new UserInputError('La factura cambió. Vuelve a revisarla.');}
  }
+ if(p.incomeStatement){const custom=await db.getAllAsync<{id:string}>('SELECT id FROM income_deduction_categories');const allowed=new Set([...deductionCategories.map(c=>c.id),...custom.map(c=>c.id)]);if(p.incomeStatement.deductions.some(d=>!allowed.has(d.categoryId)))throw new UserInputError('Elige una categoría de deducción existente.');}
  const now=new Date().toISOString();
  if(p.kind==='paid_expense'||p.kind==='paid_income'){
  const kind=p.kind==='paid_expense'?'expense':'income';
- const m:LedgerMovement={id:links.movementId!,idempotencyKey:`document:${p.id}`,kind,amountCents:cents(p.amountCents!),currency:'USD',date:p.date!,description:p.description.trim(),categoryId:p.categoryId,paymentMethod:p.paymentMethod,taxReview:false,useKind:'unknown',grossCents:null,withholdingCents:null,createdAt:now,updatedAt:now,deletedAt:null,incomeType:'manual',scheduleId:null,occurrenceDate:null,version:1};validateMovement(m);
+ const m:LedgerMovement={id:links.movementId!,idempotencyKey:`document:${p.id}`,kind,amountCents:cents(p.amountCents!),currency:'USD',date:p.date!,description:p.description.trim(),categoryId:p.categoryId,paymentMethod:p.paymentMethod,taxReview:!!p.incomeStatement,useKind:'unknown',grossCents:p.incomeStatement?.grossCents==null?null:cents(p.incomeStatement.grossCents),withholdingCents:p.incomeStatement?statementTotals(p.incomeStatement).withholding:null,createdAt:now,updatedAt:now,deletedAt:null,incomeType:'manual',scheduleId:null,occurrenceDate:null,version:1};validateMovement(m);
  if(p.categoryId){const c=await db.getFirstAsync<{kind:string;archived:number}>('SELECT kind,archived FROM categories WHERE id=?',p.categoryId);if(!c||c.archived||c.kind!==kind)throw new UserInputError('Selecciona una categoría activa del tipo correcto.');}
  if(!p.confirmSimilar&&await db.getFirstAsync('SELECT id FROM movements WHERE deleted_at IS NULL AND kind=? AND date=? AND amount_cents=?',kind,p.date,p.amountCents))throw new UserInputError('Hay un movimiento similar. Revisa si debes adjuntar al existente o confirma que es otro distinto.');
  await new MovementRepository(db).create(m);
@@ -60,6 +72,7 @@ export class DocumentStore {
  await db.runAsync('INSERT INTO bills(id,provider,amount_cents,due_date,category_id,payment_kind,reminder_days,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?)',b.id,b.provider,b.amountCents,b.dueDate,b.categoryId,b.paymentKind,null,now,now);
  }
  await db.runAsync(`INSERT INTO documents(id,movement_id,bill_id,sha256,encrypted_path,supersedes_id,status,source,record_kind,description,document_date,amount_cents,notes,raw_text,mime,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,p.id,links.movementId,links.billId,sha,p.keepImage?`sqlcipher:${p.id}`:null,p.supersedesId,'received',p.source,p.kind,p.description.trim(),p.date,p.amountCents,p.notes.trim(),p.rawText,p.image?.mime??null,now);
+ if(p.incomeStatement)await db.runAsync('INSERT INTO income_statements(document_id,movement_id,record_json,created_at) VALUES(?,?,?,?)',p.id,links.movementId,JSON.stringify(p.incomeStatement),now);
  if(p.keepImage)await db.runAsync('INSERT INTO document_contents(document_id,base64) VALUES(?,?)',p.id,p.image!.base64);
  if(p.supersedesId)await db.runAsync("UPDATE documents SET status='corrected',version=version+1 WHERE id=?",p.supersedesId);
  return p.id;

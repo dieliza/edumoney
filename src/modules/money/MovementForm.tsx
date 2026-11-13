@@ -1,3 +1,4 @@
+import {router} from 'expo-router';
 import { incomeFromBreakdown } from './incomeInput';
 import { DateField } from '../../ui/DateField';
 import { CategoryPicker } from './CategoryPicker';
@@ -75,6 +76,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
         }
     }
     return <Sheet title={initial ? 'Corregir movimiento' : kind === 'income' ? 'Añadir ingreso' : kind === 'expense' ? 'Registrar gasto' : 'Registrar otro movimiento'} close={close} busy={busy}>
+  {type==='income'&&!initial?<ActionButton title="Cheque, talonario o desglose manual de deducciones" icon="camera-outline" onPress={()=>{close();router.push('/income-documents');}}/>:null}
   <Body muted>USD · Datos guardados únicamente en la base cifrada de este dispositivo.</Body>
   {!initial&&kind!=='income'&&kind!=='expense'?<Choices<EntryKind> label="Operación" value={type} options={(['transfer','loan','debt_payment'] as EntryKind[]).map(key=>[key,kindLabels[key]] as const)} onChange={setType}/>:null}
   {initial?.scheduleId?<Body>Ingreso vinculado a una recurrencia. Esta corrección no modifica los próximos cobros.</Body>:null}

@@ -118,3 +118,18 @@ it('guarda y reabre ingresos y recibos sin descripción obligatoria',async()=>{
  vi.resetModules();vault=await import('../src/web/vault');await vault.unlockWebVault('Opcional-FICTICIO-2026');ledger=new MoneyStore(await vault.webDatabase());
  expect((await ledger.snapshot()).movements[0].description).toBe('');expect((await new DocumentStore(ledger,hash).snapshot()).documents[0].description).toBe('');
 });
+it('migra una bóveda web 14 existente y conserva sus movimientos al abrir esquema 15',async()=>{
+ let vault=await import('../src/web/vault');await vault.unlockWebVault('Migracion-FICTICIA-2026');let ledger=new MoneyStore(await vault.webDatabase());await ledger.create(movement);
+ await ledger.transaction(async db=>{await db.execAsync('DROP TABLE income_statements; DROP TABLE income_deduction_categories; PRAGMA user_version=14;');});
+ vi.resetModules();vault=await import('../src/web/vault');await vault.unlockWebVault('Migracion-FICTICIA-2026');ledger=new MoneyStore(await vault.webDatabase());
+ expect((await ledger.snapshot()).movements).toHaveLength(1);expect(await (await vault.webDatabase()).getFirstAsync('PRAGMA user_version;')).toEqual({user_version:15});
+});
+it('cifra y recupera el cheque manual, su desglose pendiente y categorías de deducción',async()=>{
+ let vault=await import('../src/web/vault');await vault.unlockWebVault('Cheques-FICTICIOS-2026');let ledger=new MoneyStore(await vault.webDatabase());
+ const {DocumentStore}=await import('../src/modules/documents/store');const {IncomeStore}=await import('../src/modules/income/store');const {createHash}=await import('node:crypto');const hash=async(s:string)=>createHash('sha256').update(s).digest('hex');
+ await new IncomeStore(ledger).addCategory('personalizada','Deducción FICTICIA');
+ const statement={version:1 as const,kind:'check' as const,issuer:'Pagador FICTICIO',reference:'FICTICIO-100',periodStart:null,periodEnd:null,grossCents:null,netCents:20000,deductions:[{id:'pendiente',categoryId:'personalizada',label:'Deducción desconocida',amountCents:null}],complete:false};
+ await new DocumentStore(ledger,hash,()=> '2026-11-13').save({id:'cheque-manual',kind:'paid_income',source:'manual',description:'',date:'2026-11-13',amountCents:20000,notes:'',rawText:null,image:null,keepImage:false,movementId:null,billId:null,expectedMovementVersion:null,expectedBillVersion:null,categoryId:null,paymentMethod:'check',supersedesId:null,expectedDocumentVersion:null,confirmSimilar:false,reviewed:true,incomeStatement:statement});
+ vi.resetModules();vault=await import('../src/web/vault');await vault.unlockWebVault('Cheques-FICTICIOS-2026');ledger=new MoneyStore(await vault.webDatabase());
+ const saved=await new IncomeStore(ledger).snapshot();expect(saved.statements[0].statement).toEqual(statement);expect(saved.categories.some(c=>c.id==='personalizada')).toBe(true);expect((await ledger.snapshot()).movements[0]).toMatchObject({amountCents:20000,grossCents:null,withholdingCents:null});
+});
