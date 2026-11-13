@@ -1,0 +1,17 @@
+import { execFileSync } from 'node:child_process';
+import { readdirSync, readFileSync, writeFileSync, copyFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { join } from 'node:path';
+execFileSync('npx', ['expo', 'export', '--platform', 'web', '--output-dir', 'dist-web'], { stdio: 'inherit', env: { ...process.env, EXPO_PUBLIC_PLANILLA_TESTS: '0' } });
+const root = 'dist-web';
+copyFileSync('assets/edumoney-official-logo.png', join(root, 'edumoney-logo.png'));
+writeFileSync(join(root, 'manifest.webmanifest'), JSON.stringify({ name: 'EduMoney', short_name: 'EduMoney', lang: 'es', start_url: '/', scope: '/', display: 'standalone', background_color: '#EDF7F3', theme_color: '#00664B', icons: [{ src: '/edumoney-logo.png', sizes: '1254x1254', type: 'image/png', purpose: 'any' }] }));
+let html = readFileSync(join(root, 'index.html'), 'utf8');
+html = html.replace('</head>', '<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/edumoney-logo.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="EduMoney"><meta name="theme-color" content="#00664B"></head>');
+html = html.replace('</body>', '<script src="/register-sw.js" defer></script></body>'); writeFileSync(join(root, 'index.html'), html);
+writeFileSync(join(root, 'register-sw.js'), "if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));}");
+function files(dir) { return readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? files(join(dir, e.name)) : [join(dir, e.name)]); }
+const assets = files(root).map(p => '/' + p.slice(root.length + 1));
+const version = createHash('sha256').update(assets.map(p => readFileSync(join(root, p))).join('')).digest('hex').slice(0, 16);
+writeFileSync(join(root, 'sw.js'), `const CACHE='edumoney-shell-${version}';const ASSETS=${JSON.stringify(assets)};self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS))));self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('edumoney-shell-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.method!=='GET'||u.origin!==self.location.origin)return;if(e.request.mode==='navigate'){e.respondWith(fetch(e.request).catch(()=>caches.match('/index.html')));return;}if(ASSETS.includes(u.pathname)){e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)));}});`);
+console.log('PWA preparada: solo se cachea el código estático; datos cifrados en IndexedDB.');

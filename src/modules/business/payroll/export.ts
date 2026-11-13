@@ -1,1 +1,2 @@
-export async function sharePayroll(_data:string|Uint8Array,_format:'csv'|'pdf'):Promise<void>{throw new Error('Disponible en iOS y Android.');}
+import { download } from '../../../web/files';
+export async function sharePayroll(data: string | Uint8Array, format: 'csv' | 'pdf') { download(data, `EduMoney-Nomina-Borrador.${format}`, format === 'pdf' ? 'application/pdf' : 'text/csv;charset=utf-8'); }

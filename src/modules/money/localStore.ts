@@ -1,4 +1,5 @@
-import type { MoneyStore } from './store';
-/** La web no acepta datos financieros: SQLCipher está disponible solo en la app nativa. */
-export async function getMoneyStore():Promise<MoneyStore>{throw new Error('El registro cifrado requiere la app iOS o Android.');}
-export const isPreview = true;
+import { webDatabase } from '../../web/vault';
+import { MoneyStore } from './store';
+let instance:Promise<MoneyStore>|undefined;
+export function getMoneyStore(){return instance ??= webDatabase().then(db=>new MoneyStore(db));}
+export const isPreview = false;

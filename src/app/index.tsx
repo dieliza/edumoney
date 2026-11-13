@@ -1,6 +1,6 @@
 import { fixed } from '../design/tokens';
 import { router } from 'expo-router';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 import { useTheme } from '../design/ThemeProvider';
 import { ActionButton, Body, Card, IconBadge, Screen } from '../ui/components';
 import { isPreview } from '../modules/money/localStore';
@@ -21,7 +21,7 @@ export default function Welcome() {
         <Body style={{ fontSize: 19, fontWeight: '700' }}>Tu tranquilidad va primero</Body>
         {([
           ['shield-checkmark-outline', 'Privado y seguro', 'Tu información permanece en tu dispositivo.'],
-          ['cloud-offline-outline', 'Sin nube', 'Tú decides qué compartir y cuándo.'],
+          [Platform.OS === 'web' ? 'sync-outline' : 'cloud-offline-outline', Platform.OS === 'web' ? 'Sincronización opcional' : 'Sin nube', 'Tú decides qué compartir y cuándo.'],
           ['book-outline', 'Sin inteligencia artificial', 'Decisiones informadas, con explicaciones claras.'],
         ] as const).map(([icon, title, detail]) => <View key={title} style={{ flexDirection: 'row', gap: 14, alignItems: 'center' }}><IconBadge icon={icon} size={42} />
           <View style={{ flex: 1 }}><Body style={{ fontWeight: '700', fontSize: 15 }}>{title}</Body><Body muted style={{ fontSize: 13, lineHeight: 20 }}>{detail}</Body></View>

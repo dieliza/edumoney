@@ -1,1 +1,1 @@
-export { default } from './LearnPreview';
+export { default } from './LearnScreen';

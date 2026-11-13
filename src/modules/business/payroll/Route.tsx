@@ -1,3 +1,1 @@
-import { router } from 'expo-router';
-import { ActionButton,Body,Card,Screen } from '../../../ui/components';
-export default function PayrollPreview(){return <Screen title="Nómina de Negocio" subtitle="Empleados, pagos y conciliación." demo={false}><Card><Body>La nómina se registra en iOS y Android con almacenamiento local cifrado. Esta vista del navegador no conserva información laboral.</Body><Body>Empleados y certificado 499 R-4; salarios o tarifas por hora; cálculo de retenciones y costo patronal; pagos confirmados y depósitos separados.</Body><Body>La conciliación y el borrador 499R-2/W-2PR incluyen pagos registrados, con exportación por código de empleado y datos pendientes identificados. No se emite ni radica un comprobante oficial.</Body></Card><ActionButton title="Volver a Negocio" onPress={()=>router.dismissTo('/business')}/></Screen>;}
+export { default } from './Screen';

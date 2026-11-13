@@ -11,3 +11,11 @@ El respaldo de recuperación es diferente: se cifra con una contraseña elegida 
 La revisión de reglas y resultados puede registrarla el usuario. No se exige que sea CPA para usar los cálculos disponibles. No se afirma certificación oficial ni se radica una planilla. Los campos o reglas no cubiertos se identifican en los resultados y documentos.
 
 Esta documentación debe completarse con los datos del responsable de la aplicación, contacto y declaraciones de las tiendas antes de la publicación. Negocio cuenta con perfiles, registros, obligaciones, panel y nómina locales. Las pruebas físicas, los recorridos nativos comerciales aún no cubiertos y la preparación de distribución siguen pendientes; el proyecto no se ha publicado.
+
+## Web app y sincronización opcional
+
+En la web, la base funciona en memoria y se guarda cifrada en IndexedDB mediante AES-256-GCM y una contraseña local. El navegador puede eliminar su almacenamiento; es necesario conservar respaldos y contraseña.
+
+Si el usuario activa el enlace y pulsa Sincronizar ahora, se envía una copia cifrada a su servicio de EduMoney. El secreto de acceso y la clave de descifrado son independientes; la clave de descifrado no se envía al servidor. Se guardan el objeto cifrado y metadatos técnicos de versión, tamaño y conexión. El proveedor de alojamiento procesa las conexiones HTTPS según su servicio. No se envían registros legibles ni se usan servicios externos de IA.
+
+El código privado de enlace permite acceder a las copias: se comparte únicamente con dispositivos propios. Se puede desvincular el dispositivo o retirar la copia remota desde la app. Las exportaciones PDF/CSV/JSON de revisión siguen siendo legibles y se descargan solo cuando el usuario las solicita. La captura web propone una imagen para revisión manual; no añade reconocimiento remoto ni dictado en servidores.

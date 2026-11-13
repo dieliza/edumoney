@@ -54,3 +54,5 @@ native-results/
 dist-preview/
 playwright-report/
 test-results/
+
+dist-web/

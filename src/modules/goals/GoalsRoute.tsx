@@ -1,1 +1,1 @@
-export { default } from './GoalsPreview';
+export { default } from './GoalsScreen';

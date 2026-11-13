@@ -1,2 +1,4 @@
-import type { GoalStore } from './store';
-export function getGoalStore():Promise<GoalStore>{return Promise.reject(new Error('Las metas necesitan almacenamiento nativo cifrado.'));}
+import { getMoneyStore } from '../money/localStore';
+import { GoalStore } from './store';
+let instance:Promise<GoalStore>|undefined;
+export function getGoalStore(){return instance??=getMoneyStore().then(ledger=>new GoalStore(ledger));}

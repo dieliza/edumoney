@@ -1,2 +1,4 @@
-import type { ProgressStore } from './store';
-export function getProgressStore():Promise<ProgressStore>{return Promise.reject(new Error('El progreso necesita almacenamiento nativo cifrado.'));}
+import { getMoneyStore } from '../money/localStore';
+import { ProgressStore } from './store';
+let instance:Promise<ProgressStore>|undefined;
+export function getProgressStore(){return instance??=getMoneyStore().then(ledger=>new ProgressStore(ledger));}

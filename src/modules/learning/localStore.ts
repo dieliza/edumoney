@@ -1,2 +1,4 @@
-import type { LearningStore } from './store';
-export function getLearningStore():Promise<LearningStore>{return Promise.reject(new Error('El avance y escenarios requieren almacenamiento nativo cifrado.'));}
+import { getMoneyStore } from '../money/localStore';
+import { LearningStore } from './store';
+let instance:Promise<LearningStore>|undefined;
+export function getLearningStore(){return instance??=getMoneyStore().then(ledger=>new LearningStore(ledger));}

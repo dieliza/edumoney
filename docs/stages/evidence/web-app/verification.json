@@ -1,0 +1,16 @@
+{
+  "framework": "Expo 58 / React Native Web",
+  "branch": "web-edumoney",
+  "testAttempts": 23,
+  "successfulTestExecutions": 21,
+  "timedOutTestExecutions": 1,
+  "artifactChecks": 1,
+  "uniqueTestCases": 11,
+  "typescript": "passed",
+  "eslint": "passed",
+  "productionExport": "passed",
+  "browserVisualQA": "unavailable: managed Sites browser tool not exposed",
+  "physicalDevicesTested": false,
+  "syncTransport": "end-to-end encrypted snapshots; manual opt-in; conditional version writes",
+  "syncEncryptedLimitBytes": 16777216
+}

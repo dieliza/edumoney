@@ -1,2 +1,5 @@
+import { download } from '../../web/files';
 import type { businessExport } from './ledgerDomain';
-export async function shareBusinessExport(_report:ReturnType<typeof businessExport>,_copies:{id:string;mime:string;base64:string}[],_format:'json'|'csv'):Promise<void>{throw new Error('La exportación requiere la aplicación nativa.');}
+export async function shareBusinessExport(report: ReturnType<typeof businessExport>, copies: { id: string; mime: string; base64: string }[], format: 'json' | 'csv') {
+  download(format === 'json' ? JSON.stringify({ ...report, copies }, null, 2) : '\uFEFF' + report.csv, `EduMoney-Negocio-CPA.${format}`, format === 'json' ? 'application/json' : 'text/csv;charset=utf-8');
+}
