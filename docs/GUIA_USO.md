@@ -12,6 +12,12 @@ EduMoney organiza información registrada por ti en este dispositivo. No requier
 
 El botón de tema permite Claro, Oscuro y Automático y guarda tu preferencia. Las vistas del navegador son informativas con datos ficticios; el registro financiero funciona en la aplicación nativa.
 
+## Elegir opciones y explorar gastos
+
+Toca un campo con flecha, como Método de pago o Categoría, para desplegar sus opciones. Elige una y la lista se cerrará mostrando tu selección. Si hay muchas, desliza dentro de la lista. Puedes cerrar sin cambiar el valor. Las pestañas principales de cada sección permanecen visibles.
+
+Cheque permite registrar una operación realizada por ese medio; EduMoney no emite cheques ni verifica que el banco los haya cobrado. La gráfica circular muestra los gastos registrados del mes y su total en el centro. Toca una categoría para abrir sus movimientos. Sin gastos registrados, la aplicación muestra un mensaje en lugar de inventar una gráfica.
+
 ## Negocio
 
 Crea primero el titular legal, sus DBA y proyectos. Una LLC conserva por separado clasificación de Puerto Rico y federal; miembros no determinan automáticamente la clasificación de Puerto Rico. Puedes dejar información pendiente.

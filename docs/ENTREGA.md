@@ -38,6 +38,8 @@ Faltan comprobaciones en dispositivos: cámara/modelos de voz, permisos, avisos/
 
 La planilla 2026 no reutiliza fórmulas 2025. Los componentes no soportados o desconocidos permanecen pendientes. Los borradores no son emisión oficial ni radicación; no se afirma certificación de Hacienda. Las validaciones de formato y trámites oficiales siguen siendo independientes del uso autónomo de cálculos.
 
-El panel completo y el escenario parcial aprobaron los recorridos seleccionados Android/iOS. La regresión Android cerró el retorno de exportación CSV. Resultados, capturas y conteo conservador de 95 casos/intentos se conservan en [CIERRE-APP.md](stages/CIERRE-APP.md). El [APK interno Android arm64](https://github.com/dieliza/edumoney/actions/runs/43191749565/artifacts/13931512804) compiló correctamente; contiene JavaScript y no requiere Metro. Usar datos ficticios: no se ha ejecutado en un teléfono físico y no es una firma de distribución oficial.
+El panel completo y el escenario parcial aprobaron los recorridos seleccionados Android/iOS. La regresión Android cerró el retorno de exportación CSV. Resultados, capturas y conteo conservador de 95 casos/intentos se conservan en [CIERRE-APP.md](stages/CIERRE-APP.md). El [APK interno Android arm64](https://github.com/dieliza/edumoney/actions/runs/43333271642/artifacts/13996138692) compiló correctamente; contiene JavaScript y no requiere Metro. Usar datos ficticios: no se ha ejecutado en un teléfono físico y no es una firma de distribución oficial.
 
 Actualización del logo oficial: [integración, comprobación y APK](stages/LOGO-OFICIAL.md).
+
+Diseño actualizado: selectores compactos, gráfica circular y pantallas interiores. Ver [capas y selectores](stages/CAPAS-Y-SELECTORES.md). La APK corresponde al código `1066e6d` e incluye el método Cheque.

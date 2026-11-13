@@ -1,0 +1,18 @@
+{
+  "sourceCommit": "1066e6d2749fd5be143f636ee5eaa8334a7ae6ea",
+  "run": 43333271642,
+  "artifact": 13996138692,
+  "apkBytes": 56468577,
+  "sha256": "c425fd8d832de263ced970d8739d292697e99fb1246ab184dccf5dc540148a98",
+  "abis": [
+    "arm64-v8a"
+  ],
+  "embeddedJavaScript": true,
+  "signerCertificateSha256": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c",
+  "sameTestCertificateAsPriorApk": true,
+  "officialLogoPixelsPreserved": true,
+  "officialLogoResources": [
+    "res/Mi.png"
+  ],
+  "physicalDeviceTested": false
+}

@@ -1,0 +1,19 @@
+{
+  "run": 43333271684,
+  "artifact": 13997585022,
+  "sourceCommit": "1066e6d2749fd5be143f636ee5eaa8334a7ae6ea",
+  "platform": "Android emulator, offline",
+  "commands": {
+    "COMPLETED": 45,
+    "SKIPPED": 1
+  },
+  "verified": [
+    "income and expense forms open",
+    "payment method Cheque selected and visible after closing options",
+    "documents and debts open",
+    "light and dark themes",
+    "five navigation tabs"
+  ],
+  "savedFinancialMovements": false,
+  "physicalDeviceTested": false
+}
