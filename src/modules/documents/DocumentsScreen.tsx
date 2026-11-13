@@ -1,4 +1,5 @@
-import {ActionMenu,CameraActionButton} from '../../ui/ActionMenu';
+import {ReceiptPhotoButtons} from './ReceiptPhotoButtons';
+import {ActionMenu} from '../../ui/ActionMenu';
 import { DateField } from '../../ui/DateField';
 import { documentMatches, validDocumentRange } from './filters';
 import { useCallback,useEffect,useRef,useState } from 'react';
@@ -27,7 +28,7 @@ export default function DocumentsScreen(){
  const load=useCallback(async()=>{const s=await getDocumentStore();const d=await s.snapshot();setStore(s);setData(d);},[]);
  const abort=useCallback(()=>{request.current++;voice.current?.abort();voice.current=null;},[]);
  useEffect(()=>{if(!focused){live.current=false;abort();return;}live.current=true;const refresh=()=>void load().catch(()=>setError('No pudimos cargar los documentos cifrados. Vuelve a abrir esta sección.'));refresh();const sub=AppState.addEventListener('change',s=>{if(s==='active')refresh();else{abort();setListening(false);setPreview(null);}});return()=>{live.current=false;sub.remove();abort();};},[focused,load,abort]);
- async function capture(source:'camera'|'library'){if(busy)return;setBusy(true);setError('');try{const result=await captureImage(source);if(result?.image&&store&&!parent){const duplicate=await store.findImageDuplicate(result.image);if(duplicate){await open(duplicate);setNotice('Este recibo ya está guardado. Abrimos su ficha sin añadir otro gasto.');return;}}if(result&&live.current)setReview({source,text:result.text,image:result.image,warning:result.warning,needsAmountReview:result.needsAmountReview,parent});}catch(e){setError(userMessage(e));}finally{setBusy(false);}}
+ async function capture(source:'camera'|'library',file?:File){if(busy)return;setBusy(true);setError('');try{const result=await captureImage(source,file);if(result?.image&&store&&!parent){const duplicate=await store.findImageDuplicate(result.image);if(duplicate){await open(duplicate);setNotice('Este recibo ya está guardado. Abrimos su ficha sin añadir otro gasto.');return;}}if(result&&live.current)setReview({source,text:result.text,image:result.image,warning:result.warning,needsAmountReview:result.needsAmountReview,parent});}catch(e){setError(userMessage(e));}finally{setBusy(false);}}
  async function dictate(){if(busy||listening)return;setError('');setVoiceText('');setListening(true);const token=++request.current;const session=await startDictation(text=>{setVoiceText(text);},setNotice,()=>{setListening(false);voice.current=null;},()=>request.current===token);if(request.current!==token){session?.abort();setListening(false);return;}voice.current=session;if(!session)setListening(false);}
  async function open(id:string){setFinanceConfirm(false);setDetailId(id);setReason('');setPreview(null);setDetailText('');setError('');if(store){const d=await store.detail(id);setDetailText([d.document?.notes,d.rawText?.text,...d.events.map(e=>`${e.recordedAt.slice(0,10)} · ${e.reason}`)].filter(Boolean).join('\n'));}}
  const detail=data.documents.find(d=>d.id===detailId);const linkedMovement=data.movements.find(m=>m.id===detail?.movementId);const rangeOK=validDocumentRange(from,to);const rows=rangeOK?data.documents.filter(d=>documentMatches(d,search,from,to)):[];
@@ -36,8 +37,7 @@ export default function DocumentsScreen(){
  {parent?<Card><Body>Corrección de: {parent.description}. Mantendremos su vínculo original.</Body><ActionButton title="Cancelar corrección" secondary onPress={()=>setParent(undefined)}/></Card>:null}
  <Card><Body>La imagen y el dictado proponen información. Tú confirmas si es un gasto, ingreso, factura pendiente, adjunto o nota. No se guarda un pago por reconocer un recibo.</Body><Body muted>La cámara y el micrófono se solicitan solo cuando los usas. Las fotos elegidas pueden seguir existiendo en tu fototeca; EduMoney solo controla su copia.</Body></Card>
  {!store?<ActivityIndicator accessibilityLabel="Cargando documentos cifrados"/>:null}
- {!busy?<View style={{flexDirection:'row',alignItems:'flex-start',gap:12}}><CameraActionButton label="Tomar foto de comprobante" testID="document-camera" onPress={()=>void capture('camera')}/><ActionMenu actions={[
- {id:'library',testID:'document-library',label:'Seleccionar imagen de comprobante',run:()=>void capture('library')},
+ {!busy?<View style={{gap:12}}><ReceiptPhotoButtons onCapture={(source,file)=>void capture(source,file)}/><ActionMenu actions={[
  {id:'manual',testID:'document-manual',label:'Escribir o pegar información',run:()=>setReview({source:'manual',text:'',image:null,warning:'Entrada manual: confirma los campos antes de guardar.',parent})},
  {id:'voice',testID:'document-voice',label:'Dictar información localmente',run:()=>void dictate()},
  ]}/></View>:<Card><Body>Procesando imagen localmente…</Body></Card>}
