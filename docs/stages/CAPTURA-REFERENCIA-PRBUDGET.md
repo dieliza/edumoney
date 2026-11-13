@@ -70,3 +70,12 @@ El entorno cloud declara escritorio, pero no expone herramienta de control de na
 5. Pulsar Buscar en fotos y seleccionar una imagen existente. Comprobar que llega al mismo flujo.
 6. Cancelar, volver a abrir y elegir la misma foto; no debe quedar bloqueado. La detección existente de duplicados sigue aplicándose al guardar.
 7. En PWA instalada repetir en modo independiente y comprobar que el retorno de cámara/fototeca conserva el contexto.
+
+## Publicación
+
+Sites confirmó succeeded en la versión alojada 14, el 2026-11-13 a las 21:25 UTC.
+URL: https://edumoney-web.diegoluissantospabon.chatgpt.site
+Despliegue: appgdep_6af7804cef44819198a6354f74eb9514.
+Fuente alojada: 09bf3a0fa493ce0630e88bc41d75113c9f1701bb.
+Versión guardada: appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_fc179d5951588191b94f51cfc28dd3f7.
+Implementación local: cd5dd96 en web-edumoney. GitHub main permanece sin cambios.
