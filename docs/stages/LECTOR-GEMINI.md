@@ -80,3 +80,7 @@ TypeScript, ESLint, git diff --check y compilación web correctos. No se probaro
 4. Elegir una foto y autorizar su lectura. Revisar el resultado antes de guardar.
 
 El modo inicial sigue siendo Local. No hay una clave incluida por defecto. Si se recarga la web, debe reintroducirse la clave porque no se conserva en disco. La integración queda preparada y comprobada con dobles; su acceso real queda pendiente de la clave de la persona.
+
+## Publicación
+
+Publicada correctamente el 13 de noviembre de 2026, 23:17 UTC. Marcador 2026.11.13.14, versión alojada 16; fuente ce1eff08a508657acdb73a67f2e25cd700180feb. Versión guardada appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_d552448e8b408191ba278aa14d7dc998; despliegue appgdep_6af79a67e1e08191b0a0fce6a8cc7651, estado succeeded. Audiencia pública conservada. GitHub main sin cambios.
