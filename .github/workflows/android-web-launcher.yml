@@ -1,0 +1,50 @@
+name: EduMoney Web - APK de acceso actualizable
+on:
+  push:
+    branches: [web-edumoney]
+    paths: ['android-web-launcher/**', '.github/workflows/android-web-launcher.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  apk:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools platforms;android-35 build-tools;35.0.0
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
+      - name: Compilar acceso web independiente
+        working-directory: android-web-launcher
+        run: gradle :app:assembleRelease --no-daemon
+      - name: Verificar firma, paquete y permisos
+        run: |
+          mkdir -p web-apk
+          cp android-web-launcher/app/build/outputs/apk/release/app-release.apk web-apk/EduMoney-Web.apk
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose web-apk/EduMoney-Web.apk
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging web-apk/EduMoney-Web.apk > web-apk/paquete.txt
+          sha256sum web-apk/EduMoney-Web.apk > web-apk/SHA256SUMS.txt
+          cat > web-apk/LEEME.txt <<'TEXT'
+          EduMoney Web: APK de acceso a la web mediante tu navegador habitual.
+          No es el APK nativo de almacenamiento independiente ni una publicación de Google Play.
+          Firma interna de prueba. Paquete com.edumoney.web; conserva la app anterior.
+          Las actualizaciones de la web publicadas se reciben al abrir o recargar.
+          No instala actualizaciones del propio paquete Android.
+          Usa el mismo navegador para conservar tu espacio cifrado local.
+          No transfiere automáticamente datos de otras apps o navegadores.
+          La sincronización cifrada es opcional y se configura dentro de EduMoney.
+          El acceso privado requiere tu cuenta ChatGPT autorizada.
+          TEXT
+      - uses: actions/upload-artifact@v4
+        with:
+          name: EduMoney-Web-APK
+          path: web-apk/
+          retention-days: 30
