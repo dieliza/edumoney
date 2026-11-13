@@ -17,7 +17,14 @@ export function proposeFields(text:string):{description:string;date:string;amoun
  const local=[...text.matchAll(/\b(\d{1,2})[/-](\d{1,2})[/-](\d{4})\b/g)];
  if(!date&&local.length===1){const [,a,b,y]=local[0];if(Number(a)>12&&Number(b)<=12)date=`${y}-${b.padStart(2,'0')}-${a.padStart(2,'0')}`;else if(Number(b)>12&&Number(a)<=12)date=`${y}-${a.padStart(2,'0')}-${b.padStart(2,'0')}`;if(date&&!validDate(date))date='';}
  if(!date)warnings.push('La fecha falta o es ambigua. Confírmala manualmente en AAAA-MM-DD.');
- const totals=lines.filter(l=>/^(?:total|importe total|amount due|balance due)\b/i.test(l)&&!/^subtotal/i.test(l)).flatMap(l=>[...l.matchAll(/(?:\$\s*)?(\d+(?:,\d{3})*\.\d{2})\b/g)].map(m=>m[1].replaceAll(',','')));
+ const totalLines=lines.filter(l=>/^(?:total(?: a pagar| venta)?|gran total|grand total|importe total|amount due|balance due)\b/i.test(l)&&!/^total\s+(?:ivu|iva|tax|impuestos?|descuentos?|ahorro|art[ií]culos)\b/i.test(l));
+ let corrected=false;
+ const totals=totalLines.flatMap(line=>[...line.matchAll(/(?:^|[\s$:])([0-9OIlS]+(?:,[0-9OIlS]{3})*[.,][0-9OIlS]{2})(?=$|[\s$]|USD\b)/g)].map(m=>{
+   if(/[OIlS]/.test(m[1]))corrected=true;
+   const value=m[1].replace(/[OIlS]/g,c=>({O:'0',I:'1',l:'1',S:'5'})[c]!);
+   return value.includes('.')?value.replaceAll(',',''):value.replace(',','.');
+ }));
+ if(corrected)warnings.push('Se propuso una corrección de letras confundidas con cifras en el total. Verifica el importe contra la foto.');
  const unique=[...new Set(totals)];let amount=unique.length===1?unique[0]:'';
  if(amount){try{if(parseAmount(amount)<=0)amount='';}catch{amount='';}}
  if(!amount)warnings.push('No hay un total único y claro. No se suman partidas ni se supone una cantidad.');

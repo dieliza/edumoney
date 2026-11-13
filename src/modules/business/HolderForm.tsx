@@ -32,7 +32,7 @@ export function HolderForm({initial,version,store,done,cancel}:{initial?:Busines
   <SectionHeading title={initial?'Editar titular':'Nuevo titular'} onSurface/>
   <Body>Los campos empiezan en blanco. Solo se guardan los datos que introduces en este dispositivo.</Body>
   <Field label="Nombre legal" testID="business-legal-name" value={name} onChangeText={setName} maxLength={200}/>
-  <Choices label="Forma jurídica" value={form} options={legalForms} onChange={v=>{if(v!==form){setForm(v);setPR('pending');setFederal('pending');}}}/>
+  <Choices required label="Forma jurídica" value={form} options={legalForms} onChange={v=>{if(v!==form){setForm(v);setPR('pending');setFederal('pending');}}}/>
   <Field label="Municipio" testID="business-municipality" value={municipality} onChangeText={setMunicipality}/>
   <Field label="Número de comerciante (si se conoce)" testID="business-merchant" value={merchant} onChangeText={setMerchant}/>
   {form==='llc'?<>

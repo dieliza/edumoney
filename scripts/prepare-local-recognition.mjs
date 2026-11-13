@@ -44,7 +44,17 @@ public class ExpoTextExtractorModule: Module {
         let request = VNRecognizeTextRequest { request, error in
           if let error = error { promise.reject(error); return }
           let observations = request.results as? [VNRecognizedTextObservation] ?? []
-          promise.resolve(observations.compactMap { $0.topCandidates(1).first?.string })
+          let parts = observations.compactMap { item -> (String, CGRect)? in
+            guard let text = item.topCandidates(1).first?.string else { return nil }
+            return (text, item.boundingBox)
+          }.sorted { $0.1.midY > $1.1.midY }
+          var rows: [(y: CGFloat, height: CGFloat, items: [(CGFloat, String)])] = []
+          for (text, box) in parts {
+            if let index = rows.indices.first(where: { abs(rows[$0].y - box.midY) <= max(rows[$0].height, box.height) * 0.55 }) {
+              rows[index].items.append((box.minX, text))
+            } else { rows.append((box.midY, box.height, [(box.minX, text)])) }
+          }
+          promise.resolve(rows.map { row in row.items.sorted { $0.0 < $1.0 }.map { $0.1 }.joined(separator: "  ") })
         }
         request.recognitionLevel = .accurate
         request.recognitionLanguages = ["es-ES", "en-US"]
@@ -58,6 +68,7 @@ public class ExpoTextExtractorModule: Module {
 writeFileSync('node_modules/expo-text-extractor/android/src/main/java/expo/modules/textextractor/ExpoTextExtractorModule.kt',`package expo.modules.textextractor
 import android.net.Uri
 import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import expo.modules.kotlin.Promise
@@ -74,7 +85,13 @@ class ExpoTextExtractorModule : Module() {
         require(uri.scheme == "file")
         val image = InputImage.fromFilePath(appContext.reactContext!!, uri)
         val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
-        recognizer.process(image).addOnSuccessListener { result -> promise.resolve(result.textBlocks.map { it.text }) }
+        recognizer.process(image).addOnSuccessListener { result -> val rows = mutableListOf<MutableList<Text.Line>>()
+          for (line in result.textBlocks.flatMap { it.lines }.filter { it.boundingBox != null }.sortedBy { it.boundingBox!!.centerY() }) {
+            val box = line.boundingBox!!
+            val row = rows.firstOrNull { kotlin.math.abs(it.first().boundingBox!!.centerY() - box.centerY()) <= kotlin.math.max(it.first().boundingBox!!.height(), box.height()) * 0.55 }
+            if (row != null) row.add(line) else rows.add(mutableListOf(line))
+          }
+          promise.resolve(rows.map { row -> row.sortedBy { it.boundingBox!!.left }.joinToString("  ") { it.text } }) }
           .addOnFailureListener { error -> promise.reject("OCR_FAILED", "No se pudo reconocer localmente", error) }
           .addOnCompleteListener { recognizer.close() }
       } catch (error: Exception) { promise.reject("OCR_FAILED", "No se pudo reconocer localmente", error) }

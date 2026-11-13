@@ -3,6 +3,7 @@ import { captureImage } from '../src/modules/documents/capture.native';
 const mock=vi.hoisted(()=>({permission:true,canceled:false,ocrFails:false,uri:'file:///cache/ImagePicker/original.jpg',size:100,files:new Map<string,{size:number;base64:string}>(),deleted:[] as string[],camera:vi.fn(),library:vi.fn(),ocr:vi.fn()}));
 vi.mock('../src/core/id',()=>({newId:()=> 'capture-test'}));
 vi.mock('expo-image-picker',()=>({requestCameraPermissionsAsync:async()=>({granted:mock.permission}),launchCameraAsync:mock.camera,launchImageLibraryAsync:mock.library}));
+vi.mock('expo-image-manipulator',()=>({SaveFormat:{JPEG:'jpeg'},ImageManipulator:{manipulate:()=>({resize:vi.fn(),renderAsync:async()=>({saveAsync:async()=>{const uri='file:///cache/prepared.jpg';mock.files.set(uri,{size:mock.size,base64:'/9j/AAAA'});return {uri};}})})}}));
 vi.mock('expo-text-extractor',()=>({isSupported:true,extractTextFromImage:mock.ocr}));
 vi.mock('expo-file-system',()=>{
  const uri=(parts:(string|{uri:string})[])=>parts.map(p=>typeof p==='string'?p:p.uri).join('/');

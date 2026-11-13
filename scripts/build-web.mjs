@@ -1,9 +1,13 @@
 import { execFileSync } from 'node:child_process';
-import { readdirSync, readFileSync, writeFileSync, copyFileSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync, copyFileSync, mkdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { join } from 'node:path';
 execFileSync('npx', ['expo', 'export', '--platform', 'web', '--output-dir', 'dist-web'], { stdio: 'inherit', env: { ...process.env, EXPO_PUBLIC_PLANILLA_TESTS: '0' } });
 const root = 'dist-web';
+mkdirSync(join(root, 'ocr'), { recursive: true });
+copyFileSync('node_modules/tesseract.js/dist/worker.min.js', join(root, 'ocr/worker.min.js'));
+for(const file of ['tesseract-core-lstm.js','tesseract-core-lstm.wasm'])copyFileSync(`node_modules/tesseract.js-core/${file}`,join(root,`ocr/${file}`));
+for (const language of ['spa', 'eng']) copyFileSync(`node_modules/@tesseract.js-data/${language}/4.0.0_best_int/${language}.traineddata.gz`, join(root, `ocr/${language}.traineddata.gz`));
 copyFileSync('assets/edumoney-official-logo.png', join(root, 'edumoney-logo.png'));
 writeFileSync(join(root, 'manifest.webmanifest'), JSON.stringify({ name: 'EduMoney', short_name: 'EduMoney', lang: 'es', start_url: '/', scope: '/', display: 'standalone', background_color: '#EDF7F3', theme_color: '#00664B', icons: [{ src: '/edumoney-logo.png', sizes: '1254x1254', type: 'image/png', purpose: 'any' }] }));
 let html = readFileSync(join(root, 'index.html'), 'utf8');
