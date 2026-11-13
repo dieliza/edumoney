@@ -5,11 +5,13 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Browser;
 import android.view.Gravity;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ScrollView;
 
 /** Opens the real browser so authentication, encrypted storage and camera remain
  * under the browser's origin and permissions. No embedded WebView or JS bridge. */
@@ -31,11 +33,20 @@ public final class MainActivity extends Activity {
         layout.addView(help);
         Button open = new Button(this); open.setText("Abrir EduMoney");
         open.setOnClickListener(v -> openWeb()); layout.addView(open);
-        setContentView(layout);
+        ScrollView scroll = new ScrollView(this);
+        scroll.setFillViewport(true);
+        scroll.addView(layout);
+        setContentView(scroll);
         if (savedInstanceState == null) openWeb();
     }
     private void openWeb() {
-        try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(APP_URL))); }
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(APP_URL));
+            // Browsers supporting this hint reuse the tab opened by this app.
+            intent.putExtra(Browser.EXTRA_APPLICATION_ID, getPackageName());
+            intent.putExtra("create_new_tab", false);
+            startActivity(intent);
+        }
         catch (ActivityNotFoundException error) {
             Toast.makeText(this, "Instala o habilita un navegador para abrir EduMoney.", Toast.LENGTH_LONG).show();
         }
