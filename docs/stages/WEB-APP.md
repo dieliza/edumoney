@@ -40,3 +40,15 @@ Total reservado: 23 casos/intentos, incluidas repeticiones. No se ejecutan suite
 El navegador administrado de Sites (`cua_repl.js`) no está disponible en este entorno. Conforme a la instrucción del plugin no se sustituye por otro servidor o controlador: la inspección visual web, la instalación en Safari/Chrome y la prueba física de cámara/archivos quedan pendientes. Las pruebas de sincronización usan dos almacenes SQLite reales en memoria, IndexedDB simulado y un servicio R2 simulado con control de versión; no equivalen a dos teléfonos físicos.
 
 Sites conserva audiencia privada para este enlace de prueba. No se solicita publicación pública ni se modifica main. El sitio aloja el código de la app; su servicio almacena exclusivamente copias cifradas elegidas por el usuario.
+
+## Enlace desplegado
+
+https://edumoney-web.diegoluissantospabon.chatgpt.site
+
+Despliegue privado de Sites confirmado como succeeded, con almacén R2 BUCKET. Proyecto `appgprj_6af65a2177c48191b95b917e1ca2a2f0`; fuente de alojamiento `85df66b83901c82374ef1ccfb7e0ae36fea34f40`. La aplicación está en la rama `web-edumoney`, código `20044e9`.
+
+El acceso de prueba requiere la cuenta de ChatGPT propietaria en ambos dispositivos. Esto no crea una cuenta de EduMoney. Mantener audiencia privada; no se publica para terceros. Para instalar: abrir en Safari de iPhone/iPad y usar Compartir → Añadir a pantalla de inicio; en Chrome Android, menú → Instalar aplicación o Añadir a pantalla de inicio, según el dispositivo.
+
+Los auxiliares de empaquetado descritos en la habilidad Sites no estaban montados en este entorno. Se mantuvo la credencial temporal exclusivamente en memoria/entrada protegida y se preparó el repositorio y tar del mismo código mediante Git estándar y tar. Dos validaciones de archivo detectaron el tipo de vínculo R2 y la estructura del archivo; se corrigieron antes de desplegar. Se conserva el mismo proyecto y audiencia. Tres intentos de empaquetado/publicación, el último correcto; conteo conservador ampliado a 26 comprobaciones/intentos si se incluyen estas validaciones junto a las 23 verificaciones de aplicación.
+
+La confirmación del despliegue no equivale a una prueba física de Safari/Chrome ni a una inspección visual del navegador. Las funciones nativas no disponibles en web mantienen alternativas e información explícita; la APK anterior sigue siendo independiente.

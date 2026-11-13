@@ -1,0 +1,13 @@
+{
+  "project_id": "appgprj_6af65a2177c48191b95b917e1ca2a2f0",
+  "deployment_id": "appgdep_6af65f3b1314819197b0268e19dcfbd9",
+  "version_id": "appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_cb5759258d0c81918d55c44628ac3803",
+  "status": "succeeded",
+  "url": "https://edumoney-web.diegoluissantospabon.chatgpt.site",
+  "audience": "owner-private",
+  "applicationCommit": "20044e9",
+  "hostingSourceCommit": "85df66b83901c82374ef1ccfb7e0ae36fea34f40",
+  "r2Binding": "BUCKET",
+  "browserVerified": false,
+  "physicalDevicesVerified": false
+}
