@@ -2,7 +2,7 @@ import {parseAmount} from '../../core/money';
 /** Reconoce separadores impresos sin inventar un decimal ausente. Solo corrige letras dentro de un token monetario. */
 export function printedAmounts(text:string){
  const result:{amount:string;index:number;length:number;corrected:boolean}[]=[];
- const pattern=/(?:^|[\s$:(])([0-9OIlS]+(?:(?:[.,]\s*|\s+)[0-9OIlS]{3})*\s*[.,]\s*[0-9OIlS]{2})(?=$|[\s$);]|USD\b)/g;
+ const pattern=/(?:^|[\s$:(|\[\]{}]|(?<=[A-Za-z]))([0-9OIlS]+(?:(?:[.,]\s*|\s+)[0-9OIlS]{3})*\s*[.,]\s*[0-9OIlS]{2})(?=$|[\s$);|\[\]{}]|[A-Za-z])/g;
  for(const match of text.matchAll(pattern)){
   const raw=match[1];if(!/\d/.test(raw))continue;
   const numeric=raw.replace(/[OIlS]/g,c=>({O:'0',I:'1',l:'1',S:'5'})[c]!).trim();const split=Math.max(numeric.lastIndexOf('.'),numeric.lastIndexOf(','));

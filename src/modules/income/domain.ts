@@ -20,8 +20,9 @@ export const deductionCategories = [
 ] as const;
 export type DeductionCategory={id:string;name:string;kind:string;rule?:import('./calculation').DeductionRule};
 export type DeductionLine={id:string;categoryId:string;label:string;amountCents:number|null;calculation?:AppliedCalculation};
-export type IncomeStatement={version:1;kind:'paystub'|'check';issuer:string;reference:string;periodStart:string|null;periodEnd:string|null;grossCents:number|null;netCents:number;deductions:DeductionLine[];totalDeductionsCents?:number|null;complete:boolean};
+export type IncomeStatement={version:1;kind:'paystub'|'check';issuer:string;reference:string;periodStart:string|null;periodEnd:string|null;grossCents:number|null;netCents:number;earnings?:import('./paystubTable').RecognizedEarning[];deductions:DeductionLine[];totalDeductionsCents?:number|null;complete:boolean};
 export function statementTotals(p:IncomeStatement){
+ if(p.earnings){if(p.earnings.length>100)throw new UserInputError('Revisa las filas de ingresos.');for(const r of p.earnings){if(r.code.length>60||[r.rate,r.hours,r.amount].some(v=>v.length>30||v!==''&&!/^\d+(?:\.\d{1,6})?$/.test(v)))throw new UserInputError('Revisa códigos, tarifas, horas e importes del desglose.');}}
  const net=cents(p.netCents);if(net<=0)throw new UserInputError('Confirma el importe neto positivo del cheque o talonario.');
  if(p.version!==1||!['paystub','check'].includes(p.kind)||p.issuer.length>240||p.reference.length>100||p.deductions.length>100)throw new UserInputError('Revisa el comprobante de ingreso.');
  if(new Set(p.deductions.map(d=>d.id)).size!==p.deductions.length)throw new UserInputError('Cada deducción debe tener un identificador distinto.');

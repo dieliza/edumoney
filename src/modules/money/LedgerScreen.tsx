@@ -1,3 +1,4 @@
+import {ActionMenu} from '../../ui/ActionMenu';
 import { userMessage } from '../../core/errors';
 import { useEffect, useMemo, useState } from 'react';
 import { AppState, ActivityIndicator, Pressable, View } from 'react-native';
@@ -21,6 +22,7 @@ const empty: Snapshot = { movements: [], categories: [], budgets: [], schedules:
 export default function LedgerScreen() {
     const { colors } = useTheme();
     const focused = useIsFocused();
+    const [showRecurring,setShowRecurring]=useState(false);
     const [bills,setBills] = useState<Bill[]>([]);
     const [store, setStore] = useState<MoneyStore | null>(null);
     const [data, setData] = useState(empty);
@@ -95,9 +97,9 @@ export default function LedgerScreen() {
     return <Screen title="Mi dinero" demo={false} subtitle="¡Hola! Aquí tienes tu resumen de hoy.">
   <ErrorNotice message={error}/>{notice ? <Card><Body>{notice}</Body></Card> : null}
   {!store ? <ActivityIndicator color={colors.accent} accessibilityLabel="Cargando registros cifrados"/> : <>
-   <Choices presentation="tabs" label="Vista de Mi dinero" value={segment} options={[['summary', 'Resumen'], ['history', 'Historial'], ['categories', 'Categorías']]} onChange={setSegment}/>
+   <Choices label="Sección de Mi dinero" value={segment} options={[['summary', 'Resumen'], ['history', 'Historial'], ['categories', 'Categorías']]} onChange={setSegment}/>
 
-   {segment !== 'summary' ? <View style={{ gap: 12 }}><ActionButton title="Añadir ingreso" icon="add-circle-outline" onPress={() => setForm({ kind: 'income' })}/><ActionButton title="Registrar gasto" icon="receipt-outline" onPress={() => setForm({ kind: 'expense' })}/><ActionButton title="Registrar transferencia, préstamo o pago" secondary onPress={() => setForm({ kind: 'transfer' })}/></View> : null}
+   {segment !== 'summary' ? <ActionMenu label="Nueva transacción" actions={[{id:'income',label:'Añadir ingreso',run:()=>setForm({kind:'income'})},{id:'expense',label:'Registrar gasto',run:()=>setForm({kind:'expense'})},{id:'transfer',label:'Registrar transferencia, préstamo o pago',run:()=>setForm({kind:'transfer'})}]}/> : null}
    {segment !== 'history' ? <SectionHeading title={month === localToday().slice(0, 7) ? 'Este mes' : month} action={showMonth ? 'Cerrar' : 'Cambiar mes'} onPress={() => setShowMonth(!showMonth)}/> : null}
    {segment !== 'history' && showMonth ? <Field label="Mes (AAAA-MM)" value={month} onChangeText={setMonth}/> : null}
    {segment !== 'history' ? <ErrorNotice message={summaryError}/> : null}
@@ -124,17 +126,21 @@ export default function LedgerScreen() {
     <Card style={{ backgroundColor: colors.mint }}><View style={ui.row}><IconBadge icon="document-text"/><View style={{ flex: 1 }}><Body style={{ fontWeight: '700' }}>Para mi contable</Body><Body muted style={ui.small}>Marca y organiza tus gastos para revisión.</Body></View></View><ActionButton title="Abrir Para mi contable" testID="open-tax" secondary onPress={() => router.push('/tax')}/></Card>
     <SectionHeading title="Ingresos y gastos del mes"/>
     <Distribution summary={summary} movements={data.movements} month={month} onSelect={id => { setFilterCategory(id === 'uncategorized' ? 'none' : id); setFilterKind('expense'); setFilterMethod('all'); setLimit(50); setDeleted('active'); setQuery(''); setFrom(`${month}-01`); setTo(`${month}-31`.replace(/31$/, String(new Date(Number(month.slice(0,4)), Number(month.slice(5,7)), 0).getDate()))); setSegment('history'); }}/>
-    <ActionButton title="Ver todas las transacciones" secondary onPress={() => setSegment('history')}/>
-    <ActionButton title="Registrar transferencia, préstamo o pago" secondary onPress={() => setForm({ kind: 'transfer' })}/>
-    <ActionButton title={showCalculation ? 'Ocultar detalle del disponible' : 'Cómo se calcula el disponible'} secondary onPress={() => setShowCalculation(!showCalculation)}/>
+    <ActionMenu label="Movimientos y disponible" actions={[
+     {id:'history',label:'Ver todas las transacciones',run:()=>setSegment('history')},
+     {id:'transfer',label:'Registrar transferencia, préstamo o pago',run:()=>setForm({kind:'transfer'})},
+     {id:'calculation',label:showCalculation?'Ocultar detalle del disponible':'Cómo se calcula el disponible',run:()=>setShowCalculation(!showCalculation)},
+    ]}/>
     {showCalculation ? <Card>{[['Ingresos recibidos', summary.income], ['Gastos registrados', summary.expenses], ['Préstamos recibidos (no son ingresos)', summary.loans], ['Pagos de tarjeta o deuda', summary.payments], ['Aportaciones a metas', summary.contributions], ['Compromisos de facturas registrados', summary.commitments]].map(([label, value]) => <View key={label} style={ui.between}><Body style={{ flex: 1 }}>{label}</Body><Body style={{ fontWeight: '700' }}>{formatMoney(value as number)}</Body></View>)}<Body muted>Disponible = ingresos + préstamos − gastos pagados sin crédito − pagos de deuda − aportaciones − compromisos pendientes. Incluye fechas futuras del mes y parte de cero. Las transferencias propias no alteran el total. Las compras con crédito consumen presupuesto; su pago reduce el disponible una sola vez.</Body></Card> : null}
-    <SectionHeading title="Ingresos recurrentes"/>
+    <ActionMenu label="Ingresos recurrentes" actions={[{id:'show-recurring',label:showRecurring?'Cerrar ingresos recurrentes':'Ver y administrar ingresos recurrentes',run:()=>setShowRecurring(!showRecurring)},{id:'new-recurring',label:'Añadir ingreso y configurar recurrencia',run:()=>setForm({kind:'income'})}]}/>
+    {showRecurring?<>
     <Card><Body muted>Las fechas previstas no son dinero recibido. Confirma cada cobro una sola vez; editar un cobro pasado no cambia su programación.</Body></Card>
     {!data.schedules.length ? <Card><Body>Añade un ingreso y elige Recurrente para preparar tus siguientes cobros.</Body></Card> : data.schedules.map(s => <Card key={s.id}><Body style={{ fontWeight: '700' }}>{s.description}</Body><Body>{formatMoney(s.amountCents)} · {s.active ? 'Próximo previsto' : 'En pausa'}: {s.nextDate}</Body><Body muted>Cada {s.intervalCount} {s.cadence === 'weekly' ? 'semana(s)' : 'mes(es)'}</Body>
      {s.active && s.nextDate <= localToday() && !busy ? <ActionButton title={`Confirmar cobro: ${s.description}`} onPress={() => void action(() => store.confirmSchedule(s.id, s.nextDate, newId(), localToday()), 'Cobro registrado. Los siguientes permanecen previstos.')}/> : null}
      {!busy ? <ActionButton title={s.active ? `Pausar: ${s.description}` : `Reanudar: ${s.description}`} secondary onPress={() => void action(() => store.toggleSchedule(s.id, !s.active), 'Programación actualizada. Los movimientos anteriores se conservan.')}/> : null}
     </Card>)}
-    <ActionButton title="Respaldo y recuperación" testID="open-backup" secondary onPress={() => router.push('/backup')}/>
+    </>:null}
+    <ActionMenu label="Respaldo y configuración" actions={[{id:'backup',label:'Respaldo y recuperación',testID:'open-backup',run:()=>router.push('/backup')}]}/>
 
    </> : null}
    {segment === 'history' ? <>

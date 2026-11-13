@@ -13,7 +13,7 @@ export function receiptContrast(rgba: Uint8ClampedArray, width: number, height: 
   }
   return { pixels: output, brightness: total / (width * height), darkFraction: dark / (width * height) };
 }
-export interface ReceiptFragment { text: string; x: number; y: number; height: number; confidence?: number }
+export interface ReceiptFragment { text: string; x: number; y: number; height: number; confidence?: number; width?:number }
 export function receiptRows(fragments: readonly ReceiptFragment[]) {
   const rows: { y: number; height: number; fragments: ReceiptFragment[] }[] = [];
   for (const part of [...fragments].filter(p => p.text.trim()).sort((a,b) => a.y - b.y || a.x - b.x)) {
