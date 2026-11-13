@@ -52,3 +52,11 @@ El acceso de prueba requiere la cuenta de ChatGPT propietaria en ambos dispositi
 Los auxiliares de empaquetado descritos en la habilidad Sites no estaban montados en este entorno. Se mantuvo la credencial temporal exclusivamente en memoria/entrada protegida y se preparó el repositorio y tar del mismo código mediante Git estándar y tar. Dos validaciones de archivo detectaron el tipo de vínculo R2 y la estructura del archivo; se corrigieron antes de desplegar. Se conserva el mismo proyecto y audiencia. Tres intentos de empaquetado/publicación, el último correcto; conteo conservador ampliado a 26 comprobaciones/intentos si se incluyen estas validaciones junto a las 23 verificaciones de aplicación.
 
 La confirmación del despliegue no equivale a una prueba física de Safari/Chrome ni a una inspección visual del navegador. Las funciones nativas no disponibles en web mantienen alternativas e información explícita; la APK anterior sigue siendo independiente.
+
+## Corrección de entrega de HTML
+
+La captura del usuario mostró bytes comprimidos como texto. Se corrigió el Worker para descomprimir los recursos en el servidor y entregar sus bytes reales sin exigir Content-Encoding al navegador o al proxy de acceso. Los datos locales y la sincronización no se modifican.
+
+Tres comprobaciones directas del artefacto aprobadas: HTML legible con manifiesto, firma PNG del logo y JavaScript legible. TypeScript y ESLint aprobaron. La comprobación anterior que descomprimía manualmente la respuesta no detectaba este problema de entrega; esta revisión valida directamente el cuerpo que recibe el cliente. Sigue pendiente la inspección visual física del navegador.
+
+Sitio actualizado en la misma URL, fuente de alojamiento `c91bd80967dcceb3e825a538ffae2642d7579cd4`, despliegue confirmado succeeded.

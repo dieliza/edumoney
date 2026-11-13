@@ -1,0 +1,16 @@
+{
+  "deployment_id": "appgdep_6af6606402408191a3b0e0792c52a165",
+  "status": "succeeded",
+  "url": "https://edumoney-web.diegoluissantospabon.chatgpt.site",
+  "hostingSourceCommit": "c91bd80967dcceb3e825a538ffae2642d7579cd4",
+  "checksPassed": 3,
+  "checks": [
+    "HTML body directly readable without client gunzip",
+    "PNG bytes preserve signature",
+    "JavaScript directly readable"
+  ],
+  "typescript": "passed",
+  "eslint": "passed",
+  "browserVisualQA": false,
+  "financialDataChanged": false
+}
