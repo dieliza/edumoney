@@ -1,3 +1,4 @@
+import {printedAmounts} from '../documents/printedAmounts';
 import {parseAmount} from '../../core/money';
 import {proposeFields} from '../documents/domain';
 export type RecognizedDeduction={categoryId:string;label:string;amount:string};
@@ -17,9 +18,11 @@ export function recognizeIncome(text:string,check=false){
   if(/^(CURRENT|DEDUCCIONES DEL PERIODO|DEDUCCIONES ACTUALES)/.test(line))accumulated=false;
   if(accumulated||(/\bYTD\b|ACUMULADO/.test(line)&&!/(CURRENT|ACTUAL|PERIODO)/.test(line)))continue;
   if(/PATRONAL|PATRONO|EMPLOYER|\bER\b|FUTA|SUTA|CFSE/.test(line)){warnings.add('Aportaciones patronales no se restaron del pago del empleado.');continue;}
-  const values=[...original.matchAll(/(?:\$\s*)?\d+(?:,\d{3})*\.\d{2}\b/g)].filter(m=>!/^\s*%/.test(original.slice((m.index??0)+m[0].length))).map(m=>m[0].replace(/[$,\s]/g,''));
-  let amount=values.length===1?values[0]:values.length===2&&columnOrder!=='unknown'?(columnOrder==='first'?values[0]:values[1]):'';
-  if(values.length>1&&!amount)warnings.add('Hay varias columnas de cifras: confirma los importes del pago actual, no los acumulados.');
+  const detected=printedAmounts(original).filter(m=>!/^\s*%/.test(original.slice(m.index+m.length)));
+  if(detected.some(m=>m.corrected))warnings.add('Se corrigieron letras confundidas con cifras. Verifica importes y decimales contra la foto.');
+  const values=detected.map(m=>m.amount);
+  let amount=values.length===1&&columnOrder==='unknown'?values[0]:values.length===2&&columnOrder!=='unknown'?(columnOrder==='first'?values[0]:values[1]):'';
+  if(values.length>0&&!amount)warnings.add('Hay columnas de cifras incompletas o ambiguas: confirma los importes del pago actual, no los acumulados.');
   if(amount){try{parseAmount(amount);}catch{amount='';}}
   if(/TOTAL.*DEDUC|TOTAL.*WITHHOLD|TOTAL.*DESCUENT|TOTAL TAXES/.test(line))continue;
   if(/GROSS\s*(PAY|WAGES|EARNINGS)?|SALARIO BRUTO|INGRESO[S]? BRUTO|TOTAL INGRESOS/.test(line)){if(amount)gross.push(amount);continue;}

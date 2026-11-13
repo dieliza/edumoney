@@ -1,0 +1,10 @@
+import {afterEach,beforeEach,expect,it,vi} from 'vitest';
+import {readReceiptPhoto} from '../src/modules/documents/photo.web';
+import {proposeFields} from '../src/modules/documents/domain';
+const mock=vi.hoisted(()=>({recognize:vi.fn(),setParameters:vi.fn(),terminate:vi.fn()}));
+vi.mock('tesseract.js',()=>({PSM:{AUTO:'3',SPARSE_TEXT:'11',SINGLE_LINE:'7'},createWorker:async()=>mock}));
+const page=(text:string)=>({data:{text,confidence:99,rotateRadians:0,blocks:[{paragraphs:[{lines:[{text,bbox:{x0:10,y0:5,x1:2000,y1:15},confidence:99}]}]}]}});
+beforeEach(()=>{vi.clearAllMocks();vi.stubGlobal('createImageBitmap',async()=>({width:2400,height:20,close:vi.fn()}));vi.stubGlobal('location',{origin:'https://ficticio.test'});vi.stubGlobal('ImageData',class{constructor(public data:Uint8ClampedArray,public width:number,public height:number){}});vi.stubGlobal('document',{createElement:()=>({width:0,height:0,toDataURL:()=> 'data:image/jpeg;base64,/9j/AAAA',getContext:()=>({drawImage:vi.fn(),putImageData:vi.fn(),fillRect:vi.fn(),fillStyle:'',getImageData:()=>({data:new Uint8ClampedArray(2400*20*4).fill(220)})})})});});
+afterEach(()=>vi.unstubAllGlobals());
+it('con confianza de palabras alta repite y recupera cifras mediante una fila ampliada',async()=>{mock.recognize.mockResolvedValueOnce(page('TOTAL')).mockResolvedValueOnce(page('TOTAL')).mockResolvedValueOnce(page('TOTAL 55.00'));const result=await readReceiptPhoto({} as File);expect(proposeFields(result.text).amount).toBe('55.00');expect(mock.recognize).toHaveBeenCalledTimes(3);expect(result.needsAmountReview).toBe(false);expect(mock.terminate).toHaveBeenCalledOnce();});
+it('conserva foto y rótulo pero deja pendiente el total si las pasadas discrepan',async()=>{mock.recognize.mockResolvedValueOnce(page('TOTAL 55.00')).mockResolvedValueOnce(page('TOTAL 65.00')).mockResolvedValueOnce(page('TOTAL 55.00'));const result=await readReceiptPhoto({} as File);expect(result.image.base64).toBe('/9j/AAAA');expect(result.needsAmountReview).toBe(true);expect(proposeFields(result.text).amount).toBe('');expect(mock.terminate).toHaveBeenCalledOnce();});

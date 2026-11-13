@@ -32,3 +32,13 @@ export function chooseReceiptReading(readings: readonly {text:string;confidence:
   const best = [...readings].sort((a,b) => receiptReadScore(b.text,b.confidence)-receiptReadScore(a.text,a.confidence))[0];
   return { text: best?.text ?? '', confidence: best?.confidence ?? 0, needsAmountReview: new Set(amounts.filter(Boolean)).size > 1 };
 }
+
+/** Agrupa rótulos y columnas ANTES de reintentar una fila a mayor tamaño. */
+export function receiptBands(fragments:readonly ReceiptFragment[]){
+ const bands:{y:number;height:number;fragments:ReceiptFragment[]}[]=[];
+ for(const f of [...fragments].filter(f=>f.text.trim()).sort((a,b)=>a.y-b.y||a.x-b.x)){
+  const band=bands.find(b=>Math.abs(b.y-f.y)<=Math.min(b.height,f.height)*.45);
+  if(band){const top=Math.min(band.y-band.height/2,f.y-f.height/2),bottom=Math.max(band.y+band.height/2,f.y+f.height/2);band.y=(top+bottom)/2;band.height=bottom-top;band.fragments.push(f);}else bands.push({y:f.y,height:f.height,fragments:[f]});
+ }
+ return bands.map(b=>({...b,text:b.fragments.sort((a,b)=>a.x-b.x).map(f=>f.text.trim()).join('  ')}));
+}

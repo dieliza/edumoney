@@ -1,3 +1,4 @@
+import {printedAmounts} from './printedAmounts';
 import { UserInputError } from '../../core/errors';
 import { parseAmount } from '../../core/money';
 import { validDate } from '../money/domain';
@@ -19,11 +20,7 @@ export function proposeFields(text:string):{description:string;date:string;amoun
  if(!date)warnings.push('La fecha falta o es ambigua. Confírmala manualmente en AAAA-MM-DD.');
  const totalLines=lines.filter(l=>/^(?:total(?: a pagar| venta)?|gran total|grand total|importe total|amount due|balance due)\b/i.test(l)&&!/^total\s+(?:ivu|iva|tax|impuestos?|descuentos?|ahorro|art[ií]culos)\b/i.test(l));
  let corrected=false;
- const totals=totalLines.flatMap(line=>[...line.matchAll(/(?:^|[\s$:])([0-9OIlS]+(?:,[0-9OIlS]{3})*[.,][0-9OIlS]{2})(?=$|[\s$]|USD\b)/g)].map(m=>{
-   if(/[OIlS]/.test(m[1]))corrected=true;
-   const value=m[1].replace(/[OIlS]/g,c=>({O:'0',I:'1',l:'1',S:'5'})[c]!);
-   return value.includes('.')?value.replaceAll(',',''):value.replace(',','.');
- }));
+ const totals=totalLines.flatMap(line=>printedAmounts(line).map(m=>{if(m.corrected)corrected=true;return m.amount;}));
  if(corrected)warnings.push('Se propuso una corrección de letras confundidas con cifras en el total. Verifica el importe contra la foto.');
  const unique=[...new Set(totals)];let amount=unique.length===1?unique[0]:'';
  if(amount){try{if(parseAmount(amount)<=0)amount='';}catch{amount='';}}
