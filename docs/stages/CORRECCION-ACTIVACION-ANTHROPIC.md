@@ -9,3 +9,5 @@ Pruebas: 9 casos aprobados (4 nuevos sobre eventos reales del componente renderi
 Marcador 2026.11.14.02. La clave sigue siendo temporal y se debe reintroducir al recargar o bloquear. La revisión/captura no cambia.
 
 TypeScript, ESLint, git diff --check y compilación web correctos.
+
+Publicada versión alojada 20 el 2026-11-14 a las 01:16 UTC. Fuente 01b4b85ef888f349c7e724ab555d4aeb0e5f424d; versión appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_cf9640de39c88191a4fdc91ebcd5b54c; despliegue appgdep_6af7b676290c8191851b2111c48559d9, succeeded. Audiencia pública conservada. https://edumoney-web.diegoluissantospabon.chatgpt.site
