@@ -21,3 +21,12 @@ Siete casos aprobados, sin suite completa:
 TypeScript y ESLint aprobados. Compilación web/PWA aprobada. No se comprobó un iPad físico ni la biometría real del propietario; no hay navegador interactivo soportado en este entorno.
 
 El uso inmediato en versiones anteriores sigue siendo cerrar la otra pestaña de EduMoney (o usar Cerrar sección en ella) y pulsar Entrar aquí. No borrar datos de Safari ni cambiar la contraseña para resolver esta exclusión.
+
+## Publicación
+
+Sites versión 33, despliegue succeeded appgdep_6af86f3ae8148191acd0979c8dd5ca33, fuente ccc03007d41a0543aa8ac0e0dc15f71353c89e8a. Variables del servidor conservadas, revisión 1. GitHub main no modificado; trabajo en web-edumoney.
+
+Enlace directo a la versión de aplicación 2026.11.14.15:
+https://edumoney-web.diegoluissantospabon.chatgpt.site/money?build=2026.11.14.15
+
+El despliegue está confirmado por Sites; la entrada real del propietario en Safari y Face ID sigue pendiente de su comprobación.
