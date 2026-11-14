@@ -35,3 +35,13 @@ No se realizaron migraciones ni cambios de API, autenticación o lógica financi
 ## Pendientes de validación física
 
 Este entorno no dispone de navegador interactivo ni iPhone, iPad o Android físico. No se afirma haber probado gestos, inercia, VoiceOver/TalkBack, cierre por interacción o apariencia real en esos dispositivos. El renderizado en servidor no sustituye esas pruebas. Verificar en Safari/PWA de iPhone/iPad, Chrome Android y escritorio: deslizar y detener, teclado/lector de pantalla, crear/seleccionar/guardar categoría, abrir desglose por flecha y cerrar menú con selección/fuera/Escape. La APK instalada necesita una compilación nueva para recibir código nativo; esta entrega publica la web/PWA.
+
+## Publicación
+
+- Sites versión 31; despliegue succeeded: appgdep_6af86ae496148191887c4db27639bb0c.
+- Versión guardada: appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_4ee5737dfb988191b34a29d1532355b7.
+- Fuente de alojamiento: dc1a75bb217bf1140684d92735845659fa985b41. Implementación en rama web-edumoney: e2424a3. No se modificó main de GitHub.
+- URL: https://edumoney-web.diegoluissantospabon.chatgpt.site
+- HTTP con curl: inicio, desglose del mes y categorías devuelven 200; dos archivos cliente públicos descargados y confirmados con versión 2026.11.14.13 y las nuevas pantallas. Esto verifica disponibilidad, no interacción ni autenticación.
+- Dos intentos de urllib recibieron 403; curl sí accedió correctamente. Un HEAD adicional obtuvo 200. Ocho solicitudes HTTP en total, incluidos intentos. Presupuesto conservador del bloque: 41 comprobaciones contando 32 casos automatizados, ocho solicitudes y la validación del contenido del cliente; menor a 100.
+- Audiencia pública y variables del servidor conservadas, revisión de entorno 1.
