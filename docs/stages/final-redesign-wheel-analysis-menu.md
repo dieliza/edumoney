@@ -42,6 +42,6 @@ Este entorno no dispone de navegador interactivo ni iPhone, iPad o Android físi
 - Versión guardada: appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_4ee5737dfb988191b34a29d1532355b7.
 - Fuente de alojamiento: dc1a75bb217bf1140684d92735845659fa985b41. Implementación en rama web-edumoney: e2424a3. No se modificó main de GitHub.
 - URL: https://edumoney-web.diegoluissantospabon.chatgpt.site
-- HTTP con curl: inicio, desglose del mes y categorías devuelven 200; dos archivos cliente públicos descargados y confirmados con versión 2026.11.14.13 y las nuevas pantallas. Esto verifica disponibilidad, no interacción ni autenticación.
-- Dos intentos de urllib recibieron 403; curl sí accedió correctamente. Un HEAD adicional obtuvo 200. Ocho solicitudes HTTP en total, incluidos intentos. Presupuesto conservador del bloque: 41 comprobaciones contando 32 casos automatizados, ocho solicitudes y la validación del contenido del cliente; menor a 100.
+- HTTP con curl: inicio, desglose del mes y categorías devuelven 200; cuatro archivos cliente públicos descargados (index, common, money, charts), idénticos byte por byte a la compilación 2026.11.14.13. Esto verifica disponibilidad, no interacción ni autenticación.
+- Dos intentos de urllib recibieron 403; curl sí accedió correctamente. Un HEAD adicional obtuvo 200. Diez solicitudes HTTP en total, incluidos intentos. La primera búsqueda de textos no consideraba los archivos por ruta ni el escape de caracteres; se sustituyó por comparación exacta de los cuatro archivos. Presupuesto conservador del bloque: 44 comprobaciones contando 32 casos automatizados, diez solicitudes y dos validaciones del contenido del cliente; menor a 100.
 - Audiencia pública y variables del servidor conservadas, revisión de entorno 1.
