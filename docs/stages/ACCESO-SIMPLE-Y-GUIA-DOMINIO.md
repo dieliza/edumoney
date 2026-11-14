@@ -25,3 +25,5 @@ Se probó login con un campo, autocompletado en el envío, doble toque, error y 
 No se probó Safari/iPad físico ni PWA instalada; no hay herramientas de navegador Sites disponibles. No se afirma reproducción visual del fallo en el dispositivo. No se envían correos ni fotos y no se modifica GitHub main.
 
 TypeScript, ESLint, git diff --check y compilación web correctos. La guía pública coincide con el documento escrito; se empaqueta como texto UTF-8. No se realizó despliegue de Cloudflare ni cambio de dominio.
+
+Publicada el 14 de noviembre de 2026 a las 01:58 UTC. Versión alojada 22, marcador 2026.11.14.04. Fuente 0c20ff98d3e06e8f82e455191fe82c18dfc3f465; versión appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_d1200cf8afe081918703ac3ae59c272c; despliegue appgdep_6af7c04da7448191aa7db529a986b791, succeeded. Audiencia pública conservada. Guía https://edumoney-web.diegoluissantospabon.chatgpt.site/Guia-EduMoney-dominio-y-correo.txt .
