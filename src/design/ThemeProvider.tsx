@@ -42,3 +42,14 @@ export function useTheme() {
   if (!theme) throw new Error('Falta ThemeProvider');
   return theme;
 }
+
+/** Solo la presentación de las gráficas: permite ver el degradado real de la pantalla. */
+export function NativeChartTheme({children}:PropsWithChildren){
+  const theme=useTheme();
+  const value=useMemo(()=>({...theme,colors:theme.name==='dark'?{...theme.colors,
+    surface:'transparent',surfaceAlt:'rgba(255,255,255,0.06)',text:'#F0FFF9',muted:'#CEE8E8',
+    primary:'#8DEBC4',line:'rgba(206,238,232,0.25)',mint:'rgba(42,218,153,0.12)',
+    coral:'rgba(255,98,133,0.12)',progressTrack:'rgba(210,244,234,0.16)',
+  }:{...theme.colors,surface:'transparent',surfaceAlt:'rgba(0,82,68,0.05)'}}),[theme]);
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+}

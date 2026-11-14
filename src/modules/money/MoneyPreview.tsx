@@ -42,7 +42,7 @@ export default function Money() {
         <View style={{ alignItems: 'flex-end', maxWidth: '40%' }}><Body muted style={{ fontSize: 12 }}>{bill.date}</Body><Body style={{ fontWeight: '700' }}>{bill.amount}</Body></View>
       </View>)}</Card>
       <SectionHeading title="Así se distribuyen tus gastos" />
-      <Card>
+      <Card chart>
         <ExpenseDonut total={195468} items={expenses.map(item => ({ id: item.name, name: item.name, spent: parseAmount(item.amount.replace('$', '')) }))}/>
 
       </Card>

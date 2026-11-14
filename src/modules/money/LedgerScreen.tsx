@@ -177,7 +177,7 @@ function Distribution({ summary, budget = false, onSelect, movements = [], month
 }) {
     const { colors } = useTheme();
     const items = summary.distribution.filter(c => budget ? c.budget !== null || c.spent > 0 : c.spent > 0);
-    return <Card>{budget && !items.length ? <Body>{budget ? 'Define un presupuesto para comparar tus gastos.' : 'Aún no hay gastos registrados en este mes.'}</Body> : null}
+    return <Card chart>{budget && !items.length ? <Body>{budget ? 'Define un presupuesto para comparar tus gastos.' : 'Aún no hay gastos registrados en este mes.'}</Body> : null}
   {!budget ? <MonthlyCharts summary={summary} movements={movements} month={month} onSelect={onSelect}/> : null}
   {budget ? items.map(item => {
             const pct = item.budget && item.budget > 0 ? Number(BigInt(item.spent) * 100n / BigInt(item.budget)) : 0;

@@ -1,4 +1,5 @@
 import {SideMenu} from './SideMenu';
+import {ChartSurface} from './ChartSurface';
 import { fixed } from '../design/tokens';
 import { useIsFocused, router } from 'expo-router';
 import { type ComponentProps, type PropsWithChildren } from 'react';
@@ -16,8 +17,9 @@ export function Body({ children, muted = false, style }: PropsWithChildren<{ mut
   const { colors } = useTheme();
   return <Text style={[{ color: muted ? colors.muted : colors.text, fontSize: 16, lineHeight: 24 }, style]}>{children}</Text>;
 }
-export function Card({ children, style }: PropsWithChildren<{ style?: StyleProp<ViewStyle> }>) {
+export function Card({ children, style, chart = false }: PropsWithChildren<{ style?: StyleProp<ViewStyle>;chart?:boolean }>) {
   const { colors } = useTheme();
+  if(chart)return <ChartSurface style={style}>{children}</ChartSurface>;
   return <View style={[{ backgroundColor: colors.surface, borderRadius: 20, padding: 16, borderWidth: 1, borderColor: colors.line, gap: 10, boxShadow: '0px 5px 18px rgba(0, 26, 40, 0.06)' }, style]}>{children}</View>;
 }
 export function IconBadge({ icon, tone = 'mint', size = 48 }: { icon: IconName; tone?: 'mint' | 'blue' | 'coral' | 'violet'; size?: number }) {
