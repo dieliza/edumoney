@@ -1,6 +1,7 @@
 import type { Database, SqlJsStatic } from 'sql.js';
 import type { SqlDb } from '../modules/money/store';
 import { migrate } from '../storage/migrate';
+import {acquireVaultTab,type VaultOpenOptions} from './vaultTabLock';
 
 type Envelope = { version: 1; salt: Uint8Array; iv: Uint8Array; ciphertext: ArrayBuffer };
 const DB_NAME = 'edumoney-encrypted-web-v1';
@@ -41,20 +42,17 @@ async function keyFor(password: string, salt: Uint8Array) {
   return crypto.subtle.deriveKey({ name: 'PBKDF2', hash: 'SHA-256', salt: new Uint8Array(salt), iterations: 600000 }, material, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
 }
 async function exclusiveTab() {
-  if (!navigator.locks) throw Error('Este navegador no permite proteger los datos entre pestañas. Actualízalo para continuar.');
-  await new Promise<void>((resolve, reject) => {
-    void navigator.locks.request('edumoney-vault-session', { ifAvailable: true }, async lock => {
-      if (!lock) { reject(Error('EduMoney está abierto en otra pestaña. Ciérrala antes de continuar aquí.')); return; }
-      resolve(); await new Promise<void>(() => { /* El navegador libera la exclusión al cerrar o recargar la pestaña. */ });
-    }).catch(reject);
-  });
+  releaseTab=await acquireVaultTab();
 }
+let releaseTab:(()=>Promise<void>)|undefined;
 let tabLocked = false;
 let unlocking = false;
-export async function unlockWebVault(password: string) {
+export async function unlockWebVault(password: string,options:VaultOpenOptions={}) {
   if (unlocking) throw Error('Hay una apertura en curso. Espera antes de volver a entrar.');
   unlocking = true;
-  try { await openWebVault(password); } finally { unlocking = false; }
+  try { if(!tabLocked&&!connection){releaseTab=await acquireVaultTab(options);tabLocked=true;}await openWebVault(password); }
+  catch(error){if(!connection){tabLocked=false;const release=releaseTab;releaseTab=undefined;await release?.();}throw error;}
+  finally { unlocking = false; }
 }
 async function openWebVault(password: string) {
   if (!globalThis.isSecureContext || !crypto.subtle) throw Error('Abre EduMoney mediante HTTPS para proteger los datos.');
