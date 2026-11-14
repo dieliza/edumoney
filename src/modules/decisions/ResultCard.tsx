@@ -3,7 +3,7 @@ import { formatMoney } from '../money/domain';
 import { simulate,type ScenarioInput } from './domain';
 export function ResultCard({input,title='Resultado estimado'}:{input:ScenarioInput;title?:string}){
  const r=simulate(input);const loan=['vehicle','home','loan'].includes(input.kind);
- return <Card><SectionHeading title={title} onSurface/>
+ return <Card row><SectionHeading title={title} onSurface/>
  <Body style={{fontWeight:'700',fontSize:20}}>Compromiso mensual estimado: {formatMoney(r.monthly)}</Body>
  {loan?<><Body>Precio o principal solicitado: {formatMoney(input.amount)} · Pronto: {formatMoney(input.down)}</Body><Body>Cargos financiados: {formatMoney(input.financedFees)} · Cargos iniciales aparte: {formatMoney(input.upfront)}</Body><Body>Costos adicionales mensuales: {formatMoney(input.extra)}</Body><Body>Principal financiado: {formatMoney(r.financed!)}</Body><Body>Plazo: {input.months} meses · Tasa nominal anual fija: {(input.rateBps/100).toFixed(2)}%</Body><Body>Cuota de principal e intereses: {formatMoney(r.loanPayment!)} · Pagos efectivos estimados: {r.paidMonths}</Body><Body>Última cuota del préstamo: {formatMoney(r.lastPayment!)}</Body></>:null}
  <Body>{input.kind==='saving'?'Rendimiento hipotético acumulado':'Intereses estimados'}: {formatMoney(r.interest)}{['recurring','emergency'].includes(input.kind)?' (este cálculo no incluye financiamiento ni rendimientos)':''}</Body>

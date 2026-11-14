@@ -15,7 +15,7 @@ export default function Progress() {
       ['Gastos bajo control', '14% menos en este ejemplo', 'trending-down-outline', 'blue'],
       ['Facturas al día', '4 de 5 atendidas en el ejemplo', 'checkmark-circle-outline', 'mint'],
       ['Meta en progreso', 'Fondo de emergencia · 28% de ejemplo', 'flag-outline', 'violet'],
-    ] as const).map(([title, detail, icon, tone]) => <Card key={title}><View style={ui.row}><IconBadge icon={icon} tone={tone} /><View style={{ flex: 1, gap: 4 }}><Body style={{ fontWeight: '700' }}>{title}</Body><Body muted style={{ fontSize: 14, lineHeight: 21 }}>{detail}</Body></View></View></Card>)}
-    <Card><Body style={ui.heading}>Un paso a la vez</Body><Body muted>Tu plan de 90 días · vista de ejemplo</Body><ProgressBar value={20} label="Plan de ejemplo: 20 por ciento" /><Body style={{ fontSize: 14 }}>Cada avance cuenta. Empieza a tu ritmo.</Body></Card>
+    ] as const).map(([title, detail, icon, tone]) => <Card row key={title}><View style={ui.row}><IconBadge icon={icon} tone={tone} /><View style={{ flex: 1, gap: 4 }}><Body style={{ fontWeight: '700' }}>{title}</Body><Body muted style={{ fontSize: 14, lineHeight: 21 }}>{detail}</Body></View></View></Card>)}
+    <Card row><Body style={ui.heading}>Un paso a la vez</Body><Body muted>Tu plan de 90 días · vista de ejemplo</Body><ProgressBar value={20} label="Plan de ejemplo: 20 por ciento" /><Body style={{ fontSize: 14 }}>Cada avance cuenta. Empieza a tu ritmo.</Body></Card>
   </Screen>;
 }

@@ -43,8 +43,8 @@ export function useTheme() {
   return theme;
 }
 
-/** Solo la presentación de las gráficas: permite ver el degradado real de la pantalla. */
-export function NativeChartTheme({children}:PropsWithChildren){
+/** Presentación de gráficas y filas sobre el fondo nativo de la pantalla. */
+export function NativeSurfaceTheme({children}:PropsWithChildren){
   const theme=useTheme();
   const value=useMemo(()=>({...theme,colors:theme.name==='dark'?{...theme.colors,
     surface:'transparent',surfaceAlt:'rgba(255,255,255,0.06)',text:'#F0FFF9',muted:'#CEE8E8',
@@ -53,3 +53,4 @@ export function NativeChartTheme({children}:PropsWithChildren){
   }:{...theme.colors,surface:'transparent',surfaceAlt:'rgba(0,82,68,0.05)'}}),[theme]);
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
+export {NativeSurfaceTheme as NativeChartTheme};

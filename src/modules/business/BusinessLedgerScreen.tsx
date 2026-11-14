@@ -40,12 +40,12 @@ export default function BusinessLedgerScreen() {
  try{totals=businessTotals(entries,projectId||undefined);}catch(e){totalsError=userMessage(e);}
  async function saved(){await load();setNotice('Información comercial guardada localmente.');}
  return <Screen back title="Movimientos de Negocio" demo={false} subtitle="Ingresos, gastos, recibos y reservas locales." keyboardForm>
-  <ErrorNotice message={error}/>{notice?<Card><Body>{notice}</Body></Card>:null}
-  {!store?<Card><Body>Abriendo registros comerciales…</Body></Card>:null}
+  <ErrorNotice message={error}/>{notice?<Card row><Body>{notice}</Body></Card>:null}
+  {!store?<Card row><Body>Abriendo registros comerciales…</Body></Card>:null}
   <Choices label="Vista por titular legal" value={holderId} options={[["","Seleccionar titular"],...data.holders.map(h=>[h.id,h.legalName] as const)]} onChange={id=>{setHolder(id);setProject('');setNotice('');setLimit(30);}}/>
   {holder?<>
    <Choices label="Vista por proyecto" value={projectId} options={[["","Todos los proyectos del titular"],...projects.map(p=>[p.id,p.name] as const)]} onChange={id=>{setProject(id);setLimit(30);}}/>
-   {totals?<Card><SectionHeading title={projectId?projects.find(p=>p.id===projectId)?.name??'Proyecto':'Resumen del titular'} onSurface/>
+   {totals?<Card row><SectionHeading title={projectId?projects.find(p=>p.id===projectId)?.name??'Proyecto':'Resumen del titular'} onSurface/>
     <Body>Depósitos netos registrados: {formatMoney(totals.receivedCents)}</Body>
     <Body>Ventas brutas: {knownMoney(totals.grossCents)} · Comisiones: {knownMoney(totals.commissionCents)} · Devoluciones: {knownMoney(totals.refundCents)}</Body>
     <Body>IVU registrado en cobros: {knownMoney(totals.ivuCents)}. No confirma tasas, exenciones ni remesas.</Body>
@@ -55,19 +55,19 @@ export default function BusinessLedgerScreen() {
     <Body>No es un saldo bancario confirmado. Los registros modificados fuera de Negocio o eliminados se muestran para revisar y se excluyen de estos totales. Clasificar como comercial no determina deducibilidad.</Body>
    </Card>:<ErrorNotice message={totalsError}/>}
    {store?<><ActionButton title="Añadir ingreso comercial" testID="business-income" onPress={()=>setForm({kind:'income'})}/><ActionButton title="Registrar gasto comercial" testID="business-expense" onPress={()=>setForm({kind:'expense'})}/></>:null}
-   <Card><SectionHeading title="Reservas manuales del titular" onSurface/>
+   <Card row><SectionHeading title="Reservas manuales del titular" onSurface/>
     {(Object.keys(reserveLabels) as ReserveKind[]).map(kind=>{const r=data.reserves.find(r=>r.holderId===holderId&&r.kind===kind);return <Body key={kind}>{reserveLabels[kind]}: {r?formatMoney(r.amountCents):'Sin registrar'}</Body>;})}
     <Body>Las reservas pertenecen al titular, incluso en la vista de proyecto. No crean gastos ni indican que el dinero esté depositado en una cuenta separada.</Body>
     <ActionButton title="Ajustar reservas manuales" secondary onPress={()=>setReserving(true)}/>
    </Card>
    <ActionButton title="Preparar exportación para el CPA" testID="business-export" secondary onPress={()=>{try{businessExport(data,holderId,projectId||null,[]);setExporting(true);}catch(e){setError(userMessage(e));}}}/>
    <SectionHeading title="Registros y recibos"/>
-   {!entries.length?<Card><Body>No hay movimientos comerciales en esta vista. Los formularios empiezan en blanco.</Body></Card>:null}
+   {!entries.length?<Card row><Body>No hay movimientos comerciales en esta vista. Los formularios empiezan en blanco.</Body></Card>:null}
    {entries.slice(0,limit).map(e=>{
     const movement=data.movements.find(m=>m.id===e.movementId),documents=data.documents.filter(d=>d.movementId===e.movementId);
     const share=projectId?entryRows(e).find(a=>a.projectId===projectId):null;
     const commercial=projectId?share?.commercialCents??null:commercialAmount(e);
-    return <Card key={e.id}>
+    return <Card row key={e.id}>
      <Body style={{fontWeight:'700'}}>{e.description}</Body><Body>{e.date} · {e.kind==='income'?'Ingreso neto':'Gasto'} · {formatMoney(share?.amountCents??e.amountCents)}</Body>
      {projectId?<Body>Importe del registro completo: {formatMoney(e.amountCents)}. Arriba se muestra únicamente la parte de este proyecto.</Body>:null}
      <Body>Uso: {useLabels[e.useKind]}{e.useKind==='mixed'?` · ${(e.businessBps??0)/100}% comercial`:''} · Parte comercial: {commercial===null?'Pendiente':formatMoney(commercial)}</Body>
@@ -81,7 +81,7 @@ export default function BusinessLedgerScreen() {
     </Card>;
    })}
    {entries.length>limit?<ActionButton title="Ver más registros comerciales" secondary onPress={()=>setLimit(limit+30)}/>:null}
-  </>:<Card><Body>Selecciona un titular. Si todavía no existe, crea primero su perfil y proyectos en Negocio.</Body></Card>}
+  </>:<Card row><Body>Selecciona un titular. Si todavía no existe, crea primero su perfil y proyectos en Negocio.</Body></Card>}
   {form&&store&&holder?<BusinessEntryForm holderId={holderId} kind={form.kind} initial={form.initial} data={data} store={store} done={saved} close={()=>setForm(null)}/>:null}
   {receipt?<BusinessReceiptForm movement={receipt} done={saved} close={()=>setReceipt(null)}/>:null}
   {viewReceipt?<ReceiptView document={viewReceipt} close={()=>setViewReceipt(null)}/>:null}

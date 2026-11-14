@@ -20,3 +20,18 @@ it('reabre categorías personalizadas y su clasificación sin alterar importes n
   const rows=historicalSeries(data,'2026-11',6,'custom-expense');expect(rows.at(-1)).toMatchObject({income:0,expenses:12345,category:12345,hasRecords:true});expect(topExpenses([{id:'custom-expense',name:'Mascotas ficticias',spent:rows.at(-1)!.expenses}])[0].spent).toBe(12345);
  }finally{db.close();rmSync(folder,{recursive:true,force:true});}
 });
+
+it('conserva más de 50 movimientos al reabrir y compila el mes completo, sin mezclar otros meses',async()=>{
+ const folder=mkdtempSync(join(tmpdir(),'edu-history-month-')),path=join(folder,'test.db');let db=new DatabaseSync(path);
+ try{
+  await migrate(adapter(db));let store=new MoneyStore(adapter(db));
+  for(let i=0;i<128;i++){
+   const income=i===125,december=i>125;
+   await store.create({id:`ficticio-${i}`,idempotencyKey:`ficticio-${i}`,kind:income?'income':'expense',amountCents:cents(income?20000:december?1000:100),currency:'USD',date:december?'2026-12-01':'2026-11-14',description:`Movimiento FICTICIO ${i}`,categoryId:income?'income-salary':'expense-food',paymentMethod:'cash',taxReview:false,useKind:'personal',grossCents:null,withholdingCents:null,createdAt:'2026-11-14T12:00:00Z',updatedAt:'2026-11-14T12:00:00Z',deletedAt:null,incomeType:'manual',scheduleId:null,occurrenceDate:null,version:1});
+  }
+  await store.setDeleted('ficticio-0',1,true,'Anulación FICTICIA');db.close();db=new DatabaseSync(path);store=new MoneyStore(adapter(db));
+  const data=await store.snapshot();expect(data.movements).toHaveLength(128);expect(data.movements.slice(0,50)).toHaveLength(50);
+  const november=historicalSeries(data,'2026-11',6).at(-1)!;expect(november).toMatchObject({income:20000,expenses:12400,hasRecords:true});expect(historicalSeries(data,'2026-12',6).at(-1)).toMatchObject({income:0,expenses:2000});
+  expect(data.movements.filter(m=>!m.deletedAt&&m.kind==='expense'&&m.date.startsWith('2026-11'))).toHaveLength(124);
+ }finally{db.close();rmSync(folder,{recursive:true,force:true});}
+});

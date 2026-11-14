@@ -1,5 +1,6 @@
 import {SideMenu} from './SideMenu';
 import {ChartSurface} from './ChartSurface';
+import {RecordSurface} from './RecordSurface';
 import { fixed } from '../design/tokens';
 import { useIsFocused, router } from 'expo-router';
 import { type ComponentProps, type PropsWithChildren } from 'react';
@@ -15,10 +16,11 @@ import { Brand } from './Brand';
 export type IconName = ComponentProps<typeof Ionicons>['name'];
 export function Body({ children, muted = false, style }: PropsWithChildren<{ muted?: boolean; style?: ComponentProps<typeof Text>['style'] }>) {
   const { colors } = useTheme();
-  return <Text style={[{ color: muted ? colors.muted : colors.text, fontSize: 16, lineHeight: 24 }, style]}>{children}</Text>;
+  return <Text style={[{ color: muted ? colors.muted : colors.text, fontSize: 16, lineHeight: 24,flexShrink:1,maxWidth:'100%' }, style]}>{children}</Text>;
 }
-export function Card({ children, style, chart = false }: PropsWithChildren<{ style?: StyleProp<ViewStyle>;chart?:boolean }>) {
+export function Card({ children, style, chart = false, row = false }: PropsWithChildren<{ style?: StyleProp<ViewStyle>;chart?:boolean;row?:boolean }>) {
   const { colors } = useTheme();
+  if(row)return <RecordSurface style={style}>{children}</RecordSurface>;
   if(chart)return <ChartSurface style={style}>{children}</ChartSurface>;
   return <View style={[{ backgroundColor: colors.surface, borderRadius: 20, padding: 16, borderWidth: 1, borderColor: colors.line, gap: 10, boxShadow: '0px 5px 18px rgba(0, 26, 40, 0.06)' }, style]}>{children}</View>;
 }

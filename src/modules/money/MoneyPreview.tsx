@@ -19,7 +19,7 @@ export default function Money() {
       {segments.map(item => <Pressable key={item} accessibilityRole="tab" accessibilityState={{ selected: item === segment }} onPress={() => setSegment(item)} style={{ flexGrow: 1, padding: 12, minHeight: 46, borderRadius: 12, backgroundColor: item === segment ? colors.primary : 'transparent' }}><Text style={{ color: item === segment ? fixed.white : colors.text, textAlign: 'center', fontSize: 13, fontWeight: '700' }}>{item}</Text></Pressable>)}
     </View>
     {segment === 'Resumen' ? <>
-      <Card style={{ padding: 0, overflow: 'hidden' }}>
+      <Card row style={{ padding: 0, overflow: 'hidden' }}>
         <LinearGradient colors={[colors.mint, colors.blue]} style={{ padding: 22, gap: 6 }}>
           <View style={ui.between}><Body style={{ fontWeight: '600' }}>Disponible estimado</Body><Ionicons name="eye-outline" size={23} color={colors.primary} /></View>
           <Text style={{ color: fixed.balance, fontSize: 38, fontWeight: '800', letterSpacing: -1 }}>$1,245.32</Text>
@@ -37,7 +37,7 @@ export default function Money() {
         ] as const).map(([title, icon, tone]) => <DashboardAction key={title} title={title} icon={icon} tone={tone} onPress={() => setDetail(title)}/>)}
       </View>
       <SectionHeading title="Próximas facturas" action="Ver todas" onPress={() => setDetail('Mis facturas')} />
-      <Card>{bills.slice(0, 2).map((bill, index) => <View key={bill.title} style={[ui.row, { paddingBottom: index === 0 ? 16 : 0, borderBottomWidth: index === 0 ? 1 : 0, borderBottomColor: colors.line }]}>
+      <Card row>{bills.slice(0, 2).map((bill, index) => <View key={bill.title} style={[ui.row, { paddingBottom: index === 0 ? 16 : 0, borderBottomWidth: index === 0 ? 1 : 0, borderBottomColor: colors.line }]}>
         <IconBadge icon={bill.icon} tone={bill.tone} size={42} /><View style={{ flex: 1 }}><Body style={{ fontWeight: '700' }}>{bill.title}</Body><Body muted style={ui.small}>{bill.description}</Body></View>
         <View style={{ alignItems: 'flex-end', maxWidth: '40%' }}><Body muted style={{ fontSize: 12 }}>{bill.date}</Body><Body style={{ fontWeight: '700' }}>{bill.amount}</Body></View>
       </View>)}</Card>
@@ -47,10 +47,10 @@ export default function Money() {
 
       </Card>
       <ActionButton secondary title="Para mi contable" icon="document-text-outline" onPress={() => setDetail('Para mi contable')} />
-    </> : segment === 'Transacciones' ? <Card><Body style={ui.heading}>Movimientos de ejemplo</Body>
+    </> : segment === 'Transacciones' ? <Card row><Body style={ui.heading}>Movimientos de ejemplo</Body>
       {[['Ingreso mensual', '+ $3,200.00'], ['Compra de alimentos', '− $55.00'], ['Electricidad', '− $125.00']].map(([title, amount]) => <View key={title} style={ui.between}><Body style={{ flex: 1 }}>{title}</Body><Body style={{ fontWeight: '700' }}>{amount}</Body></View>)}
       <Body muted style={ui.small}>Ejemplos ilustrativos. No forman un historial real ni modifican el resumen.</Body>
-    </Card> : <Card><Body style={ui.heading}>Categorías de ejemplo</Body>{expenses.map(item => <View key={item.name} style={ui.row}><View style={{ width: 10, height: 10, backgroundColor: item.color, borderRadius: 5 }} /><Body>{item.name}</Body></View>)}</Card>}
+    </Card> : <Card row><Body style={ui.heading}>Categorías de ejemplo</Body>{expenses.map(item => <View key={item.name} style={ui.row}><View style={{ width: 10, height: 10, backgroundColor: item.color, borderRadius: 5 }} /><Body>{item.name}</Body></View>)}</Card>}
     <PreviewModal title={detail} close={() => setDetail(null)} />
   </Screen>;
 }
