@@ -41,3 +41,13 @@ No hay migraciones, dependencias nuevas, cambios de API, autenticación, claves,
 TypeScript, ESLint y compilación Expo web/PWA aprobados. Presupuesto inferior a 100 casos. Las pruebas verifican regresiones financieras, selección, persistencia, captura y estructura; no sustituyen la comparación visual.
 
 Este entorno no dispone de navegador interactivo soportado ni iPad físico. No se generó una captura falsa, no se probó Face ID ni la cámara física y no se afirma haber comparado la interfaz renderizada con el boceto. Queda pendiente la comprobación visual en el dispositivo del propietario: Mi dinero, gráficos, cámara y Nueva transacción, tanto en teléfono como en iPad.
+
+## Publicación confirmada
+
+Sites versión 34; despliegue succeeded appgdep_6af878d6b4bc8191ac7cd900d72a404a. Fuente de alojamiento 7a30125cb9a4adec353020db0cd814f9fbd91006. Implementación en web-edumoney: 04dd150. GitHub main no modificado; audiencia pública y entorno (revisión 1) conservados.
+
+Dos solicitudes HTTP confirmaron el documento de /money?build=2026.11.14.16 y el archivo money-cdfb77703720a247d49928642a986c45.js. El documento referencia el actualizador de versión 16 y el archivo público coincide byte por byte con la compilación que contiene MoneyOverview. Esta comprobación prueba entrega del código, no fidelidad visual en Safari.
+
+Presupuesto conservador: 50 comprobaciones (47 casos automatizados, dos solicitudes HTTP y una comparación de artefactos), sin repetir la suite completa.
+
+Enlace: https://edumoney-web.diegoluissantospabon.chatgpt.site/money?build=2026.11.14.16
