@@ -105,6 +105,8 @@ async function openWebVault(password: string) {
     catch { throw Error('La contraseña actual no coincide. No se cambiaron los datos.'); }
     const oldSettings = await record<Envelope | undefined>('readonly', s => s.get('sync-settings'));
     const oldApi = await record<Envelope | undefined>('readonly', s => s.get('anthropic-key'));
+    const oldDevice=await record<Envelope|undefined>('readonly',s=>s.get('education-device'));
+    const device=oldDevice?await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(oldDevice.iv),additionalData:new TextEncoder().encode('edumoney-education-device-v1')},oldKey,oldDevice.ciphertext):undefined;
     const api = oldApi ? await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(oldApi.iv),additionalData:new TextEncoder().encode('edumoney-anthropic-key-v1')},oldKey,oldApi.ciphertext) : undefined;
     const settings = oldSettings ? await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(oldSettings.iv)},oldKey,oldSettings.ciphertext) : undefined;
     const newSalt = crypto.getRandomValues(new Uint8Array(16)); const newKey = await keyFor(next,newSalt);
@@ -112,10 +114,12 @@ async function openWebVault(password: string) {
       const iv = crypto.getRandomValues(new Uint8Array(12));
       return {version:1,salt:newSalt,iv,ciphertext:await crypto.subtle.encrypt({name:'AES-GCM',iv,...(apiSecret?{additionalData:new TextEncoder().encode('edumoney-anthropic-key-v1')}: {})},newKey,data)};
     };
+    const deviceIv=crypto.getRandomValues(new Uint8Array(12));
+    const deviceEnvelope=device?{version:1,salt:newSalt,iv:deviceIv,ciphertext:await crypto.subtle.encrypt({name:'AES-GCM',iv:deviceIv,additionalData:new TextEncoder().encode('edumoney-education-device-v1')},newKey,device)}:undefined;
     const database = await encrypt(plain); const sync = settings ? await encrypt(settings) : undefined; const apiKey = api ? await encrypt(api,true) : undefined;
     await new Promise<void>((resolve,reject)=>{
       const opening=indexedDB.open(DB_NAME,1); opening.onerror=()=>reject(Error('No se pudo abrir el almacenamiento.'));
-      opening.onsuccess=()=>{const handle=opening.result;const tx=handle.transaction('vault','readwrite');const store=tx.objectStore('vault');store.put(database,'database');if(sync)store.put(sync,'sync-settings');if(apiKey)store.put(apiKey,'anthropic-key');
+      opening.onsuccess=()=>{const handle=opening.result;const tx=handle.transaction('vault','readwrite');const store=tx.objectStore('vault');store.put(database,'database');if(sync)store.put(sync,'sync-settings');if(apiKey)store.put(apiKey,'anthropic-key');if(deviceEnvelope)store.put(deviceEnvelope,'education-device');
         tx.oncomplete=()=>{handle.close();resolve();};tx.onabort=tx.onerror=()=>{handle.close();reject(Error('No se cambió la contraseña. Conserva la anterior.'));};};
     });
     key=newKey;salt=newSalt;settingsKey=newKey;settingsSalt=newSalt;
@@ -173,9 +177,20 @@ export async function resetWebVault(confirmation: string) {
       old.onsuccess = () => { if (old.result) store.put(old.result, recoveryId + '-database'); };
       settings.onsuccess = () => { if (settings.result) store.put(settings.result, recoveryId + '-settings'); };
       api.onsuccess=()=>{if(api.result)store.put(api.result,recoveryId+'-anthropic-key');};
-      store.delete('database'); store.delete('sync-settings'); store.delete('anthropic-key');
+      store.delete('database'); store.delete('sync-settings'); store.delete('anthropic-key');store.delete('education-device');
       tx.oncomplete = () => { db.close(); resolve(); };
       tx.onabort = tx.onerror = () => { db.close(); reject(Error('No se pudo restablecer. Los datos no se cambiaron.')); };
     };
   });
 }
+
+/** Credencial de este dispositivo: cifrada con la contraseña local; fuera de respaldos/sync. */
+export function getOrCreateEducationDevice():Promise<string>{return vaultWrite(async()=>{
+ if(!settingsKey||!settingsSalt)throw Error('Desbloquea EduMoney.');
+ const aad=new TextEncoder().encode('edumoney-education-device-v1');
+ const saved=await record<Envelope|undefined>('readonly',s=>s.get('education-device'));
+ if(saved){const token=new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(saved.iv),additionalData:aad},settingsKey,saved.ciphertext));if(!/^[a-f0-9]{64}$/.test(token))throw Error('Vinculación de dispositivo no válida.');return token;}
+ const token=Array.from(crypto.getRandomValues(new Uint8Array(32)),b=>b.toString(16).padStart(2,'0')).join('');
+ const iv=crypto.getRandomValues(new Uint8Array(12));const ciphertext=await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:aad},settingsKey,new TextEncoder().encode(token));
+ await record('readwrite',s=>s.put({version:1,salt:settingsSalt!,iv,ciphertext} satisfies Envelope,'education-device'));return token;
+});}

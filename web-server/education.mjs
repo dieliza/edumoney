@@ -1,6 +1,12 @@
 import educationSeed from '../src/modules/education/seed.json' with {type:'json'};
 const EDU_STATE='education/state-v1.json',EDU_KEY='education/generator-key-v1.json',EDU_DAY=86400000,EDU_MODEL='claude-haiku-5-5';
-const educationOwner=(request,env)=>!!((env.EDUCATION_OWNER_ID&&request.headers.get('oai-authenticated-user-id')===env.EDUCATION_OWNER_ID)||(env.EDUCATION_OWNER_EMAIL&&request.headers.get('oai-authenticated-user-email')?.toLowerCase()===env.EDUCATION_OWNER_EMAIL.toLowerCase()));
+async function educationOwner(request,env){
+ if((env.EDUCATION_OWNER_ID&&request.headers.get('oai-authenticated-user-id')===env.EDUCATION_OWNER_ID)||(env.EDUCATION_OWNER_EMAIL&&request.headers.get('oai-authenticated-user-email')?.toLowerCase()===env.EDUCATION_OWNER_EMAIL.toLowerCase()))return true;
+ const token=/^Bearer edumoney-device\.([a-f0-9]{64})$/.exec(request.headers.get('Authorization')??'')?.[1];
+ if(!token||!/^[a-f0-9]{64}$/.test(env.EDUCATION_OWNER_DEVICE_HASH??''))return false;
+ const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(token))),b=>b.toString(16).padStart(2,'0')).join('');
+ return hash===env.EDUCATION_OWNER_DEVICE_HASH;
+}
 const eduJson=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 export function educationInitial(){return structuredClone({revision:1,catalog:{version:1,cycleId:'education-2026-11-14',startsAt:'2026-11-14T00:00:00.000Z',nextAt:'2026-12-14T00:00:00.000Z',current:educationSeed.tips.slice(0,10),history:educationSeed.tips.slice(10,20),sources:educationSeed.sources},queue:[educationSeed.tips.slice(20,30)],draft:null,alerts:[],audit:[],generationCycle:null});}
 function eduAlert(state,code){if(!state.alerts.some(a=>a.code===code))state.alerts.push({code,at:new Date().toISOString()});state.alerts=state.alerts.slice(-20);}
@@ -30,9 +36,9 @@ export async function refreshEducation(env){let {state,etag}=await eduLoad(env);
 export async function handleEducation(request,env){const path=new URL(request.url).pathname;const origin=request.headers.get('Origin');if(origin&&origin!==new URL(request.url).origin)return eduJson({error:'origin'},403);if(!env.BUCKET)return eduJson({error:'storage_unavailable'},503);
  try{
  if(path==='/api/education/catalog'&&request.method==='GET'){const {state}=await eduLoad(env);return eduJson({...state.catalog,...(state.alerts.some(a=>a.code==='no_approved_batch')?{notice:'Conservamos los consejos vigentes mientras se revisa el próximo ciclo.'}:{})});}
- if(path==='/api/education/refresh'&&request.method==='POST'){if(!educationOwner(request,env))return eduJson({error:'owner_required'},403);return eduJson(await refreshEducation(env));}
+ if(path==='/api/education/refresh'&&request.method==='POST'){if(!await educationOwner(request,env))return eduJson({error:'owner_required'},403);return eduJson(await refreshEducation(env));}
  if(path!=='/api/education/admin')return eduJson({error:'not_found'},404);
- if(!educationOwner(request,env))return eduJson({error:'owner_required'},403);
+ if(!await educationOwner(request,env))return eduJson({error:'owner_required'},403);
  if(request.method==='GET'){const {state}=await eduLoad(env);return eduJson({...state,keyConfigured:!!await env.BUCKET.head(EDU_KEY),aiEnabled:env.EDUCATION_AI_ENABLED==='true',model:EDU_MODEL});}
  if(request.method!=='POST')return eduJson({error:'method'},405);const body=await eduBody(request);
  if(body.action==='configure'){if(typeof body.key!=='string'||!/^sk-ant-[A-Za-z0-9_-]{20,}$/.test(body.key))return eduJson({error:'invalid_key'},400);const check=await fetch(`https://api.anthropic.com/v1/models/${EDU_MODEL}`,{headers:{'x-api-key':body.key,'anthropic-version':'2023-06-01'},signal:AbortSignal.timeout(15000)});if(!check.ok)return eduJson({error:'key_or_model_unavailable'},400);const sealed=await eduSeal(env,body.key);await env.BUCKET.put(EDU_KEY,sealed,{httpMetadata:{contentType:'application/json'}});return eduJson(await eduGenerate(env,true));}
@@ -54,7 +60,7 @@ export async function handleEducationMcp(request,env){
  if(call.method==='server/discover')return result({supportedVersions:['2026-07-28'],capabilities:{tools:{}}});
  if(call.method==='tools/list')return result({tools:[{name:'education_status',description:'Estado de los ciclos, revisión editorial y alertas de EduMoney. Solo propietario; no incluye registros personales ni claves.',inputSchema:{type:'object',properties:{},additionalProperties:false}},{name:'education_refresh',description:'Revisa si vence el ciclo de 30 días, publica solo conjuntos previamente aprobados y prepara como máximo un borrador con IA por ciclo usando el saldo existente. No contrata planes ni recargas. Solo propietario.',inputSchema:{type:'object',properties:{},additionalProperties:false}}]});
  if(call.method==='tools/call'){
-  if(!educationOwner(request,env))return result({isError:true,content:[{type:'text',text:'Acceso exclusivo del propietario.'}]});
+  if(!await educationOwner(request,env))return result({isError:true,content:[{type:'text',text:'Acceso exclusivo del propietario.'}]});
   if(!env.BUCKET)return result({isError:true,content:[{type:'text',text:'Almacenamiento no disponible.'}]});
   try{let output;if(call.params?.name==='education_refresh')output=await refreshEducation(env);else if(call.params?.name==='education_status'){const {state}=await eduLoad(env);output={cycleId:state.catalog.cycleId,nextAt:state.catalog.nextAt,current:state.catalog.current.length,history:state.catalog.history.length,approvedBatches:state.queue.length,draftPending:!!state.draft,alerts:state.alerts,aiEnabled:env.EDUCATION_AI_ENABLED==='true',keyConfigured:!!await env.BUCKET.head(EDU_KEY),audit:state.audit.slice(-5)};}else throw Error('unknown_tool');return result({content:[{type:'text',text:JSON.stringify(output)}]});}catch{return result({isError:true,content:[{type:'text',text:'No se completó la actualización; se conserva el catálogo vigente.'}]});}
  }
