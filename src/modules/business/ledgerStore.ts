@@ -13,7 +13,7 @@ const select=`SELECT e.id,e.holder_id AS holderId,e.movement_id AS movementId,e.
  e.commission_cents AS commissionCents,e.refund_cents AS refundCents,e.ivu_cents AS ivuCents,e.version,e.updated_at AS updatedAt,
  m.date,m.description,m.amount_cents AS amountCents,m.payment_method AS paymentMethod,m.deleted_at AS deletedAt,
  (e.movement_version<>m.version OR e.kind<>m.kind) AS stale FROM business_entries e JOIN movements m ON m.id=e.movement_id`;
-const docs=`SELECT d.id,d.movement_id AS movementId,d.bill_id AS billId,d.sha256,d.encrypted_path AS encryptedPath,d.supersedes_id AS supersedesId,d.status,d.source,d.record_kind AS kind,d.description,d.document_date AS date,d.amount_cents AS amountCents,d.notes,d.mime,d.created_at AS createdAt,d.deleted_at AS deletedAt,d.copy_deleted_at AS copyDeletedAt,d.version FROM documents d JOIN business_entries e ON e.movement_id=d.movement_id`;
+const docs=`SELECT d.id,d.movement_id AS movementId,d.bill_id AS billId,d.sha256,d.encrypted_path AS encryptedPath,d.supersedes_id AS supersedesId,d.status,d.source,d.record_kind AS kind,d.description,d.document_date AS date,d.amount_cents AS amountCents,d.notes,d.mime,d.created_at AS createdAt,d.deleted_at AS deletedAt,d.copy_deleted_at AS copyDeletedAt,d.version,(SELECT record_json FROM document_readings WHERE document_id=d.id) AS readingJson FROM documents d JOIN business_entries e ON e.movement_id=d.movement_id`;
 export class BusinessLedgerStore {
  constructor(private ledger:MoneyStore,private today=localToday){}
  async snapshot():Promise<BusinessLedgerSnapshot> {
