@@ -1,3 +1,4 @@
+import {MovementRows} from './MovementRows';
 import {MoneyOverview} from '../../ui/MoneyOverview';
 import {ActionMenu} from '../../ui/ActionMenu';
 import { userMessage } from '../../core/errors';
@@ -21,9 +22,10 @@ import { Choices, ErrorNotice, Field, Sheet } from './fields';
 import { MovementForm } from './MovementForm';
 const empty: Snapshot = { movements: [], categories: [], budgets: [], schedules: [], commitments: [] };
 export default function LedgerScreen({initialSection,initialMonth}:{initialSection?:string;initialMonth?:string}) {
-    const { colors } = useTheme();
+    const { colors,name } = useTheme();
     const focused = useIsFocused();
     const [showRecurring,setShowRecurring]=useState(false);
+    const [showHistoryFilters,setShowHistoryFilters]=useState(false);
     const [bills,setBills] = useState<Bill[]>([]);
     const [store, setStore] = useState<MoneyStore | null>(null);
     const [data, setData] = useState(empty);
@@ -131,15 +133,18 @@ export default function LedgerScreen({initialSection,initialMonth}:{initialSecti
 
    </> : null}
    {segment === 'history' ? <>
+    <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12}}><Body style={{color:name==='dark'?'#F0FFF9':colors.text,fontWeight:'700'}}>{Math.min(limit,rows.length)} de {rows.length} movimiento(s)</Body><Pressable accessibilityRole="button" accessibilityState={{expanded:showHistoryFilters}} onPress={()=>setShowHistoryFilters(!showHistoryFilters)} style={{minHeight:44,paddingHorizontal:8,justifyContent:'center'}}><Body style={{color:colors.accent,fontSize:14,fontWeight:'700'}}>{showHistoryFilters?'Ocultar filtros':'Filtrar historial'}</Body></Pressable></View>
+    <Body style={{fontSize:12,lineHeight:18,color:name==='dark'?'#CBE4E6':colors.muted}}>{from||to?`${from||'Inicio'} → ${to||'Hoy y posteriores'}`:'Todas las fechas'} · {deleted==='deleted'?'Eliminados':'Activos'} · Toca una fila para revisar, corregir o restaurar.</Body>
+    {showHistoryFilters?<>
     <Field label="Buscar descripción" value={query} onChangeText={v => { setQuery(v); setLimit(50); }}/>
     <Choices label="Tipo" value={filterKind} options={[['all', 'Todos'], ...Object.entries(kindLabels), ['goal_contribution','Aportación a meta']]} onChange={v => { setFilterKind(v); setLimit(50); }}/>
     <Choices label="Filtrar categoría" value={filterCategory} options={[['all', 'Todas'], ['none', 'Sin categoría'], ...data.categories.map(c => [c.id, c.name] as const)]} onChange={setFilterCategory}/>
     <Choices label="Filtrar método" value={filterMethod} options={[['all', 'Todos los métodos'], ...Object.entries(paymentLabels)]} onChange={setFilterMethod}/>
     <Field label="Desde (AAAA-MM-DD, opcional)" value={from} onChangeText={setFrom}/><Field label="Hasta (AAAA-MM-DD, opcional)" value={to} onChangeText={setTo}/>
     <Choices label="Estado" value={deleted} options={[['active', 'Activos'], ['deleted', 'Eliminados']]} onChange={setDeleted}/><ErrorNotice message={filterError}/>
-    <Card><Body>{rows.length} movimiento(s). Toca uno para revisar, corregir o restaurar.</Body></Card>
-    {rows.slice(0, limit).map(m => <Pressable key={m.id} accessibilityRole="button" accessibilityLabel={`${m.description}, ${formatMoney(m.amountCents)}, ${m.date}`} onPress={() => { setSelected(m); setReason(''); setRevisions(null); setError(''); }}><Card><Body style={{ fontWeight: '700' }}>{m.description}</Body><Body>{formatMoney(m.amountCents)} · {m.date}</Body><Body muted>{kindLabels[m.kind as EntryKind] ?? 'Aportación a meta'} · {categoryName(m.categoryId)} · {paymentLabels[m.paymentMethod as keyof typeof paymentLabels] ?? m.paymentMethod}</Body>{m.taxReview ? <Body muted>Marcado para revisión contributiva</Body> : null}</Card></Pressable>)}
-    {!rows.length ? <Card><Body>No hay movimientos que coincidan. Los importes de ejemplo de otras pestañas no se mezclan con tus registros.</Body></Card> : null}
+    </>:null}
+    <MovementRows rows={rows.slice(0,limit)} categoryName={categoryName} onOpen={m=>{setSelected(m);setReason('');setRevisions(null);setError('');}}/>
+    {!rows.length?<Body style={{color:name==='dark'?'#CBE4E6':colors.muted}}>No hay movimientos que coincidan. Revisa las fechas y los filtros del historial.</Body>:null}
     {rows.length > limit ? <ActionButton title="Mostrar más movimientos" secondary onPress={() => setLimit(limit + 50)}/> : null}
    </> : null}
    {segment === 'categories' ? <>
