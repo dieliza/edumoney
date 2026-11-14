@@ -1,3 +1,4 @@
+import {SideMenu} from './SideMenu';
 import { fixed } from '../design/tokens';
 import { useIsFocused, router } from 'expo-router';
 import { type ComponentProps, type PropsWithChildren } from 'react';
@@ -82,7 +83,7 @@ export function Screen({ children, title, subtitle, welcome = false, demo = true
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 70, gap: 10 }}>
           {!welcome && title === 'Mi dinero' ? <Brand onDark={name === 'dark'}/> : null}
           {welcome ? <Brand onDark={name === 'dark'} /> : <Text accessibilityRole="header" style={{ fontSize: 27, fontWeight: '800', letterSpacing: -0.5, color: headerInk, flex: 1 }}>{title}</Text>}
-          {title !== 'Configuración' ? <Pressable testID="open-settings" accessibilityRole="button" accessibilityLabel="Configuración" onPress={()=>router.push('/settings')} style={{width:46,height:46,borderRadius:23,backgroundColor:colors.surfaceAlt,alignItems:'center',justifyContent:'center'}}><Ionicons name="settings-outline" size={24} color={colors.primary}/></Pressable> : null}
+          <SideMenu color={headerInk}/>
           <ThemePicker color={headerInk} />
         </View>
         {keyboardForm?<Pressable testID="form-dismiss-keyboard" accessibilityRole="button" accessibilityLabel="Ocultar teclado" onPress={()=>Keyboard.dismiss()} style={{minHeight:48,justifyContent:'center',alignItems:'flex-end',paddingVertical:8}}><Text style={{color:headerInk,fontSize:16,fontWeight:'600'}}>Ocultar teclado</Text></Pressable>:null}

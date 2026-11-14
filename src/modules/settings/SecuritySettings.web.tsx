@@ -15,7 +15,7 @@ export function SecuritySettings() {
     <Field label="Nueva contraseña" secure required value={password} onChangeText={setPassword}/>
     <Field label="Corroborar nueva contraseña" secure required value={repeat} onChangeText={setRepeat}/>
     <ErrorNotice message={error}/>{notice?<Body>{notice}</Body>:null}
-    {busy?<Body>Cambiando el cifrado local…</Body>:<><ActionButton title="Cambiar contraseña y conservar datos" onPress={()=>void change()}/><ActionButton title="Bloquear EduMoney" secondary onPress={()=>window.location.reload()}/></>}
+    {busy?<Body>Cambiando el cifrado local…</Body>:<><ActionButton title="Cambiar contraseña y conservar datos" onPress={()=>void change()}/></>}
     <Body muted>La recuperación por correo aún no está conectada. «Olvidé mi contraseña» muestra las opciones actuales sin restablecer ni borrar tu espacio.</Body>
   </>;
 }

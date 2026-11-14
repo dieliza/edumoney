@@ -1,3 +1,4 @@
+import {ExpenseTopThree} from '../../ui/ExpenseTopThree';
 import {ActionMenu} from '../../ui/ActionMenu';
 import { userMessage } from '../../core/errors';
 import { useEffect, useMemo, useState } from 'react';
@@ -19,7 +20,7 @@ import { kindLabels, paymentLabels, type Category, type EntryKind, type LedgerMo
 import { Choices, ErrorNotice, Field, Sheet } from './fields';
 import { MovementForm } from './MovementForm';
 const empty: Snapshot = { movements: [], categories: [], budgets: [], schedules: [], commitments: [] };
-export default function LedgerScreen() {
+export default function LedgerScreen({initialSection,initialMonth}:{initialSection?:string;initialMonth?:string}) {
     const { colors } = useTheme();
     const focused = useIsFocused();
     const [showRecurring,setShowRecurring]=useState(false);
@@ -29,8 +30,8 @@ export default function LedgerScreen() {
     const [error, setError] = useState('');
     const [showCalculation, setShowCalculation] = useState(false);
     const [showMonth, setShowMonth] = useState(false);
-    const [segment, setSegment] = useState('summary');
-    const [month, setMonth] = useState(localToday().slice(0, 7));
+    const [segment, setSegment] = useState(['history','categories'].includes(initialSection??'')?initialSection!:'summary');
+    const [month, setMonth] = useState(validMonth(initialMonth??'')?initialMonth!:localToday().slice(0,7));
     const [form, setForm] = useState<{
         kind: EntryKind;
         initial?: LedgerMovement;
@@ -51,8 +52,8 @@ export default function LedgerScreen() {
     const [filterCategory, setFilterCategory] = useState('all');
     const [filterMethod, setFilterMethod] = useState('all');
     const [deleted, setDeleted] = useState('active');
-    const [from, setFrom] = useState('');
-    const [to, setTo] = useState('');
+    const [from, setFrom] = useState(initialSection==='history'&&validMonth(initialMonth??'')?`${initialMonth}-01`:'');
+    const [to, setTo] = useState(initialSection==='history'&&validMonth(initialMonth??'')?`${initialMonth}-${new Date(Number(initialMonth!.slice(0,4)),Number(initialMonth!.slice(5)),0).getDate()}`:'');
     const [limit, setLimit] = useState(50);
     useEffect(() => {
         if (!focused) return;
@@ -94,10 +95,10 @@ export default function LedgerScreen() {
     const filterError = (from && !validDate(from)) || (to && !validDate(to)) || (from && to && from > to) ? 'Revisa el rango de fechas (AAAA-MM-DD).' : '';
     const rows = filterError ? [] : data.movements.filter(m => (deleted === 'deleted' ? !!m.deletedAt : !m.deletedAt) && (filterKind === 'all' || m.kind === filterKind) && (filterCategory === 'all' || (m.categoryId ?? 'none') === filterCategory) && (filterMethod === 'all' || m.paymentMethod === filterMethod) && (!from || m.date >= from) && (!to || m.date <= to) && normalize(m.description).includes(normalize(query)));
     const categoryName = (id: string | null) => data.categories.find(c => c.id === id)?.name ?? 'Sin categoría';
-    return <Screen title="Mi dinero" demo={false} subtitle="¡Hola! Aquí tienes tu resumen de hoy.">
+    return <Screen title={segment==='categories'?'Categorías y presupuestos':'Mi dinero'} demo={false} subtitle="¡Hola! Aquí tienes tu resumen de hoy.">
   <ErrorNotice message={error}/>{notice ? <Card><Body>{notice}</Body></Card> : null}
   {!store ? <ActivityIndicator color={colors.accent} accessibilityLabel="Cargando registros cifrados"/> : <>
-   <Choices label="Sección de Mi dinero" value={segment} options={[['summary', 'Resumen'], ['history', 'Historial'], ['categories', 'Categorías']]} onChange={setSegment}/>
+   <Choices label="Sección de Mi dinero" value={segment} options={segment==='categories'?[['categories','Administrar'],['summary','Mi dinero'],['analysis','Gráficas y categorías']]:[['summary','Resumen'],['history','Historial'],['analysis','Gráficas y categorías']]} onChange={v=>{if(v==='analysis')router.push({pathname:'/charts',params:{month}});else setSegment(v);}}/>
 
    {segment !== 'summary' ? <ActionMenu label="Nueva transacción" actions={[{id:'income',label:'Añadir ingreso',run:()=>setForm({kind:'income'})},{id:'expense',label:'Registrar gasto',run:()=>setForm({kind:'expense'})},{id:'transfer',label:'Registrar transferencia propia',run:()=>setForm({kind:'transfer'})}]}/> : null}
    {segment !== 'history' ? <SectionHeading title={month === localToday().slice(0, 7) ? 'Este mes' : month} action={showMonth ? 'Cerrar' : 'Cambiar mes'} onPress={() => setShowMonth(!showMonth)}/> : null}
@@ -106,11 +107,9 @@ export default function LedgerScreen() {
    {segment === 'summary' && summary ? <>
     <Card style={{ padding: 0, overflow: 'hidden' }}>
      <View style={{ backgroundColor: colors.mint, padding: 20, gap: 4 }}><Body style={{ fontWeight: '700' }}>Disponible estimado del mes</Body><Body style={{ fontSize: 36, lineHeight: 44, fontWeight: '800', color: fixed.balance }}>{formatMoney(summary.available)}</Body><Body muted style={ui.small}>Según tus registros · No es un saldo bancario confirmado</Body></View>
-     <View style={{ flexDirection: 'row', flexWrap: 'wrap', padding: 18, gap: 16 }}>
-      <View style={[ui.row, { flex: 1, minWidth: 125 }]}><IconBadge icon="arrow-up-circle" size={36}/><View><Body muted style={ui.small}>Ingresos</Body><Body style={{ fontWeight: '700' }}>{formatMoney(summary.income)}</Body></View></View>
-      <View style={[ui.row, { flex: 1, minWidth: 125 }]}><IconBadge icon="arrow-down-circle" tone="coral" size={36}/><View><Body muted style={ui.small}>Gastos</Body><Body style={{ fontWeight: '700' }}>{formatMoney(summary.expenses)}</Body></View></View>
-     </View>
     </Card>
+    <Card><MonthlyCharts compact summary={summary} movements={data.movements} month={month}/></Card>
+    <ExpenseTopThree items={summary.distribution} month={month} onOpen={()=>router.push({pathname:'/charts',params:{month,view:'breakdown'}})}/>
     <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
      <DashboardAction title="Añadir ingreso" icon="add-circle" onPress={() => setForm({ kind: 'income' })}/>
      <DashboardAction title="Registrar gasto" icon="receipt" tone="coral" onPress={() => setForm({ kind: 'expense' })}/>
@@ -123,9 +122,7 @@ export default function LedgerScreen() {
      {!bills.some(b => !b.debtId && !b.voidedAt && outstanding(b) > 0) ? <Body muted>No tienes facturas pendientes. Añade la primera para organizar tus vencimientos.</Body> : null}
      <ActionButton title="Mis facturas" testID="open-bills" icon="calendar-outline" secondary onPress={() => router.push('/bills')}/>
     </Card>
-    <Card style={{ backgroundColor: colors.mint }}><View style={ui.row}><IconBadge icon="document-text"/><View style={{ flex: 1 }}><Body style={{ fontWeight: '700' }}>Para mi contable</Body><Body muted style={ui.small}>Marca y organiza tus gastos para revisión.</Body></View></View><ActionButton title="Abrir Para mi contable" testID="open-tax" secondary onPress={() => router.push('/tax')}/></Card>
-    <SectionHeading title="Ingresos y gastos del mes"/>
-    <Distribution summary={summary} movements={data.movements} month={month} onSelect={id => { setFilterCategory(id === 'uncategorized' ? 'none' : id); setFilterKind('expense'); setFilterMethod('all'); setLimit(50); setDeleted('active'); setQuery(''); setFrom(`${month}-01`); setTo(`${month}-31`.replace(/31$/, String(new Date(Number(month.slice(0,4)), Number(month.slice(5,7)), 0).getDate()))); setSegment('history'); }}/>
+
     <ActionMenu label="Movimientos y disponible" actions={[
      {id:'history',label:'Ver todas las transacciones',run:()=>setSegment('history')},
      {id:'transfer',label:'Registrar transferencia propia',run:()=>setForm({kind:'transfer'})},

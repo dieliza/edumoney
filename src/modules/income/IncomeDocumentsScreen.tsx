@@ -3,7 +3,6 @@ import {ReadingDetailsForm} from '../documents/ReadingDetailsForm';
 import {reviewedReading} from '../documents/ai/details';
 import type {AnthropicReading} from '../documents/ai/types';
 import {anthropicIncome} from '../documents/ai/types';
-import {ReceiptReaderStatus} from '../documents/ReceiptReaderSettings';
 import {useEffect,useState} from 'react';
 import {Image,View} from 'react-native';
 import {ActionMenu,CameraActionButton,type MenuAction} from '../../ui/ActionMenu';
@@ -78,8 +77,8 @@ export default function IncomeDocumentsScreen(){
  let previewNet:string;try{const g=optional(gross),deductions=lines.map(calculatedLine);previewNet=g!==null&&deductions.every(d=>d.amountCents!==null)?`Neto según el desglose: ${formatMoney(cents(g-addAmounts(...deductions.map(d=>cents(d.amountCents!)))))} (bruto menos deducciones).`:'Completa el bruto y las deducciones para ver el neto calculado.';}catch(e){previewNet=userMessage(e);}
  let totals:ReturnType<typeof statementTotals>|null=null;try{totals=statementTotals({...draft(),complete:false});}catch{}
  return <Screen back title="Cheques y talonarios" demo={false} subtitle="Lectura de imágenes y revisión de deducciones de tus ingresos.">
-  <ReceiptReaderStatus/><ErrorNotice message={error}/>{notice?<Card><Body>{notice}</Body></Card>:null}
-  <Card><Body>Fotografía el talonario completo y enfocado. Se propone información impresa. Puedes calcular las deducciones con tus propias reglas y porcentajes; no se elige una tasa contributiva por ti. Revisa la columna del pago actual y distingue acumulados y aportaciones patronales.</Body><Body muted>El lector elegido se indica arriba: local o Anthropic con autorización recordada. No se extraen ni guardan números de Seguro Social o cuentas como campos. Una imagen conservada puede contenerlos: recórtala o decide no guardar la copia.</Body></Card>
+  <ErrorNotice message={error}/>{notice?<Card><Body>{notice}</Body></Card>:null}
+  <Card><Body>Fotografía el talonario completo y enfocado. Se propone información impresa. Puedes calcular las deducciones con tus propias reglas y porcentajes; no se elige una tasa contributiva por ti. Revisa la columna del pago actual y distingue acumulados y aportaciones patronales.</Body><Body muted>Revisa la lectura antes de guardar. No se extraen ni guardan números de Seguro Social o cuentas como campos. Una imagen conservada puede contenerlos: recórtala o decide no guardar la copia.</Body></Card>
   <Choices label="Tipo de comprobante" value={kind} options={[[ 'paystub','Talonario de pago'],['check','Cheque']]} onChange={value=>{setKind(value);setComplete('pending');}}/>
   {photoBusy?<PhotoAnalysis/>:null}
   {!busy&&!editing?<View style={{flexDirection:'row',alignItems:'flex-start',gap:12}}><CameraActionButton label={image?'Volver a tomar foto':'Fotografiar cheque o talonario'} onPress={()=>void capture('camera')}/><ActionMenu actions={actions}/></View>:busy&&!photoBusy?<Body>Guardando cambios…</Body>:null}

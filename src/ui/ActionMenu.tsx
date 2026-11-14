@@ -1,4 +1,3 @@
-import {router} from 'expo-router';
 import {useState} from 'react';
 import {Pressable,ScrollView,View} from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -8,7 +7,7 @@ import {useTheme} from '../design/ThemeProvider';
 export type MenuAction={id:string;label:string;testID?:string;run():void};
 export function ActionMenu({actions,label='Opciones'}:{actions:MenuAction[];label?:string}){
  const [open,setOpen]=useState(false);const {colors}=useTheme();
- const menuActions:MenuAction[]=actions.some(a=>a.id==='settings')?actions:[...actions,{id:'settings',label:'Configuración',run:()=>router.push('/settings')}];
+ const menuActions=actions;
  return <View style={{flex:1,gap:8}}><Pressable accessibilityRole="button" accessibilityLabel={label} accessibilityState={{expanded:open}} onPress={()=>setOpen(!open)} style={{minHeight:54,backgroundColor:colors.surfaceAlt,borderWidth:1,borderColor:colors.line,borderRadius:16,padding:14,flexDirection:'row',alignItems:'center',gap:12}}><Body style={{flex:1,fontWeight:'700'}}>{label}</Body><Ionicons name="chevron-down" size={22} color={colors.primary}/></Pressable>{open?<View style={{borderWidth:1,borderColor:colors.line,borderRadius:16,padding:8,backgroundColor:colors.surface,gap:8}}><ScrollView nestedScrollEnabled keyboardShouldPersistTaps="handled" style={{maxHeight:320}}>{menuActions.map(action=><Pressable key={action.id} testID={action.testID} accessibilityRole="button" accessibilityLabel={action.label} onPress={()=>{setOpen(false);action.run();}} style={{minHeight:50,padding:14,borderRadius:12,justifyContent:'center',backgroundColor:colors.surfaceAlt,marginBottom:6}}><Body>{action.label}</Body></Pressable>)}</ScrollView><CloseButton label={`Cerrar ${label}`} onPress={()=>setOpen(false)}/></View>:null}</View>;
 }
 

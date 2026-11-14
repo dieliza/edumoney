@@ -1,6 +1,5 @@
 import {PhotoAnalysis} from '../../ui/PhotoAnalysis';
 import {readingSummary} from './ai/details';
-import {ReceiptReaderStatus} from './ReceiptReaderSettings';
 import {ReceiptPhotoButtons} from './ReceiptPhotoButtons';
 import {ActionMenu} from '../../ui/ActionMenu';
 import { DateField } from '../../ui/DateField';
@@ -38,7 +37,7 @@ export default function DocumentsScreen(){
  async function open(id:string){setFinanceConfirm(false);setDetailId(id);setReason('');setPreview(null);setDetailText('');setError('');if(store){const d=await store.detail(id);setDetailText([d.document?.notes,d.document?.readingJson?readingSummary(JSON.parse(d.document.readingJson)):null,d.rawText?.text,...d.events.map(e=>`${e.recordedAt.slice(0,10)} · ${e.reason}`)].filter(Boolean).join('\n'));}}
  const detail=data.documents.find(d=>d.id===detailId);const linkedMovement=data.movements.find(m=>m.id===detail?.movementId);const rangeOK=validDocumentRange(from,to);const rows=rangeOK?data.documents.filter(d=>documentMatches(d,search,from,to)):[];
  return <Screen back beforeBack={abort} title="Escaneo y documentos" demo={false} subtitle="Revisa y decide qué conservar en este dispositivo.">
- <ReceiptReaderStatus/><ErrorNotice message={error}/>{notice?<Card><Body>{notice}</Body></Card>:null}
+ <ErrorNotice message={error}/>{notice?<Card><Body>{notice}</Body></Card>:null}
  {parent?<Card><Body>Corrección de: {parent.description}. Mantendremos su vínculo original.</Body><ActionButton title="Cancelar corrección" secondary onPress={()=>setParent(undefined)}/></Card>:null}
  <Card><Body>La imagen y el dictado proponen información. Tú confirmas si es un gasto, ingreso, factura pendiente, adjunto o nota. No se guarda un pago por reconocer un recibo.</Body><Body muted>La cámara y el micrófono se solicitan solo cuando los usas. Las fotos elegidas pueden seguir existiendo en tu fototeca; EduMoney solo controla su copia.</Body></Card>
  {!store?<ActivityIndicator accessibilityLabel="Cargando documentos cifrados"/>:null}
