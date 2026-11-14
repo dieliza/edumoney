@@ -46,3 +46,7 @@ Todas las claves son ficticias y las llamadas al proveedor están simuladas. No 
 - https://privacy.claude.com/en/articles/7996866-how-long-do-you-store-my-organization-s-data
 
 Este documento sustituye las instrucciones activas de LECTOR-GEMINI y AUTORIZACION-GEMINI-RECORDADA; ambos se conservan como historial.
+
+## Publicación
+
+Compilación web correcta. Publicada el 14 de noviembre de 2026 a las 00:03 UTC; marcador 2026.11.13.16, versión alojada 18. Fuente 5f02a4474c7c5c35274f65bca4f08084b743242c; versión appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_2622e27422848191a0552f50c1830e9e; despliegue appgdep_6af7a5479d58819188fdce3f09888e73, succeeded. Audiencia pública conservada. URL https://edumoney-web.diegoluissantospabon.chatgpt.site . No se probó lectura real sin clave; la configuración utiliza una clave propia por sesión.
