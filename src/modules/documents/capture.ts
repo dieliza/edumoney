@@ -1,5 +1,5 @@
-import {readerSnapshot} from '../../web/geminiSession';
-import {readGeminiPhoto} from './ai/readPhoto.web';
+import {readerSnapshot} from '../../web/anthropicSession';
+import {readAnthropicPhoto} from './ai/readPhoto.web';
 import { readReceiptPhoto } from './photo.web';
 import { UserInputError } from '../../core/errors';
 import { pickFile } from '../../web/files';
@@ -8,7 +8,7 @@ export type { CaptureResult } from './types';
 export async function captureImage(source: 'camera' | 'library', selectedFile?:File): Promise<CaptureResult | null> {
   const file = selectedFile ?? await pickFile('image/*', source === 'camera'); if (!file) return null;
   if (!(file.type.startsWith('image/')||(!file.type&&/\.(jpe?g|png|webp|heic|heif|avif)$/i.test(file.name)))||file.size>32*1024*1024)throw new UserInputError('Selecciona una foto de hasta 32 MB para prepararla.');
-  if(readerSnapshot()==='gemini')return readGeminiPhoto(file);
+  if(readerSnapshot()==='anthropic')return readAnthropicPhoto(file);
   try {
     const result = await readReceiptPhoto(file);
     if (result.image.base64.length > Math.ceil(4 * 1024 * 1024 / 3) * 4) throw new UserInputError('La imagen preparada supera 4 MB. Toma una foto más cercana al recibo, sin fondos innecesarios.');

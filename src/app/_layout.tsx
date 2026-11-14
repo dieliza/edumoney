@@ -1,4 +1,4 @@
-import {GeminiConsentHost} from '../modules/documents/GeminiConsentHost';
+import {AnthropicConsentHost} from '../modules/documents/AnthropicConsentHost';
 import { Stack } from 'expo-router';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider, useTheme } from '../design/ThemeProvider';
@@ -11,6 +11,6 @@ function ThemedNavigator() {
 }
 export default function RootLayout() {
   return <SafeAreaProvider><ThemeProvider><StorageGate>
-    <BillsLifecycle><ThemedNavigator /><GeminiConsentHost/></BillsLifecycle>
+    <BillsLifecycle><ThemedNavigator /><AnthropicConsentHost/></BillsLifecycle>
   </StorageGate></ThemeProvider></SafeAreaProvider>;
 }
