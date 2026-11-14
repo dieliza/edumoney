@@ -67,7 +67,7 @@ export function Waves() {
     </Svg>
   </View>;
 }
-export function Screen({ children, title, subtitle, welcome = false, demo = true, keyboardForm = false, back = false, beforeBack }: PropsWithChildren<{ title: string; subtitle?: string; welcome?: boolean; demo?: boolean; keyboardForm?: boolean; back?: boolean; beforeBack?:()=>void }>) {
+export function Screen({ children, title, subtitle, welcome = false, demo = true, keyboardForm = false, back = !welcome, beforeBack }: PropsWithChildren<{ title: string; subtitle?: string; welcome?: boolean; demo?: boolean; keyboardForm?: boolean; back?: boolean; beforeBack?:()=>void }>) {
   const { name, colors, notice } = useTheme();
   const { width } = useWindowDimensions();
   const focused = useIsFocused();
@@ -78,7 +78,7 @@ export function Screen({ children, title, subtitle, welcome = false, demo = true
     <Waves />
     <SafeAreaView edges={['top', 'left', 'right']} style={{ flex: 1 }}>
       <View style={{width:'100%',position:'relative'}}>
-      {back?<View style={{position:'absolute',left:width>800?24:8,top:11,zIndex:2}}><ArrowBack beforeBack={beforeBack} color={headerInk}/></View>:null}
+      {back?<View style={{position:'absolute',left:width>800?24:8,top:11,zIndex:2}}><ArrowBack beforeBack={beforeBack} color={headerInk} fallback={title==='Mi dinero'?'/':'/money'}/></View>:null}
       <View style={{ width: '100%', maxWidth: 700, alignSelf: 'center', paddingLeft: back&&width<=800?64:width<370?16:24,paddingRight:width<370?16:24 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 70, gap: 10 }}>
           {!welcome && title === 'Mi dinero' ? <Brand onDark={name === 'dark'}/> : null}
@@ -106,9 +106,9 @@ export function CloseButton({ onPress, label = 'Cerrar ficha', testID }: { onPre
   return <Pressable testID={testID} accessibilityRole="button" accessibilityLabel={label} onPress={onPress} style={{ width:48,height:48,borderRadius:16,backgroundColor:colors.primary,alignItems:'center',justifyContent:'center',alignSelf:'flex-end' }}><Ionicons name="close" size={28} color={fixed.white} accessible={false} aria-hidden/></Pressable>;
 }
 
-function ArrowBack({beforeBack,color}:{beforeBack?:()=>void;color?:string}){
+function ArrowBack({beforeBack,color,fallback='/money'}:{beforeBack?:()=>void;color?:string;fallback?:'/'|'/money'}){
   const {colors}=useTheme();
-  return <Pressable accessibilityRole="button" accessibilityLabel="Volver a la pantalla anterior" onPress={()=>{beforeBack?.();if(router.canGoBack())router.back();else router.replace('/money');}} style={{width:48,minHeight:48,alignItems:'center',justifyContent:'center',flexShrink:0}}><Ionicons name="arrow-back" size={28} color={color??colors.primary}/></Pressable>;
+  return <Pressable testID="header-back" accessibilityRole="button" accessibilityLabel="Volver a la pantalla anterior" onPress={()=>{beforeBack?.();if(router.canGoBack())router.back();else router.replace(fallback);}} style={{width:48,minHeight:48,alignItems:'center',justifyContent:'center',flexShrink:0}}><Ionicons name="arrow-back" size={28} color={color??colors.primary}/></Pressable>;
 }
 export function BackButton({beforeBack}: {beforeBack?:()=>void}) {
   return <ArrowBack beforeBack={beforeBack}/>;
