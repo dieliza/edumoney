@@ -11,3 +11,7 @@ Aplicación 2026.11.14.17. Solicitud: retirar el fondo blanco de todas las gráf
 - Datos, importes, escalas relativas, selección del período y cálculos financieros existentes conservados. Sin migraciones, dependencias, API ni cambios de autenticación.
 
 Verificación: 11 casos existentes aprobados (monthly-charts: 4; expense-segments: 3; theme: 4). TypeScript, ESLint y compilación Expo web/PWA aprobados. Sin suite completa ni nuevas pruebas que dupliquen cambios de estilo. Este entorno no permite comparación visual en un navegador soportado ni en iPad físico; no se afirma haber realizado esa comparación.
+
+Publicada en Sites versión 35; despliegue succeeded appgdep_6af8eb00d4fc8191ba5898b5a947dfcd. Fuente de alojamiento ac4ab67ede4e5e55087226e8f5000345e7d94572. Audiencia pública y variables del servidor conservadas (revisión 1). GitHub main no modificado.
+
+Dos solicitudes HTTP confirmaron /charts?view=breakdown&build=2026.11.14.17 y el archivo común del cliente. El HTML contiene el registrador de versión 17 y el archivo publicado coincide byte por byte con la compilación que incorpora NativeChartTheme. La entrega del código está confirmada; la comparación visual en el iPad sigue pendiente.
