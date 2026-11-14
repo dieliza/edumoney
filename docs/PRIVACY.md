@@ -36,3 +36,7 @@ La foto preparada y la clave pasan por HTTPS al endpoint de EduMoney y desde all
 La API es de pago por uso, independiente de una suscripción de Claude. No hay reintentos automáticos, proveedor alternativo ni otro modelo si falla una lectura. La clave, el acceso, el saldo y la cuota se comprueban al solicitar la lectura; EduMoney no activa facturación ni adquiere créditos. Los importes y campos ilegibles permanecen pendientes; no se calculan cifras ausentes ni se guardan pagos automáticamente. La sincronización cifrada y los respaldos mantienen sus reglas existentes y no contienen la clave de API.
 
 Fuentes oficiales: https://platform.claude.com/docs/en/about-claude/models/overview , https://platform.claude.com/docs/en/about-claude/pricing , https://platform.claude.com/docs/en/build-with-claude/structured-outputs , https://privacy.claude.com/en/articles/7996866-how-long-do-you-store-my-organization-s-data .
+
+## Acceso y recuperación web
+
+La contraseña se solicita una vez para abrir el espacio local; remontar una pantalla reutiliza la conexión ya abierta. No se guarda la contraseña ni se conserva una sesión desbloqueada después de bloquear o recargar. El formulario usa autocompletado de acceso y permite revisar lo escrito. «Olvidé mi contraseña» no restablece ni borra el espacio: la recuperación por email todavía requiere configurar cuentas, correo y recuperación de las claves de datos. Conectar un dominio no descifra los datos locales por sí mismo.

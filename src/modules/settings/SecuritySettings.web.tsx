@@ -16,6 +16,6 @@ export function SecuritySettings() {
     <Field label="Corroborar nueva contraseña" secure required value={repeat} onChangeText={setRepeat}/>
     <ErrorNotice message={error}/>{notice?<Body>{notice}</Body>:null}
     {busy?<Body>Cambiando el cifrado local…</Body>:<><ActionButton title="Cambiar contraseña y conservar datos" onPress={()=>void change()}/><ActionButton title="Bloquear EduMoney" secondary onPress={()=>window.location.reload()}/></>}
-    <Body muted>Si olvidaste la contraseña, bloquea EduMoney y elige «Olvidé mi contraseña». Ese restablecimiento empieza un espacio vacío; no recupera los registros anteriores con la contraseña nueva.</Body>
+    <Body muted>La recuperación por correo aún no está conectada. «Olvidé mi contraseña» muestra las opciones actuales sin restablecer ni borrar tu espacio.</Body>
   </>;
 }

@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import { join, extname } from 'node:path';
 const site = '/workspace/sites/edumoney-web';
 function files(dir) { return readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? files(join(dir, e.name)) : [join(dir, e.name)]); }
-const types = { '.html': 'text/html;charset=utf-8', '.js': 'application/javascript', '.png': 'image/png', '.ttf': 'font/ttf', '.pdf': 'application/pdf', '.json': 'application/json', '.webmanifest': 'application/manifest+json', '.ico': 'image/x-icon', '.gz': 'application/octet-stream', '.wasm': 'application/wasm' };
+const types = { '.txt': 'text/plain;charset=utf-8', '.html': 'text/html;charset=utf-8', '.js': 'application/javascript', '.png': 'image/png', '.ttf': 'font/ttf', '.pdf': 'application/pdf', '.json': 'application/json', '.webmanifest': 'application/manifest+json', '.ico': 'image/x-icon', '.gz': 'application/octet-stream', '.wasm': 'application/wasm' };
 const routes = {}, content = {};
 for (const path of files('dist-web')) { const data = readFileSync(path), hash = createHash('sha256').update(data).digest('hex'); content[hash] ??= gzipSync(data, {level:9}).toString('base64'); routes['/' + path.slice('dist-web/'.length)] = [hash, types[extname(path)] ?? 'application/octet-stream']; }
 const handler = readFileSync('web-server/sync.mjs', 'utf8')+'\n'+readFileSync('web-server/anthropic-reader.mjs','utf8');

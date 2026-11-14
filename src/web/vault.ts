@@ -31,6 +31,8 @@ function record<T>(mode: IDBTransactionMode, operation: (store: IDBObjectStore) 
     };
   });
 }
+/** Una pantalla remontada reutiliza la conexión ya desbloqueada, nunca guarda la contraseña. */
+export function isWebVaultUnlocked(){return connection!==undefined;}
 export async function hasWebVault() { return !!await record('readonly', s => s.get('database')); }
 async function keyFor(password: string, salt: Uint8Array) {
   const material = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
