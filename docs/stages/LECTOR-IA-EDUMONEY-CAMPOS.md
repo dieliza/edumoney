@@ -55,3 +55,7 @@ Todo se probó con datos ficticios y proveedor simulado. Sin clave válida no se
 No se cambia autenticación, precios, módulos de obligaciones ni GitHub main. No se conecta una foto al pago de una obligación ni se calcula IVU debido desde una etiqueta; eso requiere datos de oferta/canal/perfil y revisión en sus flujos existentes.
 
 TypeScript, ESLint, git diff --check y compilación web correctos. El texto de procesamiento no afirma OCR local cuando se usa la IA. La configuración de Anthropic y el envío real permanecen pendientes de clave/saldo.
+
+## Publicación
+
+Publicada correctamente el 14 de noviembre de 2026 a las 00:56 UTC. Versión alojada 19, marcador 2026.11.14.01, esquema local 17. Fuente 1c977747243001a93b4c3084ae0c14b393117d1f; versión appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_cb6ad428153481918d939646ddf157b1; despliegue appgdep_6af7b1d0f1788191a32276b3d8f88fee, succeeded. Se conserva la audiencia pública y GitHub main no se modifica.
