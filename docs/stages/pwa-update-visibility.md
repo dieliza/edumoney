@@ -15,3 +15,7 @@ Corrección compatible en versión de aplicación 2026.11.14.14:
 Cinco pruebas de pwa-update.test.ts aprobadas (simulación del ciclo de registro/actualización, sin navegador físico): aviso, activación y recarga única, otra pestaña, primera instalación/actualización posterior y desconexión. TypeScript, ESLint y compilación web aprobados. No se ejecutó la suite completa ni se repitieron las pruebas anteriores de rediseño.
 
 Sin cambios de API, autenticación, lógica financiera o migraciones. Sin eliminación de datos de usuario. Pendiente confirmar el enlace y el comportamiento en el dispositivo del propietario; este entorno no dispone de navegador interactivo soportado.
+
+Publicada en Sites versión 32, despliegue succeeded appgdep_6af86d06ce4c8191be286525723b3826, fuente de alojamiento b68c28bf7e2dd34ec733c8e481f768ce5ce438b7. Audiencia y entorno conservados (revisión 1). Dos solicitudes curl confirmaron el enlace /money?build=2026.11.14.14 y el registrador versionado; el script público coincide exactamente con el código probado. Estas solicitudes no verifican el dispositivo del propietario.
+
+Enlace directo: https://edumoney-web.diegoluissantospabon.chatgpt.site/money?build=2026.11.14.14
