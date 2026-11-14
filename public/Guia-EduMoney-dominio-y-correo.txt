@@ -88,3 +88,5 @@ La migración de los espacios actuales requiere abrirlos con su contraseña vige
 - https://resend.com/docs/dashboard/domains/manage-domains
 
 Documento preparado el 14 de noviembre de 2026. No se cambiaron DNS, dominio, cuentas, correo, recursos R2 ni facturación. El ejemplo de Cloudflare no se ha desplegado; la app continúa publicada en el enlace actual de Sites.
+
+Destino actual de las solicitudes de ayuda de EduMoney: **info@prbudget.org**. El botón abre un borrador en la aplicación de correo del usuario; no es un restablecimiento automático ni confirma entrega. El remitente propuesto para un futuro servicio de acceso es un ajuste separado.
