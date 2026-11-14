@@ -30,3 +30,5 @@ Fuentes oficiales verificadas:
 - https://platform.claude.com/docs/en/build-with-claude/structured-outputs (límites exclusivos de salida/uso estricto)
 
 TypeScript, ESLint, git diff --check y compilación web correctos.
+
+Publicada el 14 de noviembre de 2026 a las 02:28 UTC. Versión alojada 24, marcador 2026.11.14.06. Fuente b0d67257b4a674a47e624ad4c46d54f86d705514; versión appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_a52efe30f9f88191aa0368a40e3c94e3; despliegue appgdep_6af7c72f81a4819188ba26249c75c7ea, succeeded. Audiencia pública conservada; se conserva la API cifrada del navegador.
