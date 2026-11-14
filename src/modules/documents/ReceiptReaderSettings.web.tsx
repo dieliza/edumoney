@@ -7,7 +7,7 @@ import {connectAnthropic,disconnectAnthropic,restoreAnthropicConnection} from '.
 import {ActionButton,Body,Card} from '../../ui/components';
 import {ErrorNotice} from '../money/fields';
 import {ApiKeyField} from './ApiKeyField.web';
-export function ReceiptReaderStatus(){const mode=useSyncExternalStore(subscribeReader,readerSnapshot,()=> 'local' as const);return <Card><Body>Lector: {mode==='anthropic'?'Claude Haiku 5.5 conectado':'Local · conecta Anthropic para interpretar fotos'}</Body><ActionButton title="Configurar lector de recibos" secondary onPress={()=>router.push('/receipt-reader')}/></Card>;}
+export function ReceiptReaderStatus(){const mode=useSyncExternalStore(subscribeReader,readerSnapshot,()=> 'local' as const);return <Card><Body>Lector: {mode==='anthropic'?'Claude Haiku 5.5 · conexión configurada':'Local · conecta Anthropic para interpretar fotos'}</Body><ActionButton title="Configurar lector de recibos" secondary onPress={()=>router.push('/receipt-reader')}/></Card>;}
 export function ReceiptReaderSettings(){
  const mode=useSyncExternalStore(subscribeReader,readerSnapshot,()=> 'local' as const);const [key,setKey]=useState(''),[error,setError]=useState(''),[notice,setNotice]=useState(''),[busy,setBusy]=useState(false),[loading,setLoading]=useState(true),[editing,setEditing]=useState(false);
  useEffect(()=>{let live=true;void restoreAnthropicConnection().catch(e=>{if(live)setError(e instanceof Error?e.message:'No se pudo abrir la conexión guardada.');}).finally(()=>{if(live)setLoading(false);});return()=>{live=false;};},[]);
