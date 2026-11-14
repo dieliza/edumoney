@@ -1,0 +1,5 @@
+import {useState} from 'react';
+import {Body,Card} from '../../ui/components';
+import {Choices,ErrorNotice} from '../money/fields';
+import {idleLockMinutes,setIdleLockMinutes} from '../../web/securityPreferences';
+export function IdleSettings(){const [value,setValue]=useState(()=>String(idleLockMinutes())),[error,setError]=useState('');return <Card><Body style={{fontWeight:'700'}}>Bloqueo por inactividad</Body><Choices label="Tiempo sin interacción" value={value} options={[["0","Solo bloqueo manual"],["5","Después de 5 minutos"],["15","Después de 15 minutos"]]} onChange={v=>{try{setIdleLockMinutes(Number(v));setValue(v);setError('');}catch{setError('Este navegador no permitió guardar el tiempo. El bloqueo manual sigue disponible.');}}}/><ErrorNotice message={error}/><Body muted>Es opcional. Al bloquear vuelve a pedir tu contraseña o la verificación del dispositivo. Guarda los formularios antes de dejar la app: los cambios que aún no guardaste no se conservan al recargar.</Body></Card>;}

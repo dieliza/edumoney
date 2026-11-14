@@ -2,5 +2,15 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "dist-web",
+    "dist-preview",
+    "test-results",
+    "playwright-report",
+    "ios",
+    "android"
+  ]
 }

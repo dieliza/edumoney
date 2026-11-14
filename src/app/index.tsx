@@ -7,7 +7,7 @@ import { isPreview } from '../modules/money/localStore';
 import { Brand } from '../ui/Brand';
 export default function Welcome() {
   const { name, colors } = useTheme();
-  return <Screen title="EduMoney" welcome>
+  return <Screen title="EduMoney" welcome demo={isPreview}>
     <View style={{ paddingVertical: 12, gap: 24, alignItems: 'center' }}>
       <View style={{ width: '100%', alignItems: 'center', gap: 18, paddingVertical: 12 }}>
         <Brand large onDark={name === 'dark'}/>
@@ -20,9 +20,9 @@ export default function Welcome() {
       <Card style={{ width: '100%', gap: 18 }}>
         <Body style={{ fontSize: 19, fontWeight: '700' }}>Tu tranquilidad va primero</Body>
         {([
-          ['shield-checkmark-outline', 'Privado y seguro', 'Tu información permanece en tu dispositivo.'],
+          ['shield-checkmark-outline', 'Privado y seguro', 'Registros cifrados en tu dispositivo; compartir y sincronizar es opcional.'],
           [Platform.OS === 'web' ? 'sync-outline' : 'cloud-offline-outline', Platform.OS === 'web' ? 'Sincronización opcional' : 'Sin nube', 'Tú decides qué compartir y cuándo.'],
-          ['book-outline', 'Sin inteligencia artificial', 'Decisiones informadas, con explicaciones claras.'],
+          ['book-outline', Platform.OS==='web'?'Lectura asistida opcional':'Lectura local de documentos', Platform.OS==='web'?'Tú eliges lectura local o Anthropic para interpretar fotos.':'El dispositivo interpreta tus fotos para que puedas revisarlas.'],
         ] as const).map(([icon, title, detail]) => <View key={title} style={{ flexDirection: 'row', gap: 14, alignItems: 'center' }}><IconBadge icon={icon} size={42} />
           <View style={{ flex: 1 }}><Body style={{ fontWeight: '700', fontSize: 15 }}>{title}</Body><Body muted style={{ fontSize: 13, lineHeight: 20 }}>{detail}</Body></View>
         </View>)}

@@ -1,0 +1,5 @@
+import {Pressable,ScrollView,View} from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import {Body,type IconName} from './components';
+import {useTheme} from '../design/ThemeProvider';
+export function NavigationRail({label,items}:{label:string;items:{title:string;icon:IconName;run():void}[]}){const {colors}=useTheme();return <ScrollView horizontal accessibilityLabel={label} showsHorizontalScrollIndicator contentContainerStyle={{gap:12,paddingVertical:8}}>{items.map(item=><Pressable key={item.title} accessibilityRole="button" accessibilityLabel={item.title} onPress={item.run} style={({pressed})=>({width:132,minHeight:126,padding:14,borderRadius:20,borderWidth:1,borderColor:colors.line,backgroundColor:colors.surface,alignItems:'center',gap:10,opacity:pressed?.7:1})}><View style={{width:48,height:48,borderRadius:24,backgroundColor:colors.mint,alignItems:'center',justifyContent:'center'}}><Ionicons name={item.icon} size={26} color={colors.primary}/></View><Body style={{fontSize:14,lineHeight:19,fontWeight:'700',textAlign:'center'}}>{item.title}</Body></Pressable>)}</ScrollView>;}

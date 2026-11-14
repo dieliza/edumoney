@@ -16,6 +16,8 @@ export async function changeWebPassword(current: string, next: string, repeat: s
   if (next.length < 12) throw Error('Usa al menos 12 caracteres.');
   if (next !== repeat) throw Error('Las contraseñas nuevas no coinciden.');
   await vaultWrite(() => rotatePassword!(current, next));
+  // La envoltura anterior ya queda invalidada por el cambio de sal; retirarla minimiza secretos antiguos.
+  await import('./biometrics').then(module=>module.disableBiometric()).catch(()=>undefined);
 }
 
 function record<T>(mode: IDBTransactionMode, operation: (store: IDBObjectStore) => IDBRequest<T>): Promise<T> {
@@ -182,6 +184,7 @@ export async function resetWebVault(confirmation: string) {
       tx.onabort = tx.onerror = () => { db.close(); reject(Error('No se pudo restablecer. Los datos no se cambiaron.')); };
     };
   });
+  await import('./biometrics').then(module=>module.disableBiometric()).catch(()=>undefined);
 }
 
 /** Credencial de este dispositivo: cifrada con la contraseña local; fuera de respaldos/sync. */
@@ -194,3 +197,6 @@ export function getOrCreateEducationDevice():Promise<string>{return vaultWrite(a
  const iv=crypto.getRandomValues(new Uint8Array(12));const ciphertext=await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:aad},settingsKey,new TextEncoder().encode(token));
  await record('readwrite',s=>s.put({version:1,salt:settingsSalt!,iv,ciphertext} satisfies Envelope,'education-device'));return token;
 });}
+/** Verificación local para activar un desbloqueo alternativo; nunca transmite la contraseña. */
+export function verifyWebPassword(password:string){return vaultWrite(async()=>{const saved=await record<Envelope|undefined>('readonly',s=>s.get('database'));if(!saved)throw Error('Primero crea tu espacio de EduMoney.');try{await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(saved.iv)},await keyFor(password,saved.salt),saved.ciphertext);}catch{throw Error('La contraseña actual no coincide.');}});}
+export async function webVaultFingerprint(){const saved=await record<Envelope|undefined>('readonly',s=>s.get('database'));return saved?Array.from(saved.salt,b=>b.toString(16).padStart(2,'0')).join(''):null;}

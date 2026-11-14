@@ -1,6 +1,7 @@
+import {NavigationRail} from '../../ui/NavigationRail';
 import { useCallback,useEffect,useState } from 'react';
 import { ActivityIndicator,AppState,Pressable,View } from 'react-native';
-import { useIsFocused } from 'expo-router';
+import { router,useIsFocused } from 'expo-router';
 import { userMessage } from '../../core/errors';
 import { ActionButton,Body,Card,IconBadge,ProgressBar,Screen,SectionHeading,ui } from '../../ui/components';
 import { formatMoney,localToday } from '../money/domain';
@@ -20,6 +21,7 @@ export default function GoalsScreen(){
  async function action(task:()=>Promise<unknown>){if(busy)return;setBusy(true);setError('');try{await task();await load();}catch(e){setError(userMessage(e));}finally{setBusy(false);}}
  const detail=data.goals.find(g=>g.id===detailId);const today=localToday();
  return <Screen title="Mis metas" demo={false} subtitle="Dale un propósito a cada paso que das.">
+ <NavigationRail label="Planificar mis metas" items={[{title:'Simular ahorro',icon:'trending-up-outline',run:()=>router.push({pathname:'/decisions',params:{kind:'saving'}})},{title:'Fondo de emergencia',icon:'shield-checkmark-outline',run:()=>router.push({pathname:'/decisions',params:{kind:'emergency'}})}]}/>
  <ErrorNotice message={error}/><ActionButton title="Crear nueva meta" testID="goal-create" icon="add-circle-outline" onPress={()=>{setForm(true);setError('');}}/>
  {!store?<ActivityIndicator accessibilityLabel="Cargando metas cifradas"/>:null}
 

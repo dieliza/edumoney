@@ -1,3 +1,5 @@
+import {ReceiptPhotoButtons} from './ReceiptPhotoButtons';
+import {PhotoAnalysis} from '../../ui/PhotoAnalysis';
 import {reviewedReading} from './ai/details';
 import {ReadingDetailsForm} from './ReadingDetailsForm';
 import {anthropicProposal,anthropicStatement} from './ai/types';
@@ -16,7 +18,8 @@ import { DuplicateDocumentError } from './store';
 import { proposeFields,proposeVoice } from './domain';
 import type { DocumentsSnapshot,ImageData,RecordKind,Source,StoredDocument } from './types';
 export interface ReviewDraft {structured?:import('./ai/types').AnthropicReading;source:Source;text:string;image:ImageData|null;warning:string;needsAmountReview?:boolean;parent?:StoredDocument}
-export function ReviewForm({initial,data,store,saved,close,openExisting}:{initial:ReviewDraft;data:DocumentsSnapshot;store:DocumentStore;saved():Promise<void>;close():void;openExisting(id:string):void}){
+export function ReviewForm({retake,processing=false,analysisError='',initial,data,store,saved,close,openExisting}:{retake?:(source:'camera'|'library',file?:File)=>void;processing?:boolean;analysisError?:string;initial:ReviewDraft;data:DocumentsSnapshot;store:DocumentStore;saved():Promise<void>;close():void;openExisting(id:string):void}){
+ const [retaking,setRetaking]=useState(false);
  const proposal=initial.structured?anthropicProposal(initial.structured):initial.source==='voice'?proposeVoice(initial.text):proposeFields(initial.text);const parent=initial.parent;
  const [details,setDetails]=useState(initial.structured?.details);
  const [structuredIds]=useState(()=>initial.structured?.deductions.map(()=>newId())??[]);
@@ -34,7 +37,7 @@ export function ReviewForm({initial,data,store,saved,close,openExisting}:{initia
  const hasSimilar=!!same||similarMovement||similarBill;
  const match=search.toLocaleLowerCase('es');const filtered=targets.filter(t=>t.label.toLocaleLowerCase('es').includes(match));
  function changeKind(value:RecordKind|''){setKind(value);setCategory('');setError('');if(value==='pending_bill')setDate(details?.due_date??'');}
- async function submit(){if(busy)return;setBusy(true);setError('');setDuplicate('');try{
+ async function submit(){if(busy||processing)return;setBusy(true);setError('');setDuplicate('');try{
  if(!kind)throw new UserInputError('Elige si es un movimiento pagado, factura pendiente, comprobante adjunto o nota.');
  if(initial.image&&!amount.trim())throw new UserInputError('Escribe el total del recibo antes de guardar.');
  if(date&&!validDate(date))throw new UserInputError('Elige una fecha válida en el calendario.');
@@ -43,8 +46,10 @@ export function ReviewForm({initial,data,store,saved,close,openExisting}:{initia
  await store.save({...(initial.structured?{reading:reviewedReading(initial.structured,description,date.trim()||null,enteredCents,details)}:{}),...(kind==='paid_income'&&initial.structured?{incomeStatement:anthropicStatement(initial.structured,enteredCents!,description.trim(),structuredIds)}:{}),id,kind,source:initial.source,description,date:date.trim()||null,amountCents:amount.trim()?parseAmount(amount.trim()):null,notes,rawText:keepText==='yes'&&!(initial.image&&keepImage==='yes')?text:null,image:initial.image,keepImage:keepImage==='yes',movementId:kind==='attachment'&&targetType==='movement'?targetId||null:null,billId:kind==='attachment'&&targetType==='bill'?targetId||null:null,expectedMovementVersion:m?.version??null,expectedBillVersion:b?.version??null,categoryId:category||null,paymentMethod:method||null,supersedesId:parent?.id??null,expectedDocumentVersion:parent?.version??null,confirmSimilar:similar===reviewKey,reviewed:true});
  await saved();close();
  }catch(e){setError(userMessage(e));if(e instanceof DuplicateDocumentError)setDuplicate(e.documentId);}finally{setBusy(false);}}
- return <Sheet title={parent?'Corregir comprobante':'Revisar antes de guardar'} close={close} busy={busy}>
+ return <Sheet title={parent?'Corregir comprobante':'Revisar antes de guardar'} close={close} busy={busy||processing}>
  {initial.structured?<Body>Documento leído: {initial.structured.document_type==='paystub'?'Talonario de pago':initial.structured.document_type==='check'?'Cheque':'Recibo de compra'}. Si es un talonario, confirma que se guarde como ingreso; su desglose quedará pendiente de revisión.</Body>:null}
+ <ErrorNotice message={analysisError}/>
+ {processing?<PhotoAnalysis/>:initial.image&&retake?<><ActionButton title="Volver a tomar la foto" icon="camera-outline" secondary onPress={()=>setRetaking(!retaking)}/>{retaking?<ReceiptPhotoButtons onCapture={retake}/>:null}</>:null}
  <Body>El reconocimiento puede equivocarse. Confirma los campos; nada se registra como pagado automáticamente.</Body>{initial.warning?<Body>{initial.warning}</Body>:null}{proposal.warnings.map(w=><Body key={w} muted>{w}</Body>)}
  {initial.image?<><Image source={{uri:`data:${initial.image.mime};base64,${initial.image.base64}`}} accessibilityLabel="Comprobante que estás revisando" style={{width:'100%',height:280}} resizeMode="contain"/><Choices label="Qué conservar de la imagen" value={keepImage} options={[[ '', 'Decidir antes de guardar'],['yes','Conservar copia local cifrada'],['no','Solo datos; no conservar imagen']]} onChange={setKeepImage}/></>:<Body muted>No hay una imagen que conservar. Solo se guardará la información confirmada.</Body>}
  {!(initial.image&&keepImage==='yes')?<>
