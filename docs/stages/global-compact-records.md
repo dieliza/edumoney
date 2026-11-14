@@ -28,3 +28,11 @@ Dos casos de final-redesign-persistence.test.ts aprobados: el caso existente de 
 La migración existente se ejecutó solo en una base temporal ficticia de prueba; no se creó migración ni se modificó la base del propietario.
 
 TypeScript, ESLint y compilación Expo web/PWA aprobados; sin suite completa. Los cambios de estilo no tienen pruebas que solo repitan el marcado. Este entorno no dispone de recorrido visual soportado ni de iPad físico; las interacciones y la apariencia real en esos dispositivos quedan pendientes de comprobación.
+
+## Publicación
+
+Sites versión 37, despliegue succeeded appgdep_6af8f03c0bfc819191bfbb38d0cd9fcc. Fuente de alojamiento 9416386edd2c02765b4a09839e9057d3af878388. Implementación en web-edumoney ba06b2a; GitHub main no modificado. Audiencia pública y variables de servidor conservadas, revisión 1.
+
+Dos solicitudes HTTP verificaron el HTML con el registrador 2026.11.14.19 y el archivo común del cliente, idéntico byte por byte al compilado con RecordSurface. Verificación de entrega de código, sin afirmar recorrido visual en iPad. Cinco comprobaciones funcionales/de entrega en este bloque: dos casos automatizados, dos solicitudes y una comparación de artefactos; sin suite completa.
+
+Enlace: https://edumoney-web.diegoluissantospabon.chatgpt.site/money?build=2026.11.14.19
