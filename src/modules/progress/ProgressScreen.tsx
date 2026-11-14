@@ -1,3 +1,4 @@
+import { EducationPanel } from '../education/EducationPanel';
 import { useCallback,useEffect,useMemo,useState } from 'react';
 import { ActivityIndicator,AppState } from 'react-native';
 import { useIsFocused } from 'expo-router';
@@ -29,6 +30,7 @@ export default function ProgressScreen(){
  <Card><SectionHeading title="Deudas reducidas por pagos" onSurface/><Body>{formatMoney(s.reduction)} en pagos vigentes que indicaste que reducen el saldo durante el mes.</Body><Body muted>No incluye conciliaciones ni pagos ya reflejados en un estado. No equivale a principal amortizado cuando falta el desglose.</Body></Card>
  <Card><SectionHeading title="Metas alcanzadas" onSurface/><Body>{s.goalsCompleted} de {s.goalsTotal} metas registradas alcanzan actualmente su objetivo, incluidas las archivadas.</Body><Body muted>Se recalcula si corriges aportaciones o cambias el objetivo; conserva tu historial.</Body></Card>
  </>:null}
+ <EducationPanel achievementsOnly/>
  <SectionHeading title="Mi plan de 90 días"/>
  <Card><Body>Ocho revisiones sugeridas para organizarte. «Ya lo hice» confirma una revisión personal; no registra pagos ni movimientos. Puedes revisarlas a tu ritmo, incluso antes de la fecha sugerida.</Body>{store&&!busy?<ActionButton title="Iniciar mi plan de 90 días" testID="progress-start-plan" onPress={()=>void action(()=>store.createPlan(newId(),today))}/>:null}</Card>
  {plan?<><Card><Body>Inicio: {plan.startDate}</Body><Body>{done} de {progressSteps.length} revisiones confirmadas · {percent}%</Body><ProgressBar value={percent} label={`Avance confirmado del plan: ${percent}%`}/><Body muted>Porcentaje de revisiones confirmadas; no es porcentaje de días transcurridos ni una calificación financiera.</Body></Card>{progressSteps.map(([key,day,title])=>{const completed=plan.actions.find(a=>a.key===key)?.completedAt;return <Card key={key}><Body style={{fontWeight:'700'}}>Día {day} · {title}</Body><Body>Fecha sugerida: {shiftDays(plan.startDate,day-1)} · {completed?'Revisada':'Por revisar'}</Body>{!busy&&store?<ActionButton title={completed?`Volver a pendiente: ${title}`:`Ya lo hice: ${title}`} testID={`progress-step-${key}`} secondary onPress={()=>void action(()=>store.check(plan.id,key,!completed))}/>:null}</Card>;})}</>:null}

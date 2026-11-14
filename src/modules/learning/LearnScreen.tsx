@@ -1,3 +1,4 @@
+import { EducationPanel } from '../education/EducationPanel';
 import { useCallback,useEffect,useRef,useState } from 'react';
 import { ActivityIndicator,AppState,Pressable,View } from 'react-native';
 import { router,useIsFocused } from 'expo-router';
@@ -21,6 +22,7 @@ export default function LearnScreen(){
  async function check(){if(!store||!lesson||busy)return;setBusy(true);setError('');try{if(answer==='')throw new Error('Selecciona una respuesta antes de comprobar.');const correct=await store.answer(newId(),lesson.id,Number(answer));await load();setFeedback(`${correct?'¡Buen paso! Lección completada.':'Puedes intentarlo de nuevo; el avance se guarda al resolver el ejercicio.'} ${lesson.explanation}`);}catch(e){setError(answer===''?'Selecciona una respuesta antes de comprobar.':userMessage(e));}finally{setBusy(false);}}
  async function read(){if(!lesson)return;const request=++voiceRequest.current;setVoiceMessage('Buscando una voz local disponible…');try{const message=await readLesson(`${lesson.title}. ${lesson.paragraphs.join(' ')} Ejercicio: ${lesson.question}. ${lesson.options.map((o,i)=>`${i+1}: ${o}`).join('. ')}`,()=>undefined,()=>setVoiceMessage('No se pudo completar la lectura. El texto sigue disponible.'));if(request===voiceRequest.current)setVoiceMessage(message);else await stopReading();}catch{setVoiceMessage('No se pudo iniciar la lectura local. El texto sigue disponible.');}}
  return <Screen title="Aprende" demo={false} subtitle="Un poco de conocimiento, más confianza para decidir.">
+ <EducationPanel/>
  <ErrorNotice message={error}/>{!store?<ActivityIndicator accessibilityLabel="Cargando lecciones locales"/>:null}
  <Card><Body style={{fontWeight:'700'}}>{completed} de {lessons.length} lecciones completadas</Body><ProgressBar value={completed/lessons.length*100} label={`Lecciones completadas: ${completed} de ${lessons.length}`}/><Body muted>Contenido educativo general. Los ejemplos están identificados como ficticios y no sustituyen una revisión de tus condiciones reales.</Body></Card>
  <ActionButton title="Antes de decidir" testID="open-decisions" icon="git-compare-outline" onPress={()=>{stop();router.push('/decisions');}}/>
