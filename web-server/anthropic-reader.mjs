@@ -83,3 +83,18 @@ export async function handleAnthropicReader(request,_env={},fetcher=fetch){
   return json({reading:normalizeAnthropicReading(raw),provider:'anthropic',model:ANTHROPIC_RECEIPT_MODEL});
  }catch(error){const code=error instanceof AnthropicReadError?error.code:'unavailable';return json({code,message:messages[code]??messages.unavailable},code==='quota'?429:code==='credits'?402:code==='api_key'?401:code==='unavailable'?503:422);}
 }
+
+/** Comprueba acceso al modelo sin fotos ni generación de mensajes. No comprueba el saldo. */
+export async function handleAnthropicActivation(request,_env={},fetcher=fetch){
+ const origin=request.headers.get('Origin');if(origin&&origin!==new URL(request.url).origin)return json({message:'Origen no permitido.'},403);
+ if(request.method!=='POST')return json({message:'Método no permitido.'},405);
+ const key=request.headers.get('X-Anthropic-Key')??'';if(!/^sk-ant-[A-Za-z0-9_-]{20,249}$/.test(key))return json({message:'Pega la clave de API completa que empieza por sk-ant-. No es tu contraseña de acceso.'},401);
+ try{
+ const response=await fetcher(`https://api.anthropic.com/v1/models/${ANTHROPIC_RECEIPT_MODEL}`,{method:'GET',headers:{'x-api-key':key,'anthropic-version':'2023-06-01'},signal:AbortSignal.timeout(20000)});
+ if([401,403].includes(response.status))return json({message:'Anthropic no aceptó esta clave o sus permisos. Revisa la clave de API; tu contraseña de EduMoney no cambia.'},401);
+ if(response.status===429)return json({message:'Anthropic pidió esperar. No se guardó la clave nueva; intenta de nuevo más tarde.'},429);
+ if(!response.ok)return json({message:'No se pudo comprobar acceso a Haiku 5.5. No se guardó la clave nueva.'},503);
+ const data=await response.json();if(data.type!=='model'||typeof data.id!=='string'||!/^claude-haiku-5-5(?:-\d{8})?$/.test(data.id))return json({message:'Anthropic no confirmó el modelo solicitado. No se guardó la clave nueva.'},503);
+ return json({verified:true,model:ANTHROPIC_RECEIPT_MODEL,balanceVerified:false});
+ }catch{return json({message:'No se pudo conectar con Anthropic. Conserva lo escrito y vuelve a intentar.'},503);}
+}

@@ -1,3 +1,4 @@
+import {AnthropicConnectionHost} from '../modules/documents/AnthropicConnectionHost';
 import {AnthropicConsentHost} from '../modules/documents/AnthropicConsentHost';
 import { Stack } from 'expo-router';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -11,6 +12,6 @@ function ThemedNavigator() {
 }
 export default function RootLayout() {
   return <SafeAreaProvider><ThemeProvider><StorageGate>
-    <BillsLifecycle><ThemedNavigator /><AnthropicConsentHost/></BillsLifecycle>
+    <BillsLifecycle><ThemedNavigator /><AnthropicConsentHost/><AnthropicConnectionHost/></BillsLifecycle>
   </StorageGate></ThemeProvider></SafeAreaProvider>;
 }

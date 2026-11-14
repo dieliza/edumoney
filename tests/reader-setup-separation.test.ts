@@ -1,0 +1,14 @@
+import React from 'react';
+import {renderToStaticMarkup} from 'react-dom/server';
+import {expect,it,vi} from 'vitest';
+import {ApiKeyField} from '../src/modules/documents/ApiKeyField.web';
+import SettingsScreen from '../src/modules/settings/SettingsScreen';
+const state=vi.hoisted(()=>({security:vi.fn()}));
+vi.mock('react-native',()=>({Platform:{OS:'web'}}));
+vi.mock('expo-router',()=>({router:{push:vi.fn()}}));
+vi.mock('../src/design/ThemeProvider',()=>({useTheme:()=>({preference:'light',setPreference:vi.fn(),colors:{line:'#ccc',text:'#111',surfaceAlt:'#fff'}})}));
+vi.mock('../src/modules/settings/SecuritySettings',()=>({SecuritySettings:()=>{state.security();return React.createElement('input',{'aria-label':'Contraseña actual'});}}));
+vi.mock('../src/modules/money/fields',()=>({Choices:()=>null}));
+vi.mock('../src/ui/components',()=>({Body:({children}:{children:React.ReactNode})=>React.createElement('p',null,children),Card:({children}:{children:React.ReactNode})=>React.createElement('div',null,children),Screen:({children}:{children:React.ReactNode})=>React.createElement('main',null,children),SectionHeading:({title}:{title:string})=>React.createElement('h2',null,title),ActionButton:({title}:{title:string})=>React.createElement('button',null,title)}));
+it('el campo de API es único, editable y no solicita contraseña ni autocompletado de contraseña',()=>{const html=renderToStaticMarkup(React.createElement(ApiKeyField,{value:'sk-ant-FICTICIO',onChange:()=>{}}));expect(html.match(/<input/g)).toHaveLength(1);expect(html).toContain('type="text"');expect(html).toContain('autoComplete="off"');expect(html).not.toMatch(/type="password"|readonly|disabled|current-password|new-password/);expect(html).toContain('Mostrar clave de API');expect(html).toContain('-webkit-text-security:disc');});
+it('configuración no monta campos de cambio de contraseña hasta pedirlo expresamente',()=>{const html=renderToStaticMarkup(React.createElement(SettingsScreen));expect(state.security).not.toHaveBeenCalled();expect(html).toContain('Conectar o gestionar lector de fotos');expect(html).not.toContain('aria-label="Contraseña actual"');expect(html).not.toContain('Nueva contraseña');});

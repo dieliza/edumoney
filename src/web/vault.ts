@@ -102,16 +102,18 @@ async function openWebVault(password: string) {
     try { plain = await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(stored.iv)}, oldKey, stored.ciphertext); }
     catch { throw Error('La contraseña actual no coincide. No se cambiaron los datos.'); }
     const oldSettings = await record<Envelope | undefined>('readonly', s => s.get('sync-settings'));
+    const oldApi = await record<Envelope | undefined>('readonly', s => s.get('anthropic-key'));
+    const api = oldApi ? await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(oldApi.iv),additionalData:new TextEncoder().encode('edumoney-anthropic-key-v1')},oldKey,oldApi.ciphertext) : undefined;
     const settings = oldSettings ? await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(oldSettings.iv)},oldKey,oldSettings.ciphertext) : undefined;
     const newSalt = crypto.getRandomValues(new Uint8Array(16)); const newKey = await keyFor(next,newSalt);
-    const encrypt = async (data: ArrayBuffer): Promise<Envelope> => {
+    const encrypt = async (data: ArrayBuffer, apiSecret=false): Promise<Envelope> => {
       const iv = crypto.getRandomValues(new Uint8Array(12));
-      return {version:1,salt:newSalt,iv,ciphertext:await crypto.subtle.encrypt({name:'AES-GCM',iv},newKey,data)};
+      return {version:1,salt:newSalt,iv,ciphertext:await crypto.subtle.encrypt({name:'AES-GCM',iv,...(apiSecret?{additionalData:new TextEncoder().encode('edumoney-anthropic-key-v1')}: {})},newKey,data)};
     };
-    const database = await encrypt(plain); const sync = settings ? await encrypt(settings) : undefined;
+    const database = await encrypt(plain); const sync = settings ? await encrypt(settings) : undefined; const apiKey = api ? await encrypt(api,true) : undefined;
     await new Promise<void>((resolve,reject)=>{
       const opening=indexedDB.open(DB_NAME,1); opening.onerror=()=>reject(Error('No se pudo abrir el almacenamiento.'));
-      opening.onsuccess=()=>{const handle=opening.result;const tx=handle.transaction('vault','readwrite');const store=tx.objectStore('vault');store.put(database,'database');if(sync)store.put(sync,'sync-settings');
+      opening.onsuccess=()=>{const handle=opening.result;const tx=handle.transaction('vault','readwrite');const store=tx.objectStore('vault');store.put(database,'database');if(sync)store.put(sync,'sync-settings');if(apiKey)store.put(apiKey,'anthropic-key');
         tx.oncomplete=()=>{handle.close();resolve();};tx.onabort=tx.onerror=()=>{handle.close();reject(Error('No se cambió la contraseña. Conserva la anterior.'));};};
     });
     key=newKey;salt=newSalt;settingsKey=newKey;settingsSalt=newSalt;
@@ -140,6 +142,19 @@ export function setWebSettings(value: unknown) { return vaultWrite(async () => {
   await record('readwrite', s => s.put({ version: 1, salt, iv, ciphertext } satisfies Envelope, 'sync-settings'));
 }); }
 
+/** Clave propia: cifrada y aislada de la base, los respaldos y la sincronización. */
+export function getWebAnthropicKey():Promise<string|undefined>{return vaultWrite(async()=>{
+ if(!settingsKey)throw Error('Desbloquea EduMoney para abrir tu conexión.');
+ const saved=await record<Envelope|undefined>('readonly',s=>s.get('anthropic-key'));if(!saved)return undefined;
+ try{return new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(saved.iv),additionalData:new TextEncoder().encode('edumoney-anthropic-key-v1')},settingsKey,saved.ciphertext));}catch{throw Error('No se pudo abrir la clave guardada de Anthropic. Puedes retirarla y conectar de nuevo; tu contraseña de EduMoney no cambia.');}
+});}
+export function setWebAnthropicKey(value:string){return vaultWrite(async()=>{
+ if(!settingsKey||!settingsSalt)throw Error('Desbloquea EduMoney para guardar tu conexión.');
+ const salt=settingsSalt;const iv=crypto.getRandomValues(new Uint8Array(12));const ciphertext=await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:new TextEncoder().encode('edumoney-anthropic-key-v1')},settingsKey,new TextEncoder().encode(value));
+ await record('readwrite',s=>s.put({version:1,salt,iv,ciphertext} satisfies Envelope,'anthropic-key'));
+});}
+export function deleteWebAnthropicKey(){return vaultWrite(async()=>{if(!settingsKey)throw Error('Desbloquea EduMoney.');await record('readwrite',s=>s.delete('anthropic-key'));});}
+
 // Reset only after explicit on-screen confirmation. Keep the old encrypted copy
 // for later recovery; never overwrite it with an empty database or a new key.
 export async function resetWebVault(confirmation: string) {
@@ -152,10 +167,11 @@ export async function resetWebVault(confirmation: string) {
     opening.onsuccess = () => {
       const db = opening.result; const tx = db.transaction('vault', 'readwrite'); const store = tx.objectStore('vault');
       const recoveryId = 'recovery-' + crypto.randomUUID();
-      const old = store.get('database'); const settings = store.get('sync-settings');
+      const old = store.get('database'); const settings = store.get('sync-settings'); const api = store.get('anthropic-key');
       old.onsuccess = () => { if (old.result) store.put(old.result, recoveryId + '-database'); };
       settings.onsuccess = () => { if (settings.result) store.put(settings.result, recoveryId + '-settings'); };
-      store.delete('database'); store.delete('sync-settings');
+      api.onsuccess=()=>{if(api.result)store.put(api.result,recoveryId+'-anthropic-key');};
+      store.delete('database'); store.delete('sync-settings'); store.delete('anthropic-key');
       tx.oncomplete = () => { db.close(); resolve(); };
       tx.onabort = tx.onerror = () => { db.close(); reject(Error('No se pudo restablecer. Los datos no se cambiaron.')); };
     };
