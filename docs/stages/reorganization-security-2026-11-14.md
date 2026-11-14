@@ -92,3 +92,14 @@ Sin migración del esquema financiero (permanece 18). Nuevo almacén local opcio
 90 casos distintos correctos, 93 ejecuciones automáticas incluidas repeticiones; máximo autorizado 100. Se corrigió un fallo en el montaje de un caso de prueba que no persistía su transacción SQL; el flujo real usa transacciones separadas y el caso corregido confirmó conservación de datos. Pruebas: aprendizaje (23), metas (19), deudas (23), respaldos (5), gráficas/modelo (4), clave de API cifrada (4), biometría (7), temas (2), preferencias (2), tres intentos sin borrado (1). Repeticiones: caso de persistencia biométrica, invalidación por cambio de contraseña y reset de API. No lanzar otra suite general.
 
 TypeScript y ESLint completos; compilación web y sintaxis del Worker empaquetado requeridas para la publicación. Sin navegador compartido administrado (`cua_repl.js` no disponible); no se instalaron navegadores como sustituto ni se afirmaron capturas visuales o pruebas físicas. Las validaciones HTTP de publicación, si se realizan, se añaden al presupuesto antes de cerrar.
+
+## Publicación y cierre
+
+- Versión visible **2026.11.14.11**, hosting **29**. URL: https://edumoney-web.diegoluissantospabon.chatgpt.site
+- Commit de aplicación `a1756df` en `web-edumoney`; commit de hosting `54cc4898c8dca6b3a3f5d650dbf71ec174f39245` en el repositorio independiente del Site.
+- Versión guardada `appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_27ba39bb5fac81918bf9bd329950372f`; despliegue `appgdep_6af85a1668dc81919943e4ae37f5044b`: **succeeded**, audiencia pública conservada, entorno revisión 1 sin cambios de secretos.
+- TypeScript, ESLint sin advertencias, compilación PWA, diff y sintaxis del Worker correctos.
+- Comprobaciones HTTP: las dos primeras solicitudes sin cabecera de navegación recibieron el 404 previsto para rutas sin un recurso estático solicitado como HTML; no eran visitas equivalentes a navegador. Repetidas con `Accept: text/html`, Configuración y Deudas devuelven **200** y el shell de la app, sin redirección a un acceso por email. Catálogo: **200**, diez consejos vigentes y diez históricos.
+- Consumo final conservador: **98 de 100** comprobaciones, contando las 93 ejecuciones de casos y las cinco solicitudes HTTP. No repetir suites de este bloque sin una nueva necesidad.
+- Las comprobaciones HTTP no prueban interacción de botones ni Face ID físico. No se realizó un recorrido visual en iPad/PWA/Android. El acceso biométrico se debe validar en hardware compatible; la alternativa de contraseña permanece disponible.
+- Recuperación automática por correo y biometría propia de una nueva APK continúan pendientes según lo descrito. No se envió email ni se tocaron DNS, MX, credenciales de correo o la configuración de PR Budget.
