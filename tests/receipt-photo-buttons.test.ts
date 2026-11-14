@@ -3,6 +3,7 @@ import {renderToStaticMarkup} from 'react-dom/server';
 import {expect,it,vi} from 'vitest';
 import {openReceiptInput,receiveReceiptFile} from '../src/web/receiptPicker';
 import {ReceiptPhotoButtons} from '../src/modules/documents/ReceiptPhotoButtons.web';
+vi.mock('../src/ui/ReceiptCaptureHero',()=>({ReceiptCaptureHero:()=>null}));
 vi.mock('react-native',()=>({View:({children}:{children:React.ReactNode})=>React.createElement('div',null,children)}));
 vi.mock('../src/ui/components',()=>({ActionButton:({title,onPress,testID}:{title:string;onPress:()=>void;testID:string})=>React.createElement('button',{'data-testid':testID,onClick:onPress},title)}));
 it('muestra los dos botones y dos campos separados con los atributos solicitados',()=>{const html=renderToStaticMarkup(React.createElement(ReceiptPhotoButtons,{onCapture:()=>{}}));expect(html).toContain('Escanear recibo');expect(html).toContain('Buscar en fotos');const inputs=html.match(/<input\b[^>]*>/g)!;expect(inputs).toHaveLength(2);expect(inputs.every(i=>i.includes('type="file"')&&i.includes('accept="image/*"'))).toBe(true);expect(inputs[0]).toContain('capture="environment"');expect(inputs[1]).not.toContain('capture=');});

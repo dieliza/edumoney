@@ -18,7 +18,7 @@ export function Body({ children, muted = false, style }: PropsWithChildren<{ mut
 }
 export function Card({ children, style }: PropsWithChildren<{ style?: StyleProp<ViewStyle> }>) {
   const { colors } = useTheme();
-  return <View style={[{ backgroundColor: colors.surface, borderRadius: 24, padding: 20, borderWidth: 1, borderColor: colors.line, gap: 14, boxShadow: '0px 5px 18px rgba(0, 26, 40, 0.06)' }, style]}>{children}</View>;
+  return <View style={[{ backgroundColor: colors.surface, borderRadius: 20, padding: 16, borderWidth: 1, borderColor: colors.line, gap: 10, boxShadow: '0px 5px 18px rgba(0, 26, 40, 0.06)' }, style]}>{children}</View>;
 }
 export function IconBadge({ icon, tone = 'mint', size = 48 }: { icon: IconName; tone?: 'mint' | 'blue' | 'coral' | 'violet'; size?: number }) {
   const { colors } = useTheme();
@@ -28,10 +28,10 @@ export function IconBadge({ icon, tone = 'mint', size = 48 }: { icon: IconName; 
   </View>;
 }
 /** Acceso del panel: el mismo control visual para registros reales y demostraciones. */
-export function DashboardAction({ title, icon, tone = 'mint', onPress, testID, accessibilityLabel }: { title: string; accessibilityLabel?: string; icon: IconName; tone?: 'mint' | 'blue' | 'coral' | 'violet'; onPress(): void; testID?: string }) {
+export function DashboardAction({ title, icon, tone = 'mint', onPress, testID, accessibilityLabel, compact = false }: { title: string; accessibilityLabel?: string; compact?: boolean; icon: IconName; tone?: 'mint' | 'blue' | 'coral' | 'violet'; onPress(): void; testID?: string }) {
   const { colors } = useTheme();
-  return <Pressable testID={testID} accessibilityRole="button" accessibilityLabel={accessibilityLabel ?? title} onPress={onPress} style={({ pressed }) => ({ flexBasis: '46%', flexGrow: 1, minHeight: 110, padding: 16, gap: 8, alignItems: 'center', justifyContent: 'center', borderRadius: 18, borderWidth: 1, borderColor: colors.line, backgroundColor: colors[tone], opacity: pressed ? 0.7 : 1 })}>
-    <IconBadge icon={icon} tone={tone} size={42}/><Body style={{ fontSize: 14, fontWeight: '700', textAlign: 'center' }}>{title}</Body>
+  return <Pressable testID={testID} accessibilityRole="button" accessibilityLabel={accessibilityLabel ?? title} onPress={onPress} style={({ pressed }) => ({ flexBasis: compact ? '22%' : '46%', flexGrow: 1, flexShrink: 1, minWidth: compact ? 58 : undefined, minHeight: compact ? 86 : 110, padding: compact ? 7 : 16, gap: compact ? 3 : 8, alignItems: 'center', justifyContent: 'center', borderRadius: 18, borderWidth: 1, borderColor: colors.line, backgroundColor: colors[tone], opacity: pressed ? 0.7 : 1 })}>
+    <IconBadge icon={icon} tone={tone} size={compact ? 36 : 42}/><Body style={{ fontSize: compact ? 12 : 14, fontWeight: '700', textAlign: 'center' }}>{title}</Body>
   </Pressable>;
 }
 export function ActionButton({ title, onPress, icon, secondary = false, testID }: { title: string; onPress(): void; icon?: IconName; secondary?: boolean; testID?: string }) {
@@ -67,7 +67,7 @@ export function Waves() {
     </Svg>
   </View>;
 }
-export function Screen({ children, title, subtitle, welcome = false, demo = true, keyboardForm = false, back = !welcome, beforeBack }: PropsWithChildren<{ title: string; subtitle?: string; welcome?: boolean; demo?: boolean; keyboardForm?: boolean; back?: boolean; beforeBack?:()=>void }>) {
+export function Screen({ children, title, subtitle, welcome = false, demo = true, keyboardForm = false, back = !welcome, beforeBack, dashboard = false }: PropsWithChildren<{ title: string; subtitle?: string; dashboard?: boolean; welcome?: boolean; demo?: boolean; keyboardForm?: boolean; back?: boolean; beforeBack?:()=>void }>) {
   const { name, colors, notice } = useTheme();
   const { width } = useWindowDimensions();
   const focused = useIsFocused();
@@ -78,18 +78,16 @@ export function Screen({ children, title, subtitle, welcome = false, demo = true
     <Waves />
     <SafeAreaView edges={['top', 'left', 'right']} style={{ flex: 1 }}>
       <View style={{width:'100%',position:'relative'}}>
-      {back?<View style={{position:'absolute',left:width>800?24:8,top:11,zIndex:2}}><ArrowBack beforeBack={beforeBack} color={headerInk} fallback={title==='Mi dinero'?'/':'/money'}/></View>:null}
-      <View style={{ width: '100%', maxWidth: 700, alignSelf: 'center', paddingLeft: back&&width<=800?64:width<370?16:24,paddingRight:width<370?16:24 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 70, gap: 10 }}>
-          {!welcome && title === 'Mi dinero' ? <Brand onDark={name === 'dark'}/> : null}
-          {welcome ? <Brand onDark={name === 'dark'} /> : <Text accessibilityRole="header" style={{ fontSize: 27, fontWeight: '800', letterSpacing: -0.5, color: headerInk, flex: 1 }}>{title}</Text>}
-          <SideMenu color={headerInk}/>
+      {back&&!dashboard?<View style={{position:'absolute',left:width>1040?(width-1040)/2+8:8,top:8,zIndex:2}}><ArrowBack beforeBack={beforeBack} color={headerInk} fallback={title==='Mi dinero'?'/':'/money'}/></View>:null}
+      <View style={{ width: '100%', maxWidth: 1040, alignSelf: 'center', paddingLeft: back&&!dashboard?64:16,paddingRight:16 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 64, gap: 10 }}>
+          {dashboard?<><SideMenu color={headerInk}/><Brand onDark={name==='dark'}/><View style={{flex:1}}><Text accessibilityRole="header" style={{fontSize:23,fontStyle:'italic',fontWeight:'800',letterSpacing:-.6,color:headerInk}}>EduMoney</Text><Text style={{fontSize:10,letterSpacing:1,color:headerInk}}>FINANZAS PERSONALES</Text></View></>:<>{welcome?<Brand onDark={name==='dark'}/>:<Text accessibilityRole="header" style={{fontSize:23,fontWeight:'800',letterSpacing:-.5,color:headerInk,flex:1}}>{title}</Text>}<SideMenu color={headerInk}/></>}
           <ThemePicker color={headerInk} />
         </View>
         {keyboardForm?<Pressable testID="form-dismiss-keyboard" accessibilityRole="button" accessibilityLabel="Ocultar teclado" onPress={()=>Keyboard.dismiss()} style={{minHeight:48,justifyContent:'center',alignItems:'flex-end',paddingVertical:8}}><Text style={{color:headerInk,fontSize:16,fontWeight:'600'}}>Ocultar teclado</Text></Pressable>:null}
       </View></View>
       <KeyboardAvoidingView enabled={keyboardForm} behavior={Platform.OS==='ios'?'padding':'height'} style={{flex:1}}><ScrollView keyboardDismissMode="on-drag" tabIndex={0} accessibilityLabel={`Contenido de ${title}`} contentContainerStyle={{ flexGrow: 1, paddingBottom: 32 }} keyboardShouldPersistTaps="handled">
-        <View style={{ width: '100%', maxWidth: 700, alignSelf: 'center', paddingHorizontal: width < 370 ? 16 : 24, gap: 18 }}>
+        <View style={{ width: '100%', maxWidth: 1040, alignSelf: 'center', paddingHorizontal: width < 370 ? 12 : 16, gap: 12 }}>
           {!welcome && demo ? <View style={{ backgroundColor: colors.warning, borderRadius: 12, paddingVertical: 8, paddingHorizontal: 12 }}><Text style={{ color: colors.warningText, fontSize: 12, fontWeight: '600', textAlign: 'center' }}>DEMOSTRACIÓN · DATOS FICTICIOS</Text></View> : null}
           {subtitle ? <Text style={{ color: name === 'dark' ? fixed.subtitleDark : colors.muted, fontSize: 16, lineHeight: 24 }}>{subtitle}</Text> : null}
           {notice ? <View accessibilityLiveRegion="polite" style={{ backgroundColor: colors.warning, padding: 14, borderRadius: 12 }}><Text style={{ color: colors.warningText, fontSize: 15 }}>{notice}</Text></View> : null}

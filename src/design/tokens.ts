@@ -12,8 +12,8 @@ export const palettes = {
     wave: '#81D8B3', onAccent: '#FFFFFF',
   },
   dark: {
-    background: '#061E31', gradient: ['#082B43', '#06394B', '#062032'] as const,
-    surface: '#F3F9F9', surfaceAlt: '#E6F1F4', text: '#102F42', muted: '#455E6C',
+    background: '#061E31', gradient: ['#042B3B', '#064555', '#087478'] as const,
+    surface: '#FFFFFF', surfaceAlt: '#F3F7FA', text: '#102F42', muted: '#455E6C',
     primary: '#006D50', accent: '#80E8BD', line: '#CFDFE2', tab: '#08283C',
     mint: '#DBF4E5', blue: '#DCEFFA', violet: '#ECE6F8', coral: '#FCE8E7',
     warning: '#FFF1C9', warningText: '#694800', progressTrack: '#CBDFDC',

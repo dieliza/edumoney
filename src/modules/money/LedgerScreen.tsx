@@ -1,4 +1,4 @@
-import {ExpenseTopThree} from '../../ui/ExpenseTopThree';
+import {MoneyOverview} from '../../ui/MoneyOverview';
 import {ActionMenu} from '../../ui/ActionMenu';
 import { userMessage } from '../../core/errors';
 import { useEffect, useMemo, useState } from 'react';
@@ -12,7 +12,7 @@ import { useTheme } from '../../design/ThemeProvider';
 import { fixed } from '../../design/tokens';
 import { newId } from '../../core/id';
 import { parseAmount } from '../../core/money';
-import { ActionButton, Body, Card, DashboardAction, IconBadge, Screen, SectionHeading, ui } from '../../ui/components';
+import { ActionButton, Body, Card, IconBadge, Screen, SectionHeading, ui } from '../../ui/components';
 import { localToday, formatMoney, monthlySummary, validDate, validMonth } from './domain';
 import { getMoneyStore } from './localStore';
 import type { MoneyStore } from './store';
@@ -95,27 +95,17 @@ export default function LedgerScreen({initialSection,initialMonth}:{initialSecti
     const filterError = (from && !validDate(from)) || (to && !validDate(to)) || (from && to && from > to) ? 'Revisa el rango de fechas (AAAA-MM-DD).' : '';
     const rows = filterError ? [] : data.movements.filter(m => (deleted === 'deleted' ? !!m.deletedAt : !m.deletedAt) && (filterKind === 'all' || m.kind === filterKind) && (filterCategory === 'all' || (m.categoryId ?? 'none') === filterCategory) && (filterMethod === 'all' || m.paymentMethod === filterMethod) && (!from || m.date >= from) && (!to || m.date <= to) && normalize(m.description).includes(normalize(query)));
     const categoryName = (id: string | null) => data.categories.find(c => c.id === id)?.name ?? 'Sin categoría';
-    return <Screen title={segment==='categories'?'Categorías y presupuestos':'Mi dinero'} demo={false} subtitle="¡Hola! Aquí tienes tu resumen de hoy.">
+    return <Screen dashboard={segment==='summary'} title={segment==='categories'?'Categorías y presupuestos':'Mi dinero'} demo={false}>
   <ErrorNotice message={error}/>{notice ? <Card><Body>{notice}</Body></Card> : null}
   {!store ? <ActivityIndicator color={colors.accent} accessibilityLabel="Cargando registros cifrados"/> : <>
-   <Choices label="Sección de Mi dinero" value={segment} options={segment==='categories'?[['categories','Administrar'],['summary','Mi dinero'],['analysis','Gráficas y categorías']]:[['summary','Resumen'],['history','Historial'],['analysis','Gráficas y categorías']]} onChange={v=>{if(v==='analysis')router.push({pathname:'/charts',params:{month}});else setSegment(v);}}/>
+   {segment!=='summary'?<Choices label="Sección de Mi dinero" value={segment} options={segment==='categories'?[['categories','Administrar'],['summary','Mi dinero'],['analysis','Gráficas y categorías']]:[['summary','Resumen'],['history','Historial'],['analysis','Gráficas y categorías']]} onChange={v=>{if(v==='analysis')router.push({pathname:'/charts',params:{month}});else setSegment(v);}}/>:null}
 
    {segment !== 'summary' ? <ActionMenu label="Nueva transacción" actions={[{id:'income',label:'Añadir ingreso',run:()=>setForm({kind:'income'})},{id:'expense',label:'Registrar gasto',run:()=>setForm({kind:'expense'})},{id:'transfer',label:'Registrar transferencia propia',run:()=>setForm({kind:'transfer'})}]}/> : null}
-   {segment !== 'history' ? <SectionHeading title={month === localToday().slice(0, 7) ? 'Este mes' : month} action={showMonth ? 'Cerrar' : 'Cambiar mes'} onPress={() => setShowMonth(!showMonth)}/> : null}
-   {segment !== 'history' && showMonth ? <Field label="Mes (AAAA-MM)" value={month} onChangeText={setMonth}/> : null}
+   {segment !== 'history' && segment !== 'summary' ? <SectionHeading title={month === localToday().slice(0, 7) ? 'Este mes' : month} action={showMonth ? 'Cerrar' : 'Cambiar mes'} onPress={() => setShowMonth(!showMonth)}/> : null}
+   {segment !== 'history' && segment !== 'summary' && showMonth ? <Field label="Mes (AAAA-MM)" value={month} onChangeText={setMonth}/> : null}
    {segment !== 'history' ? <ErrorNotice message={summaryError}/> : null}
    {segment === 'summary' && summary ? <>
-    <Card style={{ padding: 0, overflow: 'hidden' }}>
-     <View style={{ backgroundColor: colors.mint, padding: 20, gap: 4 }}><Body style={{ fontWeight: '700' }}>Disponible estimado del mes</Body><Body style={{ fontSize: 36, lineHeight: 44, fontWeight: '800', color: fixed.balance }}>{formatMoney(summary.available)}</Body><Body muted style={ui.small}>Según tus registros · No es un saldo bancario confirmado</Body></View>
-    </Card>
-    <Card><MonthlyCharts compact summary={summary} movements={data.movements} month={month}/></Card>
-    <ExpenseTopThree items={summary.distribution} month={month} onOpen={()=>router.push({pathname:'/charts',params:{month,view:'breakdown'}})}/>
-    <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
-     <DashboardAction title="Añadir ingreso" icon="add-circle" onPress={() => setForm({ kind: 'income' })}/>
-     <DashboardAction title="Registrar gasto" icon="receipt" tone="coral" onPress={() => setForm({ kind: 'expense' })}/>
-     <DashboardAction title="Escanear recibo" testID="open-documents" icon="camera" tone="blue" onPress={() => router.push('/documents')}/>
-     <DashboardAction title="Deudas" testID="open-debts" icon="calendar" tone="violet" onPress={() => router.push('/debts')}/>
-    </View>
+    <MoneyOverview summary={summary} movements={data.movements} month={month} currentMonth={localToday().slice(0,7)} onPeriod={()=>setShowMonth(!showMonth)} periodEditor={showMonth?<Field label="Mes (AAAA-MM)" value={month} onChangeText={setMonth}/>:null} onIncome={()=>setForm({kind:'income'})} onExpense={()=>setForm({kind:'expense'})} onScan={()=>router.push('/documents')} onDebts={()=>router.push('/debts')} onBreakdown={()=>router.push({pathname:'/charts',params:{month,view:'breakdown'}})} onHistory={()=>setSegment('history')} onCharts={()=>router.push({pathname:'/charts',params:{month}})}/>
     <SectionHeading title="Próximas facturas" action="Ver todas" onPress={() => router.push('/bills')}/>
     <Card>
      {bills.filter(b => !b.debtId && !b.voidedAt && outstanding(b) > 0).sort((a, b) => a.dueDate.localeCompare(b.dueDate)).slice(0, 3).map(b => <Pressable key={b.id} accessibilityRole="button" accessibilityLabel={`Abrir factura de ${b.provider}, ${formatMoney(outstanding(b))}, vence ${b.dueDate}`} onPress={() => router.push('/bills')} style={[ui.row, { minHeight: 56 }]}><IconBadge icon="flash" size={38}/><View style={{ flex: 1 }}><Body style={{ fontWeight: '700' }}>{b.provider}</Body><Body muted style={ui.small}>{b.dueDate} · {billStatus(b, localToday())}</Body></View><Body style={{ fontWeight: '700' }}>{formatMoney(outstanding(b))}</Body></Pressable>)}

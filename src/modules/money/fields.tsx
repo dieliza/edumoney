@@ -23,7 +23,7 @@ export function Sheet({ title, close, children, busy = false }: PropsWithChildre
   </Card></ScrollView>
  </View></KeyboardAvoidingView></Modal>;
 }
-export function Field({ label, value, onChangeText, decimal = false, multiline = false, testID, maxLength, secure = false, required, money, calculationRequired = isCalculationField(label) }: {
+export function Field({ label, value, onChangeText, decimal = false, multiline = false, testID, maxLength, secure = false, required, money, calculationRequired = isCalculationField(label), compact = false }: {
     label: string;
     value: string;
     onChangeText(value: string): void;
@@ -35,6 +35,7 @@ export function Field({ label, value, onChangeText, decimal = false, multiline =
     money?: boolean;
     required?: boolean;
     calculationRequired?: boolean;
+    compact?: boolean;
 }) {
     const { colors } = useTheme();
     const [visible, setVisible] = useState(false);
@@ -43,9 +44,9 @@ export function Field({ label, value, onChangeText, decimal = false, multiline =
     const needed = descriptionField?false:required ?? isRequiredField(label);
     const missing = missingField(value, needed || calculationRequired);
     if(isCalendarField(label)&&!secure&&!multiline)return <DateField label={label} value={value} onChangeText={onChangeText} required={needed||calculationRequired} testID={testID}/>;
-    return <View style={{ gap: 6, padding: 12, borderRadius: 16, backgroundColor: colors.surface }}><Body style={{ fontSize: 14, fontWeight: '600' }}>{label}{descriptionField&&!/opcional/i.test(label)?' (opcional)':''}</Body><TextInput secureTextEntry={secure && !visible} autoCorrect={secure ? false : undefined} autoCapitalize={secure ? 'none' : undefined} testID={testID} accessibilityLabel={label} accessibilityHint={missing ? (calculationRequired ? 'Necesario para calcular. Completa este dato.' : 'Campo obligatorio sin completar.') : undefined} aria-invalid={missing} placeholder={monetary?'0.00':undefined} value={monetary?moneyDisplay(value):value} onChangeText={monetary?text=>{if(text.replace(/\D/g,'').length<=15)onChangeText(moneyKeystroke(text));}:onChangeText} keyboardType={decimal ? 'decimal-pad' : 'default'} multiline={multiline} maxLength={maxLength ?? (multiline ? 240 : 100)} style={{ minHeight: 50, borderWidth: missing ? 2 : 1, borderColor: missing ? fixed.expense : colors.line, borderRadius: 12, padding: 12, color: colors.text, backgroundColor: colors.surfaceAlt, fontSize: 17 }} placeholderTextColor={colors.muted}/>{monetary?<><Body muted style={{fontSize:12}}>Escribe los dígitos de derecha a izquierda: 100 → 1.00 USD.</Body><Pressable accessibilityRole="button" accessibilityLabel={`Limpiar ${label}`} onPress={()=>onChangeText('')} style={{minHeight:44,justifyContent:"center"}}><Body>Limpiar importe</Body></Pressable></>:null}{secure ? <Pressable accessibilityRole="button" accessibilityLabel={visible ? "Ocultar contraseña" : "Mostrar contraseña"} onPress={() => setVisible(!visible)} style={{minHeight:44,justifyContent:"center",alignSelf:"flex-start",paddingHorizontal:12}}><Ionicons name={visible ? "eye-off-outline" : "eye-outline"} size={24} color={colors.primary}/></Pressable> : null}{missing ? <Body style={{fontSize:12,lineHeight:18,color:fixed.expense}}>{calculationRequired ? 'Necesario para calcular' : 'Obligatorio'}</Body> : null}</View>;
+    return <View style={{ gap: 6, padding: compact ? 4 : 12, borderRadius: 16, backgroundColor: colors.surface }}><Body style={{ fontSize: 14, fontWeight: '600' }}>{label}{descriptionField&&!/opcional/i.test(label)?' (opcional)':''}</Body><TextInput secureTextEntry={secure && !visible} autoCorrect={secure ? false : undefined} autoCapitalize={secure ? 'none' : undefined} testID={testID} accessibilityLabel={label} accessibilityHint={missing ? (calculationRequired ? 'Necesario para calcular. Completa este dato.' : 'Campo obligatorio sin completar.') : undefined} aria-invalid={missing} placeholder={monetary?'0.00':undefined} value={monetary?moneyDisplay(value):value} onChangeText={monetary?text=>{if(text.replace(/\D/g,'').length<=15)onChangeText(moneyKeystroke(text));}:onChangeText} keyboardType={decimal ? 'decimal-pad' : 'default'} multiline={multiline} maxLength={maxLength ?? (multiline ? 240 : 100)} style={{ minHeight: 50, borderWidth: missing ? 2 : 1, borderColor: missing ? fixed.expense : colors.line, borderRadius: 12, padding: 12, color: colors.text, backgroundColor: colors.surfaceAlt, fontSize: 17 }} placeholderTextColor={colors.muted}/>{monetary&&!compact?<><Body muted style={{fontSize:12}}>Escribe los dígitos de derecha a izquierda: 100 → 1.00 USD.</Body><Pressable accessibilityRole="button" accessibilityLabel={`Limpiar ${label}`} onPress={()=>onChangeText('')} style={{minHeight:44,justifyContent:"center"}}><Body>Limpiar importe</Body></Pressable></>:null}{secure ? <Pressable accessibilityRole="button" accessibilityLabel={visible ? "Ocultar contraseña" : "Mostrar contraseña"} onPress={() => setVisible(!visible)} style={{minHeight:44,justifyContent:"center",alignSelf:"flex-start",paddingHorizontal:12}}><Ionicons name={visible ? "eye-off-outline" : "eye-outline"} size={24} color={colors.primary}/></Pressable> : null}{missing ? <Body style={{fontSize:12,lineHeight:18,color:fixed.expense}}>{calculationRequired ? 'Necesario para calcular' : 'Obligatorio'}</Body> : null}</View>;
 }
-export function Choices<T extends string>({ label, value, options, onChange, presentation = 'select', required = false }: {
+export function Choices<T extends string>({ label, value, options, onChange, presentation = 'select', required = false, compact = false }: {
     label: string;
     value: T;
     options: readonly (readonly [
@@ -54,14 +55,15 @@ export function Choices<T extends string>({ label, value, options, onChange, pre
     ])[];
     onChange(value: T): void;
     presentation?: 'select' | 'tabs';
+    compact?: boolean;
     required?: boolean;
 }) {
     const { colors } = useTheme();
     const [open, setOpen] = useState(false);
     const missing = missingField(value, required);
     const selected = options.find(([key]) => key === value)?.[1] ?? 'Seleccionar';
-    if (presentation === 'select') return <View style={{ gap: 6, padding: 12, borderRadius: 16, backgroundColor: colors.surface }}>
-      <Body style={{ fontSize: 14, fontWeight: '600' }}>{label}</Body>
+    if (presentation === 'select') return <View style={{ gap: 6, padding: compact ? 4 : 12, borderRadius: 16, backgroundColor: colors.surface }}>
+      {!compact?<Body style={{ fontSize: 14, fontWeight: '600' }}>{label}</Body>:null}
       <Pressable accessibilityRole="button" accessibilityLabel={`${label}: ${selected}`} accessibilityHint={missing ? 'Selección obligatoria sin completar. Abre las opciones.' : 'Abre las opciones para elegir una'} aria-invalid={missing} accessibilityState={{ expanded: open }} onPress={() => setOpen(current => !current)} style={{ minHeight: 52, borderWidth: missing ? 2 : 1, borderColor: missing ? fixed.expense : colors.line, borderRadius: 12, backgroundColor: colors.surfaceAlt, padding: 12, flexDirection: 'row', alignItems: 'center', gap: 12 }}>
         <Body style={{ flex: 1 }}>{selected}</Body><Ionicons name="chevron-down" size={20} color={colors.primary}/>
       </Pressable>
@@ -75,7 +77,7 @@ export function Choices<T extends string>({ label, value, options, onChange, pre
         <CloseButton label={`Cerrar opciones de ${label}`} onPress={() => setOpen(false)}/>
       </View> : null}
     </View>;
-    return <View style={{ gap: 8, padding: 12, borderRadius: 16, backgroundColor: colors.surface }}><Body style={{ fontSize: 14, fontWeight: '600' }}>{label}</Body><ScrollView horizontal showsHorizontalScrollIndicator contentContainerStyle={{gap:8}}><View accessibilityRole="radiogroup" accessibilityLabel={label} style={{ flexDirection: 'row', gap: 8 }}>{options.map(([key, text]) => <Pressable key={key} accessibilityRole="radio" accessibilityLabel={text} accessibilityState={{ checked: value === key }} aria-checked={value === key} onPress={() => onChange(key)} style={{ minHeight: 48, padding: 12, borderWidth: 1, borderColor: value === key ? colors.primary : colors.line, borderRadius: 12, backgroundColor: value === key ? colors.primary : colors.surfaceAlt }}><Body style={{ fontSize: 14, color: value === key ? fixed.white : colors.text }}>{text}</Body></Pressable>)}</View></ScrollView></View>;
+    return <View style={{ gap: compact ? 0 : 8, padding: compact ? 4 : 12, borderRadius: 16, backgroundColor: colors.surface }}>{!compact?<Body style={{ fontSize: 14, fontWeight: '600' }}>{label}</Body>:null}<ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{gap:compact?4:8,flexGrow:1}}><View accessibilityRole="radiogroup" accessibilityLabel={label} style={{ flexDirection: 'row', gap: compact?4:8,flex:1 }}>{options.map(([key, text]) => <Pressable key={key} accessibilityRole="radio" accessibilityLabel={text} accessibilityState={{ checked: value === key }} aria-checked={value === key} onPress={() => onChange(key)} style={{ flex:compact?1:undefined,alignItems:'center',justifyContent:'center',minHeight: 44, padding: compact?8:12, borderWidth: 1, borderColor: value === key ? colors.primary : colors.line, borderRadius: 12, backgroundColor: value === key ? colors.primary : colors.surfaceAlt }}><Body style={{ fontSize: 14, color: value === key ? fixed.white : colors.text }}>{text}</Body></Pressable>)}</View></ScrollView></View>;
 }
 export function ErrorNotice({ message }: {
     message: string;

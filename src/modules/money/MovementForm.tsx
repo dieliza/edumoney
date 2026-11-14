@@ -41,6 +41,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState('');
     const [duplicate, setDuplicate] = useState(false);
+    const [details,setDetails]=useState(false);
     const preserveExisting=!!initial&&gross===(initial.grossCents==null?'':inputAmount(initial.grossCents))&&withholding===(initial.withholdingCents==null?'':inputAmount(initial.withholdingCents));
     const needBreakdown=!initial||(!preserveExisting&&!!(gross.trim()||withholding.trim()));
     let netPreview:ReturnType<typeof incomeFromBreakdown>|null=null;
@@ -76,15 +77,16 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
             setBusy(false);
         }
     }
-    return <Sheet title={initial ? 'Corregir movimiento' : kind === 'income' ? 'Añadir ingreso' : kind === 'expense' ? 'Registrar gasto' : 'Registrar otro movimiento'} close={close} busy={busy}>
+    return <Sheet title={initial ? 'Corregir movimiento' : 'Nueva transacción'} close={close} busy={busy}>
+  {!initial&&(kind==='income'||kind==='expense')?<Choices<'income'|'expense'> compact label="Tipo de transacción" presentation="tabs" value={type as 'income'|'expense'} options={[["expense","↓ Gasto"],["income","↑ Ingreso"]]} onChange={value=>{setType(value);if(value==='income'&&method==='credit')setMethod('bank');setCategory('');setCategoryName('');setDuplicate(false);}}/>:null}
+  {(type === 'income' || type === 'expense') ? <CategoryPicker required={type==='expense'} categories={categories} kind={type} value={category} onChange={(id,name)=>{setCategory(id);setCategoryName(name??'');setDuplicate(false);}}/> : null}
   {type==='income'&&!initial?<ActionButton title="Cheque, talonario o desglose manual de deducciones" icon="camera-outline" onPress={()=>{close();router.push('/income-documents');}}/>:null}
-  <Body muted>USD · Datos guardados únicamente en la base cifrada de este dispositivo.</Body>
+
   {!initial&&kind!=='income'&&kind!=='expense'?<Choices<EntryKind> label="Operación" value={type} options={(allowedKinds??['transfer','loan','debt_payment'] as EntryKind[]).map(key=>[key,kindLabels[key]] as const)} onChange={setType}/>:null}
   {initial?.scheduleId?<Body>Ingreso vinculado a una recurrencia. Esta corrección no modifica los próximos cobros.</Body>:null}
-  {type!=='income'?<Field label="Importe (USD)" value={amount} onChangeText={v => { setAmount(v); setDuplicate(false); }} decimal testID="movement-amount"/>:null}
-  <DateField required label="Fecha" value={date} onChangeText={v => { setDate(v); setDuplicate(false); }} testID="movement-date"/>
-  {type!=='expense'?<Field label="Descripción" value={description} onChangeText={v => { setDescription(v); setDuplicate(false); }} multiline testID="movement-description"/>:null}
-  {(type === 'income' || type === 'expense') ? <CategoryPicker required={type==='expense'} categories={categories} kind={type} value={category} onChange={(id,name)=>{setCategory(id);setCategoryName(name??'');setDuplicate(false);}}/> : null}
+  <View style={{flexDirection:'row',flexWrap:'wrap',gap:12}}><View style={{flex:1,minWidth:140}}><DateField required label="Fecha" value={date} onChangeText={v => { setDate(v); setDuplicate(false); }} testID="movement-date"/></View>{type!=='income'?<View style={{flex:1,minWidth:140}}><Field compact label="Importe (USD)" value={amount} onChangeText={v => { setAmount(v); setDuplicate(false); }} decimal testID="movement-amount"/></View>:null}</View>
+  {type!=='expense'?<Field label="Descripción (opcional)" value={description} onChangeText={v => { setDescription(v); setDuplicate(false); }} multiline testID="movement-description"/>:null}
+
   <Choices<PaymentMethod> label="Método de pago" value={method} options={(Object.entries(paymentLabels) as [
         PaymentMethod,
         string
@@ -101,12 +103,15 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
    <Body>{netPreview===null?'Completa bruto y retención para calcular el ingreso.':`Ingreso neto ${initial&&(preserveExisting||(!gross&&!withholding))?'registrado':'calculado'}: ${formatMoney(netPreview)}`}</Body>
    <Body muted>El neto es bruto menos retención. Este formulario supone que no hubo otras deducciones. Confirma que el resultado coincide con lo recibido antes de guardar; no se calcula una planilla. En registros anteriores, dejar ambos campos vacíos conserva el importe conocido.</Body>
   </> : null}
+  <ActionButton secondary title={details?'Ocultar opciones contables':'Opciones contables y uso'} icon="options-outline" onPress={()=>setDetails(!details)}/>
+  {details?<>
   <Choices label="Para revisión de mi contable" value={tax} options={[['no', 'No marcar'], ['yes', 'Marcar para revisión']]} onChange={setTax}/>
   <Choices<LedgerMovement['useKind']> label="Uso del movimiento" value={use} options={[['unknown', 'Sin clasificar'], ['personal', 'Personal'], ['business', 'Comercial'], ['mixed', 'Mixto']]} onChange={setUse}/>
   <Body muted>Marcar para revisión no implica que sea deducible.</Body>
+  </>:null}
   {initial ? <Field label="Motivo de la corrección" value={reason} onChangeText={setReason} multiline/> : null}
   <ErrorNotice message={error}/>
-  {!busy ? <ActionButton title={initial ? 'Guardar corrección' : 'Guardar movimiento'} onPress={() => { setDuplicate(false); void submit(); }}/> : null}
+  {!busy ? <ActionButton title={initial ? 'Guardar corrección' : type==='expense'?'Guardar gasto':type==='income'?'Guardar ingreso':'Guardar movimiento'} onPress={() => { setDuplicate(false); void submit(); }}/> : null}
   {!busy && duplicate ? <><Body>Si son dos operaciones distintas, puedes conservar ambas. Comprueba el historial antes de confirmar.</Body><ActionButton title="Guardar como operación distinta" secondary onPress={() => void submit(true)}/></> : null}
   {initial ? <Body muted>Original: {formatMoney(initial.amountCents)} · {initial.date}. La versión anterior se conserva en el historial cifrado.</Body> : null}
  </Sheet>;
