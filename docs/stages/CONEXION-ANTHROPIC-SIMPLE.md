@@ -38,3 +38,5 @@ Sin migración de esquema financiero ni cambios de importes o registros. El desb
 TypeScript, ESLint y diff check correctos. Sin clave real no se verificó una cuenta de Anthropic ni saldo o precisión real de fotos. No se envió una foto ni se generaron cargos. No se verificó Safari físico ni PWA instalada: las herramientas de navegador Sites siguen sin estar disponibles.
 
 Compilación web correcta. Esta etapa sustituye la configuración de API temporal descrita en documentos anteriores; se conservan como historial. La clave sigue siendo propia por navegador y no una credencial central del servicio.
+
+Publicada el 14 de noviembre de 2026 a las 01:46 UTC. Versión alojada 21, marcador 2026.11.14.03. Fuente 267ea5d70f6b232f695768627bd9cf3a3dbb0a26; versión appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_d92de2f4300c819184f6ffc1f5a60849; despliegue appgdep_6af7bd70e3a08191925ce2277c4ba354, succeeded. Audiencia pública conservada, GitHub main sin modificar. https://edumoney-web.diegoluissantospabon.chatgpt.site
