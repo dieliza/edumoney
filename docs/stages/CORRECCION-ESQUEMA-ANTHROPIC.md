@@ -28,3 +28,5 @@ Referencia oficial consultada: https://platform.claude.com/docs/en/build-with-cl
 Archivos: web-server/anthropic-reader.mjs; src/modules/documents/ai/readPhoto.web.ts; ReceiptReaderSettings.web.tsx; buildVersion.ts; pruebas anthropic-reader, anthropic-client, anthropic-schema-limits y fixture anthropicWire. Marcador 2026.11.14.05.
 
 TypeScript, ESLint, git diff --check y compilación web correctos.
+
+Publicada el 14 de noviembre de 2026 a las 02:12 UTC. Versión alojada 23, marcador 2026.11.14.05. Fuente 749c246ac5c8561e74fd7eb2b2335de0e59cb7e0; versión appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_65b8582867448191b616e0945c56c18a; despliegue appgdep_6af7c3a2d24c819195f2e0df12b57ada, succeeded. Audiencia pública y clave guardada del usuario conservadas.
