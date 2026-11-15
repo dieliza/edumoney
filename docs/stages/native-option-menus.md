@@ -19,3 +19,9 @@ Sin migraciones, dependencias, cambios de API, autenticación, fórmulas o datos
 Cuatro casos de native-select-control.test.ts aprobados: valor seleccionado/callback exacto, acción ejecutada una vez y repetible, validación/ID ajeno ignorado y estructura nativa con 300 opciones sin una lista de botones dentro de la página. TypeScript, ESLint y compilación Expo web/PWA correctos. No se ejecutó la suite completa.
 
 Este entorno no dispone de navegador interactivo soportado ni iPad físico. No se afirma haber abierto el popover real de Safari ni probado la captura física de fotos desde una selección. El aspecto y los gestos del menú nativo deben comprobarse en el dispositivo.
+
+## Publicación
+
+Sites versión 39, despliegue succeeded appgdep_6af8fc2bb18081919cf47b30d1d09fa3. Fuente de alojamiento e8d2924842b458fa6fc2ea0151faddc48421bd72; implementación web-edumoney 559c576. Audiencia pública y variables del servidor conservadas, revisión 1. GitHub main no modificado. Publicación confirmada por Sites; la comprobación del selector real en Safari/iPad sigue pendiente.
+
+Enlace directo al historial: https://edumoney-web.diegoluissantospabon.chatgpt.site/money?section=history&build=2026.11.14.21
