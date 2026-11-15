@@ -15,3 +15,8 @@ Anthropic automático para usuarios comunes, sin ver ni poder operar su configur
 ## Verificación
 13 casos aprobados, una ejecución por caso, sin repeticiones. Incluyen API normal oculta aun con enlace directo, API visible solo al propietario, rechazo de todas las acciones administrativas a visitantes, lectura predeterminada automática, clave cifrada y no devuelta, desactivación exclusiva del propietario, cuotas solo explícitas, retirada de cuota y más de 200 reservas del mismo origen sin límite ni contadores por IP. Sin llamadas reales/facturables a Anthropic.
 TypeScript, ESLint y compilación web/PWA correctos. Sin migraciones, cambios financieros, autenticación, sincronización o facturación. Pendiente comprobación visual en dispositivos físicos; no hay navegador disponible en este entorno. No se ejecutó suite general ni receipt-labels.
+
+## Publicación confirmada
+Implementación e1cfb8b en web-edumoney. Hosting 204c73f3fc1d94865f77a94e8c8d833e4373d7e1. Sites versión 55: appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_0a3b3c92553c81919ca8403fec81be08. Deployment appgdep_6afa13d390cc819190ee763776d262ea: succeeded. Entorno revisión 1 y audiencia pública conservados.
+URL: https://edumoney-web.diegoluissantospabon.chatgpt.site
+Estado real comprobado mediante acceso de servicio oficial, sin fotos: HTTP 200, enabled=true, configured=true, dailyLimit=null, Anthropic / claude-haiku-5-5. No se realizaron llamadas facturables al proveedor. Web/PWA publicadas; las compilaciones nativas anteriores no se sustituyen por publicar la web.
