@@ -1,10 +1,11 @@
+import {TransactionHistory,type TransactionHistoryKind} from './TransactionHistory';
 import {router} from 'expo-router';
 import { incomeFromBreakdown } from './incomeInput';
 import { DateField } from '../../ui/DateField';
 import { CategoryPicker } from './CategoryPicker';
 import { userMessage, UserInputError } from '../../core/errors';
-import { useState,type ReactNode } from 'react';
-import { View } from 'react-native';
+import { useRef,useState,type ReactNode } from 'react';
+import {ActivityIndicator,Pressable,View} from 'react-native';
 import { newId } from '../../core/id';
 import { parseAmount } from '../../core/money';
 import { ActionButton, Body } from '../../ui/components';
@@ -12,8 +13,12 @@ import { localToday, formatMoney, inputAmount } from './domain';
 import { Choices, ErrorNotice, Field, Sheet } from './fields';
 import { DuplicateMovementError, type MoneyStore } from './store';
 import { kindLabels, paymentLabels, type Category, type EntryKind, type IncomeSchedule, type LedgerMovement, type PaymentMethod } from './types';
-export function MovementForm({ initial, kind, categories, store, close, saved, documentReview,allowedKinds,incomeTools }: {
+export function MovementForm({ initial, kind, categories, store, close, saved, documentReview,allowedKinds,incomeTools,onHistoryEdit,historySaved,initialHistory,afterSave }: {
     initial?: LedgerMovement;
+    onHistoryEdit?(movement:LedgerMovement):void;
+    historySaved?():Promise<void>;
+    initialHistory?:TransactionHistoryKind;
+    afterSave?():void;
     incomeTools?:ReactNode;
     kind: EntryKind;
     allowedKinds?:readonly EntryKind[];
@@ -38,7 +43,8 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
     const [use, setUse] = useState(initial?.useKind ?? 'unknown');
     const [gross, setGross] = useState(initial?.grossCents != null ? inputAmount(initial.grossCents) : '');
     const [withholding, setWithholding] = useState(initial?.withholdingCents != null ? inputAmount(initial.withholdingCents) : '');
-    const [reason, setReason] = useState('');
+    const [historyPane,setHistoryPane]=useState<TransactionHistoryKind|null>(initialHistory??null);
+    const submitting=useRef(false);
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState('');
     const [duplicate, setDuplicate] = useState(false);
@@ -48,8 +54,9 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
     let netPreview:ReturnType<typeof incomeFromBreakdown>|null=null;
     if(type==='income'){try{netPreview=preserveExisting?initial!.amountCents:incomeFromBreakdown(gross,withholding,initial?.amountCents);}catch{}}
     async function submit(allowDuplicate = false) {
-        if (busy)
+        if (submitting.current)
             return;
+        submitting.current=true;
         setBusy(true);
         setError('');
         try {
@@ -64,23 +71,25 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
                 schedule = { id: scheduleId, description: m.description, amountCents: m.amountCents, categoryId: m.categoryId, paymentMethod: m.paymentMethod, cadence, intervalCount: Number(interval), anchorDate: date, nextDate: date, active: true };
             }
             if (initial)
-                await store.edit(m, reason, allowDuplicate, documentReview);
+                await (documentReview?store.edit(m,undefined,allowDuplicate,documentReview):store.editFromHistory(m,allowDuplicate));
             else
                 await store.create(m, allowDuplicate, schedule);
             await saved();
-            close();
+            if(afterSave)afterSave();else close();
         }
         catch (e) {
             setError(userMessage(e));
             setDuplicate(e instanceof DuplicateMovementError);
         }
         finally {
-            setBusy(false);
+            submitting.current=false;setBusy(false);
         }
     }
-    return <Sheet title={initial ? 'Corregir movimiento' : 'Nueva transacción'} close={close} busy={busy}>
-  {type==='income'&&incomeTools?<><ActionButton secondary title={incomeToolsOpen?'Cerrar cobros programados':'Administrar cobros programados'} onPress={()=>setIncomeToolsOpen(!incomeToolsOpen)}/>{incomeToolsOpen?incomeTools:null}</>:null}
-  {!initial&&(kind==='income'||kind==='expense')?<Choices<'income'|'expense'> compact label="Tipo de transacción" presentation="tabs" value={type as 'income'|'expense'} options={[["expense","↓ Gasto"],["income","↑ Ingreso"]]} onChange={value=>{setType(value);if(value==='income'&&method==='credit')setMethod('bank');setCategory('');setCategoryName('');setDuplicate(false);}}/>:null}
+    return <Sheet title={initial ? 'Editar movimiento' : 'Nueva transacción'} close={close} busy={busy}>
+  {!initial&&(kind==='income'||kind==='expense')?<Choices<'income'|'expense'> compact label="Tipo de transacción" presentation="tabs" value={type as 'income'|'expense'} options={[["expense","↓ Gasto"],["income","↑ Ingreso"]]} onChange={value=>{setHistoryPane(null);setType(value);if(value==='income'&&method==='credit')setMethod('bank');setCategory('');setCategoryName('');setDuplicate(false);}}/>:null}
+  {!initial&&onHistoryEdit?<View style={{gap:6}}><Body muted style={{fontSize:13}}>Historiales</Body><View style={{flexDirection:'row',gap:8}}>{([['expense','Gastos'],['income','Ingresos'],['voice','Mis dictados']] as const).map(([value,label])=><Pressable key={value} accessibilityRole="button" accessibilityState={{selected:historyPane===value}} onPress={()=>setHistoryPane(historyPane===value?null:value)} style={{flex:1,minHeight:44,paddingHorizontal:8,borderWidth:1,borderColor:'#5C9B8E',borderRadius:10,alignItems:'center',justifyContent:'center',backgroundColor:historyPane===value?'#D9F5E8':'transparent'}}><Body style={{fontSize:13,fontWeight:'700',...(historyPane===value?{color:'#005B43'}:{})}}>{label}</Body></Pressable>)}</View></View>:null}
+  {!initial&&historyPane&&onHistoryEdit?<TransactionHistory key={historyPane} kind={historyPane} store={store} onEdit={onHistoryEdit} saved={historySaved??saved}/>:<>
+  {!historyPane&&type==='income'&&incomeTools?<><ActionButton secondary title={incomeToolsOpen?'Cerrar cobros programados':'Administrar cobros programados'} onPress={()=>setIncomeToolsOpen(!incomeToolsOpen)}/>{incomeToolsOpen?incomeTools:null}</>:null}
   {(type === 'income' || type === 'expense') ? <CategoryPicker required={type==='expense'} categories={categories} kind={type} value={category} onChange={(id,name)=>{setCategory(id);setCategoryName(name??'');setDuplicate(false);}}/> : null}
   {type==='income'&&!initial?<ActionButton title="Cheque, talonario o desglose manual de deducciones" icon="camera-outline" onPress={()=>{close();router.push('/income-documents');}}/>:null}
 
@@ -111,10 +120,11 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
   <Choices<LedgerMovement['useKind']> label="Uso del movimiento" value={use} options={[['unknown', 'Sin clasificar'], ['personal', 'Personal'], ['business', 'Comercial'], ['mixed', 'Mixto']]} onChange={setUse}/>
   <Body muted>Marcar para revisión no implica que sea deducible.</Body>
   </>:null}
-  {initial ? <Field label="Motivo de la corrección" value={reason} onChangeText={setReason} multiline/> : null}
   <ErrorNotice message={error}/>
-  {!busy ? <ActionButton title={initial ? 'Guardar corrección' : type==='expense'?'Guardar gasto':type==='income'?'Guardar ingreso':'Guardar movimiento'} onPress={() => { setDuplicate(false); void submit(); }}/> : null}
+  {busy?<ActivityIndicator accessibilityLabel="Guardando cambios"/>:null}
+  {!busy ? <ActionButton title={initial ? 'Guardar' : type==='expense'?'Guardar gasto':type==='income'?'Guardar ingreso':'Guardar movimiento'} onPress={() => { setDuplicate(false); void submit(); }}/> : null}
   {!busy && duplicate ? <><Body>Si son dos operaciones distintas, puedes conservar ambas. Comprueba el historial antes de confirmar.</Body><ActionButton title="Guardar como operación distinta" secondary onPress={() => void submit(true)}/></> : null}
   {initial ? <Body muted>Original: {formatMoney(initial.amountCents)} · {initial.date}. La versión anterior se conserva en el historial cifrado.</Body> : null}
+ </>}
  </Sheet>;
 }

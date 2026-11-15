@@ -41,7 +41,7 @@ export default function DocumentsScreen(){
  <ErrorNotice message={error}/>{notice?<Card row><Body>{notice}</Body></Card>:null}
  {parent?<Card row><Body>Corrección de: {parent.description}. Mantendremos su vínculo original.</Body><ActionButton title="Cancelar corrección" secondary onPress={()=>setParent(undefined)}/></Card>:null}
  {!store?<ActivityIndicator accessibilityLabel="Cargando documentos cifrados"/>:null}
- {!busy?<View style={{gap:12}}><ReceiptPhotoButtons presentation="hero" onDictate={()=>router.push({pathname:'/documents',params:{source:'voice'}})} onCapture={(source,file)=>void capture(source,file)}/><ActionMenu actions={[
+ {!busy?<View style={{gap:12}}><ReceiptPhotoButtons presentation="hero" onCapture={(source,file)=>void capture(source,file)}/><ActionMenu actions={[
  {id:'manual',testID:'document-manual',label:'Escribir o pegar información',run:()=>setReview({source:'manual',text:'',image:null,warning:'Entrada manual: confirma los campos antes de guardar.',parent})},
  ]}/></View>:<PhotoAnalysis/>}
  {process.env.EXPO_PUBLIC_STAGE8_TESTS==='1'&&!busy?<ActionButton title="Cargar comprobante ficticio de prueba" testID="document-fixture" secondary onPress={()=>{setBusy(true);setError('');void loadOCRFixture().then(result=>{if(live.current)setReview({source:'library',text:result.text,image:result.image,warning:result.warning,needsAmountReview:result.needsAmountReview,structured:result.structured,parent});}).catch(()=>setError('No se pudo leer la imagen ficticia local.')).finally(()=>setBusy(false));}}/>:null}

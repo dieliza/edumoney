@@ -120,8 +120,9 @@ export class MoneyStore {
             throw new UserInputError('Escribe el motivo de la corrección (hasta 240 caracteres).');
         await this.db.runAsync('INSERT INTO movement_revisions(movement_id,action,reason,before_json,recorded_at) VALUES(?,?,?,?,?)', m.id, action, reason.trim(), JSON.stringify(m), new Date().toISOString());
     }
-    async edit(m: LedgerMovement, reason: string, allowDuplicate = false, documentReview?: { id: string; version: number }) {
+    async edit(m: LedgerMovement, reason = '', allowDuplicate = false, documentReview?: { id: string; version: number }) {
         validateMovement(m);
+        const auditReason=reason.trim()||'Edición guardada por el usuario';
         return this.write(async () => {
             const old = await this.existing(m.id, m.version);
             if (old.deletedAt)
@@ -138,16 +139,21 @@ export class MoneyStore {
             await this.validateCategory(m);
             if (!allowDuplicate && possibleDuplicates(m, await this.movements()).length)
                 throw new DuplicateMovementError();
-            await this.revision(old, 'edit', reason);
+            await this.revision(old, 'edit', auditReason);
             await this.db.runAsync(`UPDATE movements SET kind=?,amount_cents=?,date=?,description=?,category_id=?,payment_method=?,tax_review=?,use_kind=?,gross_cents=?,withholding_cents=?,income_type=?,updated_at=?,version=version+1 WHERE id=?`, m.kind, m.amountCents, m.date, m.description.trim(), m.categoryId, m.paymentMethod, Number(m.taxReview), m.useKind, m.grossCents, m.withholdingCents, m.incomeType, new Date().toISOString(), m.id);
             if (documentReview) {
                 const docs = await this.db.getAllAsync<{ id: string }>("SELECT * FROM documents WHERE movement_id=? AND status<>'corrected' AND deleted_at IS NULL", m.id);
                 for (const doc of docs) {
-                    await this.db.runAsync('INSERT INTO document_events(document_id,reason,before_json,recorded_at) VALUES(?,?,?,?)', doc.id, 'Movimiento corregido: ' + reason.trim(), JSON.stringify(doc), new Date().toISOString());
+                    await this.db.runAsync('INSERT INTO document_events(document_id,reason,before_json,recorded_at) VALUES(?,?,?,?)', doc.id, 'Movimiento corregido: ' + auditReason, JSON.stringify(doc), new Date().toISOString());
                     await this.db.runAsync("UPDATE documents SET status='pending',version=version+1 WHERE id=?", doc.id);
                 }
             }
         });
+    }
+    /** History edits reuse the existing document-aware transaction and keep every other link guard. */
+    async editFromHistory(m:LedgerMovement,allowDuplicate=false){
+        const document=await this.read(db=>db.getFirstAsync<{id:string;version:number}>("SELECT id,version FROM documents WHERE movement_id=? AND deleted_at IS NULL AND status<>'corrected' ORDER BY rowid DESC LIMIT 1",m.id));
+        return this.edit(m,undefined,allowDuplicate,document??undefined);
     }
     async setDeleted(id: string, version: number, deleted: boolean, reason: string, documentReview?: { id: string; version: number }) {
         return this.write(async () => {

@@ -33,6 +33,7 @@ export default function LedgerScreen({initialSection,initialMonth}:{initialSecti
     const [form, setForm] = useState<{
         kind: EntryKind;
         initial?: LedgerMovement;
+        history?:'expense'|'income'|'voice';
     } | null>(null);
     const [category, setCategory] = useState<Category | null | undefined>();
     const [budget, setBudget] = useState(false);
@@ -128,14 +129,14 @@ export default function LedgerScreen({initialSection,initialMonth}:{initialSecti
     <SectionHeading title="Tus categorías"/>
     {data.categories.map(c => <Pressable key={c.id} accessibilityRole="button" accessibilityLabel={`Editar categoría ${c.name}`} onPress={() => setCategory(c)}><Card row><Body>{c.name} · {c.kind === 'expense' ? 'Gasto' : 'Ingreso'}{c.archived ? ' · Archivada' : ''}</Body></Card></Pressable>)}
    </> : null}
-   {form ? <MovementForm incomeTools={<>
+   {form ? <MovementForm key={form.initial?`${form.initial.id}:${form.initial.version}`:`new:${form.history??''}`} initialHistory={form.history} onHistoryEdit={movement=>setForm({initial:movement,kind:movement.kind as EntryKind,history:movement.kind==='income'?'income':'expense'})} historySaved={refresh} incomeTools={<>
     <ErrorNotice message={error}/>{notice?<Card row><Body>{notice}</Body></Card>:null}
     <Card row><Body muted>Las fechas previstas no son dinero recibido. Confirma cada cobro una sola vez; editar un cobro pasado no cambia su programación.</Body></Card>
     {!data.schedules.length ? <Card row><Body>Añade un ingreso y elige Recurrente para preparar tus siguientes cobros.</Body></Card> : data.schedules.map(s => <Card row key={s.id}><Body style={{ fontWeight: '700' }}>{s.description}</Body><Body>{formatMoney(s.amountCents)} · {s.active ? 'Próximo previsto' : 'En pausa'}: {s.nextDate}</Body><Body muted>Cada {s.intervalCount} {s.cadence === 'weekly' ? 'semana(s)' : 'mes(es)'}</Body>
      {s.active && s.nextDate <= localToday() && !busy ? <ActionButton title={`Confirmar cobro: ${s.description}`} onPress={() => void action(() => store.confirmSchedule(s.id, s.nextDate, newId(), localToday()), 'Cobro registrado. Los siguientes permanecen previstos.')}/> : null}
      {!busy ? <ActionButton title={s.active ? `Pausar: ${s.description}` : `Reanudar: ${s.description}`} secondary onPress={() => void action(() => store.toggleSchedule(s.id, !s.active), 'Programación actualizada. Los movimientos anteriores se conservan.')}/> : null}
     </Card>)}
-</>} allowedKinds={['transfer']} initial={form.initial} kind={form.kind} categories={data.categories} store={store} close={() => setForm(null)} saved={async () => { await refresh(); setNotice('Movimiento guardado en este dispositivo.'); }}/> : null}
+</>} allowedKinds={['transfer']} initial={form.initial} kind={form.kind} categories={data.categories} store={store} close={() => setForm(null)} afterSave={() => setForm(form.initial&&form.history?{kind:form.history==='income'?'income':'expense',history:form.history}:null)} saved={async () => { await refresh(); setNotice('Movimiento guardado en este dispositivo.'); }}/> : null}
    {category !== undefined ? <CategoryForm initial={category} store={store} saved={refresh} close={() => setCategory(undefined)}/> : null}
    {budget ? <BudgetForm data={data} month={month} store={store} saved={refresh} close={() => setBudget(false)}/> : null}
    {selected ? <Sheet title="Detalle del movimiento" close={() => setSelected(null)} busy={busy}>
@@ -144,7 +145,7 @@ export default function LedgerScreen({initialSection,initialMonth}:{initialSecti
     <Body>Uso: {selected.useKind === 'unknown' ? 'Sin clasificar' : selected.useKind === 'personal' ? 'Personal' : selected.useKind === 'business' ? 'Comercial' : 'Mixto'} · {selected.taxReview ? 'Marcado para revisión' : 'Sin marca contributiva'}</Body>
     {selected.scheduleId ? <Body muted>Vinculado a ingreso recurrente. Eliminarlo no vuelve a generar este cobro; puedes restaurarlo.</Body> : null}
     {selected.kind==='goal_contribution'?<><Body>Las aportaciones se corrigen desde Mis metas para conservar sus vínculos.</Body><ActionButton title="Abrir Mis metas" secondary onPress={()=>{setSelected(null);router.push('/goals');}}/></>:null}
-    {selected.kind!=='goal_contribution' && !selected.deletedAt && !busy ? <ActionButton title="Corregir movimiento" onPress={() => { setForm({ initial: selected, kind: selected.kind as EntryKind }); setSelected(null); }}/> : null}
+    {selected.kind!=='goal_contribution' && !selected.deletedAt && !busy ? <ActionButton title="Editar" onPress={() => { setForm({ initial: selected, kind: selected.kind as EntryKind }); setSelected(null); }}/> : null}
     <Field label={selected.deletedAt ? 'Motivo de restauración' : 'Motivo de eliminación'} value={reason} onChangeText={setReason} multiline/>
     <Body muted>{selected.deletedAt ? 'La restauración vuelve a incluirlo en los cálculos.' : 'La eliminación lo retira de los cálculos y conserva su historial. Puedes restaurarlo desde Eliminados.'}</Body>
     {selected.kind!=='goal_contribution' && !busy ? <ActionButton title={selected.deletedAt ? 'Confirmar restauración' : 'Confirmar eliminación'} secondary onPress={() => void action(async () => { await store.setDeleted(selected.id, selected.version, !selected.deletedAt, reason); setSelected(null); }, selected.deletedAt ? 'Movimiento restaurado.' : 'Movimiento retirado de los cálculos; disponible en Eliminados.')}/> : null}
