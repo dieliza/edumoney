@@ -1,3 +1,4 @@
+import {entryMethods} from './entryContext';
 import {announceSaved} from '../../ui/saveFeedback';
 import {TransactionHistory,type TransactionHistoryKind} from './TransactionHistory';
 import {router} from 'expo-router';
@@ -30,10 +31,12 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
     documentReview?: { id: string; version: number };
 }) {
     const [identity] = useState(() => ({ id: initial?.id ?? newId(), operation: initial?.idempotencyKey ?? newId(), schedule: newId() }));
-    const [type,setType] = useState<EntryKind>(initial?.kind as EntryKind ?? kind);
+    const [type,setType] = useState<EntryKind>(initial?.kind as EntryKind ?? (initialHistory==='income'?'income':initialHistory==='expense'?'expense':kind));
     const [amount, setAmount] = useState(initial ? inputAmount(initial.amountCents) : '');
     const [description, setDescription] = useState(initial?.description ?? '');
     const [date, setDate] = useState(initial?.date ?? localToday());
+    const [addedCategories,setAddedCategories]=useState<Category[]>([]);
+    const availableCategories=[...categories,...addedCategories.filter(c=>!categories.some(old=>old.id===c.id))];
     const [category, setCategory] = useState(initial?.categoryId ?? '');
     const [categoryName,setCategoryName] = useState(categories.find(c=>c.id===initial?.categoryId)?.name??'');
     const [method, setMethod] = useState<PaymentMethod>((initial ? (initial.paymentMethod ?? '') : 'bank') as PaymentMethod);
@@ -87,11 +90,11 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
         }
     }
     return <Sheet title={initial ? 'Editar movimiento' : 'Nueva transacción'} close={close} busy={busy}>
-  {!initial&&(kind==='income'||kind==='expense')?<Choices<'income'|'expense'> compact label="Tipo de transacción" presentation="tabs" value={type as 'income'|'expense'} options={[["expense","↓ Gasto"],["income","↑ Ingreso"]]} onChange={value=>{setHistoryPane(null);setType(value);if(value==='income'&&method==='credit')setMethod('bank');setCategory('');setCategoryName('');setDuplicate(false);}}/>:null}
-  {!initial&&onHistoryEdit?<View style={{gap:6}}><Body muted style={{fontSize:13}}>Historiales</Body><View style={{flexDirection:'row',gap:8}}>{([['expense','Gastos'],['income','Ingresos']] as const).map(([value,label])=><Pressable key={value} accessibilityRole="button" accessibilityState={{selected:historyPane===value}} onPress={()=>setHistoryPane(historyPane===value?null:value)} style={{flex:1,minHeight:44,paddingHorizontal:8,borderWidth:1,borderColor:'#5C9B8E',borderRadius:10,alignItems:'center',justifyContent:'center',backgroundColor:historyPane===value?'#D9F5E8':'transparent'}}><Body style={{fontSize:13,fontWeight:'700',...(historyPane===value?{color:'#005B43'}:{})}}>{label}</Body></Pressable>)}</View></View>:null}
+  {!initial&&(kind==='income'||kind==='expense')?<Choices<'income'|'expense'> compact label="Tipo de transacción" presentation="tabs" value={type as 'income'|'expense'} options={[["expense","↓ Gasto"],["income","↑ Ingreso"]]} onChange={value=>{setHistoryPane(null);setType(value);if(value==='income'&&method==='credit')setMethod('bank');setCategory('');setCategoryName('');setDuplicate(false);setError('');setDetails(false);setIncomeToolsOpen(false);setTax('no');setUse('unknown');}}/>:null}
+  {!initial&&onHistoryEdit?<View style={{gap:6}}><Body muted style={{fontSize:13}}>Historiales</Body><View style={{flexDirection:'row',gap:8}}>{(type==='income'?([['income','Ingresos']] as const):type==='expense'?([['expense','Gastos']] as const):([['expense','Gastos'],['income','Ingresos']] as const)).map(([value,label])=><Pressable key={value} accessibilityRole="button" accessibilityState={{selected:historyPane===value}} onPress={()=>setHistoryPane(historyPane===value?null:value)} style={{flex:1,minHeight:44,paddingHorizontal:8,borderWidth:1,borderColor:'#5C9B8E',borderRadius:10,alignItems:'center',justifyContent:'center',backgroundColor:historyPane===value?'#D9F5E8':'transparent'}}><Body style={{fontSize:13,fontWeight:'700',...(historyPane===value?{color:'#005B43'}:{})}}>{label}</Body></Pressable>)}</View></View>:null}
   {!initial&&historyPane&&onHistoryEdit?<TransactionHistory key={historyPane} kind={historyPane} store={store} onEdit={onHistoryEdit} saved={historySaved??saved}/>:<>
   {!historyPane&&type==='income'&&incomeTools?<><ActionButton secondary title={incomeToolsOpen?'Cerrar cobros programados':'Administrar cobros programados'} onPress={()=>setIncomeToolsOpen(!incomeToolsOpen)}/>{incomeToolsOpen?incomeTools:null}</>:null}
-  {(type === 'income' || type === 'expense') ? <CategoryPicker required={type==='expense'} categories={categories} kind={type} value={category} onChange={(id,name)=>{setCategory(id);setCategoryName(name??'');setDuplicate(false);}}/> : null}
+  {(type === 'income' || type === 'expense') ? <CategoryPicker key={type} required={type==='expense'} categories={availableCategories} onCreated={created=>setAddedCategories(old=>[...old,created])} kind={type} value={category} onChange={(id,name)=>{setCategory(id);setCategoryName(name??'');setDuplicate(false);}}/> : null}
   {type==='income'&&!initial?<ActionButton title="Cheque, talonario o desglose manual de deducciones" icon="camera-outline" onPress={()=>{close();router.push('/income-documents');}}/>:null}
 
   {!initial&&kind!=='income'&&kind!=='expense'?<Choices<EntryKind> label="Operación" value={type} options={(allowedKinds??['transfer','loan','debt_payment'] as EntryKind[]).map(key=>[key,kindLabels[key]] as const)} onChange={setType}/>:null}
@@ -99,10 +102,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
   <View style={{flexDirection:'row',flexWrap:'wrap',gap:12}}><View style={{flex:1,minWidth:140}}><DateField required label="Fecha" value={date} onChangeText={v => { setDate(v); setDuplicate(false); }} testID="movement-date"/></View>{type!=='income'?<View style={{flex:1,minWidth:140}}><Field compact label="Importe (USD)" value={amount} onChangeText={v => { setAmount(v); setDuplicate(false); }} decimal testID="movement-amount"/></View>:null}</View>
   {type!=='expense'?<Field label="Descripción (opcional)" value={description} onChangeText={v => { setDescription(v); setDuplicate(false); }} multiline testID="movement-description"/>:null}
 
-  <Choices<PaymentMethod> label="Método de pago" value={method} options={(Object.entries(paymentLabels) as [
-        PaymentMethod,
-        string
-    ][]).filter(([key]) => type === 'expense' || key !== 'credit')} onChange={setMethod}/>
+  <Choices<PaymentMethod> label={type==='income'?'Cómo recibiste el ingreso':'Método de pago'} value={method} options={type==='income'||type==='expense'?entryMethods(type):(Object.entries(paymentLabels) as [PaymentMethod,string][]).filter(([key])=>key!=='credit')} onChange={setMethod}/>
   {type === 'expense' && method === 'credit' ? <Body>La compra cuenta como gasto y consume presupuesto. El pago posterior de la tarjeta reduce el flujo de efectivo, sin volver a contar la compra.</Body> : null}
   {type === 'transfer' ? <Body>Movimiento entre tus propias cuentas: no aumenta ingresos ni gastos y no cambia el total estimado.</Body> : null}
   {type === 'loan' ? <Body>El préstamo recibido aumenta el flujo disponible, pero no es un ingreso ganado.</Body> : null}
@@ -119,7 +119,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
   {details?<>
   <Choices label="Para revisión de mi contable" value={tax} options={[['no', 'No marcar'], ['yes', 'Marcar para revisión']]} onChange={setTax}/>
   <Choices<LedgerMovement['useKind']> label="Uso del movimiento" value={use} options={[['unknown', 'Sin clasificar'], ['personal', 'Personal'], ['business', 'Comercial'], ['mixed', 'Mixto']]} onChange={setUse}/>
-  <Body muted>Marcar para revisión no implica que sea deducible.</Body>
+  <Body muted>{type==='income'?'Marcar el ingreso permite revisarlo con tu contable; no calcula impuestos.':'Marcar para revisión no implica que sea deducible.'}</Body>
   </>:null}
   <ErrorNotice message={error}/>
   {busy?<ActivityIndicator accessibilityLabel="Guardando cambios"/>:null}

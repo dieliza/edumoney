@@ -38,7 +38,7 @@ export function BusinessReceiptForm({movement,done,close}:{movement:LedgerMoveme
  ]}/></View>:null}
   {recognition?<Body>{recognition}</Body>:null}
   {image?<><Image source={{uri:`data:${image.mime};base64,${image.base64}`}} accessibilityLabel="Recibo que estás revisando" style={{width:'100%',height:260}} resizeMode="contain"/><Choices label="Copia del recibo" value={keep} options={[["","Decidir antes de guardar"],["yes","Conservar imagen local cifrada"],["no","Guardar solo datos confirmados"]]} onChange={setKeep}/></>:<Body>Puedes registrar los datos manualmente sin conservar una imagen.</Body>}
-  {reading?.details?<ReadingDetailsForm value={reading.details} onChange={details=>setReading({...reading,details})}/>:null}
+  {reading?.details?<ReadingDetailsForm context={movement.kind==='income'?'income':movement.kind==='expense'?'expense':undefined} documentType={reading.document_type} value={reading.details} onChange={details=>setReading({...reading,details})}/>:null}
   <Field label="Descripción del recibo" value={description} onChangeText={setDescription} maxLength={240}/>
   <DateField label="Fecha confirmada del recibo (opcional)" value={date} onChangeText={setDate}/><Field label="Total confirmado del recibo USD (opcional)" value={amount} onChangeText={setAmount} decimal/>
   <Body>El total del recibo puede diferir del depósito neto o del movimiento. Confirma su importe real y explica diferencias en las notas; adjuntar no modifica el movimiento.</Body>
