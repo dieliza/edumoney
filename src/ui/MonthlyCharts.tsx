@@ -13,8 +13,8 @@ import {useTheme} from '../design/ThemeProvider';
 import {fixed} from '../design/tokens';
 import {formatMoney,type monthlySummary} from '../modules/money/domain';
 import type {LedgerMovement,Category} from '../modules/money/types';
-export function MonthlyCharts({summary,movements,month,onSelect,compact=false,categories=[]}:{summary:ReturnType<typeof monthlySummary>;movements:LedgerMovement[];month:string;compact?:boolean;categories?:Category[];onSelect?(id:string):void}){
- const {colors,name}=useTheme();const {width}=useWindowDimensions();const compactSize=width<420?210:width<820?220:250;const stacked=width<540;const fullSize=Math.min(380,width-64);const incomeInk=name==='dark'?'#38E795':fixed.income,expenseInk=name==='dark'?'#FF6381':fixed.expense;const [individual,setIndividual]=useState(true);const [selected,setSelected]=useState('overview');const [chartStyle,setChartStyle]=useState<'ring'|'horizontal'|'vertical'>('ring');
+export function MonthlyCharts({summary,movements,month,onSelect,compact=false,categories=[],initialIndividual=true}:{summary:ReturnType<typeof monthlySummary>;movements:LedgerMovement[];month:string;compact?:boolean;initialIndividual?:boolean;categories?:Category[];onSelect?(id:string):void}){
+ const {colors,name}=useTheme();const {width}=useWindowDimensions();const compactSize=width<420?210:width<820?220:250;const stacked=width<540;const fullSize=Math.min(380,width-64);const incomeInk=name==='dark'?'#38E795':fixed.income,expenseInk=name==='dark'?'#FF6381':fixed.expense;const [individual,setIndividual]=useState(initialIndividual);const [selected,setSelected]=useState('overview');const [chartStyle,setChartStyle]=useState<'ring'|'horizontal'|'vertical'>('ring');
  const model=useMemo(()=>monthlyChartModel(summary,movements,month),[summary,movements,month]);const pages=compact?['overview']:model.pages;const index=Math.max(0,pages.indexOf(selected));const page=pages[index];
  const category=model.categories.find(c=>`category:${c.id}`===page);const items=expenseSegments(model.categories);
  const next=()=>setSelected(pages[(index+1)%pages.length]);

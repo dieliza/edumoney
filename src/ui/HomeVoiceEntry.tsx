@@ -2,7 +2,7 @@ import {useCallback,useEffect,useMemo,useRef,useState} from 'react';
 import {AppState,Platform,Pressable,View} from 'react-native';
 import {Body,ActionButton} from './components';
 import {VoiceActivity} from './VoiceActivity';
-import {HoldToDictate} from './HoldToDictate';
+import {NeonActionButton} from './NeonActionButton';
 import {Field,ErrorNotice,Choices} from '../modules/money/fields';
 import {startDictation,type VoiceSession} from '../modules/documents/voice';
 import {classifyVoiceEntry} from '../modules/documents/voiceEntry';
@@ -13,7 +13,7 @@ import {formatMoney,localToday} from '../modules/money/domain';
 import {paymentLabels,type Category,type PaymentMethod} from '../modules/money/types';
 import {newId} from '../core/id';
 import {userMessage} from '../core/errors';
-export function HomeVoiceEntry({categories,saved}:{categories:Category[];saved(date?:string):Promise<void>}){
+export function HomeVoiceEntry({categories,saved,onExpense,onScan}:{categories:Category[];saved(date?:string):Promise<void>;onExpense():void;onScan():void}){
  const [text,setText]=useState(''),[phase,setPhase]=useState<'idle'|'starting'|'listening'|'stopping'>('idle'),[message,setMessage]=useState(''),[error,setError]=useState(''),[busy,setBusy]=useState(false),[privacy,setPrivacy]=useState(false),[payment,setPayment]=useState<PaymentMethod|''>('');
  const session=useRef<VoiceSession|null>(null),live=useRef(true),startupTimer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined),running=useRef(false),saving=useRef(false),id=useRef<string|null>(null),generation=useRef(0);
  const proposal=useMemo(()=>classifyVoiceEntry(text,categories,localToday(),payment||undefined),[text,categories,payment]);
@@ -29,11 +29,13 @@ export function HomeVoiceEntry({categories,saved}:{categories:Category[];saved(d
  async function save(){if(saving.current||running.current||!text.trim())return;if(proposal.needsPayment&&!proposal.method){setError('Selecciona cómo pagaste o recibiste el dinero para registrarlo en tus gastos o ingresos.');return;}saving.current=true;setBusy(true);setError('');const draftId=id.current??=newId();let stored=false;
  try{const [documents,ledger]=await Promise.all([getDocumentStore(),getMoneyStore()]);const p=await saveVoiceEntry({documents,ledger},text,draftId,localToday(),newId,undefined,payment||undefined);stored=true;if(live.current){setText('');setPayment('');id.current=null;setMessage(p.ready?`${p.kind==='income'?'Ingreso':'Gasto'} guardado. Puedes verlo en Historial.`:'Guardado en Mis dictados como nota pendiente. No cambia tus totales.');}await saved(p.ready?p.date:undefined);}catch(e){if(live.current)setError(stored?'El dictado se guardó, pero no pudimos actualizar el resumen. Vuelve a abrir Home; no necesitas guardarlo otra vez.':userMessage(e));}finally{saving.current=false;if(live.current)setBusy(false);}
  }
- return <View style={{gap:12,paddingVertical:12}} testID="home-voice-entry"><View style={{flexDirection:'row',gap:16,alignItems:'center'}}><HoldToDictate start={()=>void start()} stop={stop} listening={phase!=='idle'} disabled={busy||phase==='stopping'}/><View style={{flex:1}}><Body style={{fontWeight:'800',fontSize:21}}>Dictado por voz</Body><Body style={{fontSize:16,lineHeight:23}}>Toca para hablar. Toca otra vez para terminar.</Body></View></View>
+ const editorOpen=phase!=='idle'||!!text||!!error||!!message;
+ return <View style={{gap:12}} testID="home-voice-entry"><View style={{flexDirection:'row',gap:10,width:'100%',maxWidth:920,alignSelf:'center',justifyContent:'space-between'}}><NeonActionButton kind="expense" title="Gastos / Ingresos" testID="home-expense-income" onPress={onExpense}/><NeonActionButton kind="scan" title={'Escanear\nrecibo'} testID="open-documents" onPress={onScan}/><NeonActionButton kind="voice" title={'Dictado por\nvoz'} testID="home-voice-button" active={phase!=='idle'} disabled={busy||phase==='stopping'} onPress={()=>{if(phase==='idle')void start();else stop();}}/></View>
+ {editorOpen?<View style={{gap:12}}>
  <VoiceActivity phase={phase}/>
  {message?<View accessibilityLiveRegion="polite"><Body style={{fontSize:18,lineHeight:25,fontWeight:'700'}}>{message}</Body></View>:null}
  {text||phase!=='idle'||error?<><Field label="Tu dictado" value={text} onChangeText={value=>{if(!busy&&phase==='idle'){id.current=null;setPayment('');setText(value);}}} multiline maxLength={20000} testID="home-voice-text"/>
  {phase==='idle'?<>{proposal.needsPayment?<Choices label="Cómo pagaste o recibiste el dinero" value={payment} options={[[ '', 'Seleccionar método'],...Object.entries(paymentLabels).filter(([key])=>proposal.kind==='expense'||key!=='credit') as [PaymentMethod,string][]]} onChange={value=>{setPayment(value as PaymentMethod|'');setError('');}}/>:null}<Body style={{fontSize:15,lineHeight:22}}>{proposal.ready?`${proposal.kind==='income'?'Ingreso':'Gasto'} · ${formatMoney(proposal.amountCents!)} · ${proposal.category?.name??'Dictado por voz'} · ${proposal.date} · ${paymentLabels[proposal.method!]}`:`Se guardará como pendiente. ${proposal.reasons.join(' ')}`}</Body><ActionButton title={busy?'Guardando…':'Guardar'} onPress={()=>void save()} testID="home-voice-save"/></>:null}</>:null}
  <ErrorNotice message={error}/>
- {Platform.OS==='web'?<><Pressable accessibilityRole="button" accessibilityState={{expanded:privacy}} onPress={()=>setPrivacy(!privacy)} style={{minHeight:44,justifyContent:'center'}}><Body muted style={{fontSize:13}}>Privacidad del dictado</Body></Pressable>{privacy?<Body>El navegador puede procesar la voz con su proveedor. EduMoney no guarda audio ni lo envía a Anthropic.</Body>:null}</>:null}</View>;
+ {Platform.OS==='web'?<><Pressable accessibilityRole="button" accessibilityState={{expanded:privacy}} onPress={()=>setPrivacy(!privacy)} style={{minHeight:44,justifyContent:'center'}}><Body muted style={{fontSize:13}}>Privacidad del dictado</Body></Pressable>{privacy?<Body>El navegador puede procesar la voz con su proveedor. EduMoney no guarda audio ni lo envía a Anthropic.</Body>:null}</>:null}</View>:null}</View>;
 }
