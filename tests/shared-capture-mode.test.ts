@@ -1,0 +1,13 @@
+import {afterEach,expect,it,vi} from 'vitest';
+import {captureImage} from '../src/modules/documents/capture';
+const state=vi.hoisted(()=>({status:vi.fn(),read:vi.fn(),local:vi.fn(),prepare:vi.fn()}));
+vi.mock('../src/modules/documents/readerSetup',()=>({allowReceiptCamera:()=>true}));
+vi.mock('../src/modules/documents/sharedReader',()=>({sharedReaderStatus:state.status,readSharedImage:state.read}));
+vi.mock('../src/modules/documents/ai/preparePhoto.web',()=>({prepareAnthropicPhoto:state.prepare}));
+vi.mock('../src/modules/documents/photo.web',()=>({readReceiptPhoto:state.local}));
+const file={name:'FICTICIO.jpg',type:'image/jpeg',size:500} as File;
+const image={mime:'image/jpeg',base64:'FICTICIO'};
+afterEach(()=>vi.resetAllMocks());
+it('online capture uses the managed reader without a device API key',async()=>{state.status.mockResolvedValue({enabled:true,configured:true});state.prepare.mockResolvedValue(image);state.read.mockResolvedValue({image,text:'Interpretación FICTICIA'});expect((await captureImage('camera',file))?.text).toBe('Interpretación FICTICIA');expect(state.read).toHaveBeenCalledWith(image);expect(state.local).not.toHaveBeenCalled();});
+it('offline capture preserves local reading and visibly marks the fallback',async()=>{state.status.mockRejectedValue(Error('offline'));state.local.mockResolvedValue({image,text:'Texto local',warning:''});const result=await captureImage('camera',file);expect(result?.text).toBe('Texto local');expect(result?.warning).toContain('Sin conexión');expect(state.read).not.toHaveBeenCalled();});
+it('owner-disabled service uses the local reader without an Anthropic call',async()=>{state.status.mockResolvedValue({enabled:false,configured:false});state.local.mockResolvedValue({image,text:'local',warning:''});expect((await captureImage('library',file))?.text).toBe('local');expect(state.read).not.toHaveBeenCalled();});

@@ -1,3 +1,4 @@
+import {sharedReaderStatus,readSharedImage} from './sharedReader';
 import {allowReceiptCamera} from './readerSetup';
 import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import * as Picker from 'expo-image-picker';
@@ -22,9 +23,9 @@ export async function captureImage(source:'camera'|'library'):Promise<CaptureRes
  const normalized=await (await context.renderAsync()).saveAsync({format:SaveFormat.JPEG,compress:0.94});
  prepared=new File(normalized.uri);if(prepared.size>MAX_IMAGE_BYTES)throw new UserInputError('La foto preparada supera 4 MB. Acerca la cámara al recibo y evita fondos innecesarios.');prepared.copy(owned);const base64=await owned.base64();const mime=base64.startsWith('/9j/')?'image/jpeg':base64.startsWith('iVBORw0KGgo')?'image/png':null;
  if(!mime)throw new UserInputError('Usa una imagen JPEG o PNG. La información también puede escribirse manualmente.');
- const image:ImageData={base64,mime};validateImage(image);let text='',warning='';
+ const image:ImageData={base64,mime};validateImage(image);const service=await sharedReaderStatus().catch(()=>null);if(service?.enabled&&service.configured)return await readSharedImage(image);let text='',warning='';
  if(isSupported){try{text=(await extractTextFromImage(owned.uri)).join('\n').slice(0,20000);if(!text.trim())warning='No se reconoció texto. Revisa la imagen e introduce los datos manualmente.';}catch{warning='El reconocimiento local no pudo leer la imagen. Puedes completar los campos manualmente.';}}else warning='Este dispositivo no dispone de reconocimiento local. Completa los campos manualmente.';
- return {image,text,warning};
+ return {image,text,warning:service?warning:['Sin conexión al lector de EduMoney. Se utilizó lectura local; confirma los campos manualmente.',warning].filter(Boolean).join(' ')};
  }finally{
  if(owned.exists)owned.delete();if(prepared?.exists)prepared.delete();
  // ImagePicker entrega una copia temporal; la biblioteca de fotos original nunca se elimina.

@@ -1,0 +1,2 @@
+/** Closing events are best-effort; safety comes from saving after commits and retrying next launch. */
+export function attachSyncExit(exit:()=>void,online:()=>void){const hidden=()=>{if(document.visibilityState==='hidden')exit();else online();};window.addEventListener('pagehide',exit);window.addEventListener('online',online);document.addEventListener('visibilitychange',hidden);return()=>{window.removeEventListener('pagehide',exit);window.removeEventListener('online',online);document.removeEventListener('visibilitychange',hidden);};}

@@ -1,3 +1,4 @@
+import {notifyDataCommitted} from '../../storage/changeEvents';
 import { UserInputError } from '../../core/errors';
 import type { Movement } from '../../core/models';
 import { MovementRepository } from './repository';
@@ -34,6 +35,7 @@ export class MoneyStore {
             try {
                 const result = await task();
                 await this.db.execAsync('COMMIT;');
+                notifyDataCommitted();
                 return result;
             }
             catch (e) {

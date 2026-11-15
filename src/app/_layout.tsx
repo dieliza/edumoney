@@ -1,4 +1,4 @@
-import {ReceiptSetupLifecycle} from '../modules/documents/ReceiptSetupLifecycle';
+import {AutoSyncHost} from '../ui/AutoSyncHost';
 import {SaveToast} from '../ui/SaveToast';
 import {AnthropicConnectionHost} from '../modules/documents/AnthropicConnectionHost';
 import {AnthropicConsentHost} from '../modules/documents/AnthropicConsentHost';
@@ -14,6 +14,6 @@ function ThemedNavigator() {
 }
 export default function RootLayout() {
   return <SafeAreaProvider><ThemeProvider><StorageGate>
-    <BillsLifecycle><ReceiptSetupLifecycle/><ThemedNavigator /><AnthropicConsentHost/><AnthropicConnectionHost/><SaveToast/></BillsLifecycle>
+    <BillsLifecycle><AutoSyncHost/><ThemedNavigator /><AnthropicConsentHost/><AnthropicConnectionHost/><SaveToast/></BillsLifecycle>
   </StorageGate></ThemeProvider></SafeAreaProvider>;
 }

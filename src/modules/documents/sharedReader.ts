@@ -1,0 +1,7 @@
+import {fetchWithTimeout} from '../../core/http';
+import {readerEndpoint} from './readerEndpoint';
+import type {ImageData,CaptureResult} from './types';
+import {anthropicText,type AnthropicReading} from './ai/types';
+export type SharedReaderStatus={enabled:boolean;configured:boolean;model:string;dailyLimit?:number;owner?:boolean};
+export async function sharedReaderStatus():Promise<SharedReaderStatus>{const r=await fetchWithTimeout(readerEndpoint('/api/receipt-service'),{cache:'no-store'},15000);if(!r.ok)throw Error('No se pudo consultar el lector de fotos. Reintenta cuando tengas conexión.');return r.json();}
+export async function readSharedImage(image:ImageData):Promise<CaptureResult>{let r:Response;try{r=await fetchWithTimeout(readerEndpoint('/api/receipt-read'),{method:'POST',headers:{'Content-Type':'application/json','X-EduMoney-Reader':'shared'},body:JSON.stringify({image}),cache:'no-store'},100000);}catch{throw Error('No se pudo leer la foto. Tus datos escritos se conservan; puedes reintentar.');}const result=await r.json().catch(()=>null);if(!r.ok||!result?.reading)throw Error(typeof result?.message==='string'?result.message:'No se pudo validar la lectura. Revisa la foto o completa los datos manualmente.');const reading=result.reading as AnthropicReading;return {image,text:anthropicText(reading),structured:reading,needsAmountReview:false,warning:'Interpretado por Anthropic para EduMoney. Revisa los campos antes de guardar.'};}
