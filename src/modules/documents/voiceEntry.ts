@@ -8,9 +8,9 @@ const numberWords=Object.keys(units).join('|');
 const numeric='(?:\\d{1,3}(?:,\\d{3})+(?:\\.\\d{1,2})?|\\d+(?:[.,]\\d{1,2})?)';
 const spoken=`(?:${numberWords})(?:\\s+(?:${numberWords}|y))*`;
 function decimal(s:string){return s.includes('.')?s.replaceAll(',',''):s.replace(',','.');}
-export interface VoiceEntryProposal {kind:'income'|'expense'|null;amountCents:Cents|null;date:string;category:Category|null;method:PaymentMethod|null;ready:boolean;reasons:string[]}
-export function classifyVoiceEntry(text:string,categories:Category[],today:string):VoiceEntryProposal{
- if(text.length>1000)return {kind:null,amountCents:null,date:today,category:null,method:null,ready:false,reasons:['Dictado extenso: se conservará como nota para revisión.']};
+export interface VoiceEntryProposal {kind:'income'|'expense'|null;amountCents:Cents|null;date:string;category:Category|null;method:PaymentMethod|null;ready:boolean;needsPayment:boolean;reasons:string[]}
+export function classifyVoiceEntry(text:string,categories:Category[],today:string,confirmedMethod?:PaymentMethod):VoiceEntryProposal{
+ if(text.length>1000)return {kind:null,amountCents:null,date:today,category:null,method:null,ready:false,needsPayment:false,reasons:['Dictado extenso: se conservará como nota para revisión.']};
  const s=normal(text),reasons:string[]=[];
  const income=/\b(cobre|recibi|ingreso|ingrese|gane|me pagaron|salario recibido)\b/.test(s);
  const expense=/\b(gaste|pague|compre|gasto|compra)\b/.test(s);
@@ -39,10 +39,12 @@ export function classifyVoiceEntry(text:string,categories:Category[],today:strin
  if(!amountCents)reasons.push('Falta un importe único y claro.');
  const methods:PaymentMethod[]=[];
  if(/\befectivo\b/.test(s))methods.push('cash');if(/\bcheque\b/.test(s))methods.push('check');if(/\bdebito\b/.test(s))methods.push('debit');if(/\bcredito\b/.test(s))methods.push('credit');if(/\b(transferencia bancaria|deposito bancario)\b/.test(s))methods.push('bank');
- const method=methods.length===1?methods[0]:null;if(!method)reasons.push('Método de pago por confirmar.');
+ const needsPayment=reasons.length===0&&methods.length===0;
+ const selected=confirmedMethod&&['cash','check','debit','credit','bank','other'].includes(confirmedMethod)&&(kind==='expense'||confirmedMethod!=='credit')?confirmedMethod:null;
+ const method=methods.length===1?methods[0]:methods.length===0?selected:null;if(!method)reasons.push('Método de pago por confirmar.');
  const groups:Record<string,string[]>={comida:['comida','restaurante','supermercado','alimentos'],transporte:['transporte','gasolina','gas','uber','taxi'],vivienda:['vivienda','alquiler','renta'],servicios:['servicios','electricidad','agua','internet','telefono'],salud:['salud','farmacia','medicinas','medico'],salario:['salario','sueldo','nomina'],ventas:['venta','ventas'],entretenimiento:['entretenimiento','cine']};
  const active=categories.filter(c=>!c.archived&&c.kind===kind);
  const matches=active.filter(c=>{const name=normal(c.name);const aliases=groups[name]??[name];return aliases.some(a=>new RegExp(`\\b${a.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}\\b`).test(s));});
  const category=matches.length===1?matches[0]:null;
- return {kind,amountCents,date,category,method,ready:reasons.length===0,reasons};
+ return {kind,amountCents,date,category,method,ready:reasons.length===0,needsPayment,reasons};
 }

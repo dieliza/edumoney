@@ -1,5 +1,5 @@
 import {UserInputError} from '../../core/errors';
-import type {Category} from '../money/types';
+import type {Category,PaymentMethod} from '../money/types';
 import type {DocumentInput} from './types';
 import {classifyVoiceEntry} from './voiceEntry';
 export interface VoiceEntryStores {
@@ -7,9 +7,9 @@ export interface VoiceEntryStores {
  ledger:{snapshot():Promise<{categories:Category[]}>;saveCategory(id:string,name:string,kind:'income'|'expense'):Promise<unknown>};
 }
 /** Reuses encrypted document persistence, financial validation and duplicate protection. */
-export async function saveVoiceEntry(stores:VoiceEntryStores,text:string,id:string,today:string,newCategoryId:()=>string,pending?:{id:string;version:number}){
+export async function saveVoiceEntry(stores:VoiceEntryStores,text:string,id:string,today:string,newCategoryId:()=>string,pending?:{id:string;version:number},confirmedMethod?:PaymentMethod){
  const content=text.trim();if(!content||content.length>20000)throw new UserInputError('Escribe o dicta entre 1 y 20,000 caracteres.');
- const {categories}=await stores.ledger.snapshot();const p=classifyVoiceEntry(content,categories,today);
+ const {categories}=await stores.ledger.snapshot();const p=classifyVoiceEntry(content,categories,today,confirmedMethod);
  if(pending&&!p.ready){await stores.documents.updateVoiceNote(pending.id,pending.version,content);return p;}
  let categoryId=p.category?.id??null;
  if(p.ready&&p.kind&&!categoryId){let category=categories.find(c=>!c.archived&&c.kind===p.kind&&/^dictado por voz(?: \(\d+\))?$/i.test(c.name));if(!category){let name='Dictado por voz',suffix=2;while(categories.some(c=>c.kind===p.kind&&c.name.toLocaleLowerCase('es')===name.toLocaleLowerCase('es')))name=`Dictado por voz (${suffix++})`;category={id:newCategoryId(),name,kind:p.kind,archived:false};await stores.ledger.saveCategory(category.id,category.name,category.kind);}categoryId=category.id;}
