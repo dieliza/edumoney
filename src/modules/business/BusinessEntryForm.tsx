@@ -1,3 +1,4 @@
+import {announceSaved} from '../../ui/saveFeedback';
 import { useState } from 'react';
 import { newId } from '../../core/id';
 import { parseAmount } from '../../core/money';
@@ -33,7 +34,7 @@ export function BusinessEntryForm({holderId,kind,initial,data,store,done,close}:
  async function save(){if(busy)return;setBusy(true);setError('');try{
   if(source==='existing'&&!selected)throw new UserInputError('Selecciona un movimiento existente.');
   await store.save({id,holderId,kind,date:selected&&source==='existing'?selected.date:date.trim(),description:selected&&source==='existing'?selected.description:description,amountCents:selected&&source==='existing'?selected.amountCents:parseAmount(amount.trim()),paymentMethod:selected&&source==='existing'?selected.paymentMethod??'':method,existingMovementId:source==='existing'?selected!.id:null,expectedMovementVersion:source==='existing'?selected!.version:null,useKind:kind==='income'?'business':useKind,businessBps:kind==='expense'&&useKind==='mixed'?optional(percent):null,justification,cpaStatus:cpa,grossCents:kind==='income'?optional(gross):null,commissionCents:kind==='income'?optional(commission):null,refundCents:kind==='income'?optional(refund):null,ivuCents:kind==='income'?optional(ivu):null,allocations:projects.filter(p=>allocations[p.id]?.trim()).map(p=>({projectId:p.id,amountCents:parseAmount(allocations[p.id].trim())})),confirmSimilar:similar==='yes'},initial?.version??0,reason);
-  await done();close();
+  announceSaved();await done();close();
  }catch(e){setError(userMessage(e));}finally{setBusy(false);}}
  return <Sheet title={initial?'Revisar registro comercial':kind==='income'?'Ingreso comercial':'Gasto comercial'} close={close} busy={busy}>
   {!initial?<Choices label="Origen del registro" value={source} options={[["new","Crear movimiento nuevo"],["existing","Vincular movimiento existente"]]} onChange={setSource}/>:<Body>Esta revisión conserva el titular y movimiento originales. Para corregir importe, fecha o método, corrige primero el movimiento en Mi dinero y vuelve a conciliar aquí.</Body>}

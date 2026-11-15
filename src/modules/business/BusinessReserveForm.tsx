@@ -1,3 +1,4 @@
+import {announceSaved} from '../../ui/saveFeedback';
 import { useState } from 'react';
 import { parseAmount } from '../../core/money';
 import { userMessage } from '../../core/errors';
@@ -11,7 +12,7 @@ export function BusinessReserveForm({holderId,reserves,store,done,close}:{holder
  const [kind,setKind]=useState<ReserveKind>('tax');
  const [amount,setAmount]=useState(()=>{const r=reserves.find(r=>r.kind==='tax');return r?decimal(r.amountCents):'';});
  const [note,setNote]=useState(''),[error,setError]=useState(''),[busy,setBusy]=useState(false);
- async function save(){if(busy)return;setBusy(true);setError('');try{await store.reserve(holderId,kind,parseAmount(amount.trim()),note,reserves.find(r=>r.kind===kind)?.version??0);await done();close();}catch(e){setError(userMessage(e));}finally{setBusy(false);}}
+ async function save(){if(busy)return;setBusy(true);setError('');try{await store.reserve(holderId,kind,parseAmount(amount.trim()),note,reserves.find(r=>r.kind===kind)?.version??0);announceSaved();await done();close();}catch(e){setError(userMessage(e));}finally{setBusy(false);}}
  return <Sheet title="Reservas manuales del titular" close={close} busy={busy}>
   <Body>Registra cuánto decides mantener reservado para cada obligación. Cambiar una reserva no crea un gasto, no mueve dinero y no confirma fondos disponibles en el banco.</Body>
   <Choices<ReserveKind> label="Tipo de reserva" value={kind} options={Object.entries(reserveLabels) as [ReserveKind,string][]} onChange={k=>{setKind(k);const r=reserves.find(r=>r.kind===k);setAmount(r?decimal(r.amountCents):'');setNote('');}}/>

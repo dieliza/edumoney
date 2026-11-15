@@ -1,3 +1,4 @@
+import {announceSaved} from '../../ui/saveFeedback';
 import {HomeVoiceEntry} from '../../ui/HomeVoiceEntry';
 import {MovementRows} from './MovementRows';
 import {MoneyOverview} from '../../ui/MoneyOverview';
@@ -188,7 +189,7 @@ function CategoryForm({ initial, store, saved, close }: {
     async function save(archived: boolean) { if (busy)
         return; setBusy(true); try {
         await store.saveCategory(id, name, kind, archived);
-        await saved();
+        announceSaved();await saved();
         close();
     }
     catch (e) {
@@ -215,7 +216,7 @@ function BudgetForm({ data, month, store, saved, close }: {
     async function save(remove = false) { if (busy)
         return; setBusy(true); try {
         await store.saveBudget(month, category, remove ? null : parseAmount(amount.trim()));
-        await saved();
+        announceSaved();await saved();
         close();
     }
     catch (e) {

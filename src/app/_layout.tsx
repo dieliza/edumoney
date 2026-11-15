@@ -1,3 +1,4 @@
+import {SaveToast} from '../ui/SaveToast';
 import {AnthropicConnectionHost} from '../modules/documents/AnthropicConnectionHost';
 import {AnthropicConsentHost} from '../modules/documents/AnthropicConsentHost';
 import { Stack } from 'expo-router';
@@ -12,6 +13,6 @@ function ThemedNavigator() {
 }
 export default function RootLayout() {
   return <SafeAreaProvider><ThemeProvider><StorageGate>
-    <BillsLifecycle><ThemedNavigator /><AnthropicConsentHost/><AnthropicConnectionHost/></BillsLifecycle>
+    <BillsLifecycle><ThemedNavigator /><AnthropicConsentHost/><AnthropicConnectionHost/><SaveToast/></BillsLifecycle>
   </StorageGate></ThemeProvider></SafeAreaProvider>;
 }

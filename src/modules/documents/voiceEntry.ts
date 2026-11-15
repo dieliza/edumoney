@@ -1,3 +1,4 @@
+import {isVoicePlaceholder} from '../money/categoryLabels';
 import {parseAmount,type Cents} from '../../core/money';
 import {validDate} from '../money/domain';
 import type {Category,PaymentMethod} from '../money/types';
@@ -43,8 +44,9 @@ export function classifyVoiceEntry(text:string,categories:Category[],today:strin
  const selected=confirmedMethod&&['cash','check','debit','credit','bank','other'].includes(confirmedMethod)&&(kind==='expense'||confirmedMethod!=='credit')?confirmedMethod:null;
  const method=methods.length===1?methods[0]:methods.length===0?selected:null;if(!method)reasons.push('Método de pago por confirmar.');
  const groups:Record<string,string[]>={comida:['comida','restaurante','supermercado','alimentos'],transporte:['transporte','gasolina','gas','uber','taxi'],vivienda:['vivienda','alquiler','renta'],servicios:['servicios','electricidad','agua','internet','telefono'],salud:['salud','farmacia','medicinas','medico'],salario:['salario','sueldo','nomina'],ventas:['venta','ventas'],entretenimiento:['entretenimiento','cine']};
- const active=categories.filter(c=>!c.archived&&c.kind===kind);
+ const active=categories.filter(c=>!c.archived&&c.kind===kind&&!isVoicePlaceholder(c.name));
  const matches=active.filter(c=>{const name=normal(c.name);const aliases=groups[name]??[name];return aliases.some(a=>new RegExp(`\\b${a.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}\\b`).test(s));});
  const category=matches.length===1?matches[0]:null;
- return {kind,amountCents,date,category,method,ready:reasons.length===0,needsPayment,reasons};
+ if(!category)reasons.push('Categoría por confirmar: elige o crea una categoría que describa el movimiento.');
+ return {kind,amountCents,date,category,method,ready:reasons.length===0,needsPayment:needsPayment&&!!category,reasons};
 }

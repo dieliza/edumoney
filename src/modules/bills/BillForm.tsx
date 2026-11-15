@@ -1,3 +1,4 @@
+import {announceSaved} from '../../ui/saveFeedback';
 import { useState } from 'react';
 import { newId } from '../../core/id';
 import { parseAmount } from '../../core/money';
@@ -20,7 +21,7 @@ export function BillForm({initial,store,categories,close,saved}:{initial?:Bill;s
  async function save(confirmSimilar=false){if(busy)return;setBusy(true);setError('');try{
   const b:BillInput={id,provider:provider.trim(),amountCents:parseAmount(amount.trim()),dueDate:due.trim(),categoryId:kind==='expense' && category!=='none'?category:null,paymentKind:kind,reminderDays:days.trim()===''?null:Number(days)};
   if(initial)await store.edit(b,initial.version,reason);else await store.create(b,frequency==='once'?null:{id:seriesId,cadence:frequency,intervalCount:Number(interval),endDate:end.trim()||null},confirmSimilar);
-  await saved();close();
+  announceSaved();await saved();close();
  }catch(e){setError(userMessage(e));setSimilar(e instanceof SimilarBillError);}finally{setBusy(false);}}
  return <Sheet title={initial?'Editar factura':'Añadir factura'} close={close} busy={busy}>
   <Field label="Proveedor" testID="bill-provider" value={provider} onChangeText={setProvider}/>

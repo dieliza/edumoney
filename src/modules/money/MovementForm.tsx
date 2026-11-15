@@ -1,3 +1,4 @@
+import {announceSaved} from '../../ui/saveFeedback';
 import {TransactionHistory,type TransactionHistoryKind} from './TransactionHistory';
 import {router} from 'expo-router';
 import { incomeFromBreakdown } from './incomeInput';
@@ -74,7 +75,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
                 await (documentReview?store.edit(m,undefined,allowDuplicate,documentReview):store.editFromHistory(m,allowDuplicate));
             else
                 await store.create(m, allowDuplicate, schedule);
-            await saved();
+            announceSaved();await saved();
             if(afterSave)afterSave();else close();
         }
         catch (e) {

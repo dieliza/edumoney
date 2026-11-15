@@ -1,3 +1,4 @@
+import {announceSaved} from '../../ui/saveFeedback';
 import { useState } from 'react';
 import { newId } from '../../core/id';
 import { userMessage, UserInputError } from '../../core/errors';
@@ -21,7 +22,7 @@ export function DebtPaymentForm({debt,initialBill,store,movements,bills,saved,cl
   if(!effect||!cycle||!billId)throw new UserInputError('Confirma el efecto sobre el saldo, el vencimiento y si atiende una factura.');
   const b=pending.find(row=>row.id===billId);const optional=(text:string)=>text.trim()?parseAmount(text.trim()):null;
   const p:DebtPaymentInput={id,debtId:debt.id,expectedVersion:debt.version,amountCents:parseAmount(amount.trim()),date:date.trim(),paymentMethod:method,principalCents:optional(principal),interestCents:optional(interest),feesCents:optional(fees),applyToBalance:effect==='reduce',cycleDueDate:cycle==='current'?debt.dueDate:null,existingMovementId:existing==='new'?null:existing,confirmSimilar,billId:billId==='none'?null:billId,expectedBillVersion:b?.version??null};
-  await store.pay(p);await saved();close();
+  await store.pay(p);announceSaved();await saved();close();
  }catch(e){setError(userMessage(e));setSimilar(e instanceof SimilarDebtPaymentError);}finally{setBusy(false);}}
  return <Sheet title="Confirmar pago de deuda" close={close} busy={busy}>
   <Body style={{fontWeight:'700'}}>{debt.name} · Saldo registrado: {formatMoney(debt.balanceCents)}</Body>

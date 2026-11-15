@@ -1,3 +1,4 @@
+import {announceSaved} from '../../ui/saveFeedback';
 import { useState } from 'react';
 import { newId } from '../../core/id';
 import { UserInputError,userMessage } from '../../core/errors';
@@ -25,7 +26,7 @@ export function HolderForm({initial,version,store,done,cancel}:{initial?:Busines
   try {
    if (!form) throw new UserInputError('Selecciona la forma jurídica.');
    await store.save({holder:{id,legalName:name,legalForm:form,municipality,merchantNumber:merchant,llcJurisdiction:form==='llc'?jurisdiction:null,llcMembers:form==='llc'?members:null,prClassification:pr,federalClassification:federal},dbas,projects},version);
-   await done();
+   announceSaved();await done();
   } catch(e) { setError(userMessage(e)); } finally { setBusy(false); }
  }
  return <Card>

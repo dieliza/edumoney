@@ -1,3 +1,4 @@
+import {categoryDisplayName} from '../modules/money/categoryLabels';
 import { Pressable, View, useWindowDimensions } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import { Body, ui } from './components';
@@ -6,7 +7,7 @@ import { formatMoney } from '../modules/money/domain';
 import { expenseSegments, type ExpenseSlice } from './expenseSegments';
 export function ExpenseDonut({ items, total, onSelect,legend=true,label='Gastos' }: { items: readonly ExpenseSlice[]; total: number;legend?:boolean; label?:string; onSelect?(id: string): void }) {
   const {width}=useWindowDimensions();const size=Math.min(420,Math.max(240,width-72));
-  const segments = expenseSegments(items);
+  const segments = expenseSegments(items.map(c=>({...c,name:categoryDisplayName(c.name)})));
   if (!segments.length) return <Body muted>{label==='Gastos'?'Aún no hay gastos registrados en este mes. La gráfica aparecerá cuando registres el primero.':'Aún no hay ingresos registrados en este mes.'}</Body>;
   const circumference = 2 * Math.PI * 78;
   return <View style={{ gap: 14 }}>

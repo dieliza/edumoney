@@ -1,3 +1,4 @@
+import {announceSaved} from '../../ui/saveFeedback';
 import { useCallback,useEffect,useState } from 'react';
 import { AppState } from 'react-native';
 import { useIsFocused,useLocalSearchParams } from 'expo-router';
@@ -20,7 +21,7 @@ export default function DecisionsScreen(){
  const loan=['vehicle','home','loan'].includes(draft.kind),saving=draft.kind==='saving',emergency=draft.kind==='emergency';
  function update<K extends keyof Draft>(key:K,value:Draft[K]){setDraft(d=>({...d,[key]:value}));setResult(null);setError('');setNotice('');setSaveId(newId());}
  function calculate(){setError('');try{const input=inputScenario(draft);simulate(input);setResult(input);setSaveId(newId());setNotice('Resultado actualizado con los datos que confirmaste.');}catch(e){setError(userMessage(e));setResult(null);}}
- async function save(){if(!store||!result||busy)return;setBusy(true);setError('');try{await store.saveScenario(saveId,name,result);await load();setNotice('Escenario guardado solo en este dispositivo. No se registró ninguna compra ni pago.');}catch(e){setError(userMessage(e));}finally{setBusy(false);}}
+ async function save(){if(!store||!result||busy)return;setBusy(true);setError('');try{await store.saveScenario(saveId,name,result);announceSaved();await load();setNotice('Escenario guardado solo en este dispositivo. No se registró ninguna compra ni pago.');}catch(e){setError(userMessage(e));}finally{setBusy(false);}}
  function compare(){setError('');setComparison(null);try{const first=saved.find(s=>s.id===a),second=saved.find(s=>s.id===b);if(!first||!second||first.id===second.id)throw new Error('Selecciona dos escenarios diferentes.');if(first.kind!==second.kind)throw new Error('Compara dos escenarios del mismo tipo.');if(first.formulaVersion!==1||second.formulaVersion!==1)throw new Error('La versión de cálculo necesita revisión antes de comparar.');simulate(first.input);simulate(second.input);setComparison([first,second]);}catch(e){setError(e instanceof Error?e.message:'No se pudo comparar.');}}
  const field=(key:keyof Draft,label:string,decimal=true)=><Field key={key} testID={`decision-${key}`} label={label} required={key!=='margin'} value={String(draft[key])} onChangeText={value=>update(key,value as never)} decimal={decimal}/>;
  return <Screen back title="Antes de decidir" demo={false} subtitle="Compara opciones y revisa cómo cambian tus cantidades.">

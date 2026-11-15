@@ -1,3 +1,4 @@
+import {announceSaved} from '../../ui/saveFeedback';
 import {DateField} from '../../ui/DateField';
 import {anthropicProposal,type AnthropicReading} from '../documents/ai/types';
 import {reviewedReading} from '../documents/ai/details';
@@ -27,7 +28,7 @@ export function BusinessReceiptForm({movement,done,close}:{movement:LedgerMoveme
   if(image&&!keep)throw new UserInputError('Decide si conservarás la imagen local cifrada.');
   const store=await getDocumentStore();
   await store.save({...(reading?{reading:reviewedReading(reading,description,date.trim()||null,amount.trim()?parseAmount(amount.trim()):null)}:{}),id,kind:'attachment',source,description,date:date.trim()||null,amountCents:amount.trim()?parseAmount(amount.trim()):null,notes,rawText:null,image,keepImage:keep==='yes',movementId:movement.id,billId:null,expectedMovementVersion:movement.version,expectedBillVersion:null,categoryId:null,paymentMethod:null,supersedesId:null,expectedDocumentVersion:null,confirmSimilar:false,reviewed:confirmed==='yes'});
-  await done();close();
+  announceSaved();await done();close();
  }catch(e){setError(userMessage(e));}finally{setBusy(false);}}
  return <Sheet title="Recibo del registro comercial" close={close} busy={busy}>
   <Body>Se adjunta a {movement.description} · {movement.date} · {formatMoney(movement.amountCents)}. No crea otro ingreso ni gasto. Si el recibo incluye uso personal y comercial, conserva el importe completo y revisa el porcentaje en el registro comercial.</Body>

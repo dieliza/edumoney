@@ -11,6 +11,7 @@ const tabs: { name: string; label: string; icon: IconName }[] = [
   { name: 'learn', label: 'Aprende', icon: 'book-outline' },
   { name: 'progress', label: 'Mi progreso', icon: 'stats-chart-outline' },
   { name: 'business', label: 'Negocio', icon: 'briefcase-outline' },
+  { name: 'my-debts', label: 'Mis deudas', icon: 'card-outline' },
 ];
 export default function TabLayout() {
   const { colors, name } = useTheme();
@@ -21,7 +22,7 @@ export default function TabLayout() {
     tabBarItemStyle: { minHeight: 52 }, tabBarHideOnKeyboard: true }}>
     {tabs.map(tab => <Tabs.Screen key={tab.name} name={tab.name} options={{ title: tab.label, tabBarAccessibilityLabel: tab.label,
       tabBarIcon: ({ color }) => <Ionicons name={tab.icon} color={typeof color === 'string' ? color : colors.primary} size={24} />,
-      tabBarLabel: ({ color }) => <Text style={{ color, fontSize: 11, fontWeight: '600', textAlign: 'center', flexShrink: 1 }}>{tab.label}</Text>,
+      tabBarLabel: ({ color }) => <Text style={{ color, fontSize: 10, fontWeight: '600', textAlign: 'center', flexShrink: 1 }}>{tab.label}</Text>,
     }} />)}
   </Tabs>;
 }

@@ -1,0 +1,6 @@
+import ts from 'typescript';
+import {readFileSync,readdirSync} from 'node:fs';
+import {join} from 'node:path';
+import {expect,it} from 'vitest';
+function files(dir:string):string[]{return readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?files(join(dir,e.name)):e.name.endsWith('.tsx')?[join(dir,e.name)]:[]);}
+it('todos los archivos con botones Guardar conectan la señal después de su guardado',()=>{const missing:string[]=[],covered:string[]=[];for(const file of files('src')){const source=readFileSync(file,'utf8'),ast=ts.createSourceFile(file,source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let save=false;function walk(node:ts.Node){if(ts.isJsxSelfClosingElement(node)||ts.isJsxOpeningElement(node)){if(node.tagName.getText(ast)==='ActionButton'){for(const attr of node.attributes.properties){if(ts.isJsxAttribute(attr)&&attr.name.getText(ast)==='title'){function strings(n:ts.Node){if((ts.isStringLiteral(n)||ts.isNoSubstitutionTemplateLiteral(n))&&/\bguardar\b/i.test(n.text))save=true;n.forEachChild(strings);}if(attr.initializer)strings(attr.initializer);}}}}node.forEachChild(walk);}walk(ast);if(save){covered.push(file);if(!source.includes('announceSaved('))missing.push(file);}}expect(covered.length).toBeGreaterThan(15);expect(missing).toEqual([]);});

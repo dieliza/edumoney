@@ -1,3 +1,4 @@
+import {announceSaved} from '../../ui/saveFeedback';
 import { DateField } from '../../ui/DateField';
 import { useState } from 'react';
 import { newId } from '../../core/id';
@@ -20,7 +21,7 @@ export function DebtForm({initial,store,saved,close}:{initial?:Debt;store:DebtSt
  const [advanced,setAdvanced]=useState(false);const [reconcile,setReconcile]=useState('no');const [reason,setReason]=useState('');const [busy,setBusy]=useState(false);const [error,setError]=useState('');
  async function save(){if(busy)return;setBusy(true);setError('');try{
   const d:DebtInput={id,name:name.trim()||debtLabels[kind],kind,balanceCents:parseAmount(balance.trim()),balanceAsOf:initial?(reconcile==='yes'?localToday():initial.balanceAsOf):localToday(),annualRateBps:rate.trim()?parseRate(rate):null,minimumCents:minimum.trim()?parseAmount(minimum.trim()):null,dueDate:due.trim()||null,closingDate:closing.trim()||null,feesCents:fees.trim()?parseAmount(fees.trim()):null,futureRateBps:futureRate.trim()?parseRate(futureRate):null,rateChangeDate:changeDate.trim()||null};
-  if(initial)await store.edit(d,initial.version,reason,reconcile==='yes');else await store.create(d);await saved();close();
+  if(initial)await store.edit(d,initial.version,reason,reconcile==='yes');else await store.create(d);announceSaved();await saved();close();
  }catch(e){setError(userMessage(e));}finally{setBusy(false);}}
  return <Sheet title={initial?'Actualizar deuda':'Añadir deuda'} close={close} busy={busy}>
   <Choices<DebtKind> label="Deuda" value={kind} options={Object.entries(debtLabels) as [DebtKind,string][]} onChange={setKind}/>

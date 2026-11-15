@@ -1,9 +1,10 @@
+import {beginSaveAction,getSaveNotice,serverSaveNotice,subscribeSaveNotice} from './saveFeedback';
 import {SideMenu} from './SideMenu';
 import {ChartSurface} from './ChartSurface';
 import {RecordSurface} from './RecordSurface';
 import { fixed } from '../design/tokens';
 import { useIsFocused, router } from 'expo-router';
-import { type ComponentProps, type PropsWithChildren } from 'react';
+import {useState,useSyncExternalStore, type ComponentProps, type PropsWithChildren } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View, KeyboardAvoidingView, Keyboard, Platform, useWindowDimensions, type StyleProp, type ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -40,12 +41,12 @@ export function DashboardAction({ title, icon, tone = 'mint', onPress, testID, a
   </Pressable>;
 }
 export function ActionButton({ title, onPress, icon, secondary = false, testID }: { title: string; onPress(): void; icon?: IconName; secondary?: boolean; testID?: string }) {
-  const { colors } = useTheme();
-  return <Pressable testID={testID} accessibilityRole="button" accessibilityLabel={title} onPress={onPress}
+  const { colors } = useTheme();const [ticket,setTicket]=useState<number|null>(null);const notice=useSyncExternalStore(subscribeSaveNotice,getSaveNotice,serverSaveNotice);const succeeded=ticket!==null&&notice?.ticket===ticket;
+  return <Pressable testID={testID} accessibilityRole="button" accessibilityLabel={succeeded?'Guardado exitosamente':title} onPress={()=>{setTicket(beginSaveAction(title));onPress();}}
     style={({ pressed }) => ({ opacity: pressed ? 0.75 : 1, borderRadius: 12, overflow: 'hidden', minHeight: 54, borderWidth: secondary ? 1 : 0, borderColor: colors.primary })}>
     <LinearGradient colors={secondary ? [colors.surface, colors.surface] : [fixed.buttonStart, fixed.buttonEnd]} style={{ minHeight: 54, padding: 16, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
       {icon ? <Ionicons name={icon} color={secondary ? colors.primary : fixed.white} size={22} /> : null}
-      <Text style={{ fontSize: 17, fontWeight: '700', color: secondary ? colors.primary : fixed.white, flexShrink: 1, textAlign: 'center' }}>{title}</Text>
+      <Text style={{ fontSize: 17, fontWeight: '700', color: secondary ? colors.primary : fixed.white, flexShrink: 1, textAlign: 'center' }}>{succeeded?'Guardado exitosamente':title}</Text>
     </LinearGradient>
   </Pressable>;
 }

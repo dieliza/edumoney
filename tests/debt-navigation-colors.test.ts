@@ -1,0 +1,18 @@
+import {createElement,type ReactNode} from 'react';
+import {renderToStaticMarkup} from 'react-dom/server';
+import {expect,it,vi} from 'vitest';
+import TabLayout from '../src/app/(tabs)/_layout';
+import DebtsRedirect from '../src/app/debts';
+import {Choices} from '../src/modules/money/fields';
+import {debtViewColors,debtViewOptions} from '../src/modules/debts/debtViews';
+vi.mock('react-native',()=>({Text:({children,style}:{children:ReactNode;style?:object})=>createElement('span',{style},children),View:({children}:{children:ReactNode})=>createElement('div',null,children),ScrollView:({children}:{children:ReactNode})=>createElement('div',null,children),Pressable:({children,style,accessibilityState}:{children:ReactNode;style?:object;accessibilityState?:{checked:boolean}})=>createElement('button',{style,'aria-checked':accessibilityState?.checked},children),Modal:()=>null,TextInput:()=>null,KeyboardAvoidingView:()=>null,Keyboard:{},Platform:{OS:'web'},useWindowDimensions:()=>({fontScale:1})}));
+vi.mock('expo-router',()=>({Tabs:Object.assign(({children}:{children:ReactNode})=>createElement('nav',null,children),{Screen:({name,options}:{name:string;options:{title:string}})=>createElement('button',{'data-route':name},options.title)}),Redirect:({href}:{href:unknown})=>createElement('span',null,JSON.stringify(href)),useLocalSearchParams:()=>({debtId:'d',billId:'b',tab:'bills'})}));
+vi.mock('react-native-safe-area-context',()=>({useSafeAreaInsets:()=>({bottom:0})}));
+vi.mock('@expo/vector-icons/Ionicons',()=>({default:()=>null}));
+vi.mock('../src/design/ThemeProvider',()=>({useTheme:()=>({name:'dark',colors:{accent:'#0f0',primary:'#070',line:'#ccc',surface:'#fff',surfaceAlt:'#eee',tab:'#123',text:'#222'}})}));
+vi.mock('../src/ui/components',()=>({Body:({children,style}:{children:ReactNode;style?:object})=>createElement('span',{style},children),Card:({children}:{children:ReactNode})=>createElement('div',null,children),CloseButton:()=>null}));
+vi.mock('../src/ui/SaveToast',()=>({SaveToast:()=>null}));
+vi.mock('../src/ui/SelectControl',()=>({SelectControl:()=>null}));
+it('la barra inferior mantiene los cinco módulos y añade Mis deudas como sexta sección',()=>{const html=renderToStaticMarkup(createElement(TabLayout));for(const label of ['Mi dinero','Mis metas','Aprende','Mi progreso','Negocio','Mis deudas'])expect(html).toContain(label);expect(html.match(/data-route=/g)).toHaveLength(6);expect(html).toContain('data-route="my-debts"');});
+it('los enlaces anteriores de deudas redirigen a la pestaña conservando deuda, factura y vista',()=>{const html=renderToStaticMarkup(createElement(DebtsRedirect));expect(html).toContain('/(tabs)/my-debts');expect(html).toContain('debtId');expect(html).toContain('billId');expect(html).toContain('bills');});
+it('las siete opciones de deudas conservan nombre y selección con un color distinto por botón',()=>{const html=renderToStaticMarkup(createElement(Choices,{label:'Vista de deudas',value:'debts',onChange:()=>{},presentation:'tabs',options:debtViewOptions,tabColors:debtViewColors}));expect(new Set(Object.values(debtViewColors)).size).toBe(7);for(const [,label]of debtViewOptions)expect(html).toContain(label);expect(html).toContain('aria-checked="true"');expect(html.match(/background-color:/g)?.length).toBeGreaterThanOrEqual(7);});

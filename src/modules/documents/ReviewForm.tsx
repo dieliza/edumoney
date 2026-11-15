@@ -1,3 +1,4 @@
+import {announceSaved} from '../../ui/saveFeedback';
 import {ReceiptPhotoButtons} from './ReceiptPhotoButtons';
 import {PhotoAnalysis} from '../../ui/PhotoAnalysis';
 import {reviewedReading} from './ai/details';
@@ -44,7 +45,7 @@ export function ReviewForm({retake,processing=false,analysisError='',initial,dat
  if(initial.image&&!keepImage)throw new UserInputError('Decide si conservarás la imagen cifrada o solo los datos.');
  const m=data.movements.find(m=>m.id===targetId),b=data.bills.find(b=>b.id===targetId);
  await store.save({...(initial.structured?{reading:reviewedReading(initial.structured,description,date.trim()||null,enteredCents,details)}:{}),...(kind==='paid_income'&&initial.structured?{incomeStatement:anthropicStatement(initial.structured,enteredCents!,description.trim(),structuredIds)}:{}),id,kind,source:initial.source,description,date:date.trim()||null,amountCents:amount.trim()?parseAmount(amount.trim()):null,notes,rawText:keepText==='yes'&&!(initial.image&&keepImage==='yes')?text:null,image:initial.image,keepImage:keepImage==='yes',movementId:kind==='attachment'&&targetType==='movement'?targetId||null:null,billId:kind==='attachment'&&targetType==='bill'?targetId||null:null,expectedMovementVersion:m?.version??null,expectedBillVersion:b?.version??null,categoryId:category||null,paymentMethod:method||null,supersedesId:parent?.id??null,expectedDocumentVersion:parent?.version??null,confirmSimilar:similar===reviewKey,reviewed:true});
- await saved();close();
+ announceSaved();await saved();close();
  }catch(e){setError(userMessage(e));if(e instanceof DuplicateDocumentError)setDuplicate(e.documentId);}finally{setBusy(false);}}
  return <Sheet title={parent?'Corregir comprobante':'Revisar antes de guardar'} close={close} busy={busy||processing}>
  {initial.structured?<Body>Documento leído: {initial.structured.document_type==='paystub'?'Talonario de pago':initial.structured.document_type==='check'?'Cheque':'Recibo de compra'}. Si es un talonario, confirma que se guarde como ingreso; su desglose quedará pendiente de revisión.</Body>:null}
