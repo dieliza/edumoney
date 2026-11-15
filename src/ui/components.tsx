@@ -11,7 +11,7 @@ import { StatusBar } from 'expo-status-bar';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Svg, { Path } from 'react-native-svg';
 import { useTheme } from '../design/ThemeProvider';
-import { ThemePicker } from './ThemePicker';
+import {HeaderActions} from './HeaderActions';
 import { Brand } from './Brand';
 export {CloseButton} from './CloseButton';
 export type IconName = ComponentProps<typeof Ionicons>['name'];
@@ -72,7 +72,7 @@ export function Waves() {
     </Svg>
   </View>;
 }
-export function Screen({ children, title, subtitle, welcome = false, demo = true, keyboardForm = false, back = !welcome, beforeBack, dashboard = false }: PropsWithChildren<{ title: string; subtitle?: string; dashboard?: boolean; welcome?: boolean; demo?: boolean; keyboardForm?: boolean; back?: boolean; beforeBack?:()=>void }>) {
+export function Screen({ children, title, subtitle, welcome = false, demo = true, keyboardForm = false, back = !welcome, beforeBack, dashboard = false,chartMonth }: PropsWithChildren<{ title: string; subtitle?: string; dashboard?: boolean; chartMonth?: string; welcome?: boolean; demo?: boolean; keyboardForm?: boolean; back?: boolean; beforeBack?:()=>void }>) {
   const { name, colors, notice } = useTheme();
   const { width } = useWindowDimensions();
   const focused = useIsFocused();
@@ -85,9 +85,9 @@ export function Screen({ children, title, subtitle, welcome = false, demo = true
       <View style={{width:'100%',position:'relative'}}>
       {back&&!dashboard?<View style={{position:'absolute',left:width>1040?(width-1040)/2+8:8,top:8,zIndex:2}}><ArrowBack beforeBack={beforeBack} color={headerInk} fallback={title==='Mi dinero'?'/':'/money'}/></View>:null}
       <View style={{ width: '100%', maxWidth: 1040, alignSelf: 'center', paddingLeft: back&&!dashboard?64:16,paddingRight:16 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 64, gap: 10 }}>
-          {dashboard?<><SideMenu color={headerInk}/><Brand onDark={name==='dark'}/><View style={{flex:1}}><Text accessibilityRole="header" style={{fontSize:23,fontStyle:'italic',fontWeight:'800',letterSpacing:-.6,color:headerInk}}>EduMoney</Text><Text style={{fontSize:10,letterSpacing:1,color:headerInk}}>FINANZAS PERSONALES</Text></View></>:<>{welcome?<Brand onDark={name==='dark'}/>:<Text accessibilityRole="header" style={{fontSize:23,fontWeight:'800',letterSpacing:-.5,color:headerInk,flex:1}}>{title}</Text>}<SideMenu color={headerInk}/></>}
-          <ThemePicker color={headerInk} />
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 64, gap: 6 }}>
+          {dashboard?<><SideMenu color={headerInk}/><View style={{width:width<400?36:48}}><Brand size={width<400?36:48} onDark={name==='dark'}/></View><View style={{flex:1}}><Text accessibilityRole="header" style={{fontSize:width<370?18:23,fontStyle:'italic',fontWeight:'800',letterSpacing:-.6,color:headerInk}}>EduMoney</Text><Text style={{fontSize:width<400?7:10,letterSpacing:width<400?0.4:1,color:headerInk}}>FINANZAS PERSONALES</Text></View></>:<>{welcome?<Brand onDark={name==='dark'}/>:<Text accessibilityRole="header" style={{fontSize:23,fontWeight:'800',letterSpacing:-.5,color:headerInk,flex:1}}>{title}</Text>}<SideMenu color={headerInk}/></>}
+          <HeaderActions color={headerInk} month={chartMonth}/>
         </View>
         {keyboardForm?<Pressable testID="form-dismiss-keyboard" accessibilityRole="button" accessibilityLabel="Ocultar teclado" onPress={()=>Keyboard.dismiss()} style={{minHeight:48,justifyContent:'center',alignItems:'flex-end',paddingVertical:8}}><Text style={{color:headerInk,fontSize:16,fontWeight:'600'}}>Ocultar teclado</Text></Pressable>:null}
       </View></View>

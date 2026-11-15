@@ -8,12 +8,12 @@ const choices: { value: ThemePreference; label: string; icon: 'sunny-outline' | 
   { value: 'dark', label: 'Oscuro', icon: 'moon-outline', detail: 'Azul profundo, esmeralda y turquesa' },
   { value: 'automatic', label: 'Automático', icon: 'phone-portrait-outline', detail: 'Sigue la apariencia de tu dispositivo' },
 ];
-export function ThemePicker({ color }: { color: string }) {
+export function ThemePicker({ color,compact=false }: { color: string;compact?:boolean }) {
   const { name, preference, colors, setPreference } = useTheme();
   const [open, setOpen] = useState(false);
   return <>
     <Pressable testID="theme-picker-open" accessibilityRole="button" accessibilityLabel="Cambiar tema" accessibilityHint="Elegir Claro, Oscuro o Automático"
-      onPress={() => setOpen(true)} style={({ pressed }) => ({ padding: 12, minWidth: 48, minHeight: 48, borderRadius: 24, opacity: pressed ? 0.65 : 1 })}>
+      onPress={() => setOpen(true)} style={({ pressed }) => ({ padding: compact?8:12, minWidth: compact?44:48, minHeight: compact?44:48, borderRadius: 24, opacity: pressed ? 0.65 : 1 })}>
       <Ionicons name={name === 'dark' ? 'moon-outline' : 'sunny-outline'} size={25} color={color} />
     </Pressable>
     <Modal visible={open} transparent animationType="none" onRequestClose={() => setOpen(false)}>
@@ -22,7 +22,7 @@ export function ThemePicker({ color }: { color: string }) {
         <View accessibilityViewIsModal style={{ backgroundColor: colors.surface, borderRadius: 28, padding: 24, maxWidth: 480, width: '100%', alignSelf: 'center', gap: 14 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
             <Text accessibilityRole="header" style={{ fontSize: 24, fontWeight: '700', color: colors.text, flexShrink: 1 }}>Apariencia</Text>
-            <Pressable accessibilityRole="button" accessibilityLabel="Cerrar selector de tema" onPress={() => setOpen(false)} style={{ padding: 12, minWidth: 48, minHeight: 48 }}>
+            <Pressable accessibilityRole="button" accessibilityLabel="Cerrar selector de tema" onPress={() => setOpen(false)} style={{ padding: compact?8:12, minWidth: compact?44:48, minHeight: compact?44:48 }}>
               <Ionicons name="close" size={26} color={colors.text} />
             </Pressable>
           </View>
