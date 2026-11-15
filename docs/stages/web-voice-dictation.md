@@ -18,3 +18,12 @@ The browser's provider may process audio remotely. This is disclosed in the web 
 
 ## Files
 src/modules/documents/voice.ts, DocumentsScreen.tsx, src/ui/buildVersion.ts, tests/documents-voice-web.test.ts and this report.
+
+## Publication receipt
+- Successfully published: https://edumoney-web.diegoluissantospabon.chatgpt.site
+- App 2026.11.15.03; Sites version 42.
+- Implementation commit 68ac671 on web-edumoney; GitHub main untouched.
+- Hosting source 986b4908c7504b77b5fb9a922c180f24ca31119d.
+- Saved version appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_369ccd064b408191a00476d9ee29f8a6.
+- Deployment appgdep_6af9179c76dc8191b82ae2b2bf8c9d70: succeeded. Existing public audience and environment revision 1 preserved.
+- Packaged Worker syntax passed.
