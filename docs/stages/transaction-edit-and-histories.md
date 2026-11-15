@@ -21,3 +21,12 @@ No migrations, new dependencies, API, authentication, pricing or financial formu
 - Four static UI tests for no motive field + Guardar, separate creation/history controls, all three history panes and scanner camera/gallery without Mis dictados.
 - Two existing pending-dictation edit/confirmation cases.
 TypeScript, ESLint, web export passed; Worker syntax checked at packaging. Physical iPad/iPhone/Android and browser tap-through verification was unavailable. Static markup tests do not prove device appearance or touch behavior.
+
+## Publication receipt
+- Published successfully: https://edumoney-web.diegoluissantospabon.chatgpt.site
+- App 2026.11.15.10; Sites version 49.
+- Implementation 014c169 on web-edumoney; GitHub main untouched.
+- Hosting source 25d34fde7f0346fad1d329e67c61674e1b77554d.
+- Saved version appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_0c2aabd5d0fc81919d22cf1e48d1f470.
+- Deployment appgdep_6af9393f05dc8191b59d081bd2548283 succeeded; existing public audience and environment revision 1 preserved.
+- Final TypeScript, ESLint, web export and Worker syntax checks passed.
