@@ -14,3 +14,6 @@ Pendiente prueba visual/cámara en iPhone, iPad, Android y PWA instalada: este e
 
 ## Alcance
 Sin cambios en autenticación, permisos, claves, APIs, modelo Anthropic, cálculos, base de datos ni cobros. Reversión por commit; ningún dato eliminado.
+
+## Publicación
+Implementación f277c68, rama web-edumoney. Hosting cf15898bffd6a43d3e4f63f37b8737ec6061a46b. Sites versión 53, guardada como appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_bdd9332f15c08191bcb39f9ee3ee08db. Deployment appgdep_6af9bbcaab0c819191b6b89c0ec12516: succeeded. Revisión de entorno 1 conservada. URL: https://edumoney-web.diegoluissantospabon.chatgpt.site
