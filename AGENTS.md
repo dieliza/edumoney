@@ -50,3 +50,8 @@ No ejecutar más de 100 casos de prueba en un bloque de trabajo, contando repeti
 Para el bloque `receipt-labels`, el usuario amplió el máximo a **10 casos en total**, incluidas repeticiones y comprobaciones del controlador. No repetir las tres pruebas de código aprobadas previamente; contarlas una vez en el presupuesto conservador, dejando como máximo siete casos nuevos. Ejecutar solo el escenario `receipt-labels`; no lanzar suites generales. El controlador iOS se limita a `testHttpServer` y una invocación por trabajo. Registrar el consumo antes de repetir cualquier recorrido.
 
 Cierre de `receipt-labels`: **7 de 10 consumidos conservadoramente**, incluidos los tres casos previos y un arranque fallido sin casos iniciados. Objetivo completado en ambos simuladores; no reiniciar el contador ni repetir casos de esta corrección sin una nueva instrucción del usuario. Ver docs/stages/evidence/receipt-status-visual/execution.json.
+
+## Anthropic: decisiones reservadas al propietario
+
+El lector debe funcionar automáticamente para usuarios comunes. No mostrarles controles, pestañas ni rutas de configuración/activación/desconexión de API. La administración requiere autorización del propietario comprobada en el servidor; nunca distribuir la clave.
+No añadir ni activar cuotas de uso (diarias, por IP u otras) sin autorización expresa del propietario. El estado predeterminado es sin cuota propia de EduMoney. Los cambios fuera del alcance solicitado o nuevas restricciones deben consultarse antes de implementarse. Ejecutar las correcciones ya ordenadas sin volver a pedir aprobación.

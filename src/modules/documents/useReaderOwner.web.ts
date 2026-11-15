@@ -1,0 +1,3 @@
+import {useEffect,useState} from 'react';
+import {getOrCreateEducationDevice} from '../../web/vault';
+export function useReaderOwner(){const [state,setState]=useState({owner:false,loading:true});useEffect(()=>{let live=true;void getOrCreateEducationDevice().then(token=>fetch('/api/receipt-service/admin',{headers:{Authorization:`Bearer edumoney-device.${token}`},cache:'no-store',signal:AbortSignal.timeout(15000)})).then(async response=>{const owner=response.ok&&(await response.json()).owner===true;if(live)setState({owner,loading:false});}).catch(()=>{if(live)setState({owner:false,loading:false});});return()=>{live=false;};},[]);return state;}

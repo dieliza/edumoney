@@ -1,3 +1,6 @@
+import {Redirect} from 'expo-router';
+import {ActivityIndicator} from 'react-native';
+import {useReaderOwner} from '../modules/documents/useReaderOwner';
 import {Screen} from '../ui/components';
 import {ReceiptReaderSettings} from '../modules/documents/ReceiptReaderSettings';
-export default function ReceiptReaderSetup(){return <Screen back title="Conectar lector de fotos" demo={false} subtitle="Una clave de API; tu contraseña de EduMoney no cambia."><ReceiptReaderSettings/></Screen>;}
+export default function ReceiptReaderSetup(){const {owner,loading}=useReaderOwner();if(loading)return <ActivityIndicator accessibilityLabel="Abriendo configuración"/>;return owner?<Screen back title="Administración del lector" demo={false}><ReceiptReaderSettings/></Screen>:<Redirect href="/"/>;}
