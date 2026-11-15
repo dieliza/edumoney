@@ -21,3 +21,12 @@ The browser voice engine may use its provider's services; the web UI discloses t
 TypeScript, ESLint, web export and Worker syntax checks are required before publication. React best-practices review applied to hook lifecycle, event handling, accessibility and side-effect placement. Expo 58 reference consulted.
 
 No browser/device microphone or visual QA was available. Real Safari iPhone/iPad, Chrome Android, installed PWA and desktop microphone checks remain pending; mocked control tests do not prove physical recognition quality.
+
+## Publication receipt
+- Published successfully: https://edumoney-web.diegoluissantospabon.chatgpt.site
+- App 2026.11.15.04; Sites version 43.
+- Implementation commit 8cfd772, branch web-edumoney; GitHub main untouched.
+- Hosting source 38d8b8069889ed76cd90dc7c99f9820fe8cfded8.
+- Saved version appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_d41870bdb3a88191a2d9c7380f45c938.
+- Deployment appgdep_6af91b40d6f88191aefef5f8e45859da: succeeded. Public audience and existing environment revision 1 preserved.
+- Final TypeScript, ESLint (zero warnings), web export and packaged Worker syntax checks passed.
