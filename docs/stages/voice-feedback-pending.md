@@ -23,3 +23,12 @@ Existing encrypted stores/schema are reused: no migrations, new dependencies, au
 - Covers click/permission focus behavior, engine-confirmed status, final/interim text, duplicate prevention, note edits, delete guards, stale versions, idempotent confirmation, transactional rollback and repeat dictation after withdrawal.
 - TypeScript, ESLint, web export passed. Packaged Worker syntax checked before publication.
 - No real microphone/browser or physical iPhone/iPad/Android/PWA validation was available. No visual screenshot or recognition-quality claim is made. These device checks remain pending.
+
+## Publication receipt
+- Published successfully: https://edumoney-web.diegoluissantospabon.chatgpt.site
+- App version 2026.11.15.05; Sites version 44.
+- Implementation 1e17ab8 on web-edumoney; GitHub main untouched.
+- Hosting source a16ebd4ce32eaee4082be96b7653cc8f448c0952.
+- Saved version appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_dc713e5543908191a9ccf7530369a383.
+- Deployment appgdep_6af91ff741048191b3462087378614ff succeeded; existing audience and environment revision 1 preserved.
+- Final TypeScript, ESLint, web export and Worker syntax checks passed.
