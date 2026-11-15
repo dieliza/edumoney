@@ -1,3 +1,5 @@
+vi.mock('../src/ui/NeonActionButton',()=>({NeonActionButton:()=>null}));
+vi.mock('../src/modules/documents/readerSetup',()=>({allowReceiptCamera:()=>true}));
 import {createElement,type ReactNode} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {expect,it,vi} from 'vitest';

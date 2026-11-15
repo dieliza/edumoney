@@ -1,3 +1,4 @@
+import {allowReceiptCamera} from './readerSetup';
 import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import * as Picker from 'expo-image-picker';
 import { File,Directory,Paths } from 'expo-file-system';
@@ -8,6 +9,7 @@ import { UserInputError } from '../../core/errors';
 import { MAX_IMAGE_BYTES,validateImage } from './domain';
 import type { ImageData, CaptureResult } from './types';
 export async function captureImage(source:'camera'|'library'):Promise<CaptureResult|null>{
+ if(source==='camera'&&!allowReceiptCamera())return null;
  if(source==='camera'){const permission=await Picker.requestCameraPermissionsAsync();if(!permission.granted)throw new UserInputError('La cámara no tiene permiso. Puedes escribir la información o seleccionar una imagen.');}
  const options:Picker.ImagePickerOptions={mediaTypes:['images'],base64:false,exif:false,quality:1,allowsEditing:false};
  const result=source==='camera'?await Picker.launchCameraAsync(options):await Picker.launchImageLibraryAsync(options);

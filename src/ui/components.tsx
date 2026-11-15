@@ -1,5 +1,4 @@
 import {beginSaveAction,getSaveNotice,serverSaveNotice,subscribeSaveNotice} from './saveFeedback';
-import {SideMenu} from './SideMenu';
 import {ChartSurface} from './ChartSurface';
 import {RecordSurface} from './RecordSurface';
 import { fixed } from '../design/tokens';
@@ -87,9 +86,10 @@ export function Screen({ children, title, subtitle, welcome = false, demo = true
       {back&&!dashboard?<View style={{position:'absolute',left:width>1040?(width-1040)/2+8:8,top:8,zIndex:2}}><ArrowBack beforeBack={beforeBack} color={headerInk} fallback={title==='Mi dinero'?'/':'/money'}/></View>:null}
       <View style={{ width: '100%', maxWidth: 1040, alignSelf: 'center', paddingLeft: back&&!dashboard?64:16,paddingRight:16 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 64, gap: 6 }}>
-          {dashboard?<><SideMenu color={headerInk}/><View style={{width:width<400?36:48}}><Brand size={width<400?36:48} onDark={name==='dark'}/></View><View style={{flex:1}}><Text accessibilityRole="header" style={{fontSize:width<370?18:23,fontStyle:'italic',fontWeight:'800',letterSpacing:-.6,color:headerInk}}>EduMoney</Text><Text style={{fontSize:width<400?7:10,letterSpacing:width<400?0.4:1,color:headerInk}}>FINANZAS PERSONALES</Text></View></>:<>{welcome?<Brand onDark={name==='dark'}/>:<Text accessibilityRole="header" style={{fontSize:23,fontWeight:'800',letterSpacing:-.5,color:headerInk,flex:1}}>{title}</Text>}<SideMenu color={headerInk}/></>}
-          <HeaderActions color={headerInk} month={chartMonth}/>
+          {dashboard?<><View style={{width:width<400?36:48}}><Brand size={width<400?36:48} onDark={name==='dark'}/></View><View style={{flex:1}}><Text accessibilityRole="header" style={{fontSize:width<370?18:23,fontStyle:'italic',fontWeight:'800',letterSpacing:-.6,color:headerInk}}>EduMoney</Text><Text style={{fontSize:width<400?7:10,letterSpacing:width<400?0.4:1,color:headerInk}}>FINANZAS PERSONALES</Text></View></>:<>{welcome?<Brand onDark={name==='dark'}/>:<Text accessibilityRole="header" style={{fontSize:23,fontWeight:'800',letterSpacing:-.5,color:headerInk,flex:1}}>{title}</Text>}</>}
+          {width>=600?<HeaderActions color={headerInk} month={chartMonth}/>:null}
         </View>
+        {width<600?<View style={{marginLeft:back&&!dashboard?-48:0,paddingBottom:6}}><HeaderActions expanded color={headerInk} month={chartMonth}/></View>:null}
         {keyboardForm?<Pressable testID="form-dismiss-keyboard" accessibilityRole="button" accessibilityLabel="Ocultar teclado" onPress={()=>Keyboard.dismiss()} style={{minHeight:48,justifyContent:'center',alignItems:'flex-end',paddingVertical:8}}><Text style={{color:headerInk,fontSize:16,fontWeight:'600'}}>Ocultar teclado</Text></Pressable>:null}
       </View></View>
       <KeyboardAvoidingView enabled={keyboardForm} behavior={Platform.OS==='ios'?'padding':'height'} style={{flex:1}}><ScrollView keyboardDismissMode="on-drag" tabIndex={0} accessibilityLabel={`Contenido de ${title}`} contentContainerStyle={{ flexGrow: 1, paddingBottom: 32 }} keyboardShouldPersistTaps="handled">

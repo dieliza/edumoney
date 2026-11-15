@@ -1,0 +1,17 @@
+import {expect,it,vi} from 'vitest';
+import {HeaderActions} from '../src/ui/HeaderActions';
+import {ReceiptCaptureHero} from '../src/ui/ReceiptCaptureHero';
+vi.mock('react-native',()=>({Pressable:()=>null,View:()=>null,Text:()=>null,useWindowDimensions:()=>({width:390})}));
+vi.mock('expo-router',()=>({router:{push:vi.fn()},usePathname:()=>'/documents'}));
+vi.mock('@expo/vector-icons/Ionicons',()=>({default:()=>null}));
+vi.mock('expo-linear-gradient',()=>({LinearGradient:()=>null}));
+vi.mock('../src/ui/ThemePicker',()=>({ThemePicker:()=>null}));
+vi.mock('../src/ui/NotificationBell',()=>({NotificationBell:()=>null}));
+vi.mock('../src/ui/SideMenu',()=>({SideMenu:()=>null}));
+vi.mock('../src/ui/components',()=>({Body:()=>null}));
+vi.mock('../src/design/ThemeProvider',()=>({useTheme:()=>({colors:{primary:'#fff'}})}));
+vi.mock('../src/ui/NeonActionButton',()=>({NeonActionButton:()=>null}));
+import {NotificationBell} from '../src/ui/NotificationBell';
+import {SideMenu} from '../src/ui/SideMenu';
+it('four controls share one row with notifications first and menu last',()=>{const row=HeaderActions({color:'#fff',expanded:true});expect(row.props.style.flexDirection).toBe('row');expect(row.props.style.justifyContent).toBe('space-between');expect(row.props.children).toHaveLength(4);expect(row.props.children[0].type).toBe(NotificationBell);expect(row.props.children[3].type).toBe(SideMenu);});
+it('camera and document history use equal tiles and preserve actions and gallery',()=>{const camera=vi.fn(),history=vi.fn(),gallery=vi.fn();const view=ReceiptCaptureHero({onCamera:camera,onHistory:history,onGallery:gallery});const tiles=view.props.children[0].props.children;expect(tiles[0].type).toBe(tiles[1].type);expect(tiles[0].props.title).toBe('Tomar fotos');expect(tiles[1].props.title).toBe('Historial de\ndocumentos');tiles[0].props.onPress();tiles[1].props.onPress();view.props.children[1].props.onPress();expect(camera).toHaveBeenCalledOnce();expect(history).toHaveBeenCalledOnce();expect(gallery).toHaveBeenCalledOnce();});
