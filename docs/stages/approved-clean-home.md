@@ -20,3 +20,12 @@ Seven focused cases passed without repeating completed cases:
 The first static-layout suite failed during module import because the test lacked a mock for native Expo Crypto; zero layout cases ran at that time. Added the isolated ID mock and ran the three layout cases successfully. Conservative budget: eight attempts including that setup failure, below 100.
 
 TypeScript, ESLint and web export passed; packaged Worker syntax checked before publication. Static markup/callback checks are not real Safari/iPad/Android/PWA visual or microphone tests. Device appearance and microphone QA remain pending; no pixel-perfect comparison is claimed.
+
+## Publication receipt
+- Published successfully: https://edumoney-web.diegoluissantospabon.chatgpt.site
+- App 2026.11.15.08; Sites version 47.
+- Implementation 772a505 on web-edumoney; GitHub main untouched.
+- Hosting source 1cb358fa4d61587b8107913cac3f28520958c390.
+- Saved version appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_5635079b3cfc81919aca9595d339fe69.
+- Deployment appgdep_6af92f2028bc8191bf320bef2bf15eaa succeeded. Public audience and existing environment revision 1 preserved.
+- Final TypeScript, ESLint, web export and Worker syntax checks passed.
