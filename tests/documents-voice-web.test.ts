@@ -1,0 +1,21 @@
+import {afterEach,beforeEach,expect,it,vi} from 'vitest';
+import {startDictation} from '../src/modules/documents/voice';
+class Recognition {
+ static instances:Recognition[]=[];
+ lang='';continuous=true;interimResults=false;maxAlternatives=0;
+ onresult:((e:any)=>void)|null=null;onerror:((e:any)=>void)|null=null;onend:(()=>void)|null=null;onstart:(()=>void)|null=null;
+ start=vi.fn();stop=vi.fn();abort=vi.fn();
+ constructor(){Recognition.instances.push(this);}
+}
+beforeEach(()=>{vi.useFakeTimers();Recognition.instances=[];vi.stubGlobal('window',{SpeechRecognition:Recognition,isSecureContext:true});});
+afterEach(()=>{vi.clearAllTimers();vi.useRealTimers();vi.unstubAllGlobals();});
+it('inicia desde el toque y reemplaza resultados intermedios sin duplicar números',async()=>{
+ const text=vi.fn(),end=vi.fn();const pending=startDictation(text,vi.fn(),end);const r=Recognition.instances[0];expect(r.start).toHaveBeenCalledOnce();expect(r.lang).toBe('es-PR');expect(r.continuous).toBe(false);expect(r.interimResults).toBe(true);const session=await pending;
+ r.onresult?.({results:[{0:{transcript:'Gasté 12'},isFinal:false}]});r.onresult?.({results:[{0:{transcript:'Gasté 12.50 dólares'},isFinal:true},{0:{transcript:'en comida'},isFinal:false}]});expect(text.mock.calls.map(c=>c[0])).toEqual(['Gasté 12','Gasté 12.50 dólares en comida']);session?.abort();expect(end).toHaveBeenCalledOnce();
+});
+it('acepta el reconocedor prefijado de Safari y termina al finalizar',async()=>{vi.stubGlobal('window',{webkitSpeechRecognition:Recognition,isSecureContext:true});const end=vi.fn();expect(await startDictation(vi.fn(),vi.fn(),end)).not.toBeNull();const r=Recognition.instances[0],ended=r.onend;r.onend?.();ended?.();expect(end).toHaveBeenCalledOnce();expect(r.onresult).toBeNull();});
+it('detener permite recibir el resultado final antes de limpiar',async()=>{const text=vi.fn(),end=vi.fn();const session=await startDictation(text,vi.fn(),end);const r=Recognition.instances[0];session?.stop();session?.stop();expect(r.stop).toHaveBeenCalledOnce();r.onresult?.({results:[{0:{transcript:'Ingreso 399.53'},isFinal:true}]});r.onend?.();expect(text).toHaveBeenCalledWith('Ingreso 399.53');expect(end).toHaveBeenCalledOnce();vi.advanceTimersByTime(60000);expect(r.abort).not.toHaveBeenCalled();});
+it('cancelar ignora callbacks tardíos y permite abrir otra sesión',async()=>{const text=vi.fn(),end=vi.fn();const session=await startDictation(text,vi.fn(),end);const old=Recognition.instances[0],late=old.onresult;session?.abort();late?.({results:[{0:{transcript:'tardío'}}]});expect(text).not.toHaveBeenCalled();expect(old.abort).toHaveBeenCalledOnce();expect(end).toHaveBeenCalledOnce();expect(await startDictation(text,vi.fn(),vi.fn())).not.toBeNull();expect(Recognition.instances).toHaveLength(2);});
+it('denegación y fallo de red ofrecen recuperación sin reiniciar ni usar otra API',async()=>{for(const error of ['not-allowed','network']){const message=vi.fn(),end=vi.fn();await startDictation(vi.fn(),message,end);Recognition.instances.at(-1)?.onerror?.({error});expect(message).toHaveBeenCalledWith(expect.stringMatching(error==='network'?/conectarse/:/Permite el micrófono/));expect(end).toHaveBeenCalledOnce();}expect(Recognition.instances).toHaveLength(2);});
+it('sin soporte o HTTPS muestra alternativa de teclado sin abrir micrófono',async()=>{for(const browser of [{isSecureContext:true},{SpeechRecognition:Recognition,isSecureContext:false}]){vi.stubGlobal('window',browser);const message=vi.fn();expect(await startDictation(vi.fn(),message,vi.fn())).toBeNull();expect(message).toHaveBeenCalledWith(expect.stringContaining('micrófono del teclado'));}expect(Recognition.instances).toHaveLength(0);});
+it('abandono y límite de tiempo limpian la sesión sin eventos posteriores',async()=>{let active=true;const text=vi.fn(),end=vi.fn();await startDictation(text,vi.fn(),end,()=>active);active=false;Recognition.instances[0].onresult?.({results:[{0:{transcript:'privado'}}]});expect(text).not.toHaveBeenCalled();expect(end).toHaveBeenCalledOnce();await startDictation(text,vi.fn(),end);vi.advanceTimersByTime(45000);expect(Recognition.instances[1].stop).toHaveBeenCalledOnce();vi.advanceTimersByTime(3000);expect(Recognition.instances[1].abort).toHaveBeenCalledOnce();expect(end).toHaveBeenCalledTimes(2);});
