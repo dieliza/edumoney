@@ -38,3 +38,12 @@ Se actualizan textos de SettingsScreen, StorageGate.web (solo aviso informativo 
 - Web y PWA se publican en el origen existente. Soporte nativo implementado en código; APK/IPA instalados anteriormente requieren una nueva compilación/distribución. No se realizó EAS ni publicación en tiendas.
 - Pendientes: Safari/iPhone/iPad, Chrome Android y PWA física; interrupción real del sistema operativo; compilación y recorrido nativos. Entorno sin navegador ni dispositivos físicos.
 - Reversión: revertir los commits de esta etapa, conservar objetos cifrados y códigos existentes; no se han eliminado datos ni cambiado cálculos o autenticación.
+
+## Publicación y comprobación operativa
+- Implementación: 27ff563, rama web-edumoney. No se modificó GitHub main.
+- Hosting: 54cfc5ebf60ec8eedce9e6df4f5d5b1ca3111103. Sites versión 54; versión guardada appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_fdb652c8660c8191a8c18df829393cb5.
+- Deployment appgdep_6afa116576fc819198c9db9bea3a88fc: succeeded. Revisión de entorno 1 y acceso público preexistente conservados. No se cambiaron variables, claves ni planes de facturación.
+- URL: https://edumoney-web.diegoluissantospabon.chatgpt.site
+- Estado real del servicio: HTTP 200, enabled=true, configured=true, dailyLimit=200, provider=Anthropic, model=claude-haiku-5-5. Consulta mediante el acceso de servicio oficial de Sites; sin fotos ni generación facturable.
+- Las consultas iniciales Python con User-Agent predeterminado recibieron Cloudflare 1010 antes de la aplicación, incluso en el endpoint público. No se interpreta ese 403 como una prueba de la autorización del panel. Node fetch no pudo utilizar el transporte del entorno. Se completó la comprobación con proxy Python, User-Agent identificable compatible y cabecera oficial de servicio, sin guardar ni imprimir el token.
+- La separación de permisos del administrador está cubierta por pruebas del servidor; quedan pendientes la comprobación visual y los recorridos en dispositivos físicos indicados arriba. Todas las comprobaciones automatizadas y operativas permanecieron por debajo del límite de 100.
