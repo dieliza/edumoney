@@ -16,3 +16,12 @@ No database migrations, new dependencies, API calls, AI usage, billing changes o
 ## Validation
 20 cases passed, one run, no repeats: six new reminder/database/event cases, five existing inbox/preference cases and nine pending-note regressions. Covers the exact patio example, income-vs-expense wording, unchanged financial totals, stable deduplication, update/remove/resolve behavior, event timing, failed saves, observer failures and separate databases.
 TypeScript, ESLint and web export passed. Worker syntax checked during packaging. Physical-device/browser visual and tap-through verification remains unavailable; deep-link route payload and storage behavior are tested in code.
+
+## Publication receipt
+- Published successfully: https://edumoney-web.diegoluissantospabon.chatgpt.site
+- App 2026.11.15.09; Sites version 48.
+- Implementation ac6bc98 on web-edumoney; GitHub main untouched.
+- Hosting source e6bb800bc8e7dff6099764e779d72d2759132293.
+- Saved version appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_3925656acd2081918f7a71b4d52dbd7a.
+- Deployment appgdep_6af93200c25c8191b772e3fbcc0e11ef succeeded; existing public audience and environment revision 1 preserved.
+- Final TypeScript, ESLint, web export and Worker syntax checks passed.
