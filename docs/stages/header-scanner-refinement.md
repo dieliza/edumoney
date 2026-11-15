@@ -8,9 +8,9 @@
 - Acción del detalle: Editar esta transacción; mismo editor y protecciones. Símbolo informativo amarillo en oscuro y azul en claro; enlace de privacidad azul contrastante y subrayado.
 
 ## Validación
-- TypeScript y ESLint: correctos. Build web/PWA: correcto. git diff --check: correcto.
+- TypeScript y ESLint finales: correctos. Se corrigió un error inicial de lint eliminando setState del efecto de configuración y usando una clave de ruta para inicializar correctamente la pestaña. Build web/PWA: correcto. git diff --check: correcto.
 - 12 casos aprobados: reader-setup (5), header-scanner-layout (2), neon-button-actions (1), transaction-history-ui (4).
-- Primera ejecución: 8 aprobados y una suite sin iniciar casos debido a un mock ausente de SVG/React Native. Se añadió el mock del botón al test SSR; sus cuatro casos pasaron después. Total ejecutado: 12 casos, sin repetir casos completados; inferior al límite de 100.
+- Primera ejecución: 8 aprobados y una suite sin iniciar casos debido a un mock ausente de SVG/React Native. Se añadió el mock del botón al test SSR; sus cuatro casos pasaron después. Después del ajuste de ruta/importaciones se repitieron seis casos pertinentes, todos aprobados. Total ejecutado: 18 casos, incluidas repeticiones; inferior al límite de 100.
 - Cobertura: orden horizontal, mismas acciones de tiles, galería conservada, primera visita, lector configurado, persistencia aislada por espacio, lecturas tardías, fallo de almacenamiento y limpieza al bloquear, formularios/historiales existentes.
 - Pendiente en dispositivos físicos: Safari iPhone/iPad, PWA instalada, Chrome Android, cámara/cancelar/reintentar y contraste visual final. Entorno sin herramientas de navegador; no se afirma validación visual ni nativa.
 

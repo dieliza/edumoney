@@ -9,7 +9,7 @@ import { DateField } from '../../ui/DateField';
 import { documentMatches, validDocumentRange } from './filters';
 import { useCallback,useEffect,useRef,useState } from 'react';
 import { ActivityIndicator,AppState,Image,Pressable,View } from 'react-native';
-import { router,useIsFocused,useLocalSearchParams } from 'expo-router';
+import {useIsFocused,useLocalSearchParams } from 'expo-router';
 import { userMessage } from '../../core/errors';
 import { ActionButton,Body,Card,Screen,SectionHeading } from '../../ui/components';
 import { Field,Sheet,ErrorNotice } from '../money/fields';

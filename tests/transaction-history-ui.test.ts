@@ -1,5 +1,3 @@
-vi.mock('../src/ui/NeonActionButton',()=>({NeonActionButton:()=>null}));
-vi.mock('../src/modules/documents/readerSetup',()=>({allowReceiptCamera:()=>true}));
 import {createElement,type ReactNode} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {expect,it,vi} from 'vitest';
@@ -8,6 +6,8 @@ import {ReceiptPhotoButtons} from '../src/modules/documents/ReceiptPhotoButtons.
 import type {MoneyStore} from '../src/modules/money/store';
 import type {LedgerMovement} from '../src/modules/money/types';
 import {cents} from '../src/core/money';
+vi.mock('../src/ui/NeonActionButton',()=>({NeonActionButton:()=>null}));
+vi.mock('../src/modules/documents/readerSetup',()=>({allowReceiptCamera:()=>true}));
 vi.mock('react-native',()=>({View:({children}:{children:ReactNode})=>createElement('div',null,children),Pressable:({children,accessibilityLabel}:{children:ReactNode;accessibilityLabel?:string})=>createElement('button',{'aria-label':accessibilityLabel},children),ActivityIndicator:()=>null}));
 vi.mock('expo-linear-gradient',()=>({LinearGradient:({children}:{children:ReactNode})=>createElement('div',null,children)}));
 vi.mock('@expo/vector-icons/Ionicons',()=>({default:()=>null}));
