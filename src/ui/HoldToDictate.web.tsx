@@ -1,0 +1,7 @@
+import {useRef} from 'react';
+export function HoldToDictate({start,stop,listening,disabled}:{start():void;stop():void;listening:boolean;disabled:boolean}){
+ const held=useRef(false);
+ const begin=()=>{if(disabled||held.current)return;held.current=true;start();};
+ const end=()=>{if(!held.current)return;held.current=false;stop();};
+ return <button type="button" aria-label="Mantén pulsado para dictar un gasto o ingreso; suelta para revisar. Con teclado, mantén Espacio o Enter." aria-pressed={listening} disabled={disabled} onPointerDown={e=>{if(e.button!==0)return;e.currentTarget.setPointerCapture(e.pointerId);begin();}} onPointerUp={end} onPointerCancel={end} onLostPointerCapture={end} onKeyDown={e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();if(!e.repeat)begin();}}} onKeyUp={e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();end();}}} onBlur={end} onClick={e=>{if(e.detail===0&&!held.current){if(listening)stop();else start();}}} style={{width:72,height:72,borderRadius:'50%',border:'2px solid #5BE6B9',background:listening?'#D72D50':'#00795C',color:'#FFFFFF',display:'flex',alignItems:'center',justifyContent:'center',cursor:disabled?'default':'pointer',touchAction:'none',userSelect:'none',opacity:disabled?.5:1}}><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></svg></button>;
+}

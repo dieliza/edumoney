@@ -9,7 +9,7 @@ import {ExpenseTopThree} from './ExpenseTopThree';
 import {useTheme} from '../design/ThemeProvider';
 import {formatMoney,type monthlySummary} from '../modules/money/domain';
 import type {LedgerMovement} from '../modules/money/types';
-type Props={summary:ReturnType<typeof monthlySummary>;movements:LedgerMovement[];month:string;currentMonth:string;periodEditor?:ReactNode;onPeriod():void;onExpense():void;onScan():void;onDebts():void;onBreakdown():void};
+type Props={summary:ReturnType<typeof monthlySummary>;movements:LedgerMovement[];month:string;currentMonth:string;periodEditor?:ReactNode;voiceEntry?:ReactNode;onPeriod():void;onExpense():void;onScan():void;onDebts():void;onBreakdown():void};
 export function MoneyOverview(p:Props){const {colors,name}=useTheme();const {width,fontScale}=useWindowDimensions();const wide=width>=820&&fontScale<1.5;const heading=name==='dark'?'#F1FFFC':colors.text;return <View testID="money-overview-redesign" style={{gap:12}}>
  <View style={{flexDirection:'row',gap:12,alignItems:'center',justifyContent:'space-between'}}><View style={{flex:1}}><Body style={{fontSize:24,lineHeight:30,fontWeight:'800',color:heading}}>¡Hola!</Body><Body style={{fontSize:13,lineHeight:18,color:name==='dark'?'#C7EAE4':colors.muted}}>Aquí tienes el resumen de tus finanzas.</Body></View><Pressable accessibilityRole="button" accessibilityLabel={`Cambiar período. Actual: ${p.month}`} onPress={p.onPeriod} style={{minHeight:44,paddingHorizontal:12,borderRadius:13,borderWidth:1,borderColor:name==='dark'?'#77B3B3':colors.line,flexDirection:'row',alignItems:'center',gap:7}}><Ionicons name="calendar-outline" size={18} color={heading}/><Body style={{fontSize:13,color:heading}}>{p.month===p.currentMonth?'Este mes':p.month}</Body><Ionicons name="chevron-down" size={15} color={heading}/></Pressable></View>
  {p.periodEditor}
@@ -20,5 +20,6 @@ export function MoneyOverview(p:Props){const {colors,name}=useTheme();const {wid
  <View style={{flex:wide ? 1.1 : undefined}}><Card chart style={{padding:14,borderRadius:20}}><MonthlyCharts compact summary={p.summary} movements={p.movements} month={p.month}/></Card></View>
  </View>
  <View style={{flexDirection:'row',gap:10,width:'100%',maxWidth:920,alignSelf:'center',justifyContent:'space-between'}}><NeonActionButton kind="expense" title="Gastos / Ingresos" onPress={p.onExpense}/><NeonActionButton kind="scan" title={'Escanear\nrecibo'} testID="open-documents" onPress={p.onScan}/><NeonActionButton kind="debts" title="Deudas" testID="open-debts" onPress={p.onDebts}/></View>
+ {p.voiceEntry}
  <ExpenseTopThree items={p.summary.distribution} month={p.month} onOpen={p.onBreakdown}/>
  </View>;}
