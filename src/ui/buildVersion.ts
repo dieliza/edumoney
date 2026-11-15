@@ -1,1 +1,1 @@
-export const WEB_BUILD = '2026.11.15.01';
+export const WEB_BUILD = '2026.11.15.02';
