@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import { ExpoSpeechRecognitionModule as Speech } from 'expo-speech-recognition';
 export interface VoiceSession {stop():void;abort():void}
-export async function startDictation(onText:(text:string)=>void,onMessage:(text:string)=>void,onEnd:()=>void,active:()=>boolean=()=>true):Promise<VoiceSession|null>{
+export async function startDictation(onText:(text:string)=>void,onMessage:(text:string)=>void,onEnd:()=>void,active:()=>boolean=()=>true,onStarted:()=>void=()=>{}):Promise<VoiceSession|null>{
  if(Platform.OS==='android'&&Number(Platform.Version)<33){onMessage('El dictado estrictamente local requiere Android 13 o posterior. Puedes escribir los datos.');return null;}
  let listeners:{remove():void}[]=[];let timer:ReturnType<typeof setTimeout>|undefined;let ended=false;
  const clean=()=>{ended=true;listeners.forEach(l=>l.remove());if(timer)clearTimeout(timer);};
@@ -13,7 +13,7 @@ export async function startDictation(onText:(text:string)=>void,onMessage:(text:
  if(!active())return null;
  const permission=await Speech.requestMicrophonePermissionsAsync();if(!permission.granted){onMessage('El micrófono no tiene permiso. La entrada manual sigue disponible.');return null;}
  if(!active())return null;
- listeners=[Speech.addListener('result',event=>{const text=event.results[0]?.transcript;if(text&&active()&&!ended)onText(text.slice(0,20000));}),Speech.addListener('error',()=>{clean();try{Speech.abort();}catch{}if(active())onMessage('No se pudo completar el dictado local. No cambiaremos a un servicio remoto; revisa el texto o escribe.');onEnd();}),Speech.addListener('end',()=>{clean();onEnd();})];
+ listeners=[Speech.addListener('start',()=>{if(active()&&!ended)onStarted();}),Speech.addListener('result',event=>{const text=event.results[0]?.transcript;if(text&&active()&&!ended)onText(text.slice(0,20000));}),Speech.addListener('error',()=>{clean();try{Speech.abort();}catch{}if(active())onMessage('No se pudo completar el dictado local. No cambiaremos a un servicio remoto; revisa el texto o escribe.');onEnd();}),Speech.addListener('end',()=>{clean();onEnd();})];
  Speech.start({lang:locale,requiresOnDeviceRecognition:true,interimResults:false,maxAlternatives:1,continuous:false,recordingOptions:{persist:false}});
  if(!ended)timer=setTimeout(()=>{try{Speech.stop();}catch{clean();onEnd();}},45000);
  return {stop:()=>Speech.stop(),abort:()=>{clean();try{Speech.abort();}finally{onEnd();}}};

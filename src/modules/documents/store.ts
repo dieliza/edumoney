@@ -6,7 +6,7 @@ import { cents } from '../../core/money';
 import { localToday,validDate,validateMovement } from '../money/domain';
 import { validateBill } from '../bills/domain';
 import { MovementRepository } from '../money/repository';
-import { MoneyStore,movementSelect,readMovement } from '../money/store';
+import { MoneyStore,movementSelect,readMovement,type SqlDb } from '../money/store';
 import type { LedgerMovement } from '../money/types';
 import { validateImage } from './domain';
 import type { DocumentInput,DocumentsSnapshot,StoredDocument } from './types';
@@ -44,6 +44,8 @@ export class DocumentStore {
  return this.ledger.transaction(async db=>{
  const old=await db.getFirstAsync<StoredDocument>(select+' WHERE id=?',p.id);
  if(old){if((old.readingJson??null)!==(p.reading?JSON.stringify(p.reading):null))throw new UserInputError('El desglose reconocido del reintento no coincide.');const detail=await db.getFirstAsync<{json:string}>('SELECT record_json AS json FROM income_statements WHERE document_id=?',p.id);if((detail?.json??null)!==(p.incomeStatement?JSON.stringify(p.incomeStatement):null))throw new UserInputError('El desglose del reintento no coincide.');if(old.sha256===sha&&canonical(old)===canonical({...p,...links})){const original=await db.getFirstAsync<{text:string|null}>('SELECT raw_text AS text FROM documents WHERE id=?',old.id);if(original?.text!==p.rawText)throw new UserInputError('El texto del reintento no coincide.');if(p.kind==='pending_bill'){const bill=await db.getFirstAsync<{category:string|null}>('SELECT category_id AS category FROM bills WHERE id=?',old.billId);if(bill?.category!==p.categoryId)throw new UserInputError('La categoría del reintento no coincide.');}if(p.kind==='paid_expense'||p.kind==='paid_income'){const m=await db.getFirstAsync<{method:string;category:string|null}>('SELECT payment_method AS method,category_id AS category FROM movements WHERE id=?',old.movementId);if(m?.method!==p.paymentMethod||m?.category!==p.categoryId)throw new UserInputError('El reintento no coincide con el movimiento original.');}return old.id;}throw new UserInputError('El identificador ya corresponde a otro documento.');}
+ let resolvedVoice:StoredDocument|null=null;
+ if(p.resolveVoiceNote){if(p.source!=='voice'||!['paid_income','paid_expense'].includes(p.kind)||p.resolveVoiceNote.id===p.id)throw new UserInputError('Solo un dictado confirmado puede resolver un pendiente.');resolvedVoice=await this.voiceNote(db,p.resolveVoiceNote.id,p.resolveVoiceNote.version);}
  const duplicate=await db.getFirstAsync<{id:string}>('SELECT id FROM documents WHERE sha256=?',sha);if(duplicate)throw new DuplicateDocumentError(duplicate.id);
  if(p.incomeStatement?.reference.trim()&&p.incomeStatement.issuer.trim()){
  const prior=await db.getAllAsync<{id:string;json:string}>('SELECT i.document_id AS id,i.record_json AS json FROM income_statements i JOIN movements m ON m.id=i.movement_id WHERE substr(m.date,1,4)=?',p.date!.slice(0,4));
@@ -79,8 +81,21 @@ export class DocumentStore {
  if(p.incomeStatement)await db.runAsync('INSERT INTO income_statements(document_id,movement_id,record_json,created_at) VALUES(?,?,?,?)',p.id,links.movementId,JSON.stringify(p.incomeStatement),now);
  if(p.keepImage)await db.runAsync('INSERT INTO document_contents(document_id,base64) VALUES(?,?)',p.id,p.image!.base64);
  if(p.supersedesId)await db.runAsync("UPDATE documents SET status='corrected',version=version+1 WHERE id=?",p.supersedesId);
+ if(resolvedVoice){const tombstone=await this.digest('resolved-voice:'+resolvedVoice.id+':'+resolvedVoice.sha256);await db.runAsync('UPDATE documents SET deleted_at=?,sha256=?,version=version+1 WHERE id=?',now,tombstone,resolvedVoice.id);await db.runAsync('INSERT INTO document_events(document_id,reason,before_json,recorded_at) VALUES(?,?,?,?)',resolvedVoice.id,'Dictado confirmado como movimiento: '+p.id,JSON.stringify(resolvedVoice),now);}
  return p.id;
  });}
+ private async voiceNote(db:SqlDb,id:string,version:number){
+ const d=await db.getFirstAsync<StoredDocument>(select+' WHERE id=?',id);
+ if(!d||d.version!==version||d.source!=='voice'||d.kind!=='note'||d.movementId||d.billId||d.deletedAt||d.status==='corrected'||d.supersedesId||await db.getFirstAsync('SELECT id FROM documents WHERE supersedes_id=?',id))throw new UserInputError('Abre el dictado pendiente actual. Los movimientos confirmados se corrigen en Historial.');
+ return d;
+ }
+ async updateVoiceNote(id:string,version:number,text:string){
+ const rawText=text.trim();if(!rawText||rawText.length>20000)throw new UserInputError('Revisa el texto del dictado (hasta 20,000 caracteres).');
+ const description=rawText.replace(/\s+/g,' ').slice(0,100),notes=('Pendiente de revisión.\n\n'+rawText).slice(0,20000);
+ const sha=await this.digest('text:'+JSON.stringify([description,null,null,notes,rawText,'note']));
+ return this.ledger.transaction(async db=>{const d=await this.voiceNote(db,id,version);const duplicate=await db.getFirstAsync<{id:string}>('SELECT id FROM documents WHERE sha256=? AND id<>?',sha,id);if(duplicate)throw new DuplicateDocumentError(duplicate.id);await db.runAsync('UPDATE documents SET description=?,notes=?,raw_text=?,sha256=?,version=version+1 WHERE id=?',description,notes,rawText,sha,id);await db.runAsync('INSERT INTO document_events(document_id,reason,before_json,recorded_at) VALUES(?,?,?,?)',id,'Edición de dictado pendiente',JSON.stringify(d),new Date().toISOString());});
+ }
+ async deleteVoiceNote(id:string,version:number){return this.ledger.transaction(async db=>{const d=await this.voiceNote(db,id,version),now=new Date().toISOString(),tombstone=await this.digest('deleted-voice:'+id+':'+d.sha256);await db.runAsync('UPDATE documents SET deleted_at=?,sha256=?,version=version+1 WHERE id=?',now,tombstone,id);await db.runAsync('INSERT INTO document_events(document_id,reason,before_json,recorded_at) VALUES(?,?,?,?)',id,'Dictado pendiente retirado por el usuario',JSON.stringify(d),now);});}
  async detail(id:string){return this.ledger.read(async db=>({document:await db.getFirstAsync<StoredDocument>(select+' WHERE id=?',id),rawText:await db.getFirstAsync<{text:string|null}>('SELECT raw_text AS text FROM documents WHERE id=?',id),events:await db.getAllAsync<{reason:string;recordedAt:string}>('SELECT reason,recorded_at AS recordedAt FROM document_events WHERE document_id=? ORDER BY id DESC',id)}));}
  async content(id:string){return this.ledger.read(db=>db.getFirstAsync<{base64:string;mime:string}>(`SELECT c.base64,d.mime FROM document_contents c JOIN documents d ON d.id=c.document_id WHERE d.id=? AND d.deleted_at IS NULL`,id));}
  async confirmReview(id:string,version:number,reason:string){if(!reason.trim()||reason.length>240)throw new UserInputError('Explica la revisión (hasta 240 caracteres).');return this.ledger.transaction(async db=>{const d=await db.getFirstAsync<StoredDocument>(select+' WHERE id=?',id);if(!d||d.version!==version||d.status!=='pending')throw new UserInputError('Abre el comprobante pendiente actual.');await db.runAsync('INSERT INTO document_events(document_id,reason,before_json,recorded_at) VALUES(?,?,?,?)',id,reason.trim(),JSON.stringify(d),new Date().toISOString());await db.runAsync("UPDATE documents SET status='received',version=version+1 WHERE id=?",id);});}
