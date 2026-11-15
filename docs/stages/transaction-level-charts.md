@@ -20,3 +20,12 @@ No financial writes, inferred recategorization, migrations, APIs, dependencies, 
 - One persisted voice-to-chart integration for Gané 100 dólares de mi sueldo: income amount 10000 cents, Salario, recorded date and original text; separate food expense preserved.
 - Two static render tests assert separate salary bars, exact amounts/category labels and preserved access to Home's original circle.
 TypeScript, ESLint and web export passed. Worker syntax checked at packaging. Static rendering and mocked native views do not establish physical browser/device appearance; iPhone/iPad/Android/PWA visual checks remain pending.
+
+## Publication receipt
+- Published successfully: https://edumoney-web.diegoluissantospabon.chatgpt.site
+- App 2026.11.15.07; Sites version 46.
+- Implementation b5031c1 on web-edumoney; GitHub main untouched.
+- Hosting source 79570d461a226a0ddd3c14dd45b89b69b48a8f4d.
+- Saved version appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_3fdc49f74ea881919cb8fa0f6dcb4a93.
+- Deployment appgdep_6af92737c3a08191bdffd23f79a84543 succeeded; existing public audience and environment revision 1 preserved.
+- Final TypeScript, ESLint, web export and Worker syntax checks passed.
