@@ -5,3 +5,6 @@ export function documentMatches(d:StoredDocument,search:string,from:string,to:st
  return normalize(`${d.description} ${d.date??''}`).includes(normalize(search.trim())) && (!from||!!d.date&&d.date>=from) && (!to||!!d.date&&d.date<=to);
 }
 export function validDocumentRange(from:string,to:string){return (!from||validDate(from))&&(!to||validDate(to))&&(!from||!to||from<=to);}
+
+/** Voice records remain stored, but belong exclusively to Mis dictados. */
+export function isScannerDocument(d:Pick<StoredDocument,'source'>){return d.source!=='voice';}
