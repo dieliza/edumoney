@@ -14,4 +14,12 @@ No migrations, new dependencies, provider/API changes, authentication changes, f
 Six focused tests passed (five inbox/preferences cases and one four-button callback case), with no repetitions. TypeScript passed. ESLint and web export passed before final packaging (see publication receipt below). Callback tests assert the exact provided handlers are retained. No physical iPhone/iPad/Android or browser visual QA was available; visual matching and device behavior remain for device review. Existing records are preserved.
 
 ## Publication
-Pending final packaging and Sites deployment.
+Published successfully to https://edumoney-web.diegoluissantospabon.chatgpt.site
+
+- App version: 2026.11.15.01; Sites version: 40.
+- App implementation: 5b96040 on web-edumoney (GitHub main untouched).
+- Hosting source: 3f83c958419f26970cd4d1f8fb98c4200b46a5f7.
+- Saved version: appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_228ea17b47dc8191b37b475be79670d0.
+- Deployment: appgdep_6af912ff4e448191b92ac8cbf6519c4c, succeeded, existing environment revision 1 preserved.
+- TypeScript, ESLint, web export and packaged Worker syntax check passed.
+- Public audience preserved; no runtime secret changes.
