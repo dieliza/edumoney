@@ -1,0 +1,15 @@
+import {createElement,type ReactNode} from 'react';
+import {renderToStaticMarkup} from 'react-dom/server';
+import {expect,it,vi} from 'vitest';
+import {TransactionChart} from '../src/ui/TransactionChart';
+import {MonthlyCharts} from '../src/ui/MonthlyCharts';
+import {monthlySummary} from '../src/modules/money/domain';
+import {cents} from '../src/core/money';
+import type {Snapshot} from '../src/modules/money/types';
+vi.mock('react-native',()=>({View:({children,accessibilityLabel}:{children:ReactNode;accessibilityLabel?:string})=>createElement('div',{'aria-label':accessibilityLabel},children),ScrollView:({children}:{children:ReactNode})=>createElement('div',null,children),Pressable:({children,accessibilityLabel}:{children:ReactNode;accessibilityLabel?:string})=>createElement('button',{'aria-label':accessibilityLabel},children),useWindowDimensions:()=>({width:390})}));
+vi.mock('@expo/vector-icons/Ionicons',()=>({default:()=>null}));
+vi.mock('react-native-svg',()=>({default:({children}:{children:ReactNode})=>createElement('svg',null,children),Circle:()=>null}));
+vi.mock('../src/ui/components',()=>({Body:({children}:{children:ReactNode})=>createElement('span',null,children),ui:{}}));
+vi.mock('../src/design/ThemeProvider',()=>({useTheme:()=>({name:'dark',colors:{primary:'#0a0',mint:'#0c0',progressTrack:'#444',surfaceAlt:'#333'}})}));
+it('presenta fecha, tipo, categoría e importe para cada barra, sin fusionar dos sueldos',()=>{const rows=[{id:'i1',kind:'income' as const,date:'2026-11-15',description:'Primer sueldo',categoryId:'salary',categoryName:'Salario',archived:false,amountCents:cents(10000),paymentMethod:'bank',createdAt:'2026-11-15T12:00:00Z'},{id:'i2',kind:'income' as const,date:'2026-11-15',description:'Segundo sueldo',categoryId:'salary',categoryName:'Salario',archived:false,amountCents:cents(10000),paymentMethod:'bank',createdAt:'2026-11-15T13:00:00Z'}];const html=renderToStaticMarkup(createElement(TransactionChart,{rows}));expect(html).toContain('2026-11-15 · Ingreso · Salario · Primer sueldo: $100.00');expect(html).toContain('2026-11-15 · Ingreso · Salario · Segundo sueldo: $100.00');expect(html).not.toContain('$200.00');});
+it('Home abre la vista individual con la categoría de ingreso y conserva el acceso al círculo',()=>{const s:Snapshot={movements:[{id:'salary',idempotencyKey:'salary',kind:'income',amountCents:cents(10000),currency:'USD',date:'2026-11-15',description:'Gané 100 dólares de mi sueldo',categoryId:'salary-category',paymentMethod:'bank',taxReview:false,useKind:'personal',grossCents:null,withholdingCents:null,createdAt:'2026-11-15T12:00:00Z',updatedAt:'2026-11-15T12:00:00Z',deletedAt:null,incomeType:'manual',scheduleId:null,occurrenceDate:null,version:1}],categories:[{id:'salary-category',kind:'income',name:'Salario',archived:false}],budgets:[],schedules:[],commitments:[]};const html=renderToStaticMarkup(createElement(MonthlyCharts,{compact:true,summary:monthlySummary(s,'2026-11'),movements:s.movements,categories:s.categories,month:'2026-11'}));expect(html).toContain('Ingreso · Salario');expect(html).toContain('$100.00');expect(html).toContain('Ver círculo y totales del mes');});

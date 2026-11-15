@@ -4,21 +4,21 @@ import { Body, ui } from './components';
 import { formatMoney } from '../modules/money/domain';
 
 import { expenseSegments, type ExpenseSlice } from './expenseSegments';
-export function ExpenseDonut({ items, total, onSelect,legend=true }: { items: readonly ExpenseSlice[]; total: number;legend?:boolean; onSelect?(id: string): void }) {
+export function ExpenseDonut({ items, total, onSelect,legend=true,label='Gastos' }: { items: readonly ExpenseSlice[]; total: number;legend?:boolean; label?:string; onSelect?(id: string): void }) {
   const {width}=useWindowDimensions();const size=Math.min(420,Math.max(240,width-72));
   const segments = expenseSegments(items);
-  if (!segments.length) return <Body muted>Aún no hay gastos registrados en este mes. La gráfica aparecerá cuando registres el primero.</Body>;
+  if (!segments.length) return <Body muted>{label==='Gastos'?'Aún no hay gastos registrados en este mes. La gráfica aparecerá cuando registres el primero.':'Aún no hay ingresos registrados en este mes.'}</Body>;
   const circumference = 2 * Math.PI * 78;
   return <View style={{ gap: 14 }}>
-    <View accessible accessibilityLabel={`Gastos: ${formatMoney(total)}. Desglose por categoría a continuación.`} style={{ alignItems: 'center', justifyContent: 'center', height: size }}>
+    <View accessible accessibilityLabel={`${label}: ${formatMoney(total)}. Desglose por categoría a continuación.`} style={{ alignItems: 'center', justifyContent: 'center', height: size }}>
       <Svg width={size} height={size} viewBox="0 0 212 212" aria-hidden>
         {segments.map(item => <Circle key={item.id} cx={106} cy={106} r={78} fill="none" stroke={item.color} strokeWidth={28} strokeDasharray={`${circumference * item.fraction} ${circumference}`} strokeDashoffset={-circumference * item.offset} transform="rotate(-90 106 106)"/>)}
       </Svg>
-      <View pointerEvents="none" style={{ position: 'absolute', alignItems: 'center', maxWidth: size*.55 }}><Body muted style={ui.small}>Gastos</Body><Body style={{ fontSize: 28, lineHeight:36, fontWeight: '800', textAlign: 'center' }}>{formatMoney(total)}</Body></View>
+      <View pointerEvents="none" style={{ position: 'absolute', alignItems: 'center', maxWidth: size*.55 }}><Body muted style={ui.small}>{label}</Body><Body style={{ fontSize: 28, lineHeight:36, fontWeight: '800', textAlign: 'center' }}>{formatMoney(total)}</Body></View>
     </View>
     {legend?segments.map(item => {
       const content = <View style={[ui.row, { minHeight: 48 }]}><View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: item.color }}/><Body style={{ flex: 1, fontSize: 14 }}>{item.name}</Body><Body muted style={ui.small}>{Math.round(item.fraction * 1000) / 10}%</Body><Body style={{ fontWeight: '700', fontSize: 14 }}>{formatMoney(item.spent)}</Body></View>;
-      return onSelect ? <Pressable key={item.id} accessibilityRole="button" accessibilityLabel={`Ver gastos de ${item.name}, ${formatMoney(item.spent)}`} onPress={() => onSelect(item.id)}>{content}</Pressable> : <View key={item.id}>{content}</View>;
+      return onSelect ? <Pressable key={item.id} accessibilityRole="button" accessibilityLabel={`Ver ${label.toLowerCase()} de ${item.name}, ${formatMoney(item.spent)}`} onPress={() => onSelect(item.id)}>{content}</Pressable> : <View key={item.id}>{content}</View>;
     }):null}
   </View>;
 }
