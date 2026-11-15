@@ -13,6 +13,7 @@ import Svg, { Path } from 'react-native-svg';
 import { useTheme } from '../design/ThemeProvider';
 import { ThemePicker } from './ThemePicker';
 import { Brand } from './Brand';
+export {CloseButton} from './CloseButton';
 export type IconName = ComponentProps<typeof Ionicons>['name'];
 export function Body({ children, muted = false, style }: PropsWithChildren<{ muted?: boolean; style?: ComponentProps<typeof Text>['style'] }>) {
   const { colors } = useTheme();
@@ -102,11 +103,6 @@ export function Screen({ children, title, subtitle, welcome = false, demo = true
   </LinearGradient>;
 }
 export const ui = StyleSheet.create({ row: { flexDirection: 'row', alignItems: 'center', gap: 12 }, between: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 12 }, heading: { fontSize: 20, fontWeight: '700' }, small: { fontSize: 13, lineHeight: 20 } });
-
-export function CloseButton({ onPress, label = 'Cerrar ficha', testID }: { onPress(): void; label?: string; testID?: string }) {
-  const { colors } = useTheme();
-  return <Pressable testID={testID} accessibilityRole="button" accessibilityLabel={label} onPress={onPress} style={{ width:48,height:48,borderRadius:16,backgroundColor:colors.primary,alignItems:'center',justifyContent:'center',alignSelf:'flex-end' }}><Ionicons name="close" size={28} color={fixed.white} accessible={false} aria-hidden/></Pressable>;
-}
 
 function ArrowBack({beforeBack,color,fallback='/money'}:{beforeBack?:()=>void;color?:string;fallback?:'/'|'/money'}){
   const {colors}=useTheme();

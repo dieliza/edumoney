@@ -6,14 +6,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { AppState, ActivityIndicator, Pressable, View } from 'react-native';
 import { router, useIsFocused } from 'expo-router';
 import { refreshBills } from '../bills/runtime';
-import { billStatus, outstanding } from '../bills/domain';
-import type { Bill } from '../bills/types';
 import { MonthlyCharts } from '../../ui/MonthlyCharts';
 import { useTheme } from '../../design/ThemeProvider';
 import { fixed } from '../../design/tokens';
 import { newId } from '../../core/id';
 import { parseAmount } from '../../core/money';
-import { ActionButton, Body, Card, IconBadge, Screen, SectionHeading, ui } from '../../ui/components';
+import { ActionButton, Body, Card, Screen, SectionHeading, ui } from '../../ui/components';
 import { localToday, formatMoney, monthlySummary, validDate, validMonth } from './domain';
 import { getMoneyStore } from './localStore';
 import type { MoneyStore } from './store';
@@ -24,13 +22,10 @@ const empty: Snapshot = { movements: [], categories: [], budgets: [], schedules:
 export default function LedgerScreen({initialSection,initialMonth}:{initialSection?:string;initialMonth?:string}) {
     const { colors,name } = useTheme();
     const focused = useIsFocused();
-    const [showRecurring,setShowRecurring]=useState(false);
     const [showHistoryFilters,setShowHistoryFilters]=useState(false);
-    const [bills,setBills] = useState<Bill[]>([]);
     const [store, setStore] = useState<MoneyStore | null>(null);
     const [data, setData] = useState(empty);
     const [error, setError] = useState('');
-    const [showCalculation, setShowCalculation] = useState(false);
     const [showMonth, setShowMonth] = useState(false);
     const [segment, setSegment] = useState(['history','categories'].includes(initialSection??'')?initialSection!:'summary');
     const [month, setMonth] = useState(validMonth(initialMonth??'')?initialMonth!:localToday().slice(0,7));
@@ -62,9 +57,9 @@ export default function LedgerScreen({initialSection,initialMonth}:{initialSecti
         let active = true;
         const load = async () => {
             const s = await getMoneyStore();
-            const result = await refreshBills();
+            await refreshBills();
             const snapshot = await s.snapshot();
-            if (active) { setStore(s); setData(snapshot); setBills(result.data.bills); }
+            if (active) { setStore(s); setData(snapshot); }
         };
         const reload = () => { void load().catch(() => { if (active) setError('No pudimos cargar tus registros cifrados. Cierra y vuelve a abrir la app.'); }); };
         reload();
@@ -108,29 +103,6 @@ export default function LedgerScreen({initialSection,initialMonth}:{initialSecti
    {segment !== 'history' ? <ErrorNotice message={summaryError}/> : null}
    {segment === 'summary' && summary ? <>
     <MoneyOverview summary={summary} movements={data.movements} month={month} currentMonth={localToday().slice(0,7)} onPeriod={()=>setShowMonth(!showMonth)} periodEditor={showMonth?<Field label="Mes (AAAA-MM)" value={month} onChangeText={setMonth}/>:null} onIncome={()=>setForm({kind:'income'})} onExpense={()=>setForm({kind:'expense'})} onScan={()=>router.push('/documents')} onDebts={()=>router.push('/debts')} onBreakdown={()=>router.push({pathname:'/charts',params:{month,view:'breakdown'}})} onHistory={()=>setSegment('history')} onCharts={()=>router.push({pathname:'/charts',params:{month}})}/>
-    <SectionHeading title="Próximas facturas" action="Ver todas" onPress={() => router.push('/bills')}/>
-    <Card row>
-     {bills.filter(b => !b.debtId && !b.voidedAt && outstanding(b) > 0).sort((a, b) => a.dueDate.localeCompare(b.dueDate)).slice(0, 3).map(b => <Pressable key={b.id} accessibilityRole="button" accessibilityLabel={`Abrir factura de ${b.provider}, ${formatMoney(outstanding(b))}, vence ${b.dueDate}`} onPress={() => router.push('/bills')} style={[ui.row, { minHeight: 56 }]}><IconBadge icon="flash" size={38}/><View style={{ flex: 1 }}><Body style={{ fontWeight: '700' }}>{b.provider}</Body><Body muted style={ui.small}>{b.dueDate} · {billStatus(b, localToday())}</Body></View><Body style={{ fontWeight: '700' }}>{formatMoney(outstanding(b))}</Body></Pressable>)}
-     {!bills.some(b => !b.debtId && !b.voidedAt && outstanding(b) > 0) ? <Body muted>No tienes facturas pendientes. Añade la primera para organizar tus vencimientos.</Body> : null}
-     <ActionButton title="Mis facturas" testID="open-bills" icon="calendar-outline" secondary onPress={() => router.push('/bills')}/>
-    </Card>
-
-    <ActionMenu label="Movimientos y disponible" actions={[
-     {id:'history',label:'Ver todas las transacciones',run:()=>setSegment('history')},
-     {id:'transfer',label:'Registrar transferencia propia',run:()=>setForm({kind:'transfer'})},
-     {id:'calculation',label:showCalculation?'Ocultar detalle del disponible':'Cómo se calcula el disponible',run:()=>setShowCalculation(!showCalculation)},
-    ]}/>
-    {showCalculation ? <Card row>{[['Ingresos recibidos', summary.income], ['Gastos registrados', summary.expenses], ['Préstamos recibidos (no son ingresos)', summary.loans], ['Pagos de tarjeta o deuda', summary.payments], ['Aportaciones a metas', summary.contributions], ['Compromisos de facturas registrados', summary.commitments]].map(([label, value]) => <View key={label} style={ui.between}><Body style={{ flex: 1 }}>{label}</Body><Body style={{ fontWeight: '700' }}>{formatMoney(value as number)}</Body></View>)}<Body muted>Disponible = ingresos + préstamos − gastos pagados sin crédito − pagos de deuda − aportaciones − compromisos pendientes. Incluye fechas futuras del mes y parte de cero. Las transferencias propias no alteran el total. Las compras con crédito consumen presupuesto; su pago reduce el disponible una sola vez.</Body></Card> : null}
-    <ActionMenu label="Ingresos recurrentes" actions={[{id:'show-recurring',label:showRecurring?'Cerrar ingresos recurrentes':'Ver y administrar ingresos recurrentes',run:()=>setShowRecurring(!showRecurring)},{id:'new-recurring',label:'Añadir ingreso y configurar recurrencia',run:()=>setForm({kind:'income'})}]}/>
-    {showRecurring?<>
-    <Card row><Body muted>Las fechas previstas no son dinero recibido. Confirma cada cobro una sola vez; editar un cobro pasado no cambia su programación.</Body></Card>
-    {!data.schedules.length ? <Card row><Body>Añade un ingreso y elige Recurrente para preparar tus siguientes cobros.</Body></Card> : data.schedules.map(s => <Card row key={s.id}><Body style={{ fontWeight: '700' }}>{s.description}</Body><Body>{formatMoney(s.amountCents)} · {s.active ? 'Próximo previsto' : 'En pausa'}: {s.nextDate}</Body><Body muted>Cada {s.intervalCount} {s.cadence === 'weekly' ? 'semana(s)' : 'mes(es)'}</Body>
-     {s.active && s.nextDate <= localToday() && !busy ? <ActionButton title={`Confirmar cobro: ${s.description}`} onPress={() => void action(() => store.confirmSchedule(s.id, s.nextDate, newId(), localToday()), 'Cobro registrado. Los siguientes permanecen previstos.')}/> : null}
-     {!busy ? <ActionButton title={s.active ? `Pausar: ${s.description}` : `Reanudar: ${s.description}`} secondary onPress={() => void action(() => store.toggleSchedule(s.id, !s.active), 'Programación actualizada. Los movimientos anteriores se conservan.')}/> : null}
-    </Card>)}
-    </>:null}
-
-
    </> : null}
    {segment === 'history' ? <>
     <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12}}><Body style={{color:name==='dark'?'#F0FFF9':colors.text,fontWeight:'700'}}>{Math.min(limit,rows.length)} de {rows.length} movimiento(s)</Body><Pressable accessibilityRole="button" accessibilityState={{expanded:showHistoryFilters}} onPress={()=>setShowHistoryFilters(!showHistoryFilters)} style={{minHeight:44,paddingHorizontal:8,justifyContent:'center'}}><Body style={{color:colors.accent,fontSize:14,fontWeight:'700'}}>{showHistoryFilters?'Ocultar filtros':'Filtrar historial'}</Body></Pressable></View>
@@ -155,7 +127,14 @@ export default function LedgerScreen({initialSection,initialMonth}:{initialSecti
     <SectionHeading title="Tus categorías"/>
     {data.categories.map(c => <Pressable key={c.id} accessibilityRole="button" accessibilityLabel={`Editar categoría ${c.name}`} onPress={() => setCategory(c)}><Card row><Body>{c.name} · {c.kind === 'expense' ? 'Gasto' : 'Ingreso'}{c.archived ? ' · Archivada' : ''}</Body></Card></Pressable>)}
    </> : null}
-   {form ? <MovementForm allowedKinds={['transfer']} initial={form.initial} kind={form.kind} categories={data.categories} store={store} close={() => setForm(null)} saved={async () => { await refresh(); setNotice('Movimiento guardado en este dispositivo.'); }}/> : null}
+   {form ? <MovementForm incomeTools={<>
+    <ErrorNotice message={error}/>{notice?<Card row><Body>{notice}</Body></Card>:null}
+    <Card row><Body muted>Las fechas previstas no son dinero recibido. Confirma cada cobro una sola vez; editar un cobro pasado no cambia su programación.</Body></Card>
+    {!data.schedules.length ? <Card row><Body>Añade un ingreso y elige Recurrente para preparar tus siguientes cobros.</Body></Card> : data.schedules.map(s => <Card row key={s.id}><Body style={{ fontWeight: '700' }}>{s.description}</Body><Body>{formatMoney(s.amountCents)} · {s.active ? 'Próximo previsto' : 'En pausa'}: {s.nextDate}</Body><Body muted>Cada {s.intervalCount} {s.cadence === 'weekly' ? 'semana(s)' : 'mes(es)'}</Body>
+     {s.active && s.nextDate <= localToday() && !busy ? <ActionButton title={`Confirmar cobro: ${s.description}`} onPress={() => void action(() => store.confirmSchedule(s.id, s.nextDate, newId(), localToday()), 'Cobro registrado. Los siguientes permanecen previstos.')}/> : null}
+     {!busy ? <ActionButton title={s.active ? `Pausar: ${s.description}` : `Reanudar: ${s.description}`} secondary onPress={() => void action(() => store.toggleSchedule(s.id, !s.active), 'Programación actualizada. Los movimientos anteriores se conservan.')}/> : null}
+    </Card>)}
+</>} allowedKinds={['transfer']} initial={form.initial} kind={form.kind} categories={data.categories} store={store} close={() => setForm(null)} saved={async () => { await refresh(); setNotice('Movimiento guardado en este dispositivo.'); }}/> : null}
    {category !== undefined ? <CategoryForm initial={category} store={store} saved={refresh} close={() => setCategory(undefined)}/> : null}
    {budget ? <BudgetForm data={data} month={month} store={store} saved={refresh} close={() => setBudget(false)}/> : null}
    {selected ? <Sheet title="Detalle del movimiento" close={() => setSelected(null)} busy={busy}>

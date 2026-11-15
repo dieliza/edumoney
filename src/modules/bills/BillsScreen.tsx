@@ -14,7 +14,7 @@ import { calendarCopy, enableReminders } from './services';
 import type { BillsStore } from './store';
 import type { Bill, BillPayment, BillSnapshot } from './types';
 const empty:BillSnapshot={bills:[],series:[],payments:[],categories:[],movements:[]};
-export default function BillsScreen(){
+export default function BillsScreen({embedded=false}:{embedded?:boolean}={}){
  const {scope}=useLocalSearchParams<{scope?:string}>();const debtOnly=scope==='debts';
  const {colors}=useTheme();const focused=useIsFocused();
  const [store,setStore]=useState<BillsStore|null>(null);const [data,setData]=useState(empty);const [reminders,setReminders]=useState('Comprobando avisos locales…');
@@ -31,7 +31,7 @@ export default function BillsScreen(){
  function open(b:Bill){setDetailId(b.id);setReason('');setRevisions([]);setError('');}
  function row(b:Bill){return <Pressable key={b.id} accessibilityRole="button" accessibilityLabel={`Factura ${b.provider}, ${billStatus(b,today)}, ${b.dueDate}, Importe: ${formatMoney(b.amountCents)}, Pendiente: ${formatMoney(outstanding(b))}`} onPress={()=>open(b)}><Card row><Body style={{fontWeight:'700'}}>{b.provider}</Body><Body>{b.dueDate} · {billStatus(b,today)}</Body><Body style={{fontWeight:'800'}}>{formatMoney(outstanding(b))}</Body><Body muted>Importe: {formatMoney(b.amountCents)} · Pagado: {formatMoney(b.paidCents)}</Body>{b.seriesId?<Body muted>Factura recurrente · cada vencimiento se paga por separado</Body>:null}</Card></Pressable>;}
 
- return <Screen back title={debtOnly?"Facturas de deudas":"Mis facturas"} demo={false} subtitle="Vencimientos y pagos que tú confirmas.">
+ const content=<>
   <ErrorNotice message={error}/>{notice?<Card row><Body>{notice}</Body></Card>:null}
   {!debtOnly?<ActionButton title="Añadir factura" testID="add-bill" icon="add-circle-outline" onPress={()=>{setForm(true);setError('');}}/>:null}
   <Choices presentation="tabs" label="Vista de facturas" value={tab} options={[[ 'upcoming','Próximas'],['paid','Pagadas'],['calendar','Calendario']]} onChange={v=>{setTab(v);setLimit(50);}}/>
@@ -59,7 +59,8 @@ export default function BillsScreen(){
    {!busy?<ActionButton title="Ver cambios de vencimiento e importe" secondary onPress={()=>void action(async()=>setRevisions(await store.revisions(detail.id)),'Historial de cambios cargado.')}/>:null}
    {revisions.map((r,i)=>{let before:Bill|null=null;try{before=JSON.parse(r.beforeJson);}catch{}return <Body key={i}>{r.recordedAt} · {r.reason}{before?` · Antes: ${before.dueDate}, ${formatMoney(before.amountCents)}`:''}</Body>;})}<ErrorNotice message={error}/>
   </Sheet>:null}
- </Screen>;
+ </>;
+ return embedded?<View style={{gap:12}}>{content}</View>:<Screen back title={debtOnly?"Facturas de deudas":"Mis facturas"} demo={false} subtitle="Vencimientos y pagos que tú confirmas.">{content}</Screen>;
 }
 function PaymentHistory({payment:p,busy,reverse}:{payment:BillPayment;busy:boolean;reverse():void}){
  return <Card row><Body>{p.date} · {formatMoney(p.amountCents)} · {p.reversed?'Revertido':'Confirmado'}</Body><Body muted>Movimiento: {p.movementId}</Body>{p.reversed?<Body>Motivo: {p.reason}</Body>:<><Body muted>{p.createdMovement?'Revertir retirará del cálculo el movimiento creado por este pago.':'Revertir solo desvinculará el movimiento que ya existía; su gasto se conserva.'} Escribe el motivo debajo antes de confirmar.</Body>{!busy?<ActionButton title={`Revertir pago de ${formatMoney(p.amountCents)}`} secondary onPress={reverse}/>:null}</>}</Card>;

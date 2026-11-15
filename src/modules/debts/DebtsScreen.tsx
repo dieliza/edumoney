@@ -1,3 +1,4 @@
+import BillsScreen from '../bills/BillsScreen';
 import {getMoneyStore} from '../money/localStore';
 import type {MoneyStore} from '../money/store';
 import type {Category} from '../money/types';
@@ -28,7 +29,7 @@ export default function DebtsScreen(){
  const {colors}=useTheme();
  const focused=useIsFocused();const params=useLocalSearchParams<{debtId?:string;billId?:string;tab?:string}>();const handled=useRef('');
  const [ledger,setLedger]=useState<MoneyStore|null>(null),[categories,setCategories]=useState<Category[]>([]),[otherMovement,setOtherMovement]=useState(false);
- const [store,setStore]=useState<DebtStore|null>(null);const [data,setData]=useState(empty);const [tab,setTab]=useState(params.tab==='simulator'?'simulator':'debts');const [archived,setArchived]=useState(false);
+ const [store,setStore]=useState<DebtStore|null>(null);const [data,setData]=useState(empty);const [tab,setTab]=useState(params.tab==='simulator'?'simulator':params.tab==='bills'?'bills':'debts');const [archived,setArchived]=useState(false);
  const [error,setError]=useState('');const [notice,setNotice]=useState('');const [busy,setBusy]=useState(false);const [form,setForm]=useState<Debt|true|null>(null);
  const [historyLimit,setHistoryLimit]=useState(50);
  const [detailId,setDetailId]=useState<string|null>(null);const [reason,setReason]=useState('');const [payment,setPayment]=useState<{debt:Debt;bill?:Bill}|null>(null);
@@ -52,7 +53,8 @@ export default function DebtsScreen(){
   {otherMovement&&ledger?<MovementForm kind="loan" allowedKinds={['loan','debt_payment']} categories={categories} store={ledger} close={()=>setOtherMovement(false)} saved={async()=>{await load();setNotice('Movimiento guardado. Si corresponde a una deuda, revisa y vincula el pago desde su ficha.');}}/>:null}
   <ErrorNotice message={error}/>{notice?<Card row><Body>{notice}</Body></Card>:null}
   <View style={{alignSelf:'flex-start'}}><ActionButton title="Añadir deuda" icon="add-outline" testID="add-debt" onPress={()=>setForm(true)}/></View>
-  <Choices presentation="tabs" label="Vista de deudas" value={tab} options={[[ 'debts','Deudas'],['calendar','Calendario de pagos'],['simulator','Simulador'],['plan','Plan de 30 días'],['notices','Avisos'],['tools','Herramientas']]} onChange={setTab}/>
+  <Choices presentation="tabs" label="Vista de deudas" value={tab} options={[[ 'debts','Deudas'],['bills','Mis facturas'],['calendar','Calendario de pagos'],['simulator','Simulador'],['plan','Plan de 30 días'],['notices','Avisos'],['tools','Herramientas']]} onChange={setTab}/>
+  {tab==='bills'?<BillsScreen embedded/>:null}
   {tab==='notices'?<><Card row><Body style={{fontWeight:'700'}}>Avisos de tus deudas</Body><Body>Revisa vencimientos, mínimos y datos pendientes. No son anuncios ni mensajes de cobro externos.</Body></Card>{active.map(d=><Card row key={d.id}><Body style={{fontWeight:'700'}}>{d.name}</Body>{debtWarnings(d,today).map(message=><Body key={message}>{message}</Body>)}{!debtWarnings(d,today).length?<Body>No hay advertencias con los datos registrados.</Body>:null}</Card>)}<ActionButton title="Facturas y recordatorios de deudas" icon="notifications-outline" onPress={()=>router.push({pathname:'/bills',params:{scope:'debts'}})}/></>:null}
   {tab==='tools'?<><Card row><Body>Para registrar pagos y actualizar el saldo, abre la deuda correspondiente. Otros movimientos registra préstamos recibidos o pagos sin vínculo; no modifica por sí solo el saldo de una deuda.</Body></Card><NavigationRail label="Herramientas de deudas" items={[{title:'Otros movimientos',icon:'cash-outline',run:()=>setOtherMovement(true)},{title:'Facturas vinculadas',icon:'calendar-outline',run:()=>router.push({pathname:'/bills',params:{scope:'debts'}})},{title:'Préstamo',icon:'calculator-outline',run:()=>router.push({pathname:'/decisions',params:{kind:'loan'}})},{title:'Auto',icon:'car-outline',run:()=>router.push({pathname:'/decisions',params:{kind:'vehicle'}})},{title:'Vivienda',icon:'home-outline',run:()=>router.push({pathname:'/decisions',params:{kind:'home'}})},{title:'Aprender sobre deudas',icon:'book-outline',run:()=>router.push('/debt-lessons')}]}/></>:null}
   {!store?<ActivityIndicator accessibilityLabel="Cargando deudas cifradas"/>:null}

@@ -3,7 +3,7 @@ import { incomeFromBreakdown } from './incomeInput';
 import { DateField } from '../../ui/DateField';
 import { CategoryPicker } from './CategoryPicker';
 import { userMessage, UserInputError } from '../../core/errors';
-import { useState } from 'react';
+import { useState,type ReactNode } from 'react';
 import { View } from 'react-native';
 import { newId } from '../../core/id';
 import { parseAmount } from '../../core/money';
@@ -12,8 +12,9 @@ import { localToday, formatMoney, inputAmount } from './domain';
 import { Choices, ErrorNotice, Field, Sheet } from './fields';
 import { DuplicateMovementError, type MoneyStore } from './store';
 import { kindLabels, paymentLabels, type Category, type EntryKind, type IncomeSchedule, type LedgerMovement, type PaymentMethod } from './types';
-export function MovementForm({ initial, kind, categories, store, close, saved, documentReview,allowedKinds }: {
+export function MovementForm({ initial, kind, categories, store, close, saved, documentReview,allowedKinds,incomeTools }: {
     initial?: LedgerMovement;
+    incomeTools?:ReactNode;
     kind: EntryKind;
     allowedKinds?:readonly EntryKind[];
     categories: Category[];
@@ -41,7 +42,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState('');
     const [duplicate, setDuplicate] = useState(false);
-    const [details,setDetails]=useState(false);
+    const [details,setDetails]=useState(false),[incomeToolsOpen,setIncomeToolsOpen]=useState(false);
     const preserveExisting=!!initial&&gross===(initial.grossCents==null?'':inputAmount(initial.grossCents))&&withholding===(initial.withholdingCents==null?'':inputAmount(initial.withholdingCents));
     const needBreakdown=!initial||(!preserveExisting&&!!(gross.trim()||withholding.trim()));
     let netPreview:ReturnType<typeof incomeFromBreakdown>|null=null;
@@ -78,6 +79,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
         }
     }
     return <Sheet title={initial ? 'Corregir movimiento' : 'Nueva transacción'} close={close} busy={busy}>
+  {type==='income'&&incomeTools?<><ActionButton secondary title={incomeToolsOpen?'Cerrar cobros programados':'Administrar cobros programados'} onPress={()=>setIncomeToolsOpen(!incomeToolsOpen)}/>{incomeToolsOpen?incomeTools:null}</>:null}
   {!initial&&(kind==='income'||kind==='expense')?<Choices<'income'|'expense'> compact label="Tipo de transacción" presentation="tabs" value={type as 'income'|'expense'} options={[["expense","↓ Gasto"],["income","↑ Ingreso"]]} onChange={value=>{setType(value);if(value==='income'&&method==='credit')setMethod('bank');setCategory('');setCategoryName('');setDuplicate(false);}}/>:null}
   {(type === 'income' || type === 'expense') ? <CategoryPicker required={type==='expense'} categories={categories} kind={type} value={category} onChange={(id,name)=>{setCategory(id);setCategoryName(name??'');setDuplicate(false);}}/> : null}
   {type==='income'&&!initial?<ActionButton title="Cheque, talonario o desglose manual de deducciones" icon="camera-outline" onPress={()=>{close();router.push('/income-documents');}}/>:null}
