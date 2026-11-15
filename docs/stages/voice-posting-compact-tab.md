@@ -16,3 +16,12 @@ After a confirmed Home save, the ledger refreshes and shows the transaction's mo
 New coverage verifies expense posting, category chart spent totals, available balance, income totals, existing credit behavior, completion of old pending notes, preservation of ambiguous notes, spoken-method precedence and absence of an automatic method default.
 
 TypeScript, ESLint and web export passed; packaged Worker syntax checked before publication. Browser visual and physical-device verification remain unavailable. No migrations, dependencies, API, authentication, pricing or unrelated function changes.
+
+## Publication receipt
+- Published successfully: https://edumoney-web.diegoluissantospabon.chatgpt.site
+- App 2026.11.15.06; Sites version 45.
+- Implementation fe22e9b on web-edumoney; GitHub main untouched.
+- Hosting source 148adcee9887df394799449c2761e9ea35ff8c4f.
+- Saved version appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_4b122f3244088191b83595b453c16c74.
+- Deployment appgdep_6af923d08f708191a0b0f235811d8be4 succeeded. Existing public audience and environment revision 1 preserved.
+- Final TypeScript, ESLint, web export and Worker syntax checks passed.
