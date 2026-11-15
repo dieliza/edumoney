@@ -1,3 +1,4 @@
+import {SelectControl} from '../../ui/SelectControl';
 import { DateField } from '../../ui/DateField';
 import { isCalendarField } from '../../ui/dateInput';
 import { moneyKeystroke, moneyDisplay } from '../../ui/moneyInput';
@@ -59,24 +60,7 @@ export function Choices<T extends string>({ label, value, options, onChange, pre
     required?: boolean;
 }) {
     const { colors } = useTheme();
-    const [open, setOpen] = useState(false);
-    const missing = missingField(value, required);
-    const selected = options.find(([key]) => key === value)?.[1] ?? 'Seleccionar';
-    if (presentation === 'select') return <View style={{ gap: 6, padding: compact ? 4 : 12, borderRadius: 16, backgroundColor: colors.surface }}>
-      {!compact?<Body style={{ fontSize: 14, fontWeight: '600' }}>{label}</Body>:null}
-      <Pressable accessibilityRole="button" accessibilityLabel={`${label}: ${selected}`} accessibilityHint={missing ? 'Selección obligatoria sin completar. Abre las opciones.' : 'Abre las opciones para elegir una'} aria-invalid={missing} accessibilityState={{ expanded: open }} onPress={() => setOpen(current => !current)} style={{ minHeight: 52, borderWidth: missing ? 2 : 1, borderColor: missing ? fixed.expense : colors.line, borderRadius: 12, backgroundColor: colors.surfaceAlt, padding: 12, flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-        <Body style={{ flex: 1 }}>{selected}</Body><Ionicons name="chevron-down" size={20} color={colors.primary}/>
-      </Pressable>
-      {missing ? <Body style={{fontSize:12,lineHeight:18,color:fixed.expense}}>Obligatorio</Body> : null}
-      {open ? <View style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 16, padding: 8, gap: 8, backgroundColor: colors.surfaceAlt }}>
-        <ScrollView nestedScrollEnabled keyboardShouldPersistTaps="handled" style={{ maxHeight: 280 }}>
-          <View accessibilityRole="radiogroup" accessibilityLabel={label} style={{ gap: 6 }}>
-            {options.map(([key, text]) => <Pressable key={key} accessibilityRole="radio" accessibilityLabel={text} accessibilityState={{ checked: value === key }} aria-checked={value === key} onPress={() => { onChange(key); setOpen(false); }} style={{ minHeight: 52, borderRadius: 12, backgroundColor: value === key ? colors.mint : colors.surface, padding: 14, flexDirection: 'row', alignItems: 'center', gap: 12 }}><Body style={{ flex: 1 }}>{text}</Body>{value === key ? <Ionicons name="checkmark-circle" size={22} color={colors.primary}/> : null}</Pressable>)}
-          </View>
-        </ScrollView>
-        <CloseButton label={`Cerrar opciones de ${label}`} onPress={() => setOpen(false)}/>
-      </View> : null}
-    </View>;
+    if (presentation === 'select') return <SelectControl label={label} value={value} options={options} onChange={onChange} required={required} compact={compact}/>;
     return <View style={{ gap: compact ? 0 : 8, padding: compact ? 4 : 12, borderRadius: 16, backgroundColor: colors.surface }}>{!compact?<Body style={{ fontSize: 14, fontWeight: '600' }}>{label}</Body>:null}<ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{gap:compact?4:8,flexGrow:1}}><View accessibilityRole="radiogroup" accessibilityLabel={label} style={{ flexDirection: 'row', gap: compact?4:8,flex:1 }}>{options.map(([key, text]) => <Pressable key={key} accessibilityRole="radio" accessibilityLabel={text} accessibilityState={{ checked: value === key }} aria-checked={value === key} onPress={() => onChange(key)} style={{ flex:compact?1:undefined,alignItems:'center',justifyContent:'center',minHeight: 44, padding: compact?8:12, borderWidth: 1, borderColor: value === key ? colors.primary : colors.line, borderRadius: 12, backgroundColor: value === key ? colors.primary : colors.surfaceAlt }}><Body style={{ fontSize: 14, color: value === key ? fixed.white : colors.text }}>{text}</Body></Pressable>)}</View></ScrollView></View>;
 }
 export function ErrorNotice({ message }: {
