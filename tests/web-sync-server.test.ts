@@ -27,3 +27,10 @@ it('separa las copias por secreto aunque la aplicación se abra sin identidad Ch
  const other=await handleSync(req('GET',{Authorization:`Bearer ${'b'.repeat(64)}`}),env);expect(other.status).toBe(404);
  expect((await handleSync(req(),env)).status).toBe(200);expect(env.BUCKET.rows.size).toBe(1);
 });
+it('acepta respaldos con fotos de varios MB sin desbordar la pila y conserva la versión',async()=>{
+ const env={BUCKET:bucket()};const large=JSON.stringify({...JSON.parse(encrypted),ciphertext:'ab'.repeat(4*1024*1024)});
+ const put=await handleSync(req('PUT',{'If-None-Match':'*'},large),env);expect(put.status).toBe(204);const get=await handleSync(req(),env);expect(await get.text()).toBe(large);expect(get.headers.get('ETag')).toBe(put.headers.get('ETag'));
+});
+it('rechaza un carácter inválido al final de un respaldo grande sin borrar la copia existente',async()=>{
+ const env={BUCKET:bucket()};const first=await handleSync(req('PUT',{'If-None-Match':'*'},encrypted),env);const malformed=JSON.stringify({...JSON.parse(encrypted),ciphertext:'ab'.repeat(4*1024*1024)+'zz'});const rejected=await handleSync(req('PUT',{'If-Match':first.headers.get('ETag')!},malformed),env);expect(rejected.status).toBe(400);expect(await (await handleSync(req(),env)).text()).toBe(encrypted);
+});
