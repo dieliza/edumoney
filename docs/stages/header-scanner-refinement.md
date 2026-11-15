@@ -16,3 +16,11 @@
 
 ## Compatibilidad
 Sin migraciones ni dependencias nuevas. Sin cambios en cálculos, registros, autenticación, API/modelo Anthropic, autorización de fotos o facturación. Reversión mediante commits de esta etapa; la preferencia de onboarding es aditiva y puede ignorarse.
+
+## Publicación confirmada
+- Implementación: 529bcd7 y fcfd61c, rama web-edumoney.
+- Hosting: 237cc763dda9ab987fba643ec8a2999ad76591f0; Sites versión 52.
+- Versión guardada: appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_b3518c3eea488191861e51a3e7c66e3c.
+- Deployment: appgdep_6af9b7a65e1081919ea74b29eca0b25d, succeeded. Variables de entorno revisión 1 conservadas.
+- URL: https://edumoney-web.diegoluissantospabon.chatgpt.site
+- La revisión automática inicialmente detuvo el envío por destino no verificado; tras comprobar igualdad del remoto con el proporcionado por Sites y contenido limitado al hosting compilado, autorizó la publicación.
