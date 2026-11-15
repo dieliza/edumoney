@@ -20,3 +20,9 @@ Cinco casos aprobados:
 - ledger.test.ts: 1 seleccionado (recurrencia mensual, cobro previsto, confirmación única, pausa y reversión).
 
 TypeScript, ESLint y compilación web/PWA correctos. Sin suite completa ni pruebas ajenas al alcance. Este entorno no tiene recorrido visual soportado ni iPad físico; el cierre táctil en Safari y la navegación real a la pestaña quedan pendientes de comprobar en el dispositivo.
+
+## Publicación
+
+Sites versión 38, despliegue succeeded appgdep_6af8f6b887608191ba354e8f2c3cdd48. Fuente de alojamiento 8d0c88edb178f36866aab05551db8cb1f873eb74; implementación en web-edumoney 2cd1ae7. Audiencia pública y entorno de servidor conservados, revisión 1. GitHub main no modificado. Publicación confirmada por Sites; no se realizaron más casos ni se afirma haber probado Safari físico.
+
+Enlace: https://edumoney-web.diegoluissantospabon.chatgpt.site/money?build=2026.11.14.20
