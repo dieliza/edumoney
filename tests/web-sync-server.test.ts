@@ -11,7 +11,7 @@ it('rechaza solicitudes sin secreto y de otro origen', async () => {
   const env = { BUCKET: bucket() }; expect((await handleSync(new Request('https://edumoney.test/api/sync'), env)).status).toBe(401); expect((await handleSync(req('GET', { Origin: 'https://otro.test' }), env)).status).toBe(403);
 });
 it('guarda únicamente una copia cifrada y la recupera con versión', async () => {
-  const env = { BUCKET: bucket() }; const put = await handleSync(req('PUT', { 'If-None-Match': '*' }, encrypted), env); expect(put.status).toBe(204); const get = await handleSync(req(), env); expect(await get.text()).toBe(encrypted); expect(get.headers.get('ETag')).toBe(put.headers.get('ETag')); expect(get.headers.get('Cache-Control')).toBe('no-store');
+  const env = { BUCKET: bucket() }; const put = await handleSync(req('PUT', { 'If-None-Match': '*' }, encrypted), env); expect(put.status).toBe(204); const get = await handleSync(req(), env); expect(await get.text()).toBe(encrypted); expect(get.headers.get('ETag')).toBe(put.headers.get('ETag')); expect(get.headers.get('Cache-Control')).toBe('no-store, no-transform');
 });
 it('evita sobrescrituras concurrentes y rechaza contenido sin cifrar', async () => {
   const env = { BUCKET: bucket() }; expect((await handleSync(req('PUT', { 'If-None-Match': '*' }, JSON.stringify({ salary: 1000 })), env)).status).toBe(400); expect((await handleSync(req('PUT', { 'If-None-Match': '*' }, JSON.stringify({ ...JSON.parse(encrypted), salary: 1000 })), env)).status).toBe(400); expect((await handleSync(req('PUT', { 'If-None-Match': '*' }, 'null'), env)).status).toBe(400); expect(env.BUCKET.rows.size).toBe(0);
@@ -33,4 +33,18 @@ it('acepta respaldos con fotos de varios MB sin desbordar la pila y conserva la 
 });
 it('rechaza un carácter inválido al final de un respaldo grande sin borrar la copia existente',async()=>{
  const env={BUCKET:bucket()};const first=await handleSync(req('PUT',{'If-None-Match':'*'},encrypted),env);const malformed=JSON.stringify({...JSON.parse(encrypted),ciphertext:'ab'.repeat(4*1024*1024)+'zz'});const rejected=await handleSync(req('PUT',{'If-Match':first.headers.get('ETag')!},malformed),env);expect(rejected.status).toBe(400);expect(await (await handleSync(req(),env)).text()).toBe(encrypted);
+});
+
+it('acepta la revisión W/ de clientes existentes manteniendo la comparación atómica de la copia',async()=>{
+ const env={BUCKET:bucket()};const first=await handleSync(req('PUT',{'If-None-Match':'*'},encrypted),env);const tag=first.headers.get('ETag')!;
+ const get=await handleSync(req(),env);expect(get.headers.get('X-EduMoney-Sync-Version')).toBe(tag);
+ const second=await handleSync(req('PUT',{'If-Match':'W/'+tag},encrypted),env);expect(second.status).toBe(204);expect(second.headers.get('X-EduMoney-Sync-Version')).toBe(second.headers.get('ETag'));
+ expect((await handleSync(req('PUT',{'If-Match':'W/'+tag},encrypted),env)).status).toBe(412);
+ expect((await handleSync(req('DELETE',{'If-Match':'W/'+tag}),env)).status).toBe(412);
+ expect((await handleSync(req('DELETE',{'If-Match':'W/'+second.headers.get('ETag')}),env)).status).toBe(204);
+});
+it('no convierte comodines, listas ni revisiones mal formadas en autorización para reemplazar',async()=>{
+ const env={BUCKET:bucket()};await handleSync(req('PUT',{'If-None-Match':'*'},encrypted),env);
+ for(const tag of ['*','W/*','W/W/"1"','W/"1", "2"','W/1','"bad/value"'])expect((await handleSync(req('PUT',{'If-Match':tag},encrypted),env)).status).toBe(428);
+ expect(await (await handleSync(req(),env)).text()).toBe(encrypted);
 });

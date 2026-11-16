@@ -11,10 +11,13 @@ export async function handleSync(request, env) {
   if (request.method === 'GET') {
     const object = await env.BUCKET.get(key); if (!object) return reply('No hay copia sincronizada.', 404);
     if (object.customMetadata?.deleted === '1') return reply('Este enlace fue eliminado. Crea otro enlace para sincronizar.', 410);
-    return new Response(object.body, { headers: { 'Content-Type': 'application/json', ETag: object.httpEtag, 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' } });
+    return new Response(object.body, { headers: { 'Content-Type': 'application/json', ETag: object.httpEtag, 'X-EduMoney-Sync-Version':object.httpEtag, 'Cache-Control': 'no-store, no-transform', 'X-Content-Type-Options': 'nosniff' } });
   }
   if (!['PUT', 'DELETE'].includes(request.method)) return reply('Método no permitido.', 405);
-  const ifMatch = request.headers.get('If-Match'), create = request.headers.get('If-None-Match') === '*';
+  // Older clients may echo the weak ETag produced by HTTP compression.
+  // Compare its exact underlying object revision atomically in R2; never remove onlyIf.
+  const incomingMatch = request.headers.get('If-Match');
+  const ifMatch = incomingMatch?.startsWith('W/')?incomingMatch.slice(2):incomingMatch, create = request.headers.get('If-None-Match') === '*';
   if ((!ifMatch && !create) || (ifMatch && !/^"[a-fA-F0-9-]+"$/.test(ifMatch))) return reply('Se requiere una versión para evitar sobrescrituras.', 428);
   const onlyIf = new Headers(ifMatch ? { 'If-Match': ifMatch } : { 'If-None-Match': '*' });
   if (request.method === 'DELETE') {
@@ -32,4 +35,4 @@ export async function handleSync(request, env) {
   const result = await env.BUCKET.put(key, bytes, { onlyIf, httpMetadata: { contentType: 'application/json' } });
   return result ? replyWithTag(result.httpEtag) : reply('Otro dispositivo cambió la copia. Sincroniza y revisa los cambios.', 412);
 }
-function replyWithTag(etag) { return new Response(null, { status: 204, headers: { ETag: etag, 'Cache-Control': 'no-store' } }); }
+function replyWithTag(etag) { return new Response(null, { status: 204, headers: { ETag: etag, 'X-EduMoney-Sync-Version':etag, 'Cache-Control': 'no-store, no-transform' } }); }

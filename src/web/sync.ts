@@ -1,3 +1,4 @@
+import {syncResponseRevision,normalizeSyncRevision} from './syncRevision';
 import {SyncFailure,syncHttpFailure} from './syncErrors';
 import {fetchWithTimeout} from '../core/http';
 import {sha256} from '@noble/hashes/sha2.js';
@@ -21,12 +22,13 @@ async function storeSyncRevision(settings:SyncSettings,changes:Partial<SyncSetti
 
 async function syncRequest(options:RequestInit){try{return await fetchWithTimeout(syncEndpoint(),options);}catch(error){const name=error&&typeof error==='object'&&'name' in error?error.name:undefined;throw new SyncFailure(name==='AbortError'||name==='TimeoutError'?'timeout':'network');}}
 async function upload(local: BackupPayload, settings: SyncSettings, remoteTag?: string) {
+  if(remoteTag&&!normalizeSyncRevision(remoteTag))throw new SyncFailure('version');
   const keys = parsePairingCode(settings.code);
   const body = await encryptBackup(JSON.stringify(local), keys.encryption, async n => syncRandom(n));
   if (body.length > 16 * 1024 * 1024) throw new SyncFailure('size');
-  const response = await syncRequest( { method: 'PUT', headers: { Authorization: `Bearer ${keys.access}`, 'Content-Type': 'application/json', ...(remoteTag ? { 'If-Match': remoteTag } : { 'If-None-Match': '*' }) }, body, cache: 'no-store',keepalive:body.length<60000 });
+  const response = await syncRequest( { method: 'PUT', headers: { Authorization: `Bearer ${keys.access}`, 'Content-Type': 'application/json', ...(remoteTag ? { 'If-Match': normalizeSyncRevision(remoteTag)! } : { 'If-None-Match': '*' }) }, body, cache: 'no-store',keepalive:body.length<60000 });
   if (!response.ok) throw syncHttpFailure(response.status);
-  const confirmedTag=response.headers.get('ETag');if(!confirmedTag)throw new SyncFailure('version');
+  const confirmedTag=syncResponseRevision(response);if(!confirmedTag)throw new SyncFailure('version');
   await storeSyncRevision(settings,{baseHash:await digest(local),etag:confirmedTag});
 }
 let operations:Promise<unknown>=Promise.resolve();
@@ -38,7 +40,7 @@ async function performSync(options:{uploadOnly?:boolean}): Promise<{ message: st
   if (response.status === 404) { await upload(local, settings); return { message: 'Copia cifrada enviada. Puedes enlazar el otro dispositivo con tu código privado.' }; }
   if (response.status === 410) throw Error('Este enlace fue eliminado. Crea uno nuevo para volver a sincronizar.');
   if (!response.ok) throw syncHttpFailure(response.status);
-  const tag = response.headers.get('ETag'); if (!tag) throw new SyncFailure('version');
+  const tag = syncResponseRevision(response); if (!tag) throw new SyncFailure('version');
   const remote: unknown = JSON.parse(await decryptBackup(await response.text(), keys.encryption)); validatePayload(remote);
   const localHash = await digest(local), remoteHash = await digest(remote);
   if (localHash === remoteHash) { await storeSyncRevision(settings,{baseHash:localHash,etag:tag}); return { message: 'Ambos dispositivos tienen los mismos registros.' }; }
@@ -53,7 +55,7 @@ export async function resolveSync(conflict: SyncConflict, choice: 'local' | 'rem
   if (choice === 'local') { await upload(conflict.local, conflict.settings, conflict.remoteTag); return 'Copia local enviada cifrada; se conservó la versión que elegiste.'; }
   const keys = parsePairingCode(conflict.settings.code);
   const response = await syncRequest( { headers: { Authorization: `Bearer ${keys.access}` }, cache: 'no-store' });
-  if (!response.ok || response.headers.get('ETag') !== conflict.remoteTag) throw Error('La copia remota cambió. Vuelve a sincronizar para revisarla.');
+  if (!response.ok || syncResponseRevision(response) !== normalizeSyncRevision(conflict.remoteTag)) throw Error('La copia remota cambió. Vuelve a sincronizar para revisarla.');
   await store.restore(conflict.remote, 'RESTAURAR', JSON.stringify(conflict.local.tables));
   await storeSyncRevision(conflict.settings,{baseHash:await digest(conflict.remote),etag:conflict.remoteTag});
   return 'Copia del otro dispositivo recibida. Los datos locales se reemplazaron según tu elección.';
@@ -65,7 +67,7 @@ export async function deleteRemoteCopy(confirmation: string) {
   const keys = parsePairingCode(settings.code); const headers = { Authorization: `Bearer ${keys.access}` };
   const response = await syncRequest( { headers, cache: 'no-store' });
   if (response.status !== 404 && response.status !== 410) {
-    const tag = response.headers.get('ETag'); if (!response.ok || !tag) throw Error('No se pudo verificar la copia remota.');
+    const tag = syncResponseRevision(response); if (!response.ok || !tag) throw Error('No se pudo verificar la copia remota.');
     const deleted = await syncRequest( { method: 'DELETE', headers: { ...headers, 'If-Match': tag }, cache: 'no-store' });
     if (!deleted.ok) throw Error('La copia remota cambió o no se pudo eliminar. Vuelve a revisarla.');
   }
