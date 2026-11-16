@@ -18,3 +18,6 @@ Pruebas de interfaz con hooks simulados y SQLite real: confirmación antes del b
 - Regresiones de income-statements seleccionadas: 4 correctas (totales/retenciones, guardado atómico e idempotencia, rollback, propuesta estructurada sin duplicar ingreso).
 - Total conservador del bloque: 26, inferior al máximo 100.
 - TypeScript, ESLint y compilación se registran al publicar. Safari/iPad/iPhone/Android físicos pendientes; este entorno no ofrece QA visual en dispositivo.
+
+## Publicación confirmada
+TypeScript, ESLint sin avisos, diff --check, compilación web/PWA y sintaxis Worker correctos. Implementación 9041c93. Fuente hosting 869807f599936872f3078d09ece746961cfacad4. Sites versión 61, versión guardada appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_fce9eb52962881918653df8e8cbe5479. Despliegue appgdep_6afa7f0e336481919d4af7cf604fd412 succeeded, entorno existente preservado (env_set_revision=1). URL https://edumoney-web.diegoluissantospabon.chatgpt.site, versión visible 2026.11.16.5. Verificación física del dispositivo del usuario pendiente.
