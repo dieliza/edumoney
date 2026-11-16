@@ -55,3 +55,7 @@ Cierre de `receipt-labels`: **7 de 10 consumidos conservadoramente**, incluidos 
 
 El lector debe funcionar automáticamente para usuarios comunes. No mostrarles controles, pestañas ni rutas de configuración/activación/desconexión de API. La administración requiere autorización del propietario comprobada en el servidor; nunca distribuir la clave.
 No añadir ni activar cuotas de uso (diarias, por IP u otras) sin autorización expresa del propietario. El estado predeterminado es sin cuota propia de EduMoney. Los cambios fuera del alcance solicitado o nuevas restricciones deben consultarse antes de implementarse. Ejecutar las correcciones ya ordenadas sin volver a pedir aprobación.
+
+## Capturas: solo datos
+Las capturas nuevas no deben persistir imágenes en la base local, archivos de la app ni respaldos. Solo se guardan datos confirmados, el origen automático (cámara/galería/voz/texto) y huellas necesarias para evitar duplicados. La vista de foto es temporal y se libera al guardar/cerrar. No ofrecer opciones para conservar fotos. No borrar imágenes históricas ni originales de la fototeca sin indicación expresa.
+En la revisión de capturas no volver a preguntar el origen ni mostrar el selector de categorías que el propietario pidió retirar. Usar categorías financieras existentes solo cuando corresponda; nunca convertir Foto o Dictado por voz en categoría financiera.

@@ -1,3 +1,4 @@
+import {CAPTURE_DATA_ONLY} from './capturePolicy';
 import {validateReading} from './ai/details';
 import {validateStatementRules} from '../income/store';
 import {statementTotals} from '../income/domain';
@@ -22,6 +23,7 @@ export class DocumentStore {
  }
  async snapshot():Promise<DocumentsSnapshot>{return this.ledger.read(async db=>({documents:await db.getAllAsync<StoredDocument>(select+' ORDER BY rowid DESC'),movements:(await db.getAllAsync<LedgerMovement>(movementSelect+' ORDER BY date DESC')).map(readMovement),bills:await db.getAllAsync('SELECT id,provider,amount_cents AS amountCents,due_date AS dueDate,version FROM bills WHERE voided_at IS NULL ORDER BY due_date DESC'),categories:(await db.getAllAsync<{id:string;name:string;kind:'income'|'expense';archived:number}>('SELECT id,name,kind,archived FROM categories')).map(c=>({...c,archived:!!c.archived}))}));}
  async save(p:DocumentInput){
+ if(CAPTURE_DATA_ONLY)p={...p,keepImage:false};
  if(p.reading)validateReading(p.reading);
  if(!p.id||!p.reviewed||p.description.length>240||p.notes.length>20000||(p.rawText?.length??0)>20000)throw new UserInputError('Revisa la descripción y confirma que comprobaste todos los datos.');
  if(!['paid_expense','paid_income','pending_bill','attachment','note'].includes(p.kind)||!['manual','camera','library','voice'].includes(p.source))throw new UserInputError('Elige cómo se guardará este documento.');
