@@ -6,8 +6,8 @@ import {ReadingDetailsForm} from '../documents/ReadingDetailsForm';
 import {reviewedReading} from '../documents/ai/details';
 import type {AnthropicReading} from '../documents/ai/types';
 import {anthropicIncome} from '../documents/ai/types';
-import {useEffect,useState} from 'react';
-import {Image,View} from 'react-native';
+import {useEffect,useRef,useState} from 'react';
+import {ActivityIndicator,Image,View} from 'react-native';
 import {ActionMenu,CameraActionButton,type MenuAction} from '../../ui/ActionMenu';
 import {router} from 'expo-router';
 import {newId} from '../../core/id';
@@ -30,6 +30,7 @@ import type {RecognizedEarning} from './paystubTable';
 import {recognizeIncome} from './recognition';
 type Line={id:string;categoryId:string;label:string;amount:string;rule?:DeductionRule};
 export default function IncomeDocumentsScreen(){
+ const saving=useRef(false);
  const [store,setStore]=useState<IncomeStore>(),[categories,setCategories]=useState<DeductionCategory[]>([...deductionCategories]);
  const [history,setHistory]=useState<Awaited<ReturnType<IncomeStore['snapshot']>>['statements']>([]);
  const [kind,setKind]=useState<'paystub'|'check'>('paystub'),[issuer,setIssuer]=useState(''),[reference,setReference]=useState('');
@@ -62,13 +63,16 @@ export default function IncomeDocumentsScreen(){
  function update(id:string,change:Partial<Line>){setLines(old=>old.map(d=>d.id===id?{...d,...change}:d));setComplete('pending');}
  async function capture(from:'camera'|'library'){if(busy)return;setPhotoBusy(true);setBusy(true);setError('');try{const result=await captureImage(from);if(!result)return;if(result.structured?.document_type==='receipt')throw new UserInputError('Esta foto se identificó como recibo de compra. Abre Escaneo y documentos para registrarlo.');setReading(result.structured);setReference(result.structured?.details?.reference??'');setMethod(methodForDirection(recognizedPayment(result.text,result.structured?.details?.payment_method,'document')??'','income'));const parsed=result.structured?anthropicIncome(result.structured):recognizeIncome(result.text,kind==='check');if(result.structured)setKind(result.structured.document_type==='check'?'check':'paystub');setReadingText(result.text);setShowReading(false);setImage(result.image);setSource(from);setIssuer(parsed.issuer);setGross(parsed.gross);setNet(parsed.net);setDate(parsed.date);setStart(parsed.periodStart);setEnd(parsed.periodEnd);setEarningIndex('0');setEarnings(parsed.earnings);setLines(parsed.deductions.map(d=>({...d,amount:d.amount,id:newId()})));setWarnings([result.warning,...parsed.warnings].filter(Boolean));setComplete('pending');setReceived('no');}catch(e){setError(userMessage(e));}finally{setPhotoBusy(false);setBusy(false);}}
  async function createCategory(){if(!store||busy)return;setBusy(true);setError('');try{await store.saveCategory(categoryId||newId(),categoryName,useRule==='yes'?categoryRule:categoryId?{...blankRule(),active:false}:undefined,!!categoryId);announceSaved();await refresh(store);setAdding(false);setNotice('Categoría guardada para futuros pagos. Los cheques y las deducciones ya abiertos conservan sus reglas originales.');}catch(e){setError(userMessage(e));}finally{setBusy(false);}}
- async function save(){if(busy||!store)return;setBusy(true);setError('');setNotice('');try{
+ async function save(){if(saving.current||busy||!store)return;saving.current=true;setBusy(true);setError('');setNotice('');try{
   if(received!=='yes')throw new UserInputError('Confirma que ya recibiste el ingreso. La foto de un cheque no confirma que fue cobrado o recibido.');
   if(!validDate(date))throw new UserInputError('Confirma la fecha del pago con el calendario.');
+  if(autoNet!=='yes'&&!net.trim())throw new UserInputError('Revisa o escribe el neto del talonario antes de guardar.');
+  if(!methodForDirection(method,'income'))throw new UserInputError('Selecciona cómo recibiste este ingreso.');
   const statement=draft();statementTotals(statement);
   if(editing){await store.editStatement(editing,statement,date,method);}else{const docs=await getDocumentStore();await docs.save({...(reading?{reading:reviewedReading({...reading,period_start:statement.periodStart,period_end:statement.periodEnd,gross_cents:statement.grossCents,net_cents:statement.netCents,deductions:statement.deductions.map(d=>({label:d.label,category:d.categoryId,amount_cents:d.amountCents}))},statement.issuer,date,statement.netCents,reading.details?{...reading.details,reference:statement.reference||null}:undefined)}:{}),id,kind:'paid_income',source,description:issuer.trim()|| (kind==='check'?'Cheque recibido':'Talonario de pago'),date,amountCents:statement.netCents,notes:'Comprobante de ingreso revisado. Deducciones del empleado conservadas en su desglose, sin crear gastos separados.',rawText:null,image,keepImage:!!image,movementId:null,billId:null,expectedMovementVersion:null,expectedBillVersion:null,categoryId:null,paymentMethod:method,supersedesId:null,expectedDocumentVersion:null,confirmSimilar:confirmedKey===reviewKey,reviewed:true,incomeStatement:statement});}
-  announceSaved();setImage(null);await refresh(store);clearForm();setNotice('Cheque y desglose guardados. El neto se cuenta una sola vez. Las retenciones se conservan separadas de los gastos ordinarios.');
- }catch(e){if(!(e instanceof DuplicateDocumentError)&&userMessage(e).includes('similar'))setSimilarKey(reviewKey);setError(e instanceof DuplicateDocumentError?'Este comprobante ya existe. Abre Mis documentos; no se creó otro ingreso.':userMessage(e));}finally{setBusy(false);}}
+  announceSaved();clearForm();setNotice(kind==='paystub'?'Guardado exitosamente. Talonario e ingreso registrados.':'Guardado exitosamente. Cheque e ingreso registrados.');
+  try{await refresh(store);}catch{setNotice('Guardado exitosamente. El ingreso quedó guardado; vuelve a abrir esta sección para actualizar el historial.');}
+ }catch(e){if(!(e instanceof DuplicateDocumentError)&&userMessage(e).includes('similar'))setSimilarKey(reviewKey);setError(e instanceof DuplicateDocumentError?'Este comprobante ya existe. Abre Mis documentos; no se creó otro ingreso.':userMessage(e));}finally{saving.current=false;setBusy(false);}}
  const actions:MenuAction[]=[
   {id:'library',label:'Seleccionar foto del comprobante',run:()=>void capture('library')},
   {id:'manual',label:'Entrada manual sin foto ni talonario',run:()=>{setImage(null);setReading(undefined);setSource('manual');setWarnings(['Entrada manual: escribe solo lo que conoces. Los datos desconocidos pueden quedar pendientes.']);setComplete('pending');}},
@@ -79,12 +83,13 @@ export default function IncomeDocumentsScreen(){
  let previewNet:string;try{const g=optional(gross),deductions=lines.map(calculatedLine);previewNet=g!==null&&deductions.every(d=>d.amountCents!==null)?`Neto según el desglose: ${formatMoney(cents(g-addAmounts(...deductions.map(d=>cents(d.amountCents!)))))} (bruto menos deducciones).`:'Completa el bruto y las deducciones para ver el neto calculado.';}catch(e){previewNet=userMessage(e);}
  let totals:ReturnType<typeof statementTotals>|null=null;try{totals=statementTotals({...draft(),complete:false});}catch{}
  return <Screen back title="Cheques y talonarios" demo={false} subtitle="Lectura de imágenes y revisión de deducciones de tus ingresos.">
-  {!busy&&store?<ActionButton title="Guardar" onPress={()=>void save()}/>:null}
+  <Choices required label="Confirmación del ingreso" value={received} options={[[ 'no','Todavía no confirmo haberlo recibido'],['yes','Confirmo que ya recibí este ingreso y revisé las cifras']]} onChange={setReceived}/>
+  {!busy&&store?<ActionButton title="Guardar" testID="income-document-save" onPress={()=>void save()}/>:busy&&!photoBusy?<View accessibilityLiveRegion="polite" style={{flexDirection:'row',alignItems:'center',gap:10}}><ActivityIndicator accessibilityLabel="Guardando talonario"/><Body>Guardando ingreso…</Body></View>:null}
   <ErrorNotice message={error}/>{notice?<Card row><Body>{notice}</Body></Card>:null}
   <Card row><Body>Fotografía el talonario completo y enfocado. Se propone información impresa. Puedes calcular las deducciones con tus propias reglas y porcentajes; no se elige una tasa contributiva por ti. Revisa la columna del pago actual y distingue acumulados y aportaciones patronales.</Body><Body muted>Revisa la lectura antes de guardar. No se extraen ni guardan números de Seguro Social o cuentas como campos. El comprobante se conserva cifrado como respaldo de los datos confirmados.</Body></Card>
   <Choices label="Tipo de comprobante" value={kind} options={[[ 'paystub','Talonario de pago'],['check','Cheque']]} onChange={value=>{setKind(value);setComplete('pending');}}/>
   {photoBusy?<PhotoAnalysis/>:null}
-  {!busy&&!editing?<View style={{flexDirection:'row',alignItems:'flex-start',gap:12}}><CameraActionButton label={image?'Volver a tomar foto':'Fotografiar cheque o talonario'} onPress={()=>void capture('camera')}/><ActionMenu actions={actions}/></View>:busy&&!photoBusy?<Body>Guardando cambios…</Body>:null}
+  {!busy&&!editing?<View style={{flexDirection:'row',alignItems:'flex-start',gap:12}}><CameraActionButton label={image?'Volver a tomar foto':'Fotografiar cheque o talonario'} onPress={()=>void capture('camera')}/><ActionMenu actions={actions}/></View>:null}
   {editing?<Card row><Body>Editando: {editing.statement.reference||editing.documentId}</Body><ActionButton title="Cancelar edición" secondary onPress={clearForm}/></Card>:null}
   {reading?.details?<ReadingDetailsForm context="income" documentType={reading.document_type} value={reading.details} onChange={details=>setReading({...reading,details})}/>:null}
   <ActionMenu label="Administrar deducciones" actions={[{id:'add',label:'Añadir deducción',run:addDeduction},{id:'new-category',label:'Añadir categoría',run:()=>openCategory()},...categories.map(c=>({id:c.id,label:`Editar ${c.name}`,run:()=>openCategory(c)}))]}/>
@@ -113,7 +118,6 @@ export default function IncomeDocumentsScreen(){
   {totals?<Card row><Body>Deducciones conocidas de este pago: {formatMoney(totals.known)}</Body><Body>{totals.difference===null?'Bruto pendiente; no se comprueba la conciliación.':`Diferencia por explicar entre bruto, deducciones conocidas y neto: ${formatMoney(totals.difference)}`}</Body>{!totals.allKnown?<Body>Hay deducciones con importe pendiente; el subtotal conocido está incompleto.</Body>:null}</Card>:null}
   <Choices label="Estado del desglose" value={complete} options={[[ 'pending','Conservar datos pendientes de revisión'],['complete','Revisé todas las deducciones y el total cuadra']]} onChange={setComplete}/>
   {image&&recognizedPayment(readingText,reading?.details?.payment_method,'document')?<Body>Método identificado: {entryMethods('income').find(([key])=>key===method)?.[1]??'Por revisar'}</Body>:<Choices label="Cómo recibí el ingreso" value={method} options={entryMethods('income')} onChange={setMethod}/>}
-  <Choices required label="Confirmación del ingreso" value={received} options={[[ 'no','Todavía no confirmo haberlo recibido'],['yes','Confirmo que ya recibí este ingreso y revisé las cifras']]} onChange={setReceived}/>
   {similarKey===reviewKey?<Choices label="Coincidencia con otro registro" value={confirmedKey===reviewKey?'yes':'no'} options={[[ 'no','Revisar el ingreso existente'],['yes','Verifiqué que es un pago distinto con su propia referencia']]} onChange={value=>setConfirmedKey(value==='yes'?reviewKey:'')}/>:null}
   <ErrorNotice message={error}/>
   <SectionHeading title="Comprobantes guardados"/>{!history.length?<Card row><Body>Todavía no hay cheques o talonarios guardados en esta sección.</Body></Card>:null}
