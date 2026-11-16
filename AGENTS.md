@@ -61,3 +61,6 @@ Guardar cifrados los comprobantes de negocio, posibles deducciones y casos pendi
 No preguntar al usuario si sabe que algo es deducible. Pedir hechos sencillos según las reglas verificadas de Hacienda por año. Propuestas pendientes no son deducciones finales ni modifican cálculos financieros o de planilla. No enviar el perfil familiar/contributivo al lector de IA.
 No mostrar selectores de método de pago si está reconocido explícitamente en foto, voz o texto; autocompletar y mostrar resumen. Si falta o es ambiguo, preguntar. No inferir el método de logotipos o anuncios de métodos aceptados. Mantener opción de guardar en la parte superior de formularios de captura, con errores visibles y confirmación tras persistencia.
 En la revisión de capturas no volver a preguntar el origen ni mostrar el selector de categorías que el propietario pidió retirar. Usar categorías financieras existentes solo cuando corresponda; nunca convertir Foto o Dictado por voz en categoría financiera.
+
+## Acceso a información para el contable
+El único acceso operativo a este expediente debe estar en Configuración, con el texto «Para el contable». Mantener allí perfil, orientación, revisión y exportación existentes. No mostrar botones/preguntas contables en formularios de ingreso, gasto, captura ni menú lateral. Conservar datos, clasificación automática y protecciones existentes.

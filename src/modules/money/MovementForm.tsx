@@ -1,5 +1,3 @@
-import {ExpenseGuideFields} from '../tax/ExpenseGuideFields';
-import {emptyExpenseAnswers} from '../tax/expenseGuide';
 import {recognizedPayment} from '../documents/paymentRecognition';
 import {entryMethods} from './entryContext';
 import {announceSaved} from '../../ui/saveFeedback';
@@ -9,7 +7,7 @@ import { incomeFromBreakdown } from './incomeInput';
 import { DateField } from '../../ui/DateField';
 import { CategoryPicker } from './CategoryPicker';
 import { userMessage, UserInputError } from '../../core/errors';
-import { useEffect,useRef,useState,type ReactNode } from 'react';
+import { useRef,useState,type ReactNode } from 'react';
 import {ActivityIndicator,Pressable,View} from 'react-native';
 import { newId } from '../../core/id';
 import { parseAmount } from '../../core/money';
@@ -33,9 +31,6 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
     saved(): Promise<void>;
     documentReview?: { id: string; version: number };
 }) {
-    const [expenseAnswers,setExpenseAnswers]=useState(emptyExpenseAnswers);
-    const answersTouched=useRef(false);
-    useEffect(()=>{if(!initial||initial.kind!=='expense')return;let live=true;void store.expenseGuide(initial.id,Number(initial.date.slice(0,4))).then(g=>{if(live&&!answersTouched.current&&g?.sourceVersion===initial.version)setExpenseAnswers(g.guidance.answers);}).catch(()=>{});return()=>{live=false;};},[store,initial]);
     const [identity] = useState(() => ({ id: initial?.id ?? newId(), operation: initial?.idempotencyKey ?? newId(), schedule: newId() }));
     const [type,setType] = useState<EntryKind>(initial?.kind as EntryKind ?? (initialHistory==='income'?'income':initialHistory==='expense'?'expense':kind));
     const [amount, setAmount] = useState(initial ? inputAmount(initial.amountCents) : '');
@@ -49,8 +44,8 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
     const [incomeType, setIncomeType] = useState(initial?.incomeType ?? 'manual');
     const [cadence, setCadence] = useState<'weekly' | 'monthly'>('monthly');
     const [interval, setInterval] = useState('1');
-    const [tax, setTax] = useState(initial?.taxReview ? 'yes' : 'no');
-    const [use, setUse] = useState(initial?.useKind ?? 'unknown');
+    const [tax] = useState(initial?.taxReview ? 'yes' : 'no');
+    const [use] = useState(initial?.useKind ?? 'unknown');
     const [gross, setGross] = useState(initial?.grossCents != null ? inputAmount(initial.grossCents) : '');
     const [withholding, setWithholding] = useState(initial?.withholdingCents != null ? inputAmount(initial.withholdingCents) : '');
     const [historyPane,setHistoryPane]=useState<TransactionHistoryKind|null>(initialHistory??null);
@@ -58,7 +53,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState('');
     const [duplicate, setDuplicate] = useState(false);
-    const [details,setDetails]=useState(false),[incomeToolsOpen,setIncomeToolsOpen]=useState(false);
+    const [incomeToolsOpen,setIncomeToolsOpen]=useState(false);
     const preserveExisting=!!initial&&gross===(initial.grossCents==null?'':inputAmount(initial.grossCents))&&withholding===(initial.withholdingCents==null?'':inputAmount(initial.withholdingCents));
     const needBreakdown=!initial||(!preserveExisting&&!!(gross.trim()||withholding.trim()));
     let netPreview:ReturnType<typeof incomeFromBreakdown>|null=null;
@@ -81,9 +76,9 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
                 schedule = { id: scheduleId, description: m.description, amountCents: m.amountCents, categoryId: m.categoryId, paymentMethod: m.paymentMethod, cadence, intervalCount: Number(interval), anchorDate: date, nextDate: date, active: true };
             }
             if (initial)
-                await (documentReview?store.edit(m,undefined,allowDuplicate,documentReview,type==='expense'&&answersTouched.current?expenseAnswers:undefined):store.editFromHistory(m,allowDuplicate,type==='expense'&&answersTouched.current?expenseAnswers:undefined));
+                await (documentReview?store.edit(m,undefined,allowDuplicate,documentReview):store.editFromHistory(m,allowDuplicate));
             else
-                await store.create(m, allowDuplicate, schedule,type==='expense'?expenseAnswers:undefined);
+                await store.create(m, allowDuplicate, schedule);
             announceSaved();await saved();
             if(afterSave)afterSave();else close();
         }
@@ -96,7 +91,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
         }
     }
     return <Sheet title={initial ? 'Editar movimiento' : 'Nueva transacción'} close={close} busy={busy} headerAction={!historyPane&&!busy?<><ErrorNotice message={error}/><ActionButton title={initial?'Guardar':type==='expense'?'Guardar gasto':type==='income'?'Guardar ingreso':'Guardar movimiento'} onPress={()=>{setDuplicate(false);void submit();}}/></>:null}>
-  {!initial&&(kind==='income'||kind==='expense')?<Choices<'income'|'expense'> compact label="Tipo de transacción" presentation="tabs" value={type as 'income'|'expense'} options={[["expense","↓ Gasto"],["income","↑ Ingreso"]]} onChange={value=>{setHistoryPane(null);setType(value);if(value==='income'&&method==='credit')setMethod('bank');setCategory('');setCategoryName('');setDuplicate(false);setError('');setDetails(false);setIncomeToolsOpen(false);setTax('no');setUse('unknown');}}/>:null}
+  {!initial&&(kind==='income'||kind==='expense')?<Choices<'income'|'expense'> compact label="Tipo de transacción" presentation="tabs" value={type as 'income'|'expense'} options={[["expense","↓ Gasto"],["income","↑ Ingreso"]]} onChange={value=>{setHistoryPane(null);setType(value);if(value==='income'&&method==='credit')setMethod('bank');setCategory('');setCategoryName('');setDuplicate(false);setError('');setIncomeToolsOpen(false);}}/>:null}
   {!initial&&onHistoryEdit?<View style={{gap:6}}><Body muted style={{fontSize:13}}>Historiales</Body><View style={{flexDirection:'row',gap:8}}>{(type==='income'?([['income','Ingresos']] as const):type==='expense'?([['expense','Gastos']] as const):([['expense','Gastos'],['income','Ingresos']] as const)).map(([value,label])=><Pressable key={value} accessibilityRole="button" accessibilityState={{selected:historyPane===value}} onPress={()=>setHistoryPane(historyPane===value?null:value)} style={{flex:1,minHeight:44,paddingHorizontal:8,borderWidth:1,borderColor:'#5C9B8E',borderRadius:10,alignItems:'center',justifyContent:'center',backgroundColor:historyPane===value?'#D9F5E8':'transparent'}}><Body style={{fontSize:13,fontWeight:'700',...(historyPane===value?{color:'#005B43'}:{})}}>{label}</Body></Pressable>)}</View></View>:null}
   {!initial&&historyPane&&onHistoryEdit?<TransactionHistory key={historyPane} kind={historyPane} store={store} onEdit={onHistoryEdit} saved={historySaved??saved}/>:<>
   {!historyPane&&type==='income'&&incomeTools?<><ActionButton secondary title={incomeToolsOpen?'Cerrar cobros programados':'Administrar cobros programados'} onPress={()=>setIncomeToolsOpen(!incomeToolsOpen)}/>{incomeToolsOpen?incomeTools:null}</>:null}
@@ -121,13 +116,6 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
    <Body>{netPreview===null?'Completa bruto y retención para calcular el ingreso.':`Ingreso neto ${initial&&(preserveExisting||(!gross&&!withholding))?'registrado':'calculado'}: ${formatMoney(netPreview)}`}</Body>
    <Body muted>El neto es bruto menos retención. Este formulario supone que no hubo otras deducciones. Confirma que el resultado coincide con lo recibido antes de guardar; no se calcula una planilla. En registros anteriores, dejar ambos campos vacíos conserva el importe conocido.</Body>
   </> : null}
-  {type==='expense'?<ExpenseGuideFields year={Number(date.slice(0,4))} text={description||categoryName} value={expenseAnswers} onChange={value=>{answersTouched.current=true;setExpenseAnswers(value);}}/>:null}
-  <ActionButton secondary title={details?'Ocultar opciones contables':'Opciones contables y uso'} icon="options-outline" onPress={()=>setDetails(!details)}/>
-  {details?<>
-  <Choices label="Para revisión de mi contable" value={tax} options={[['no', 'No marcar'], ['yes', 'Marcar para revisión']]} onChange={setTax}/>
-  <Choices<LedgerMovement['useKind']> label="Uso del movimiento" value={use} options={[['unknown', 'Sin clasificar'], ['personal', 'Personal'], ['business', 'Comercial'], ['mixed', 'Mixto']]} onChange={setUse}/>
-  <Body muted>{type==='income'?'Marcar el ingreso permite revisarlo con tu contable; no calcula impuestos.':'Marcar para revisión no implica que sea deducible.'}</Body>
-  </>:null}
   <ErrorNotice message={error}/>
   {busy?<ActivityIndicator accessibilityLabel="Guardando cambios"/>:null}
   {!busy && duplicate ? <><Body>Si son dos operaciones distintas, puedes conservar ambas. Comprueba el historial antes de confirmar.</Body><ActionButton title="Guardar como operación distinta" secondary onPress={() => void submit(true)}/></> : null}

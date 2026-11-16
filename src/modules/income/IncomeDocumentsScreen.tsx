@@ -75,7 +75,6 @@ export default function IncomeDocumentsScreen(){
   {id:'deduction',label:'Añadir deducción',run:addDeduction},
   {id:'category',label:'Añadir categoría',run:()=>openCategory()},
   {id:'documents',label:'Abrir Mis documentos',run:()=>router.push('/documents')},
-  {id:'tax',label:'Revisar Para mi contable',run:()=>router.push('/tax')},
  ];
  let previewNet:string;try{const g=optional(gross),deductions=lines.map(calculatedLine);previewNet=g!==null&&deductions.every(d=>d.amountCents!==null)?`Neto según el desglose: ${formatMoney(cents(g-addAmounts(...deductions.map(d=>cents(d.amountCents!)))))} (bruto menos deducciones).`:'Completa el bruto y las deducciones para ver el neto calculado.';}catch(e){previewNet=userMessage(e);}
  let totals:ReturnType<typeof statementTotals>|null=null;try{totals=statementTotals({...draft(),complete:false});}catch{}

@@ -6,7 +6,7 @@ import { ExpenseDonut } from '../../ui/ExpenseDonut';
 import { parseAmount } from '../../core/money';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '../../design/ThemeProvider';
-import { ActionButton, Body, Card, DashboardAction, IconBadge, Screen, SectionHeading, ui } from '../../ui/components';
+import { Body, Card, DashboardAction, IconBadge, Screen, SectionHeading, ui } from '../../ui/components';
 import { bills, expenses } from '../../preview/data';
 import { PreviewModal } from '../../preview/PreviewModal';
 const segments = ['Resumen', 'Transacciones', 'Categorías'] as const;
@@ -46,7 +46,6 @@ export default function Money() {
         <ExpenseDonut total={195468} items={expenses.map(item => ({ id: item.name, name: item.name, spent: parseAmount(item.amount.replace('$', '')) }))}/>
 
       </Card>
-      <ActionButton secondary title="Para mi contable" icon="document-text-outline" onPress={() => setDetail('Para mi contable')} />
     </> : segment === 'Transacciones' ? <Card row><Body style={ui.heading}>Movimientos de ejemplo</Body>
       {[['Ingreso mensual', '+ $3,200.00'], ['Compra de alimentos', '− $55.00'], ['Electricidad', '− $125.00']].map(([title, amount]) => <View key={title} style={ui.between}><Body style={{ flex: 1 }}>{title}</Body><Body style={{ fontWeight: '700' }}>{amount}</Body></View>)}
       <Body muted style={ui.small}>Ejemplos ilustrativos. No forman un historial real ni modifican el resumen.</Body>
