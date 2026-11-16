@@ -64,8 +64,8 @@ export class DebtStore{
   let movementId=p.existingMovementId;
   if(movementId){
    const m=await db.getFirstAsync<LedgerMovement>(movementSelect+' WHERE id=?',movementId);
-   if(!m||m.deletedAt||m.kind!=='debt_payment'||m.amountCents!==p.amountCents||m.date!==p.date||m.paymentMethod!==p.paymentMethod)throw new UserInputError('El movimiento debe ser un pago de deuda con el mismo importe, fecha y método.');
-   const assigned=await db.getFirstAsync<{id:string}>('SELECT id FROM debt_payments WHERE movement_id=? AND reversed_at IS NULL',movementId);if(assigned)throw new UserInputError('Ese movimiento ya está asignado a una deuda.');
+   if(!m||m.deletedAt||m.kind!=='debt_payment'||m.amountCents!==p.amountCents||m.date!==p.date||m.paymentMethod!==p.paymentMethod)throw new UserInputError('La transacción debe ser un pago de deuda con el mismo importe, fecha y método.');
+   const assigned=await db.getFirstAsync<{id:string}>('SELECT id FROM debt_payments WHERE movement_id=? AND reversed_at IS NULL',movementId);if(assigned)throw new UserInputError('Esa transacción ya está asignado a una deuda.');
   }else{
    const similar=await db.getFirstAsync<{id:string}>('SELECT id FROM movements WHERE kind=\'debt_payment\' AND amount_cents=? AND date=? AND deleted_at IS NULL LIMIT 1',p.amountCents,p.date);if(similar&&!p.confirmSimilar)throw new SimilarDebtPaymentError();
    const now=new Date().toISOString();movementId=`debt-movement:${p.id}`;
@@ -75,7 +75,7 @@ export class DebtStore{
   if(p.billId){
    const b=await db.getFirstAsync<Bill>(billSelect+' WHERE b.id=?',p.billId);
    if(!b||b.voidedAt||b.paymentKind!=='debt_payment'||b.debtId&&b.debtId!==d.id||b.version!==p.expectedBillVersion||p.amountCents>b.amountCents-b.paidCents)throw new UserInputError('Revisa la factura: debe estar pendiente, corresponder a esta deuda y cubrir el pago.');
-   const linked=await db.getFirstAsync<{id:string}>('SELECT id FROM bill_payments WHERE movement_id=? AND reversed_at IS NULL',movementId);if(linked)throw new UserInputError('Ese movimiento ya está vinculado a una factura; elige Solo deuda para asignarlo sin repetir el vínculo.');
+   const linked=await db.getFirstAsync<{id:string}>('SELECT id FROM bill_payments WHERE movement_id=? AND reversed_at IS NULL',movementId);if(linked)throw new UserInputError('Esa transacción ya está vinculada a una factura; elige Solo deuda para asignarlo sin repetir el vínculo.');
    ownedBill=`debt-bill-payment:${p.id}`;await db.runAsync('INSERT INTO bill_payments(id,bill_id,movement_id,amount_cents,created_movement) VALUES(?,?,?,?,0)',ownedBill,b.id,movementId,p.amountCents);
    await db.runAsync('UPDATE bills SET debt_id=?,version=version+1,updated_at=? WHERE id=?',d.id,new Date().toISOString(),b.id);
   }
@@ -91,7 +91,7 @@ export class DebtStore{
  async reverse(id:string,reason:string){this.reason(reason);return this.ledger.transaction(async db=>{
   const p=await db.getFirstAsync<DebtPayment>(paymentSelect+' WHERE p.id=?',id);if(!p)throw new UserInputError('Pago no encontrado.');if(p.reversedAt)return;const d=await this.debt(db,p.debtId);
   if(p.createdMovement){
-   const links=await db.getFirstAsync<{n:number}>(`SELECT (SELECT COUNT(*) FROM documents WHERE movement_id=?)+(SELECT COUNT(*) FROM tax_records WHERE movement_id=?)+(SELECT COUNT(*) FROM goal_contributions WHERE movement_id=?) AS n`,p.movementId,p.movementId,p.movementId);if(links?.n)throw new UserInputError('El movimiento tiene documentos u otros vínculos. Requiere revisión conjunta.');
+   const links=await db.getFirstAsync<{n:number}>(`SELECT (SELECT COUNT(*) FROM documents WHERE movement_id=?)+(SELECT COUNT(*) FROM tax_records WHERE movement_id=?)+(SELECT COUNT(*) FROM goal_contributions WHERE movement_id=?) AS n`,p.movementId,p.movementId,p.movementId);if(links?.n)throw new UserInputError('La transacción tiene documentos u otros vínculos. Requiere revisión conjunta.');
    const bill=await db.getFirstAsync<{id:string}>('SELECT id FROM bill_payments WHERE movement_id=? AND reversed_at IS NULL',p.movementId);if(bill)await this.reverseBill(db,bill.id,reason);
    const m=await db.getFirstAsync<Record<string,unknown>>('SELECT * FROM movements WHERE id=?',p.movementId);const now=new Date().toISOString();await db.runAsync('INSERT INTO movement_revisions(movement_id,action,reason,before_json,recorded_at) VALUES(?,?,?,?,?)',p.movementId,'delete',reason.trim(),JSON.stringify(m),now);await db.runAsync('UPDATE movements SET deleted_at=?,updated_at=?,version=version+1 WHERE id=?',now,now,p.movementId);
   }else if(p.ownedBillPaymentId)await this.reverseBill(db,p.ownedBillPaymentId,reason);

@@ -31,9 +31,9 @@ export class PlanningStore {
     const v=value as Models['treatment']|Models['payment'];entryId=v.entryId;
     if(entryId){
      if(kind==='payment'&&rows.some(r=>r.kind==='payment'&&(decoded(r) as Models['payment']).entryId===entryId))throw new UserInputError('Este gasto ya tiene un pago estimado vinculado. Revisa el existente.');
-     if(kind==='treatment'&&old&&(decoded(old) as Models['treatment']).entryId!==entryId)throw new UserInputError('Una clasificación conserva su movimiento original.');
+     if(kind==='treatment'&&old&&(decoded(old) as Models['treatment']).entryId!==entryId)throw new UserInputError('Una clasificación conserva su transacción original.');
      const e=await db.getFirstAsync<{version:number;holderId:string;kind:string;amount:number;stale:number;deleted:string|null}>('SELECT e.version,e.holder_id AS holderId,e.kind,m.amount_cents AS amount,(e.movement_version<>m.version OR e.kind<>m.kind) AS stale,m.deleted_at AS deleted FROM business_entries e JOIN movements m ON m.id=e.movement_id WHERE e.id=?',entryId);
-     if(!e||e.holderId!==value.holderId||e.version!==v.entryVersion||e.stale||e.deleted)throw new UserInputError('El movimiento debe estar vigente y conciliado con este titular.');
+     if(!e||e.holderId!==value.holderId||e.version!==v.entryVersion||e.stale||e.deleted)throw new UserInputError('La transacción debe estar vigente y conciliado con este titular.');
      if(kind==='treatment'){key=entryId;const t=value as Models['treatment'];if(t.role!=='tax'&&rows.some(r=>r.kind==='payment'&&(decoded(r) as Models['payment']).entryId===entryId))throw new UserInputError('El gasto tiene un pago estimado vinculado; primero revisa o anula ese registro.');}
      else{const p=value as Models['payment'];if(e.kind!=='expense'||p.amountCents!==e.amount)throw new UserInputError('El pago estimado vinculado debe coincidir con el importe completo del gasto.');}
     }
@@ -41,11 +41,11 @@ export class PlanningStore {
    if(kind==='cash'){
     const c=value as Models['cash'];key=c.reference.trim().toLocaleLowerCase();movementId=c.movementId;
     if(movementId){
-     if(rows.some(r=>r.kind==='cash'&&(decoded(r) as Models['cash']).movementId===movementId))throw new UserInputError('Este movimiento ya tiene un ajuste de efectivo.');
+     if(rows.some(r=>r.kind==='cash'&&(decoded(r) as Models['cash']).movementId===movementId))throw new UserInputError('Esta transacción ya tiene un ajuste de efectivo.');
      const m=await db.getFirstAsync<{version:number;amount:number;date:string;kind:string;deleted:string|null}>('SELECT version,amount_cents AS amount,date,kind,deleted_at AS deleted FROM movements WHERE id=?',movementId);
-     if(!m||m.deleted||m.version!==c.movementVersion||m.amount!==c.amountCents||m.date!==c.date)throw new UserInputError('El movimiento de efectivo cambió o no coincide en importe y fecha.');
-     if(await db.getFirstAsync('SELECT id FROM business_entries WHERE movement_id=?',movementId))throw new UserInputError('Ese movimiento ya está incluido en los registros comerciales; no vuelvas a sumarlo.');
-     if(m.kind==='income'&&c.direction!=='in'||['expense','debt_payment','goal_contribution'].includes(m.kind)&&c.direction!=='out'||m.kind==='loan'&&c.direction!=='in')throw new UserInputError('La dirección de efectivo no corresponde al movimiento financiero.');
+     if(!m||m.deleted||m.version!==c.movementVersion||m.amount!==c.amountCents||m.date!==c.date)throw new UserInputError('La transacción de efectivo cambió o no coincide en importe y fecha.');
+     if(await db.getFirstAsync('SELECT id FROM business_entries WHERE movement_id=?',movementId))throw new UserInputError('Esa transacción ya está incluido en los registros comerciales; no vuelvas a sumarlo.');
+     if(m.kind==='income'&&c.direction!=='in'||['expense','debt_payment','goal_contribution'].includes(m.kind)&&c.direction!=='out'||m.kind==='loan'&&c.direction!=='in')throw new UserInputError('La dirección de efectivo no corresponde a la transacción financiero.');
     }
    }
    if(kind==='payment'){
@@ -58,7 +58,7 @@ export class PlanningStore {
     const reference=(value as Models['cash']|Models['payment']).reference.trim().toLocaleLowerCase();
     if(reference&&rows.some(r=>r.holderId===value.holderId&&r.kind!==kind&&['cash','payment'].includes(r.kind)&&((decoded(r) as Models['cash']|Models['payment']).reference.trim().toLocaleLowerCase()===reference)))throw new UserInputError('Esta referencia ya se incluyó en efectivo o pagos estimados. Revisa el registro existente para evitar duplicarlo.');
    }
-   if(rows.some(r=>r.holderId===value.holderId&&r.kind===kind&&(()=>{const v=decoded(r) as Models[Kind];return kind==='plan'?String((v as Models['plan']).year)===key:kind==='treatment'?(v as Models['treatment']).entryId===key:kind==='cash'?(v as Models['cash']).reference.trim().toLocaleLowerCase()===key:false;})()))throw new UserInputError('Este perfil, movimiento o referencia ya está registrado. Abre el existente.');
+   if(rows.some(r=>r.holderId===value.holderId&&r.kind===kind&&(()=>{const v=decoded(r) as Models[Kind];return kind==='plan'?String((v as Models['plan']).year)===key:kind==='treatment'?(v as Models['treatment']).entryId===key:kind==='cash'?(v as Models['cash']).reference.trim().toLocaleLowerCase()===key:false;})()))throw new UserInputError('Este perfil, transacción o referencia ya está registrado. Abre el existente.');
    const now=new Date().toISOString();if(old)await db.runAsync('INSERT INTO business_ledger_events(entity_kind,entity_id,before_json,reason,recorded_at) VALUES(?,?,?,?,?)',`planning:${kind}`,value.id,old.json,'Revisión del panel comercial',now);
    await db.runAsync('INSERT INTO business_planning_records(id,holder_id,kind,record_key,entry_id,movement_id,record_json,updated_at) VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET record_key=excluded.record_key,entry_id=excluded.entry_id,movement_id=excluded.movement_id,record_json=excluded.record_json,version=version+1,updated_at=excluded.updated_at',value.id,value.holderId,kind,key,entryId,movementId,JSON.stringify(value),now);
   });

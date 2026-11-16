@@ -11,7 +11,7 @@ export default function Progress() {
       <Body style={{ color: fixed.onSuccess }}>Así podrías visualizar tus avances. Estos reconocimientos son ejemplos.</Body>
     </LinearGradient>
     {([
-      ['Movimientos registrados', '32 en este mes de ejemplo', 'bar-chart-outline', 'mint'],
+      ['Transacciones registrados', '32 en este mes de ejemplo', 'bar-chart-outline', 'mint'],
       ['Gastos bajo control', '14% menos en este ejemplo', 'trending-down-outline', 'blue'],
       ['Facturas al día', '4 de 5 atendidas en el ejemplo', 'checkmark-circle-outline', 'mint'],
       ['Meta en progreso', 'Fondo de emergencia · 28% de ejemplo', 'flag-outline', 'violet'],

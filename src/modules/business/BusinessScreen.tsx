@@ -34,7 +34,7 @@ export default function BusinessScreen() {
    {data.projects.filter(p=>p.holderId===h.id).map(p=><Body key={p.id}>Proyecto: {p.name} · {p.dbaId?data.dbas.find(d=>d.id===p.dbaId)?.name:'Directamente con el titular'}</Body>)}
    <ActionButton title={`Abrir perfil: ${h.legalName}`} secondary onPress={()=>{setNotice('');setEditing(h.id);}}/>
    <View style={{flexDirection:'row',flexWrap:'wrap',gap:12,flexBasis:'100%'}}>
-    <DashboardAction title="Movimientos y recibos" accessibilityLabel={`Movimientos y recibos: ${h.legalName}`} icon="receipt" onPress={()=>router.push({pathname:'/business-ledger',params:{holderId:h.id}})}/>
+    <DashboardAction title="Transacciones y recibos" accessibilityLabel={`Transacciones y recibos: ${h.legalName}`} icon="receipt" onPress={()=>router.push({pathname:'/business-ledger',params:{holderId:h.id}})}/>
     <DashboardAction title="IVU y contratistas" accessibilityLabel={`IVU y contratistas: ${h.legalName}`} icon="document-text" tone="blue" onPress={()=>router.push({pathname:'/business-obligations',params:{holderId:h.id}})}/>
     <DashboardAction title="Panel y escenarios" accessibilityLabel={`Panel y escenarios: ${h.legalName}`} icon="stats-chart" tone="violet" onPress={()=>router.push({pathname:'/business-planning',params:{holderId:h.id}})}/>
     <DashboardAction title="Nómina" accessibilityLabel={`Nómina: ${h.legalName}`} icon="people" tone="coral" onPress={()=>router.push({pathname:'/business-payroll',params:{holderId:h.id}})}/>

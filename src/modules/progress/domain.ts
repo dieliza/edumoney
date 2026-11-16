@@ -4,7 +4,7 @@ import { validMonth } from '../money/domain';
 import type { LedgerMovement,Budget } from '../money/types';
 import type { Goal } from '../goals/types';
 export const progressSteps=[
- ['start',1,'Revisar mi punto de partida'],['record',7,'Revisar mis movimientos'],['budget',14,'Revisar mi presupuesto'],
+ ['start',1,'Revisar mi punto de partida'],['record',7,'Revisar mis transacciones'],['budget',14,'Revisar mi presupuesto'],
  ['bills',30,'Revisar facturas y vencimientos'],['debt',45,'Revisar mis deudas'],['savings',60,'Revisar mis aportaciones'],
  ['adjust',75,'Ajustar mi organización'],['review',90,'Revisar mis avances de 90 días'],
 ] as const;

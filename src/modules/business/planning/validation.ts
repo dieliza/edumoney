@@ -20,7 +20,7 @@ export function validate<K extends Kind>(kind:K,value:Models[K],today:string){
   amount(p.openingCashCents,true);for(const n of [p.annualTaxCents,p.creditsCents,p.taxReserveAllocatedCents])amount(n);
  }
  if(kind==='treatment'){
-  const t=value as Models['treatment'];if(!text(t.entryId,100,true)||!Number.isInteger(t.entryVersion)||t.entryVersion<1||!['operating','equipment','tax','financing','owner','pending'].includes(t.role)||!text(t.note,2000,true))fail('Revisa movimiento, clasificación y motivo.');
+  const t=value as Models['treatment'];if(!text(t.entryId,100,true)||!Number.isInteger(t.entryVersion)||t.entryVersion<1||!['operating','equipment','tax','financing','owner','pending'].includes(t.role)||!text(t.note,2000,true))fail('Revisa transacción, clasificación y motivo.');
  }
  if(kind==='cash'){
   const c=value as Models['cash'];amount(c.amountCents);if(c.amountCents===null||c.amountCents<=0||!['in','out'].includes(c.direction)||!['capital','loan','repayment','card_payment','equipment','other'].includes(c.kind)||!text(c.reference,240,true)||!text(c.note,2000,true)||(!!c.movementId)!==(c.movementVersion!==null))fail('Revisa entrada/salida de efectivo, referencia única y nota.');

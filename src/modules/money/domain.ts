@@ -30,7 +30,7 @@ export function validateMovement(m: LedgerMovement) {
     if (cents(m.amountCents) <= 0 || m.currency !== 'USD')
         throw new UserInputError('El importe debe ser positivo y en dólares.');
     if (!['income', 'expense', 'transfer', 'loan', 'debt_payment'].includes(m.kind))
-        throw new UserInputError('Tipo de movimiento no disponible en esta etapa.');
+        throw new UserInputError('Tipo de transacción no disponible en esta etapa.');
     if (!['manual', 'recurring', 'extraordinary'].includes(m.incomeType) || !['personal', 'business', 'mixed', 'unknown'].includes(m.useKind))
         throw new UserInputError('Clasificación no válida.');
     if (!['cash', 'check', 'debit', 'credit', 'bank', 'other'].includes(m.paymentMethod || ''))

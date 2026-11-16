@@ -24,11 +24,11 @@ export function PaymentForm({bill,store,movements,close,saved}:{bill:Bill;store:
   <Field label="Importe pagado (USD)" testID="bill-paid-amount" value={amount} onChangeText={v=>{setAmount(v);setSimilar(false);}} decimal/>
   <Field label="Fecha del pago (AAAA-MM-DD)" testID="bill-paid-date" value={date} onChangeText={v=>{setDate(v);setSimilar(false);}}/>
   <Choices label="Método del pago" value={method} options={Object.entries(paymentLabels).filter(([key])=>bill.paymentKind==='expense' || key!=='credit') as [PaymentMethod,string][]} onChange={v=>{setMethod(v);setSimilar(false);}}/>
-  <Choices label="Movimiento del pago" value={existing} options={[[ 'new','Crear un movimiento'],...candidates.map(m=>[m.id,`${m.description} · ${formatMoney(m.amountCents)} · ${m.date}`] as const)]} onChange={v=>{
+  <Choices label="Transacción del pago" value={existing} options={[[ 'new','Crear una transacción'],...candidates.map(m=>[m.id,`${m.description} · ${formatMoney(m.amountCents)} · ${m.date}`] as const)]} onChange={v=>{
    setExisting(v);setSimilar(false);const m=candidates.find(row=>row.id===v);if(m){setAmount(inputAmount(m.amountCents));setDate(m.date);setMethod(m.paymentMethod as PaymentMethod);}
   }}/>
-  <Body muted>{existing==='new'?'Se creará un solo movimiento vinculado a esta factura.':'Se conservará el movimiento elegido, sin sumar otro. Debe coincidir exactamente con los datos de pago.'} Se muestran hasta 100 movimientos recientes; puedes buscarlos primero en Mi dinero.</Body>
+  <Body muted>{existing==='new'?'Se creará un solo transacción vinculada a esta factura.':'Se conservará la transacción elegido, sin sumar otro. Debe coincidir exactamente con los datos de pago.'} Se muestran hasta 100 transacciones recientes; puedes buscarlos primero en Mi dinero.</Body>
   <ErrorNotice message={error}/>{!busy?<ActionButton title="Confirmar pago registrado" testID="bill-confirm-payment" onPress={()=>void save()}/>:null}
-  {similar && !busy?<Card><Body>Revisa el movimiento coincidente antes de continuar. Si son dos pagos distintos, confirma expresamente.</Body><ActionButton title="Confirmo que es otro pago distinto" secondary onPress={()=>void save(true)}/></Card>:null}
+  {similar && !busy?<Card><Body>Revisa la transacción coincidente antes de continuar. Si son dos pagos distintos, confirma expresamente.</Body><ActionButton title="Confirmo que es otro pago distinto" secondary onPress={()=>void save(true)}/></Card>:null}
  </Sheet>;
 }

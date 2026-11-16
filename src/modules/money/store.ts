@@ -16,7 +16,7 @@ export interface SqlDb {
     getFirstAsync<T>(sql: string, ...params: (string | number | null)[]): Promise<T | null>;
 }
 export class DuplicateMovementError extends UserInputError {
-    constructor() { super('Ya hay un movimiento con la misma fecha, descripción e importe. Revisa el historial antes de guardar otro.'); }
+    constructor() { super('Ya hay una transacción con la misma fecha, descripción e importe. Revisa el historial antes de guardar otro.'); }
 }
 export const movementSelect = `SELECT id,idempotency_key AS idempotencyKey,kind,amount_cents AS amountCents,currency,date,description,
  category_id AS categoryId,payment_method AS paymentMethod,tax_review AS taxReview,use_kind AS useKind,gross_cents AS grossCents,
@@ -65,7 +65,7 @@ export class MoneyStore {
             return;
         const category = await this.db.getFirstAsync<Category>('SELECT id,name,kind,archived FROM categories WHERE id=?', m.categoryId);
         if (!category || !['income', 'expense'].includes(m.kind) || category.kind !== m.kind)
-            throw new UserInputError('La categoría no corresponde al movimiento.');
+            throw new UserInputError('La categoría no corresponde a la transacción.');
         // Una categoría archivada conserva su historia; no se permite en movimientos nuevos.
         if (category.archived) {
             const old = await this.db.getFirstAsync<{
@@ -107,7 +107,7 @@ export class MoneyStore {
     private async existing(id: string, version: number) {
         const m = await this.db.getFirstAsync<LedgerMovement>(movementSelect + ' WHERE id=?', id);
         if (!m || m.version !== version)
-            throw new UserInputError('El movimiento cambió. Cierra esta ficha y vuelve a abrirla.');
+            throw new UserInputError('La transacción cambió. Cierra esta ficha y vuelve a abrirla.');
         return readMovement(m);
     }
     private async guardLinks(id: string, allowDocuments = false) {
@@ -119,7 +119,7 @@ export class MoneyStore {
     (SELECT COUNT(*) FROM tax_records WHERE movement_id=?) +
     (SELECT COUNT(*) FROM tax_statement_movements l JOIN tax_statements s ON s.id=l.statement_id WHERE l.movement_id=? AND s.status NOT IN ('corrected','not_applicable'))) AS n`, id, id, id, id, Number(allowDocuments), id, id);
         if (linked?.n)
-            throw new UserInputError('Este movimiento está vinculado a otra sección. Debe corregirse junto con su registro de origen.');
+            throw new UserInputError('Esta transacción está vinculada a otra sección. Debe corregirse junto con su registro de origen.');
     }
     private async revision(m: LedgerMovement, action: string, reason: string) {
         if (!reason.trim() || reason.length > 240)
@@ -132,7 +132,7 @@ export class MoneyStore {
         return this.write(async () => {
             const old = await this.existing(m.id, m.version);
             if (old.deletedAt)
-                throw new UserInputError('Restaura el movimiento antes de editarlo.');
+                throw new UserInputError('Restaura la transacción antes de editarla.');
             if (old.idempotencyKey !== m.idempotencyKey || old.scheduleId !== m.scheduleId || old.occurrenceDate !== m.occurrenceDate || old.incomeType === 'recurring' && m.incomeType !== 'recurring')
                 throw new UserInputError('No se pueden cambiar los vínculos de recurrencia.');
             if (old.scheduleId && m.kind !== 'income')
@@ -151,7 +151,7 @@ export class MoneyStore {
             if (documentReview) {
                 const docs = await this.db.getAllAsync<{ id: string }>("SELECT * FROM documents WHERE movement_id=? AND status<>'corrected' AND deleted_at IS NULL", m.id);
                 for (const doc of docs) {
-                    await this.db.runAsync('INSERT INTO document_events(document_id,reason,before_json,recorded_at) VALUES(?,?,?,?)', doc.id, 'Movimiento corregido: ' + auditReason, JSON.stringify(doc), new Date().toISOString());
+                    await this.db.runAsync('INSERT INTO document_events(document_id,reason,before_json,recorded_at) VALUES(?,?,?,?)', doc.id, 'Transacción corregida: ' + auditReason, JSON.stringify(doc), new Date().toISOString());
                     await this.db.runAsync("UPDATE documents SET status='pending',version=version+1 WHERE id=?", doc.id);
                 }
             }
@@ -162,6 +162,11 @@ export class MoneyStore {
         const document=await this.read(db=>db.getFirstAsync<{id:string;version:number}>("SELECT id,version FROM documents WHERE movement_id=? AND deleted_at IS NULL AND status<>'corrected' ORDER BY rowid DESC LIMIT 1",m.id));
         return this.edit(m,undefined,allowDuplicate,document??undefined,expenseAnswers);
     }
+    /** Same reversible deletion and link guards as the detail view, without a confirmation prompt. */
+    async deleteFromHistory(m:LedgerMovement){
+        const document=await this.read(db=>db.getFirstAsync<{id:string;version:number}>("SELECT id,version FROM documents WHERE movement_id=? AND deleted_at IS NULL AND status<>'corrected' ORDER BY rowid DESC LIMIT 1",m.id));
+        return this.setDeleted(m.id,m.version,true,'Eliminación desde el historial de gastos',document??undefined);
+    }
     async setDeleted(id: string, version: number, deleted: boolean, reason: string, documentReview?: { id: string; version: number }) {
         return this.write(async () => {
             const old = await this.existing(id, version);
@@ -169,7 +174,7 @@ export class MoneyStore {
                 return;
             if (documentReview) {
                 const doc = await this.db.getFirstAsync<{ version: number; status: string; removed: string | null }>('SELECT version,status,deleted_at AS removed FROM documents WHERE id=? AND movement_id=?', documentReview.id, id);
-                if (!doc || doc.removed || doc.status === 'corrected' || doc.version !== documentReview.version) throw new UserInputError('Abre el comprobante vigente antes de retirar o restaurar el movimiento.');
+                if (!doc || doc.removed || doc.status === 'corrected' || doc.version !== documentReview.version) throw new UserInputError('Abre el comprobante vigente antes de retirar o restaurar la transacción.');
             }
             await this.guardLinks(id, !!documentReview);
             await this.revision(old, deleted ? 'delete' : 'restore', reason);
@@ -178,7 +183,7 @@ export class MoneyStore {
             if (documentReview) {
                 const docs = await this.db.getAllAsync<{ id: string }>("SELECT * FROM documents WHERE movement_id=? AND status<>'corrected' AND deleted_at IS NULL", id);
                 for (const doc of docs) {
-                    await this.db.runAsync('INSERT INTO document_events(document_id,reason,before_json,recorded_at) VALUES(?,?,?,?)', doc.id, (deleted ? 'Movimiento retirado: ' : 'Movimiento restaurado: ') + reason.trim(), JSON.stringify(doc), now);
+                    await this.db.runAsync('INSERT INTO document_events(document_id,reason,before_json,recorded_at) VALUES(?,?,?,?)', doc.id, (deleted ? 'Transacción retirada: ' : 'Transacción restaurada: ') + reason.trim(), JSON.stringify(doc), now);
                     await this.db.runAsync("UPDATE documents SET status='pending',version=version+1 WHERE id=?", doc.id);
                 }
             }

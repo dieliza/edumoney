@@ -39,7 +39,7 @@ export default function BusinessLedgerScreen() {
  let totals:ReturnType<typeof businessTotals>|null=null,totalsError='';
  try{totals=businessTotals(entries,projectId||undefined);}catch(e){totalsError=userMessage(e);}
  async function saved(){await load();setNotice('Información comercial guardada localmente.');}
- return <Screen back title="Movimientos de Negocio" demo={false} subtitle="Ingresos, gastos, recibos y reservas locales." keyboardForm>
+ return <Screen back title="Transacciones de Negocio" demo={false} subtitle="Ingresos, gastos, recibos y reservas locales." keyboardForm>
   <ErrorNotice message={error}/>{notice?<Card row><Body>{notice}</Body></Card>:null}
   {!store?<Card row><Body>Abriendo registros comerciales…</Body></Card>:null}
   <Choices label="Vista por titular legal" value={holderId} options={[["","Seleccionar titular"],...data.holders.map(h=>[h.id,h.legalName] as const)]} onChange={id=>{setHolder(id);setProject('');setNotice('');setLimit(30);}}/>
@@ -62,7 +62,7 @@ export default function BusinessLedgerScreen() {
    </Card>
    <ActionButton title="Preparar exportación para el CPA" testID="business-export" secondary onPress={()=>{try{businessExport(data,holderId,projectId||null,[]);setExporting(true);}catch(e){setError(userMessage(e));}}}/>
    <SectionHeading title="Registros y recibos"/>
-   {!entries.length?<Card row><Body>No hay movimientos comerciales en esta vista. Los formularios empiezan en blanco.</Body></Card>:null}
+   {!entries.length?<Card row><Body>No hay transacciones comerciales en esta vista. Los formularios empiezan en blanco.</Body></Card>:null}
    {entries.slice(0,limit).map(e=>{
     const movement=data.movements.find(m=>m.id===e.movementId),documents=data.documents.filter(d=>d.movementId===e.movementId);
     const share=projectId?entryRows(e).find(a=>a.projectId===projectId):null;
@@ -72,7 +72,7 @@ export default function BusinessLedgerScreen() {
      {projectId?<Body>Importe del registro completo: {formatMoney(e.amountCents)}. Arriba se muestra únicamente la parte de este proyecto.</Body>:null}
      <Body>Uso: {useLabels[e.useKind]}{e.useKind==='mixed'?` · ${(e.businessBps??0)/100}% comercial`:''} · Parte comercial: {commercial===null?'Pendiente':formatMoney(commercial)}</Body>
      <Body>{e.justification}</Body><Body>{cpaLabels[e.cpaStatus]}</Body>
-     {e.stale||e.deletedAt?<Body>{e.deletedAt?'Movimiento eliminado':'Movimiento modificado; conciliación pendiente'}. Excluido de totales.</Body>:null}
+     {e.stale||e.deletedAt?<Body>{e.deletedAt?'Transacción eliminada':'Transacción modificado; conciliación pendiente'}. Excluido de totales.</Body>:null}
      {entryRows(e).map(a=><Body key={a.projectId}>{data.projects.find(p=>p.id===a.projectId)?.name}: {formatMoney(a.amountCents)}</Body>)}
      {documents.map(d=><ActionButton key={d.id} title={`Ver recibo: ${d.description||d.id} · ${receiptStatus(d)}`} secondary onPress={()=>setViewReceipt(d)}/>)}
      {!documents.length?<Body>Comprobante pendiente de adjuntar.</Body>:null}

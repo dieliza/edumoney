@@ -17,7 +17,7 @@ export function GoalForm({initial,store,saved,close}:{initial?:Goal;store:GoalSt
  <Field label="Nombre de la meta" testID="goal-name" value={name} onChangeText={setName}/>
  <Choices<GoalKind> label="Tipo de meta" options={goalKinds} value={kind} onChange={setKind}/>
  <Field label="Cantidad objetivo" testID="goal-target" decimal value={target} onChangeText={setTarget}/>
- <Field label="Ahorro previo ya acumulado (opcional)" testID="goal-opening" decimal value={opening} onChangeText={setOpening}/><Body muted>Importe ya reservado antes de registrar aportaciones aquí. No crea ingresos ni movimientos. Al editar, cambia solo esa base previa; las aportaciones se conservan.</Body>
+ <Field label="Ahorro previo ya acumulado (opcional)" testID="goal-opening" decimal value={opening} onChangeText={setOpening}/><Body muted>Importe ya reservado antes de registrar aportaciones aquí. No crea ingresos ni transacciones. Al editar, cambia solo esa base previa; las aportaciones se conservan.</Body>
  <Field label="Fecha deseada AAAA-MM-DD (opcional)" testID="goal-date" value={date} onChangeText={setDate}/>
  <Choices<'weekly'|'monthly'> label="Frecuencia de aportación sugerida" options={[[ 'monthly','Mensual'],['weekly','Semanal']]} value={cadence} onChange={setCadence}/>
  {initial?<Field testID="goal-reason" label="Motivo del cambio" value={reason} onChangeText={setReason} multiline/>:null}<ErrorNotice message={error}/>

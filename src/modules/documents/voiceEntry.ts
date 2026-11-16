@@ -47,6 +47,6 @@ export function classifyVoiceEntry(text:string,categories:Category[],today:strin
  const active=categories.filter(c=>!c.archived&&c.kind===kind&&!isVoicePlaceholder(c.name));
  const matches=active.filter(c=>{const name=normal(c.name);const aliases=groups[name]??[name];return aliases.some(a=>new RegExp(`\\b${a.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}\\b`).test(s));});
  const category=matches.length===1?matches[0]:null;
- if(!category)reasons.push('Categoría por confirmar: elige o crea una categoría que describa el movimiento.');
+ if(!category)reasons.push('Categoría por confirmar: elige o crea una categoría que describa la transacción.');
  return {kind,amountCents,date,category,method,ready:reasons.length===0,needsPayment:needsPayment&&!!category,reasons};
 }

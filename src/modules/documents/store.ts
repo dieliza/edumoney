@@ -12,7 +12,7 @@ import { MoneyStore,movementSelect,readMovement,type SqlDb } from '../money/stor
 import type { LedgerMovement } from '../money/types';
 import { validateImage } from './domain';
 import type { DocumentInput,DocumentsSnapshot,StoredDocument } from './types';
-export class DuplicateDocumentError extends UserInputError {constructor(public documentId:string){super('Este comprobante ya existe. Abre su ficha; no se registró otro movimiento.');}}
+export class DuplicateDocumentError extends UserInputError {constructor(public documentId:string){super('Este comprobante ya existe. Abre su ficha; no se registró otra transacción.');}}
 const select=`SELECT id,movement_id AS movementId,bill_id AS billId,sha256,encrypted_path AS encryptedPath,supersedes_id AS supersedesId,status,source,record_kind AS kind,description,document_date AS date,amount_cents AS amountCents,notes,mime,created_at AS createdAt,deleted_at AS deletedAt,copy_deleted_at AS copyDeletedAt,version,(SELECT record_json FROM document_readings WHERE document_id=documents.id) AS readingJson FROM documents`;
 const target=(p:DocumentInput)=>({movementId:p.kind==='paid_expense'||p.kind==='paid_income'?`document-movement:${p.id}`:p.movementId,billId:p.kind==='pending_bill'?`document-bill:${p.id}`:p.billId});
 const canonical=(d:Pick<StoredDocument,'description'|'date'|'amountCents'|'notes'|'kind'|'source'|'supersedesId'|'movementId'|'billId'>)=>JSON.stringify([d.description.trim(),d.date,d.amountCents,d.notes.trim(),d.kind,d.source,d.supersedesId,d.movementId,d.billId]);
@@ -40,15 +40,15 @@ export class DocumentStore {
  }
  const financial=['paid_expense','paid_income','pending_bill'].includes(p.kind);
  if(financial&&(!p.date||p.amountCents===null))throw new UserInputError('Confirma fecha e importe antes de crear el registro financiero.');
- if((p.kind==='paid_expense'||p.kind==='paid_income')&&p.date!>this.today())throw new UserInputError('No se confirma como recibido o pagado un movimiento futuro.');
+ if((p.kind==='paid_expense'||p.kind==='paid_income')&&p.date!>this.today())throw new UserInputError('No se confirma como recibido o pagado una transacción futuro.');
  if(financial&&(p.movementId||p.billId))throw new UserInputError('Para vincular un registro existente elige Adjuntar; no crees otro.');
- if(p.kind==='attachment'&&Number(!!p.movementId)+Number(!!p.billId)!==1)throw new UserInputError('Elige un movimiento o una factura existente, solo uno.');
- if(p.kind==='note'&&(p.movementId||p.billId||!p.notes.trim()))throw new UserInputError('Una nota necesita texto confirmado y no crea movimientos.');
+ if(p.kind==='attachment'&&Number(!!p.movementId)+Number(!!p.billId)!==1)throw new UserInputError('Elige una transacción o una factura existente, solo uno.');
+ if(p.kind==='note'&&(p.movementId||p.billId||!p.notes.trim()))throw new UserInputError('Una nota necesita texto confirmado y no crea transacciones.');
  const links=target(p);const material=p.image?`image:${p.image.mime}:${p.image.base64}`:`text:${JSON.stringify([p.description.trim(),p.date,p.amountCents,p.notes.trim(),p.rawText,p.kind,...(p.incomeStatement?['income-statement',p.incomeStatement.reference]:[])])}`;const sha=await this.digest(material);
  if(!/^[a-f0-9]{64}$/.test(sha))throw new Error('Huella no válida');
  return this.ledger.transaction(async db=>{
  const old=await db.getFirstAsync<StoredDocument>(select+' WHERE id=?',p.id);
- if(old){if((old.readingJson??null)!==(p.reading?JSON.stringify(p.reading):null))throw new UserInputError('El desglose reconocido del reintento no coincide.');const detail=await db.getFirstAsync<{json:string}>('SELECT record_json AS json FROM income_statements WHERE document_id=?',p.id);if((detail?.json??null)!==(p.incomeStatement?JSON.stringify(p.incomeStatement):null))throw new UserInputError('El desglose del reintento no coincide.');if(old.sha256===sha&&canonical(old)===canonical({...p,...links})){const original=await db.getFirstAsync<{text:string|null}>('SELECT raw_text AS text FROM documents WHERE id=?',old.id);if(original?.text!==p.rawText)throw new UserInputError('El texto del reintento no coincide.');if(p.kind==='pending_bill'){const bill=await db.getFirstAsync<{category:string|null}>('SELECT category_id AS category FROM bills WHERE id=?',old.billId);if(bill?.category!==p.categoryId)throw new UserInputError('La categoría del reintento no coincide.');}if(p.kind==='paid_expense'||p.kind==='paid_income'){const m=await db.getFirstAsync<{method:string;category:string|null}>('SELECT payment_method AS method,category_id AS category FROM movements WHERE id=?',old.movementId);if(m?.method!==p.paymentMethod||m?.category!==p.categoryId)throw new UserInputError('El reintento no coincide con el movimiento original.');}return old.id;}throw new UserInputError('El identificador ya corresponde a otro documento.');}
+ if(old){if((old.readingJson??null)!==(p.reading?JSON.stringify(p.reading):null))throw new UserInputError('El desglose reconocido del reintento no coincide.');const detail=await db.getFirstAsync<{json:string}>('SELECT record_json AS json FROM income_statements WHERE document_id=?',p.id);if((detail?.json??null)!==(p.incomeStatement?JSON.stringify(p.incomeStatement):null))throw new UserInputError('El desglose del reintento no coincide.');if(old.sha256===sha&&canonical(old)===canonical({...p,...links})){const original=await db.getFirstAsync<{text:string|null}>('SELECT raw_text AS text FROM documents WHERE id=?',old.id);if(original?.text!==p.rawText)throw new UserInputError('El texto del reintento no coincide.');if(p.kind==='pending_bill'){const bill=await db.getFirstAsync<{category:string|null}>('SELECT category_id AS category FROM bills WHERE id=?',old.billId);if(bill?.category!==p.categoryId)throw new UserInputError('La categoría del reintento no coincide.');}if(p.kind==='paid_expense'||p.kind==='paid_income'){const m=await db.getFirstAsync<{method:string;category:string|null}>('SELECT payment_method AS method,category_id AS category FROM movements WHERE id=?',old.movementId);if(m?.method!==p.paymentMethod||m?.category!==p.categoryId)throw new UserInputError('El reintento no coincide con la transacción original.');}return old.id;}throw new UserInputError('El identificador ya corresponde a otro documento.');}
  let resolvedVoice:StoredDocument|null=null;
  if(p.resolveVoiceNote){if(p.source!=='voice'||!['paid_income','paid_expense'].includes(p.kind)||p.resolveVoiceNote.id===p.id)throw new UserInputError('Solo un dictado confirmado puede resolver un pendiente.');resolvedVoice=await this.voiceNote(db,p.resolveVoiceNote.id,p.resolveVoiceNote.version);}
  const duplicate=await db.getFirstAsync<{id:string}>('SELECT id FROM documents WHERE sha256=?',sha);if(duplicate)throw new DuplicateDocumentError(duplicate.id);
@@ -60,11 +60,11 @@ export class DocumentStore {
  if(p.supersedesId){
  const previous=await db.getFirstAsync<StoredDocument>(select+' WHERE id=?',p.supersedesId);
  if(!previous||previous.deletedAt||previous.version!==p.expectedDocumentVersion)throw new UserInputError('El documento anterior cambió. Vuelve a abrirlo.');
- if(financial||previous.movementId!==links.movementId||previous.billId!==links.billId)throw new UserInputError('Corregir un comprobante conserva su vínculo financiero; no crea otro movimiento.');
+ if(financial||previous.movementId!==links.movementId||previous.billId!==links.billId)throw new UserInputError('Corregir un comprobante conserva su vínculo financiero; no crea otra transacción.');
  if(await db.getFirstAsync('SELECT id FROM documents WHERE supersedes_id=?',previous.id))throw new UserInputError('Este documento ya tiene una corrección; abre la versión más reciente.');
  }
  if(p.kind==='attachment'){
- if(p.movementId){const m=await db.getFirstAsync<LedgerMovement>(movementSelect+' WHERE id=?',p.movementId);if(!m||m.deletedAt||m.version!==p.expectedMovementVersion)throw new UserInputError('El movimiento cambió o está eliminado. Vuelve a revisarlo.');}
+ if(p.movementId){const m=await db.getFirstAsync<LedgerMovement>(movementSelect+' WHERE id=?',p.movementId);if(!m||m.deletedAt||m.version!==p.expectedMovementVersion)throw new UserInputError('La transacción cambió o está eliminado. Vuelve a revisarlo.');}
  if(p.billId){const b=await db.getFirstAsync<{version:number;voided:string|null}>('SELECT version,voided_at AS voided FROM bills WHERE id=?',p.billId);if(!b||b.voided||b.version!==p.expectedBillVersion)throw new UserInputError('La factura cambió. Vuelve a revisarla.');}
  }
  if(p.incomeStatement)await validateStatementRules(db,p.incomeStatement,p.date!);
@@ -73,7 +73,7 @@ export class DocumentStore {
  const kind=p.kind==='paid_expense'?'expense':'income';
  const m:LedgerMovement={id:links.movementId!,idempotencyKey:`document:${p.id}`,kind,amountCents:cents(p.amountCents!),currency:'USD',date:p.date!,description:p.description.trim(),categoryId:p.categoryId,paymentMethod:p.paymentMethod,taxReview:p.context==='business'&&!!p.incomeStatement,useKind:p.context==='business'?'business':'unknown',grossCents:p.incomeStatement?.grossCents==null?null:cents(p.incomeStatement.grossCents),withholdingCents:p.incomeStatement?statementTotals(p.incomeStatement).withholding:null,createdAt:now,updatedAt:now,deletedAt:null,incomeType:'manual',scheduleId:null,occurrenceDate:null,version:1};validateMovement(m);
  if(p.categoryId){const c=await db.getFirstAsync<{kind:string;archived:number}>('SELECT kind,archived FROM categories WHERE id=?',p.categoryId);if(!c||c.archived||c.kind!==kind)throw new UserInputError('Selecciona una categoría activa del tipo correcto.');}
- if(!p.confirmSimilar&&await db.getFirstAsync('SELECT id FROM movements WHERE deleted_at IS NULL AND kind=? AND date=? AND amount_cents=?',kind,p.date,p.amountCents))throw new UserInputError('Hay un movimiento similar. Revisa si debes adjuntar al existente o confirma que es otro distinto.');
+ if(!p.confirmSimilar&&await db.getFirstAsync('SELECT id FROM movements WHERE deleted_at IS NULL AND kind=? AND date=? AND amount_cents=?',kind,p.date,p.amountCents))throw new UserInputError('Hay una transacción similar. Revisa si debes adjuntar al existente o confirma que es otro distinto.');
  await new MovementRepository(db).create(m);
  if(kind==='expense'&&p.context==='business')await recordExpenseGuide(db,m,p.expenseAnswers);
  }else if(p.kind==='pending_bill'){
@@ -87,12 +87,12 @@ export class DocumentStore {
  if(p.incomeStatement)await db.runAsync('INSERT INTO income_statements(document_id,movement_id,record_json,created_at) VALUES(?,?,?,?)',p.id,links.movementId,JSON.stringify(p.incomeStatement),now);
  if(p.keepImage)await db.runAsync('INSERT INTO document_contents(document_id,base64) VALUES(?,?)',p.id,p.image!.base64);
  if(p.supersedesId)await db.runAsync("UPDATE documents SET status='corrected',version=version+1 WHERE id=?",p.supersedesId);
- if(resolvedVoice){const tombstone=await this.digest('resolved-voice:'+resolvedVoice.id+':'+resolvedVoice.sha256);await db.runAsync('UPDATE documents SET deleted_at=?,sha256=?,version=version+1 WHERE id=?',now,tombstone,resolvedVoice.id);await db.runAsync('INSERT INTO document_events(document_id,reason,before_json,recorded_at) VALUES(?,?,?,?)',resolvedVoice.id,'Dictado confirmado como movimiento: '+p.id,JSON.stringify(resolvedVoice),now);}
+ if(resolvedVoice){const tombstone=await this.digest('resolved-voice:'+resolvedVoice.id+':'+resolvedVoice.sha256);await db.runAsync('UPDATE documents SET deleted_at=?,sha256=?,version=version+1 WHERE id=?',now,tombstone,resolvedVoice.id);await db.runAsync('INSERT INTO document_events(document_id,reason,before_json,recorded_at) VALUES(?,?,?,?)',resolvedVoice.id,'Dictado confirmado como transacción: '+p.id,JSON.stringify(resolvedVoice),now);}
  return p.id;
  });}
  private async voiceNote(db:SqlDb,id:string,version:number){
  const d=await db.getFirstAsync<StoredDocument>(select+' WHERE id=?',id);
- if(!d||d.version!==version||d.source!=='voice'||d.kind!=='note'||d.movementId||d.billId||d.deletedAt||d.status==='corrected'||d.supersedesId||await db.getFirstAsync('SELECT id FROM documents WHERE supersedes_id=?',id))throw new UserInputError('Abre el dictado pendiente actual. Los movimientos confirmados se corrigen en Historial.');
+ if(!d||d.version!==version||d.source!=='voice'||d.kind!=='note'||d.movementId||d.billId||d.deletedAt||d.status==='corrected'||d.supersedesId||await db.getFirstAsync('SELECT id FROM documents WHERE supersedes_id=?',id))throw new UserInputError('Abre el dictado pendiente actual. Las transacciones confirmados se corrigen en Historial.');
  return d;
  }
  async updateVoiceNote(id:string,version:number,text:string){

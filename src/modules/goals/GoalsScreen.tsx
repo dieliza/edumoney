@@ -38,7 +38,7 @@ export default function GoalsScreen(){
  {data.contributions.filter(c=>c.goalId===detail.id).slice(0,limit).map(c=><Card row key={c.id}><Body>{c.date} · {formatMoney(c.amountCents)} · {c.reversedAt?'Revertida':'Vigente'}</Body>{c.reversedAt?<Body>{c.reversalReason}</Body>:!busy?<ActionButton title={`Revertir aportación de ${formatMoney(c.amountCents)}`} secondary onPress={()=>void action(()=>store.reverse(c.id,reason))}/>:null}</Card>)}
  {data.contributions.filter(c=>c.goalId===detail.id).length>limit?<ActionButton title="Ver más aportaciones" secondary onPress={()=>setLimit(limit+30)}/>:null}
  <SectionHeading title="Cambios de la meta" onSurface/>{data.events.filter(e=>e.goalId===detail.id).slice(0,limit).map((e,i)=><Body key={i}>{e.recordedAt.slice(0,10)} · {e.reason}</Body>)}
- <Field label="Motivo para revertir o archivar" value={reason} onChangeText={setReason} multiline/><Body muted>Revertir conserva el historial. Si se creó el movimiento aquí, retira ese flujo; si ya existía, solo quita su vínculo. Para corregir importe o fecha, revierte y vuelve a registrar.</Body><ErrorNotice message={error}/>
+ <Field label="Motivo para revertir o archivar" value={reason} onChangeText={setReason} multiline/><Body muted>Revertir conserva el historial. Si se creó la transacción aquí, retira ese flujo; si ya existía, solo quita su vínculo. Para corregir importe o fecha, revierte y vuelve a registrar.</Body><ErrorNotice message={error}/>
  {!busy?<ActionButton title={detail.archived?'Reactivar meta':'Archivar meta'} secondary onPress={()=>void action(async()=>{await store.edit(detail,detail.version,reason,!detail.archived);setDetailId(null);})}/>:null}
  </Sheet>:null}
  </Screen>;

@@ -1,1 +1,1 @@
-export const WEB_BUILD = '2026.11.16.7';
+export const WEB_BUILD = '2026.11.16.8';

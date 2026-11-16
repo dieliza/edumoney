@@ -40,8 +40,8 @@ export function BusinessReceiptForm({movement,done,close}:{movement:LedgerMoveme
   {reading?.details?<ReadingDetailsForm context={movement.kind==='income'?'income':movement.kind==='expense'?'expense':undefined} documentType={reading.document_type} value={reading.details} onChange={details=>setReading({...reading,details})}/>:null}
   <Field label="Descripción del recibo" value={description} onChangeText={setDescription} maxLength={240}/>
   <DateField label="Fecha confirmada del recibo (opcional)" value={date} onChangeText={setDate}/><Field label="Total confirmado del recibo USD (opcional)" value={amount} onChangeText={setAmount} decimal/>
-  <Body>El total del recibo puede diferir del depósito neto o del movimiento. Confirma su importe real y explica diferencias en las notas; adjuntar no modifica el movimiento.</Body>
+  <Body>El total del recibo puede diferir del depósito neto o de la transacción. Confirma su importe real y explica diferencias en las notas; adjuntar no modifica la transacción.</Body>
   <Field label="Notas del comprobante" value={notes} onChangeText={setNotes} multiline maxLength={20000}/>
-  <Choices label="Confirmación" value={confirmed} options={[["no","Todavía revisando"],["yes","Confirmo recibo y movimiento vinculado"]]} onChange={setConfirmed}/>
+  <Choices label="Confirmación" value={confirmed} options={[["no","Todavía revisando"],["yes","Confirmo recibo y transacción vinculada"]]} onChange={setConfirmed}/>
  </Sheet>;
 }

@@ -16,7 +16,7 @@ const selectPayment = `SELECT p.id,p.bill_id AS billId,p.movement_id AS movement
  p.created_movement AS createdMovement,r.payment_id IS NOT NULL AS reversed,r.reason FROM bill_payments p JOIN movements m ON m.id=p.movement_id LEFT JOIN bill_payment_reversals r ON r.payment_id=p.id`;
 const canonical = (b: BillInput) => JSON.stringify([b.provider.trim(),b.amountCents,b.dueDate,b.categoryId,b.paymentKind,b.reminderDays]);
 export class SimilarBillError extends UserInputError { constructor(){super('Ya hay una factura con ese proveedor, importe y vencimiento. Revisa si es la misma antes de guardar otra.');} }
-export class SimilarBillPaymentError extends UserInputError { constructor(){super('Hay un movimiento con ese importe, fecha y tipo. Revisa si es el mismo pago: puedes vincularlo o confirmar que es otro.');} }
+export class SimilarBillPaymentError extends UserInputError { constructor(){super('Hay una transacción con ese importe, fecha y tipo. Revisa si es el mismo pago: puedes vincularlo o confirmar que es otro.');} }
 export class BillsStore {
  constructor(private ledger: MoneyStore, private today:()=>string=localToday) {}
  private async bill(db:SqlDb,id:string,version?:number) {
@@ -115,15 +115,15 @@ export class BillsStore {
     return;
    }
    const b=await this.bill(db,p.billId,p.expectedVersion);
-   if(b.debtId)throw new UserInputError('Confirma esta factura desde Ordenar mis pagos para actualizar su deuda sin duplicar el movimiento.');
+   if(b.debtId)throw new UserInputError('Confirma esta factura desde Ordenar mis pagos para actualizar su deuda sin duplicar la transacción.');
    if(b.voidedAt || p.amountCents>outstanding(b))throw new UserInputError('El pago supera el pendiente o la factura está anulada.');
    if(b.paymentKind==='debt_payment' && p.paymentMethod==='credit')throw new UserInputError('Un pago de deuda no se registra como compra con crédito.');
    let movementId=p.existingMovementId;
    if(movementId){
     const m=await db.getFirstAsync<{kind:string;amountCents:number;date:string;paymentMethod:string;deletedAt:string|null}>(`SELECT kind,amount_cents AS amountCents,date,payment_method AS paymentMethod,deleted_at AS deletedAt FROM movements WHERE id=?`,movementId);
-    if(!m || m.deletedAt || m.kind!==b.paymentKind || m.amountCents!==p.amountCents || m.date!==p.date || m.paymentMethod!==p.paymentMethod)throw new UserInputError('El movimiento debe coincidir exactamente en tipo, importe, fecha y método.');
+    if(!m || m.deletedAt || m.kind!==b.paymentKind || m.amountCents!==p.amountCents || m.date!==p.date || m.paymentMethod!==p.paymentMethod)throw new UserInputError('La transacción debe coincidir exactamente en tipo, importe, fecha y método.');
     const linked=await db.getFirstAsync<{n:number}>(`SELECT (SELECT COUNT(*) FROM bill_payments WHERE movement_id=? AND reversed_at IS NULL)+(SELECT COUNT(*) FROM goal_contributions WHERE movement_id=?) AS n`,movementId,movementId);
-    if(linked?.n)throw new UserInputError('El movimiento ya tiene un vínculo de pago. Revisa su registro de origen.');
+    if(linked?.n)throw new UserInputError('La transacción ya tiene un vínculo de pago. Revisa su registro de origen.');
    }else{
     const similar=await db.getFirstAsync<{id:string}>('SELECT id FROM movements WHERE deleted_at IS NULL AND kind=? AND amount_cents=? AND date=? LIMIT 1',b.paymentKind,p.amountCents,p.date);
     if(similar && !p.confirmSimilar)throw new SimilarBillPaymentError();

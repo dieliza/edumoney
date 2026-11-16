@@ -19,7 +19,7 @@ async function reliefs(db:SqlDb){return db.getAllAsync<Relief>(reliefSQL+' ORDER
 async function payments(db:SqlDb){const rows=await db.getAllAsync<Omit<SavedPayment,'providerAtSave'>&{providerJSON:string}>(paymentSQL+' ORDER BY payment_date,sequence');return rows.map(({providerJSON,...p})=>({...p,providerAtSave:JSON.parse(providerJSON) as Provider}));}
 async function holderExists(db:SqlDb,id:string){if(!await db.getFirstAsync('SELECT id FROM business_holders WHERE id=?',id))throw new UserInputError('Selecciona un titular legal existente.');}
 async function entryLink(db:SqlDb,id:string|null,holderId:string,kind:'income'|'expense') {
- if(id&&!await db.getFirstAsync("SELECT e.id FROM business_entries e JOIN movements m ON m.id=e.movement_id WHERE e.id=? AND e.holder_id=? AND e.kind=? AND m.kind=e.kind AND m.deleted_at IS NULL AND m.version=e.movement_version",id,holderId,kind))throw new UserInputError('El movimiento comercial vinculado debe estar vigente, conciliado y pertenecer al titular.');
+ if(id&&!await db.getFirstAsync("SELECT e.id FROM business_entries e JOIN movements m ON m.id=e.movement_id WHERE e.id=? AND e.holder_id=? AND e.kind=? AND m.kind=e.kind AND m.deleted_at IS NULL AND m.version=e.movement_version",id,holderId,kind))throw new UserInputError('La transacción comercial vinculada debe estar vigente, conciliada y pertenecer al titular.');
 }
 export class BusinessObligationStore {
  constructor(private ledger:MoneyStore,private today=localToday){}

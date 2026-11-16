@@ -41,8 +41,8 @@ export class GoalStore {
  const movementId=p.existingMovementId??`goal-movement:${p.id}`;
  if(p.existingMovementId){
  const m=await db.getFirstAsync<LedgerMovement>(movementSelect+' WHERE id=?',movementId);
- if(!m||m.deletedAt||m.kind!=='goal_contribution'||m.amountCents!==p.amountCents||m.date!==p.date||m.paymentMethod!==p.paymentMethod)throw new UserInputError('El movimiento debe ser una aportación con el mismo importe, fecha y método.');
- if(await db.getFirstAsync(`SELECT id FROM goal_contributions WHERE movement_id=? AND reversed_at IS NULL UNION ALL SELECT id FROM bill_payments WHERE movement_id=? UNION ALL SELECT id FROM debt_payments WHERE movement_id=? AND reversed_at IS NULL`,movementId,movementId,movementId))throw new UserInputError('El movimiento ya está vinculado.');
+ if(!m||m.deletedAt||m.kind!=='goal_contribution'||m.amountCents!==p.amountCents||m.date!==p.date||m.paymentMethod!==p.paymentMethod)throw new UserInputError('La transacción debe ser una aportación con el mismo importe, fecha y método.');
+ if(await db.getFirstAsync(`SELECT id FROM goal_contributions WHERE movement_id=? AND reversed_at IS NULL UNION ALL SELECT id FROM bill_payments WHERE movement_id=? UNION ALL SELECT id FROM debt_payments WHERE movement_id=? AND reversed_at IS NULL`,movementId,movementId,movementId))throw new UserInputError('La transacción ya está vinculada.');
  }else{
  if(!p.confirmSimilar&&await db.getFirstAsync(`SELECT id FROM movements WHERE kind='goal_contribution' AND deleted_at IS NULL AND date=? AND amount_cents=?`,p.date,p.amountCents))throw new UserInputError('Existe una aportación similar. Revisa o confirma que es otra distinta.');
  const now=new Date().toISOString();await new MovementRepository(db).create({id:movementId,idempotencyKey:movementId,kind:'goal_contribution',amountCents:cents(p.amountCents),currency:'USD',date:p.date,description:`Aportación: ${g.name}`,categoryId:null,paymentMethod:p.paymentMethod,taxReview:false,useKind:'personal',grossCents:null,withholdingCents:null,createdAt:now,updatedAt:now,deletedAt:null});
@@ -55,7 +55,7 @@ export class GoalStore {
  const now=new Date().toISOString();
  if(p.createdMovement){
  const linked=await db.getFirstAsync<{n:number}>(`SELECT (SELECT COUNT(*) FROM documents WHERE movement_id=?)+(SELECT COUNT(*) FROM tax_records WHERE movement_id=?)+(SELECT COUNT(*) FROM bill_payments WHERE movement_id=?)+(SELECT COUNT(*) FROM debt_payments WHERE movement_id=?) AS n`,p.movementId,p.movementId,p.movementId,p.movementId);
- if(linked?.n)throw new UserInputError('Revisa primero los documentos u otros vínculos del movimiento.');
+ if(linked?.n)throw new UserInputError('Revisa primero los documentos u otros vínculos de la transacción.');
  const m=await db.getFirstAsync<LedgerMovement>(movementSelect+' WHERE id=?',p.movementId);await db.runAsync('INSERT INTO movement_revisions(movement_id,action,reason,before_json,recorded_at) VALUES(?,?,?,?,?)',p.movementId,'delete',reason.trim(),JSON.stringify(m),now);
  await db.runAsync('UPDATE movements SET deleted_at=?,updated_at=?,version=version+1 WHERE id=?',now,now,p.movementId);
  }

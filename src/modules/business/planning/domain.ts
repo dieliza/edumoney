@@ -24,7 +24,7 @@ export function panel(s:PlanningSnapshot,p:Plan,asOf:string){
  function cashOf(e:BusinessEntry){return e.paymentMethod==='credit'?0:e.paymentMethod==='other'?null:(e.kind==='income'?e.amountCents:-e.amountCents);}
  for(const e of entries){
   const inCash=e.date>=p.openingDate;
-  if(e.stale||e.deletedAt){pending.push(`${e.description}: movimiento modificado o eliminado; revisar conciliación.`);profitParts.push(null);if(inCash)cashParts.push(null);continue;}
+  if(e.stale||e.deletedAt){pending.push(`${e.description}: transacción modificado o eliminado; revisar conciliación.`);profitParts.push(null);if(inCash)cashParts.push(null);continue;}
   const t=treatmentsByEntry.get(e.id),tax=taxEntries.has(e.id);
   let role=tax?'tax':t?.role??(p.defaultOperating==='yes'?'operating':'pending');
   if(t&&t.entryVersion!==e.version){role='pending';pending.push(`${e.description}: clasificación anterior a la versión actual.`);}
@@ -40,7 +40,7 @@ export function panel(s:PlanningSnapshot,p:Plan,asOf:string){
  for(const r of s.records.cash.filter(r=>!r.voidedAt&&r.value.holderId===p.holderId)){
   const v=r.value;if(v.date<p.openingDate||v.date>asOf)continue;
   const m=v.movementId?movementsById.get(v.movementId):undefined;
-  if(v.movementId&&(!m||m.deletedAt||m.version!==v.movementVersion||m.amountCents!==v.amountCents)){cashParts.push(null);pending.push(`${v.reference}: movimiento de efectivo cambió; conciliar.`);}
+  if(v.movementId&&(!m||m.deletedAt||m.version!==v.movementVersion||m.amountCents!==v.amountCents)){cashParts.push(null);pending.push(`${v.reference}: transacción de efectivo cambió; conciliar.`);}
   else cashParts.push(v.amountCents===null?null:v.direction==='in'?v.amountCents:-v.amountCents);
  }
  for(const v of activePayments.filter(v=>v.status==='paid'&&v.date>=p.openingDate&&v.date<=asOf)){
@@ -51,7 +51,7 @@ export function panel(s:PlanningSnapshot,p:Plan,asOf:string){
  const profitCents=knownSum(profitParts),cashChangeCents=knownSum(cashParts);
  if(p.openingDate>asOf)pending.push('La fecha de efectivo inicial es posterior al corte; revisar antes de calcular saldo.');
  if(p.openingCashCents===null)pending.push('Indicar efectivo inicial al comenzar la fecha base.');
- if(p.cashComplete!=='yes')pending.push('Confirmar que se incluyeron cobros, compras con crédito, pagos de tarjetas, préstamos y movimientos de propietarios.');
+ if(p.cashComplete!=='yes')pending.push('Confirmar que se incluyeron cobros, compras con crédito, pagos de tarjetas, préstamos y transacciones de propietarios.');
  const cashCents=p.cashComplete==='yes'&&p.openingCashCents!==null&&p.openingDate<=asOf?knownSum([p.openingCashCents,cashChangeCents]):null;
  const cutoffEnd=new Date(asOf+'T23:59:59.999').getTime();
  const reserves=Object.fromEntries((['tax','ivu','payroll'] as const).map(k=>{const r=s.ledger.reserves.find(r=>r.holderId===p.holderId&&r.kind===k);const timestamp=r?new Date(r.updatedAt).getTime():NaN;return [k,!r||!Number.isFinite(timestamp)||timestamp>cutoffEnd?null:r.amountCents];})) as Record<'tax'|'ivu'|'payroll',number|null>;
@@ -85,7 +85,7 @@ export function compareScenario(base:ReturnType<typeof panel>,v:Scenario){
  const dueCents=knownSum([base.dueCents,v.taxChangeCents]);
  const needReserveCents=dueCents===null||base.taxReserveAllocatedCents===null?null:dueCents<=base.taxReserveAllocatedCents?0:subtract(dueCents,base.taxReserveAllocatedCents);
  const assumedFinancingCents=v.equipmentCostCents===null||v.equipmentCashCents===null?null:subtract(v.equipmentCostCents,v.equipmentCashCents);
- return {profitDelta,cashDelta,profitCents,cashCents,availableCents,dueCents,needReserveCents,assumedFinancingCents,explanations:['Las ventas cambian el resultado; los cobros cambian el efectivo. No se supone que toda venta se cobre inmediatamente.','Los gastos operativos y sus pagos se introducen por separado. Una reducción se escribe negativa.','El equipo no se descuenta de inmediato de este resultado antes de depreciación; el efectivo baja solo por lo pagado. La diferencia es financiación/importe aún por atender del escenario.','El cambio contributivo es un supuesto declarado, no una tasa o deducción automática. Comparar no crea movimientos, pagos ni reservas.',v.assumptions]};
+ return {profitDelta,cashDelta,profitCents,cashCents,availableCents,dueCents,needReserveCents,assumedFinancingCents,explanations:['Las ventas cambian el resultado; los cobros cambian el efectivo. No se supone que toda venta se cobre inmediatamente.','Los gastos operativos y sus pagos se introducen por separado. Una reducción se escribe negativa.','El equipo no se descuenta de inmediato de este resultado antes de depreciación; el efectivo baja solo por lo pagado. La diferencia es financiación/importe aún por atender del escenario.','El cambio contributivo es un supuesto declarado, no una tasa o deducción automática. Comparar no crea transacciones, pagos ni reservas.',v.assumptions]};
 }
 export interface CalendarRow {key:string;name:string;period:string;date:string|null;status:string;source:string;note:string}
 export function calendar(s:PlanningSnapshot,p:Plan):CalendarRow[]{

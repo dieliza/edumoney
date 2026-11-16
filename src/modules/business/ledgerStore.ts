@@ -33,19 +33,19 @@ export class BusinessLedgerStore {
    if(!await db.getFirstAsync('SELECT id FROM business_holders WHERE id=?',p.holderId))throw new UserInputError('El titular ya no está disponible.');
    for(const a of p.allocations)if(!await db.getFirstAsync('SELECT id FROM business_projects WHERE id=? AND holder_id=?',a.projectId,p.holderId))throw new UserInputError('Cada proyecto debe pertenecer al titular seleccionado.');
    const movementId=p.existingMovementId??`business-movement:${p.id}`;
-   if(old&&(old.movementId!==movementId||old.holderId!==p.holderId))throw new UserInputError('Una corrección conserva el movimiento y el titular originales.');
+   if(old&&(old.movementId!==movementId||old.holderId!==p.holderId))throw new UserInputError('Una corrección conserva la transacción y el titular originales.');
    const collision=await db.getFirstAsync<{id:string}>('SELECT id FROM business_entries WHERE movement_id=? AND id<>?',movementId,p.id);
-   if(collision)throw new UserInputError('Ese movimiento ya tiene un registro comercial. Ábrelo; no se guardó otro.');
+   if(collision)throw new UserInputError('Esa transacción ya tiene un registro comercial. Ábrelo; no se guardó otro.');
    let movement:LedgerMovement;
    const now=new Date().toISOString();
    if(p.existingMovementId) {
     const m=await db.getFirstAsync<LedgerMovement>(movementSelect+' WHERE id=?',movementId);
-    if(!m||m.deletedAt||m.version!==p.expectedMovementVersion||m.kind!==p.kind||m.amountCents!==p.amountCents||m.date!==p.date||m.description!==p.description||m.paymentMethod!==p.paymentMethod)throw new UserInputError('El movimiento cambió o no coincide. Vuelve a seleccionarlo para conciliar.');
+    if(!m||m.deletedAt||m.version!==p.expectedMovementVersion||m.kind!==p.kind||m.amountCents!==p.amountCents||m.date!==p.date||m.description!==p.description||m.paymentMethod!==p.paymentMethod)throw new UserInputError('La transacción cambió o no coincide. Vuelve a seleccionarlo para conciliar.');
     if(await db.getFirstAsync(`SELECT id FROM bill_payments WHERE movement_id=? UNION ALL SELECT id FROM debt_payments WHERE movement_id=? UNION ALL SELECT id FROM goal_contributions WHERE movement_id=?`,movementId,movementId,movementId))throw new UserInputError('Este pago pertenece a facturas, deudas o metas. No lo reclasifiques como otra compra comercial.');
     movement=m;
    }else{
-    if(old)throw new UserInputError('Abre el movimiento original para corregir su clasificación.');
-    if(!p.confirmSimilar&&await db.getFirstAsync('SELECT id FROM movements WHERE deleted_at IS NULL AND kind=? AND date=? AND amount_cents=?',p.kind,p.date,p.amountCents))throw new UserInputError('Hay un movimiento similar. Vincula el existente o confirma que es otro distinto.');
+    if(old)throw new UserInputError('Abre la transacción original para corregir su clasificación.');
+    if(!p.confirmSimilar&&await db.getFirstAsync('SELECT id FROM movements WHERE deleted_at IS NULL AND kind=? AND date=? AND amount_cents=?',p.kind,p.date,p.amountCents))throw new UserInputError('Hay una transacción similar. Vincula el existente o confirma que es otro distinto.');
     movement={id:movementId,idempotencyKey:`business:${p.id}`,kind:p.kind,date:p.date,description:p.description,amountCents:cents(p.amountCents),currency:'USD',categoryId:null,paymentMethod:p.paymentMethod,taxReview:true,useKind:p.useKind==='pending'?'unknown':p.useKind,grossCents:p.kind==='income'&&p.grossCents!==null?cents(p.grossCents):null,withholdingCents:null,createdAt:now,updatedAt:now,deletedAt:null,incomeType:'manual',scheduleId:null,occurrenceDate:null,version:1};
     validateMovement(movement);await new MovementRepository(db).create(movement);
    }

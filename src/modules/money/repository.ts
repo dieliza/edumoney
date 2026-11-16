@@ -9,7 +9,7 @@ export class MovementRepository {
     if (cents(movement.amountCents) <= 0) throw new UserInputError('El importe debe ser positivo');
     const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(movement.date);
     if (!match || new Date(`${movement.date}T12:00:00Z`).toISOString().slice(0, 10) !== movement.date) throw new UserInputError('Fecha no válida');
-    if (!movement.id || !movement.idempotencyKey) throw new UserInputError('Movimiento incompleto');
+    if (!movement.id || !movement.idempotencyKey) throw new UserInputError('Transacción incompleto');
     await this.db.runAsync(`INSERT INTO movements
       (id, idempotency_key, kind, amount_cents, currency, date, description, category_id, payment_method,
        tax_review, use_kind, gross_cents, withholding_cents, created_at, updated_at, deleted_at)

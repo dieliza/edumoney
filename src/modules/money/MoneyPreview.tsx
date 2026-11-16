@@ -46,7 +46,7 @@ export default function Money() {
         <ExpenseDonut total={195468} items={expenses.map(item => ({ id: item.name, name: item.name, spent: parseAmount(item.amount.replace('$', '')) }))}/>
 
       </Card>
-    </> : segment === 'Transacciones' ? <Card row><Body style={ui.heading}>Movimientos de ejemplo</Body>
+    </> : segment === 'Transacciones' ? <Card row><Body style={ui.heading}>Transacciones de ejemplo</Body>
       {[['Ingreso mensual', '+ $3,200.00'], ['Compra de alimentos', '− $55.00'], ['Electricidad', '− $125.00']].map(([title, amount]) => <View key={title} style={ui.between}><Body style={{ flex: 1 }}>{title}</Body><Body style={{ fontWeight: '700' }}>{amount}</Body></View>)}
       <Body muted style={ui.small}>Ejemplos ilustrativos. No forman un historial real ni modifican el resumen.</Body>
     </Card> : <Card row><Body style={ui.heading}>Categorías de ejemplo</Body>{expenses.map(item => <View key={item.name} style={ui.row}><View style={{ width: 10, height: 10, backgroundColor: item.color, borderRadius: 5 }} /><Body>{item.name}</Body></View>)}</Card>}
