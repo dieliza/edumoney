@@ -9,7 +9,7 @@ const tabs: { name: string; label: string; icon: IconName }[] = [
   { name: 'money', label: 'Mi dinero', icon: 'wallet-outline' },
   { name: 'goals', label: 'Mis metas', icon: 'flag-outline' },
   { name: 'learn', label: 'Aprende', icon: 'book-outline' },
-  { name: 'progress', label: 'Mi progreso', icon: 'stats-chart-outline' },
+  { name: 'progress', label: 'Mi progreso', icon: 'trophy-outline' },
   { name: 'business', label: 'Negocio', icon: 'briefcase-outline' },
   { name: 'my-debts', label: 'Mis deudas', icon: 'card-outline' },
 ];
