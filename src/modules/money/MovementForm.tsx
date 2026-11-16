@@ -6,7 +6,7 @@ import {router} from 'expo-router';
 import { DateField } from '../../ui/DateField';
 import { CategoryPicker } from './CategoryPicker';
 import { userMessage, UserInputError } from '../../core/errors';
-import { useRef,useState,type ReactNode } from 'react';
+import { useRef,useState } from 'react';
 import {ActivityIndicator,Pressable,View} from 'react-native';
 import { newId } from '../../core/id';
 import { parseAmount } from '../../core/money';
@@ -15,13 +15,12 @@ import { localToday, formatMoney, inputAmount } from './domain';
 import { Choices, ErrorNotice, Field, Sheet } from './fields';
 import { DuplicateMovementError, type MoneyStore } from './store';
 import { kindLabels, paymentLabels, type Category, type EntryKind, type IncomeSchedule, type LedgerMovement, type PaymentMethod } from './types';
-export function MovementForm({ initial, kind, categories, store, close, saved, documentReview,allowedKinds,incomeTools,onHistoryEdit,historySaved,initialHistory,afterSave }: {
+export function MovementForm({ initial, kind, categories, store, close, saved, documentReview,allowedKinds,onHistoryEdit,historySaved,initialHistory,afterSave }: {
     initial?: LedgerMovement;
     onHistoryEdit?(movement:LedgerMovement):void;
     historySaved?():Promise<void>;
     initialHistory?:TransactionHistoryKind;
     afterSave?():void;
-    incomeTools?:ReactNode;
     kind: EntryKind;
     allowedKinds?:readonly EntryKind[];
     categories: Category[];
@@ -50,7 +49,6 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState('');
     const [duplicate, setDuplicate] = useState(false);
-    const [incomeToolsOpen,setIncomeToolsOpen]=useState(false);
     async function submit(allowDuplicate = false) {
         if (submitting.current)
             return;
@@ -84,10 +82,9 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
         }
     }
     return <Sheet title={initial ? 'Editar movimiento' : 'Nueva transacción'} close={close} busy={busy} headerAction={!historyPane&&!busy?<><ErrorNotice message={error}/><ActionButton title={initial?'Guardar':type==='expense'?'Guardar gasto':type==='income'?'Guardar ingreso':'Guardar movimiento'} onPress={()=>{setDuplicate(false);void submit();}}/></>:null}>
-  {!initial&&(kind==='income'||kind==='expense')?<Choices<'income'|'expense'> compact label="Tipo de transacción" presentation="tabs" value={type as 'income'|'expense'} options={[["expense","↓ Gasto"],["income","↑ Ingreso"]]} onChange={value=>{setHistoryPane(null);setType(value);if(value==='income'&&method==='credit')setMethod('bank');setCategory('');setCategoryName('');setDuplicate(false);setError('');setIncomeToolsOpen(false);}}/>:null}
+  {!initial&&(kind==='income'||kind==='expense')?<Choices<'income'|'expense'> compact label="Tipo de transacción" presentation="tabs" value={type as 'income'|'expense'} options={[["expense","↓ Gasto"],["income","↑ Ingreso"]]} onChange={value=>{setHistoryPane(null);setType(value);if(value==='income'&&method==='credit')setMethod('bank');setCategory('');setCategoryName('');setDuplicate(false);setError('');}}/>:null}
   {!initial&&onHistoryEdit?<View style={{gap:6}}><Body muted style={{fontSize:13}}>Historiales</Body><View style={{flexDirection:'row',gap:8}}>{(type==='income'?([['income','Ingresos']] as const):type==='expense'?([['expense','Gastos']] as const):([['expense','Gastos'],['income','Ingresos']] as const)).map(([value,label])=><Pressable key={value} accessibilityRole="button" accessibilityState={{selected:historyPane===value}} onPress={()=>setHistoryPane(historyPane===value?null:value)} style={{flex:1,minHeight:44,paddingHorizontal:8,borderWidth:1,borderColor:'#5C9B8E',borderRadius:10,alignItems:'center',justifyContent:'center',backgroundColor:historyPane===value?'#D9F5E8':'transparent'}}><Body style={{fontSize:13,fontWeight:'700',...(historyPane===value?{color:'#005B43'}:{})}}>{label}</Body></Pressable>)}</View></View>:null}
   {!initial&&historyPane&&onHistoryEdit?<TransactionHistory key={historyPane} kind={historyPane} store={store} onEdit={onHistoryEdit} saved={historySaved??saved}/>:<>
-  {!historyPane&&type==='income'&&incomeTools?<><ActionButton secondary title={incomeToolsOpen?'Cerrar cobros programados':'Administrar cobros programados'} onPress={()=>setIncomeToolsOpen(!incomeToolsOpen)}/>{incomeToolsOpen?incomeTools:null}</>:null}
   {(type === 'income' || type === 'expense') ? <CategoryPicker key={type} required={type==='expense'} categories={availableCategories} onCreated={created=>setAddedCategories(old=>[...old,created])} kind={type} value={category} onChange={(id,name)=>{setCategory(id);setCategoryName(name??'');setDuplicate(false);}}/> : null}
   {type==='income'&&!initial?<ActionButton title="Cheque o talonario" icon="camera-outline" onPress={()=>{close();router.push('/income-documents');}}/>:null}
 
