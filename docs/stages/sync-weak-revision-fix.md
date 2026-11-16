@@ -13,3 +13,13 @@ El 16 de noviembre de 2026, PUT /api/sync devolvía 428 repetidamente aproximada
 ## Validación local
 20 casos correctos: servidor 9, integración cliente de dos dispositivos cifrados 1, controlador 6, diagnósticos 2 y revisión 2. Incluye ETag debilitado en la respuesta de descarga, compatibilidad de cliente anterior, escrituras y borrados obsoletos bloqueados, entradas mal formadas rechazadas, copias de varios MB, separación por secreto y ausencia de duplicados. Datos ficticios, sin llamadas a Anthropic. No se ejecutó suite general.
 TypeScript, ESLint y compilación se registran al publicar. Prueba en Safari/iPad físico pendiente; el entorno no dispone de navegador/dispositivo para QA visual. La consulta de logs no leyó cuerpos, claves ni datos financieros privados.
+
+## Publicación y prueba real
+- TypeScript, ESLint sin avisos, diff --check, compilación web/PWA y sintaxis del Worker: correctos.
+- Implementación fca7ee8, rama web-edumoney; hosting bc13aa099b258c560d34cdda9d7c5e3fb9bfe9e5.
+- Sites versión 60: appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_ebf2004403748191aaa9418a9a275464.
+- Despliegue appgdep_6afa7959b0408191896ab2bea26f439f succeeded, configuración existente conservada, env_set_revision=1.
+- URL https://edumoney-web.diegoluissantospabon.chatgpt.site, versión 2026.11.16.4.
+- Prueba real aislada con código aleatorio nuevo y sobre AES-256-GCM/PBKDF2 ficticio: crear PUT204, leer GET200 con contenido idéntico y revisión estable, actualizar con W/ PUT204, reintento con revisión anterior PUT412, limpieza condicional DELETE204. Nunca se leyó ni modificó una copia de usuario.
+- Primer arranque del ejecutor no importó TS por resolución local de extensión y terminó antes de realizar solicitudes. Se corrigió exclusivamente ese ejecutor usando WebCrypto estándar. Conteo conservador: 20 casos automatizados y 2 intentos de recorrido operativo, 22 en total.
+- Los logs posteriores todavía no ofrecen confirmación de la copia específica del usuario. No se afirma que ya se haya completado su respaldo: el controlador sigue reintentando y retirará el aviso al confirmar éxito.
