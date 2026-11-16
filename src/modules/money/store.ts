@@ -1,3 +1,5 @@
+import {recordExpenseGuide,readExpenseGuides} from '../tax/guideStore';
+import type {ExpenseAnswers} from '../tax/expenseGuide';
 import {notifyDataCommitted} from '../../storage/changeEvents';
 import { UserInputError } from '../../core/errors';
 import type { Movement } from '../../core/models';
@@ -77,7 +79,8 @@ export class MoneyStore {
         await new MovementRepository(this.db).create(m as Movement);
         await this.db.runAsync('UPDATE movements SET income_type=?,schedule_id=?,occurrence_date=? WHERE id=?', m.incomeType, m.scheduleId, m.occurrenceDate, m.id);
     }
-    async create(m: LedgerMovement, allowDuplicate = false, schedule?: IncomeSchedule): Promise<void> {
+    expenseGuide(id:string,year:number){return this.read(async db=>(await readExpenseGuides(db,year)).find(g=>g.movementId===id));}
+    async create(m: LedgerMovement, allowDuplicate = false, schedule?: IncomeSchedule, expenseAnswers?:ExpenseAnswers): Promise<void> {
         validateMovement(m);
         return this.write(async () => {
             const previous = await this.db.getFirstAsync<LedgerMovement>(movementSelect + ' WHERE idempotency_key=?', m.idempotencyKey);
@@ -98,6 +101,7 @@ export class MoneyStore {
             else if (m.scheduleId || m.incomeType === 'recurring')
                 throw new UserInputError('Confirma los ingresos recurrentes desde su fecha prevista.');
             await this.insert(m);
+            if(m.kind==='expense')await recordExpenseGuide(this.db,m,expenseAnswers??{use:m.useKind,topic:'unknown',paid:'unknown',reimbursed:'unknown',eligible:'unknown',purpose:'',businessPercent:'',personalOnly:'unknown'});
         });
     }
     private async existing(id: string, version: number) {
@@ -122,7 +126,7 @@ export class MoneyStore {
             throw new UserInputError('Escribe el motivo de la corrección (hasta 240 caracteres).');
         await this.db.runAsync('INSERT INTO movement_revisions(movement_id,action,reason,before_json,recorded_at) VALUES(?,?,?,?,?)', m.id, action, reason.trim(), JSON.stringify(m), new Date().toISOString());
     }
-    async edit(m: LedgerMovement, reason = '', allowDuplicate = false, documentReview?: { id: string; version: number }) {
+    async edit(m: LedgerMovement, reason = '', allowDuplicate = false, documentReview?: { id: string; version: number }, expenseAnswers?:ExpenseAnswers) {
         validateMovement(m);
         const auditReason=reason.trim()||'Edición guardada por el usuario';
         return this.write(async () => {
@@ -143,6 +147,7 @@ export class MoneyStore {
                 throw new DuplicateMovementError();
             await this.revision(old, 'edit', auditReason);
             await this.db.runAsync(`UPDATE movements SET kind=?,amount_cents=?,date=?,description=?,category_id=?,payment_method=?,tax_review=?,use_kind=?,gross_cents=?,withholding_cents=?,income_type=?,updated_at=?,version=version+1 WHERE id=?`, m.kind, m.amountCents, m.date, m.description.trim(), m.categoryId, m.paymentMethod, Number(m.taxReview), m.useKind, m.grossCents, m.withholdingCents, m.incomeType, new Date().toISOString(), m.id);
+            if(expenseAnswers&&m.kind==='expense')await recordExpenseGuide(this.db,{...m,version:m.version+1},expenseAnswers);
             if (documentReview) {
                 const docs = await this.db.getAllAsync<{ id: string }>("SELECT * FROM documents WHERE movement_id=? AND status<>'corrected' AND deleted_at IS NULL", m.id);
                 for (const doc of docs) {
@@ -153,9 +158,9 @@ export class MoneyStore {
         });
     }
     /** History edits reuse the existing document-aware transaction and keep every other link guard. */
-    async editFromHistory(m:LedgerMovement,allowDuplicate=false){
+    async editFromHistory(m:LedgerMovement,allowDuplicate=false,expenseAnswers?:ExpenseAnswers){
         const document=await this.read(db=>db.getFirstAsync<{id:string;version:number}>("SELECT id,version FROM documents WHERE movement_id=? AND deleted_at IS NULL AND status<>'corrected' ORDER BY rowid DESC LIMIT 1",m.id));
-        return this.edit(m,undefined,allowDuplicate,document??undefined);
+        return this.edit(m,undefined,allowDuplicate,document??undefined,expenseAnswers);
     }
     async setDeleted(id: string, version: number, deleted: boolean, reason: string, documentReview?: { id: string; version: number }) {
         return this.write(async () => {

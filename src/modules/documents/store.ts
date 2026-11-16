@@ -1,4 +1,5 @@
-import {CAPTURE_DATA_ONLY} from './capturePolicy';
+import {assessExpense,emptyExpenseAnswers,validateExpenseAnswers} from '../tax/expenseGuide';
+import {recordExpenseGuide} from '../tax/guideStore';
 import {validateReading} from './ai/details';
 import {validateStatementRules} from '../income/store';
 import {statementTotals} from '../income/domain';
@@ -23,7 +24,11 @@ export class DocumentStore {
  }
  async snapshot():Promise<DocumentsSnapshot>{return this.ledger.read(async db=>({documents:await db.getAllAsync<StoredDocument>(select+' ORDER BY rowid DESC'),movements:(await db.getAllAsync<LedgerMovement>(movementSelect+' ORDER BY date DESC')).map(readMovement),bills:await db.getAllAsync('SELECT id,provider,amount_cents AS amountCents,due_date AS dueDate,version FROM bills WHERE voided_at IS NULL ORDER BY due_date DESC'),categories:(await db.getAllAsync<{id:string;name:string;kind:'income'|'expense';archived:number}>('SELECT id,name,kind,archived FROM categories')).map(c=>({...c,archived:!!c.archived}))}));}
  async save(p:DocumentInput){
- if(CAPTURE_DATA_ONLY)p={...p,keepImage:false};
+ if(p.expenseAnswers)validateExpenseAnswers(p.expenseAnswers);
+ const guideText=[p.description,...(p.reading?.details?.items.map(i=>i.description)??[])].join(' ');
+ const guidance=assessExpense(Number(p.date?.slice(0,4)),guideText,p.expenseAnswers??emptyExpenseAnswers());
+ // Preserve evidence by default. Only explicitly resolved personal purchases may discard it.
+ p={...p,keepImage:!!p.image&&(p.kind!=='paid_expense'||guidance.retainImage)};
  if(p.reading)validateReading(p.reading);
  if(!p.id||!p.reviewed||p.description.length>240||p.notes.length>20000||(p.rawText?.length??0)>20000)throw new UserInputError('Revisa la descripción y confirma que comprobaste todos los datos.');
  if(!['paid_expense','paid_income','pending_bill','attachment','note'].includes(p.kind)||!['manual','camera','library','voice'].includes(p.source))throw new UserInputError('Elige cómo se guardará este documento.');
@@ -72,6 +77,7 @@ export class DocumentStore {
  if(p.categoryId){const c=await db.getFirstAsync<{kind:string;archived:number}>('SELECT kind,archived FROM categories WHERE id=?',p.categoryId);if(!c||c.archived||c.kind!==kind)throw new UserInputError('Selecciona una categoría activa del tipo correcto.');}
  if(!p.confirmSimilar&&await db.getFirstAsync('SELECT id FROM movements WHERE deleted_at IS NULL AND kind=? AND date=? AND amount_cents=?',kind,p.date,p.amountCents))throw new UserInputError('Hay un movimiento similar. Revisa si debes adjuntar al existente o confirma que es otro distinto.');
  await new MovementRepository(db).create(m);
+ if(kind==='expense')await recordExpenseGuide(db,{...m,description:guideText},p.expenseAnswers);
  }else if(p.kind==='pending_bill'){
  const b={id:links.billId!,provider:p.description.trim()||'Proveedor por confirmar',amountCents:cents(p.amountCents!),dueDate:p.date!,categoryId:p.categoryId,paymentKind:'expense' as const,reminderDays:null};validateBill(b);
  if(p.categoryId){const c=await db.getFirstAsync<{kind:string;archived:number}>('SELECT kind,archived FROM categories WHERE id=?',p.categoryId);if(!c||c.archived||c.kind!=='expense')throw new UserInputError('Selecciona una categoría activa de gasto.');}

@@ -1,3 +1,4 @@
+import {recognizedPayment} from './paymentRecognition';
 import {isVoicePlaceholder} from '../money/categoryLabels';
 import {parseAmount,type Cents} from '../../core/money';
 import {validDate} from '../money/domain';
@@ -38,11 +39,10 @@ export function classifyVoiceEntry(text:string,categories:Category[],today:strin
  const extraNumbers=withoutDates.split('').map((c,i)=>candidates.some(m=>i>=m.start&&i<m.end)?' ':c).join('').match(/\d+/g);
  if(candidates.length===1&&!extraNumbers){try{const n=parseAmount(candidates[0].value);if(n>0)amountCents=n;}catch{/* Keep an ambiguous amount pending. */}}
  if(!amountCents)reasons.push('Falta un importe único y claro.');
- const methods:PaymentMethod[]=[];
- if(/\befectivo\b/.test(s))methods.push('cash');if(/\bcheque\b/.test(s))methods.push('check');if(/\bdebito\b/.test(s))methods.push('debit');if(/\bcredito\b/.test(s))methods.push('credit');if(/\b(transferencia bancaria|deposito bancario)\b/.test(s))methods.push('bank');
- const needsPayment=reasons.length===0&&methods.length===0;
+ const detected=recognizedPayment(text);
+ const needsPayment=reasons.length===0&&!detected;
  const selected=confirmedMethod&&['cash','check','debit','credit','bank','other'].includes(confirmedMethod)&&(kind==='expense'||confirmedMethod!=='credit')?confirmedMethod:null;
- const method=methods.length===1?methods[0]:methods.length===0?selected:null;if(!method)reasons.push('Método de pago por confirmar.');
+ const method=detected??selected;if(!method)reasons.push('Método de pago por confirmar.');
  const groups:Record<string,string[]>={comida:['comida','restaurante','supermercado','alimentos'],transporte:['transporte','gasolina','gas','uber','taxi'],vivienda:['vivienda','alquiler','renta'],servicios:['servicios','electricidad','agua','internet','telefono'],salud:['salud','farmacia','medicinas','medico'],salario:['salario','sueldo','nomina'],ventas:['venta','ventas'],entretenimiento:['entretenimiento','cine']};
  const active=categories.filter(c=>!c.archived&&c.kind===kind&&!isVoicePlaceholder(c.name));
  const matches=active.filter(c=>{const name=normal(c.name);const aliases=groups[name]??[name];return aliases.some(a=>new RegExp(`\\b${a.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}\\b`).test(s));});

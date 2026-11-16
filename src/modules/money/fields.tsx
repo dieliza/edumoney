@@ -6,19 +6,21 @@ import { moneyKeystroke, moneyDisplay } from '../../ui/moneyInput';
 import { isRequiredField, isCalculationField, missingField } from '../../ui/requiredFields';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Modal, Pressable, ScrollView, TextInput, View, KeyboardAvoidingView, Keyboard, Platform } from 'react-native';
-import { useState, type PropsWithChildren } from 'react';
+import { useState, type PropsWithChildren, type ReactNode } from 'react';
 import { useTheme } from '../../design/ThemeProvider';
 import { fixed } from '../../design/tokens';
 import { Body, Card, CloseButton } from '../../ui/components';
-export function Sheet({ title, close, children, busy = false }: PropsWithChildren<{
+export function Sheet({ title, close, children, headerAction, busy = false }: PropsWithChildren<{
     title: string;
     close(): void;
     busy?: boolean;
+    headerAction?:ReactNode;
 }>) {
     const { colors } = useTheme();
     return <Modal transparent animationType="none" onRequestClose={() => { if (!busy)
         close(); }}><KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1, justifyContent: 'center', padding: 16, backgroundColor: fixed.previewBackdrop }}>
   <View style={{ width: '100%', maxWidth: 650, maxHeight: '92%', alignSelf: 'center' }}><View style={{flexDirection:'row',gap:8,alignItems:'center',paddingBottom:8}}><Pressable testID="sheet-dismiss-keyboard" accessibilityRole="button" accessibilityLabel="Ocultar teclado del formulario" onPress={()=>Keyboard.dismiss()} style={{minWidth:48,minHeight:48,padding:12,backgroundColor:colors.surface,borderRadius:16}}><Ionicons name="keypad-outline" size={24} color={colors.primary}/></Pressable><View style={{flex:1}}/>{!busy?<CloseButton testID="sheet-close" onPress={close}/>:null}</View>
+  {headerAction?<View style={{padding:8,borderTopLeftRadius:20,borderTopRightRadius:20,backgroundColor:colors.surface}}>{headerAction}</View>:null}
   <ScrollView tabIndex={0} keyboardDismissMode="on-drag" keyboardShouldPersistTaps="handled" style={{ flexShrink: 1, width: '100%', borderRadius: 24 }}><Card style={{ gap: 16 }}>
    <Body style={{ fontSize: 23, fontWeight: '800', paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: colors.line }}>{title}</Body>{children}
    {busy ? <Body>Guardando en este dispositivo…</Body> : null}

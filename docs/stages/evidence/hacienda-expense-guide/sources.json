@@ -1,0 +1,19 @@
+{
+  "agency": "Departamento de Hacienda de Puerto Rico",
+  "title": "Instrucciones Planilla de Individuos 2025",
+  "year": 2025,
+  "url": "https://hacienda.pr.gov/sites/default/files/inst_individuos_2025_1_abr_26.pdf",
+  "verifiedAt": "2026-11-16",
+  "httpResult": 200,
+  "sha256": "9afb0f5165dba2dc993571dd06db140745058d3849eb7bd0b4c70636b996ef69",
+  "references": {
+    "evidence": "p.7, conservar evidencias mínimo seis años",
+    "business": "p.18 y Anejos J/K/L/M pp.83-86, revisión gastos/activos/informativas",
+    "mortgage": "pp.24-25, intereses con informativa, no principal",
+    "medical": "pp.25-26, gastos no reembolsados, evidencia y límite anual",
+    "donations": "pp.26-27, entidad/evidencia/límites",
+    "ira": "pp.27-28, cuentas elegibles, certificación y límites",
+    "studentInterest": "p.28, interés de estudios universitarios y 480.7B"
+  },
+  "scope": "Propuestas y preguntas, sin importes deducibles calculados ni radicación; no heredar reglas al año 2026."
+}
