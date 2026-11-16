@@ -31,3 +31,12 @@ El propietario autorizó ampliar los puntos propuestos: perfil, orientación de 
 6. Dos casos de métodos explícitos/documentos y protección de partidas médicas frente a descarte personal: 2; acumulado 98.
 
 Incluye SQLite real, rollback, reintentos, respaldo/restauración, separación de bases/años, perfil excluido por defecto, conservación selectiva, versiones, origen/categoría, importes exactos y ausencia de duplicados. No se ejecutó la suite completa ni pruebas externas facturadas. TypeScript, ESLint y compilación web se registran en el cierre de publicación.
+
+## Cierre de publicación
+- TypeScript, ESLint sin avisos, diff --check, compilación web y comprobación de sintaxis del Worker: correctos.
+- Implementación 298f7dc, rama web-edumoney. No se modificó GitHub main.
+- Hosting fuente 7be3d52f0b1f477f85a742e3cbfd68adcbe12d2a, Sites versión 58.
+- Versión guardada appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_0cd12babd3ec819199c369312e051055.
+- Despliegue appgdep_6afa6d22917c8191bb437ad2fbb6fd22, succeeded, 2026-11-16. Configuración existente conservada, env_set_revision=1.
+- Producción: https://edumoney-web.diegoluissantospabon.chatgpt.site
+- Versión visible 2026.11.16.2. Pruebas físicas de cámaras/navegadores y almacenamiento a gran escala pendientes según límites anteriores.
