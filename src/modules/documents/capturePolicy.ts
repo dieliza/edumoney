@@ -1,7 +1,7 @@
 import type {Category} from '../money/types';
 import type {EntryDirection} from '../money/entryContext';
 import type {Source} from './types';
-export const CAPTURE_POLICY='selective-tax-evidence' as const;
+export const CAPTURE_POLICY='personal-data-only-business-encrypted-images' as const;
 export const captureSourceLabel:Record<Source,string>={camera:'Foto de cámara',library:'Foto de galería',voice:'Dictado por voz',manual:'Texto escrito'};
 const normalize=(s:string)=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();
 /** Reuse existing financial categories; capture channel is never a category. */

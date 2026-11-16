@@ -30,7 +30,7 @@ export function assessExpense(year:number,text:string,answers:ExpenseAnswers=emp
  if(answers.use==='mixed')result.questions.push('¿Qué proporción se usó realmente para el negocio? Conserva cómo la determinaste.');
  }
  else if(topic in rules){const rule=rules[topic as keyof typeof rules];result.reference=rule.reference;result.explanation=rule.explanation;result.questions.push(rule.question);if(answers.use==='personal'&&answers.paid==='yes'&&answers.reimbursed==='no'&&answers.eligible==='yes'){result.state='potential';result.label='Posible deducción personal';}}
- else if(answers.use==='personal'&&topic==='everyday'&&answers.personalOnly==='yes'){result.state='personal';result.label='Personal: sin deducción identificada';result.explanation='Confirmaste que es una compra cotidiana exclusivamente personal, sin componentes médicos, de donativo, intereses, retiro ni uso comercial. Se conservarán solo los datos.';result.retainImage=false;result.reference='Anejo A, deducciones detalladas; pág. 24';}
+ else if(answers.use==='personal'&&topic==='everyday'&&answers.personalOnly==='yes'){result.state='personal';result.label='Personal: sin deducción identificada';result.explanation='Confirmaste que es una compra cotidiana exclusivamente personal, sin componentes médicos, de donativo, intereses, retiro ni uso comercial. Su uso personal no confirma una deducción comercial.';result.reference='Anejo A, deducciones detalladas; pág. 24';}
  else result.questions.push('¿Qué compraste o pagaste? Elige el concepto que mejor lo describe; no necesitas saber si es deducible.');
  if(result.state!=='personal'){
  if(answers.paid==='unknown')result.questions.push('¿Ya pagaste este gasto durante el año indicado?');

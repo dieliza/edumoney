@@ -3,7 +3,6 @@ import {entryMethods} from './entryContext';
 import {announceSaved} from '../../ui/saveFeedback';
 import {TransactionHistory,type TransactionHistoryKind} from './TransactionHistory';
 import {router} from 'expo-router';
-import { incomeFromBreakdown } from './incomeInput';
 import { DateField } from '../../ui/DateField';
 import { CategoryPicker } from './CategoryPicker';
 import { userMessage, UserInputError } from '../../core/errors';
@@ -46,18 +45,12 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
     const [interval, setInterval] = useState('1');
     const [tax] = useState(initial?.taxReview ? 'yes' : 'no');
     const [use] = useState(initial?.useKind ?? 'unknown');
-    const [gross, setGross] = useState(initial?.grossCents != null ? inputAmount(initial.grossCents) : '');
-    const [withholding, setWithholding] = useState(initial?.withholdingCents != null ? inputAmount(initial.withholdingCents) : '');
     const [historyPane,setHistoryPane]=useState<TransactionHistoryKind|null>(initialHistory??null);
     const submitting=useRef(false);
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState('');
     const [duplicate, setDuplicate] = useState(false);
     const [incomeToolsOpen,setIncomeToolsOpen]=useState(false);
-    const preserveExisting=!!initial&&gross===(initial.grossCents==null?'':inputAmount(initial.grossCents))&&withholding===(initial.withholdingCents==null?'':inputAmount(initial.withholdingCents));
-    const needBreakdown=!initial||(!preserveExisting&&!!(gross.trim()||withholding.trim()));
-    let netPreview:ReturnType<typeof incomeFromBreakdown>|null=null;
-    if(type==='income'){try{netPreview=preserveExisting?initial!.amountCents:incomeFromBreakdown(gross,withholding,initial?.amountCents);}catch{}}
     async function submit(allowDuplicate = false) {
         if (submitting.current)
             return;
@@ -68,7 +61,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
             if(type==='expense'&&!category)throw new UserInputError('Elige o crea una categoría para el gasto.');
             const now = new Date().toISOString();
             const scheduleId = !initial && type === 'income' && incomeType === 'recurring' ? identity.schedule : initial?.scheduleId ?? null;
-            const m: LedgerMovement = { id: identity.id, idempotencyKey: identity.operation, kind: type, amountCents: type==='income'?(preserveExisting?initial!.amountCents:incomeFromBreakdown(gross,withholding,initial?.amountCents)):parseAmount(amount.trim()), currency: 'USD', date, description: type==='expense'?(initial?.description||categoryName||categories.find(c=>c.id===category)?.name||'Gasto'):(description.trim()||categoryName||categories.find(c=>c.id===category)?.name||kindLabels[type]), categoryId: category || null, paymentMethod: recognizedPayment(description)||method, taxReview: tax === 'yes', useKind: use, grossCents: type === 'income' && gross.trim() ? parseAmount(gross.trim()) : null, withholdingCents: type === 'income' && withholding.trim() ? parseAmount(withholding.trim()) : null, createdAt: initial?.createdAt ?? now, updatedAt: now, deletedAt: null, incomeType: type === 'income' ? incomeType : 'manual', scheduleId, occurrenceDate: initial?.occurrenceDate ?? (scheduleId ? date : null), version: initial?.version ?? 1 };
+            const m: LedgerMovement = { id: identity.id, idempotencyKey: identity.operation, kind: type, amountCents: parseAmount(amount.trim()), currency: 'USD', date, description: type==='expense'?(initial?.description||categoryName||categories.find(c=>c.id===category)?.name||'Gasto'):(description.trim()||categoryName||categories.find(c=>c.id===category)?.name||kindLabels[type]), categoryId: category || null, paymentMethod: recognizedPayment(description)||method, taxReview: tax === 'yes', useKind: use, grossCents: type === 'income' ? initial?.grossCents??null : null, withholdingCents: type === 'income' ? initial?.withholdingCents??null : null, createdAt: initial?.createdAt ?? now, updatedAt: now, deletedAt: null, incomeType: type === 'income' ? incomeType : 'manual', scheduleId, occurrenceDate: initial?.occurrenceDate ?? (scheduleId ? date : null), version: initial?.version ?? 1 };
             let schedule: IncomeSchedule | undefined;
             if (!initial && scheduleId) {
                 if (!/^\d+$/.test(interval))
@@ -96,11 +89,11 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
   {!initial&&historyPane&&onHistoryEdit?<TransactionHistory key={historyPane} kind={historyPane} store={store} onEdit={onHistoryEdit} saved={historySaved??saved}/>:<>
   {!historyPane&&type==='income'&&incomeTools?<><ActionButton secondary title={incomeToolsOpen?'Cerrar cobros programados':'Administrar cobros programados'} onPress={()=>setIncomeToolsOpen(!incomeToolsOpen)}/>{incomeToolsOpen?incomeTools:null}</>:null}
   {(type === 'income' || type === 'expense') ? <CategoryPicker key={type} required={type==='expense'} categories={availableCategories} onCreated={created=>setAddedCategories(old=>[...old,created])} kind={type} value={category} onChange={(id,name)=>{setCategory(id);setCategoryName(name??'');setDuplicate(false);}}/> : null}
-  {type==='income'&&!initial?<ActionButton title="Cheque, talonario o desglose manual de deducciones" icon="camera-outline" onPress={()=>{close();router.push('/income-documents');}}/>:null}
+  {type==='income'&&!initial?<ActionButton title="Cheque o talonario" icon="camera-outline" onPress={()=>{close();router.push('/income-documents');}}/>:null}
 
   {!initial&&kind!=='income'&&kind!=='expense'?<Choices<EntryKind> label="Operación" value={type} options={(allowedKinds??['transfer','loan','debt_payment'] as EntryKind[]).map(key=>[key,kindLabels[key]] as const)} onChange={setType}/>:null}
   {initial?.scheduleId?<Body>Ingreso vinculado a una recurrencia. Esta corrección no modifica los próximos cobros.</Body>:null}
-  <View style={{flexDirection:'row',flexWrap:'wrap',gap:12}}><View style={{flex:1,minWidth:140}}><DateField required label="Fecha" value={date} onChangeText={v => { setDate(v); setDuplicate(false); }} testID="movement-date"/></View>{type!=='income'?<View style={{flex:1,minWidth:140}}><Field compact label="Importe (USD)" value={amount} onChangeText={v => { setAmount(v); setDuplicate(false); }} decimal testID="movement-amount"/></View>:null}</View>
+  <View style={{flexDirection:'row',flexWrap:'wrap',gap:12}}><View style={{flex:1,minWidth:140}}><DateField required label="Fecha" value={date} onChangeText={v => { setDate(v); setDuplicate(false); }} testID="movement-date"/></View>{<View style={{flex:1,minWidth:140}}><Field compact label={type==='income'?'Importe recibido (USD)':'Importe (USD)'} value={amount} onChangeText={v => { setAmount(v); setDuplicate(false); }} decimal testID="movement-amount"/></View>}</View>
   {type!=='expense'?<Field label="Descripción (opcional)" value={description} onChangeText={v => { setDescription(v); setDuplicate(false); }} multiline testID="movement-description"/>:null}
 
   {recognizedPayment(description)?<Body>Método identificado: {paymentLabels[recognizedPayment(description)!]}</Body>:<Choices<PaymentMethod> label={type==='income'?'Cómo recibiste el ingreso':'Método de pago'} value={method} options={type==='income'||type==='expense'?entryMethods(type):(Object.entries(paymentLabels) as [PaymentMethod,string][]).filter(([key])=>key!=='credit')} onChange={setMethod}/>}
@@ -111,10 +104,6 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
   {type === 'income' ? <>
    {!initial?.scheduleId ? <Choices<LedgerMovement['incomeType']> label="Clase de ingreso" value={incomeType} options={initial ? [['manual', 'Manual'], ['extraordinary', 'Extraordinario']] : [['manual', 'Manual'], ['recurring', 'Recurrente'], ['extraordinary', 'Extraordinario']]} onChange={setIncomeType}/> : null}
    {!initial && incomeType === 'recurring' ? <View style={{ gap: 14 }}><Choices<'weekly' | 'monthly'> label="Frecuencia" value={cadence} options={[['weekly', 'Semanas'], ['monthly', 'Meses']]} onChange={setCadence}/><Field label="Cada cuántas semanas o meses (1–120)" value={interval} onChangeText={setInterval}/><Body>Al guardar confirmas el primer cobro. Los siguientes aparecerán como previstos y solo se sumarán cuando confirmes que los recibiste.</Body></View> : null}
-   <Field required={needBreakdown} label="Ingreso bruto (USD)" value={gross} onChangeText={setGross} decimal testID="movement-gross"/>
-   <Field required={needBreakdown} label="Retención (USD; escribe cero si no hubo)" value={withholding} onChangeText={setWithholding} decimal testID="movement-withheld"/>
-   <Body>{netPreview===null?'Completa bruto y retención para calcular el ingreso.':`Ingreso neto ${initial&&(preserveExisting||(!gross&&!withholding))?'registrado':'calculado'}: ${formatMoney(netPreview)}`}</Body>
-   <Body muted>El neto es bruto menos retención. Este formulario supone que no hubo otras deducciones. Confirma que el resultado coincide con lo recibido antes de guardar; no se calcula una planilla. En registros anteriores, dejar ambos campos vacíos conserva el importe conocido.</Body>
   </> : null}
   <ErrorNotice message={error}/>
   {busy?<ActivityIndicator accessibilityLabel="Guardando cambios"/>:null}

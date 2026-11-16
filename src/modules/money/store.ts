@@ -101,7 +101,7 @@ export class MoneyStore {
             else if (m.scheduleId || m.incomeType === 'recurring')
                 throw new UserInputError('Confirma los ingresos recurrentes desde su fecha prevista.');
             await this.insert(m);
-            if(m.kind==='expense')await recordExpenseGuide(this.db,m,expenseAnswers??{use:m.useKind,topic:'unknown',paid:'unknown',reimbursed:'unknown',eligible:'unknown',purpose:'',businessPercent:'',personalOnly:'unknown'});
+            if(m.kind==='expense'&&(m.useKind==='business'||m.useKind==='mixed'))await recordExpenseGuide(this.db,m,expenseAnswers??{use:m.useKind,topic:'unknown',paid:'unknown',reimbursed:'unknown',eligible:'unknown',purpose:'',businessPercent:'',personalOnly:'unknown'});
         });
     }
     private async existing(id: string, version: number) {

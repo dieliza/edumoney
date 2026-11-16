@@ -6,7 +6,6 @@ import {announceSaved} from '../../ui/saveFeedback';
 import {ReceiptPhotoButtons} from './ReceiptPhotoButtons';
 import {PhotoAnalysis} from '../../ui/PhotoAnalysis';
 import {reviewedReading} from './ai/details';
-import {ReadingDetailsForm} from './ReadingDetailsForm';
 import {anthropicProposal,anthropicStatement} from './ai/types';
 import { DateField } from '../../ui/DateField';
 import { useState,useRef } from 'react';
@@ -28,7 +27,7 @@ export function ReviewForm({retake,processing=false,analysisError='',initial,dat
  const proposal=initial.structured?anthropicProposal(initial.structured):initial.source==='voice'?proposeVoice(initial.text):proposeFields(initial.text);const parent=initial.parent;
  const linkedKind=parent?data.movements.find(m=>m.id===parent.movementId)?.kind:undefined;
  const [direction,setDirection]=useState<EntryDirection|''>(initial.entryKind??(parent?(linkedKind==='income'||linkedKind==='expense'?linkedKind:parent.billId?'expense':''):suggestedDirection(initial.structured?.document_type)));
- const [details,setDetails]=useState(initial.structured?.details);
+ const [details]=useState(initial.structured?.details);
  const [structuredIds]=useState(()=>initial.structured?.deductions.map(()=>newId())??[]);
  const [id]=useState(newId);const [kind,setKind]=useState<RecordKind|''>(parent?(parent.movementId||parent.billId?'attachment':'note'):direction?kindForDirection(direction):'');
  const [description,setDescription]=useState(parent?.description??proposal.description);const [date,setDate]=useState(parent?.date??proposal.date);const [amount,setAmount]=useState(initial.needsAmountReview?'':parent?.amountCents?`${Math.floor(parent.amountCents/100)}.${String(parent.amountCents%100).padStart(2,'0')}`:proposal.amount);
@@ -56,16 +55,16 @@ export function ReviewForm({retake,processing=false,analysisError='',initial,dat
  if((initial.image||financial)&&!amount.trim())throw new UserInputError('Escribe el importe antes de guardar.');
  if(date&&!validDate(date))throw new UserInputError('Elige una fecha válida en el calendario.');
  const m=data.movements.find(m=>m.id===targetId),b=data.bills.find(b=>b.id===targetId);
- await store.save({...(initial.structured?{reading:reviewedReading(initial.structured,description,date.trim()||null,enteredCents,details)}:{}),...(kind==='paid_income'&&initial.structured?{incomeStatement:anthropicStatement(initial.structured,enteredCents!,description.trim(),structuredIds)}:{}),id,kind,source:initial.source,description,date:date.trim()||null,amountCents:amount.trim()?parseAmount(amount.trim()):null,notes,rawText:keepText==='yes'?text:null,image:initial.image,keepImage:!!initial.image,movementId:kind==='attachment'&&targetType==='movement'?targetId||null:null,billId:kind==='attachment'&&targetType==='bill'?targetId||null:null,expectedMovementVersion:m?.version??null,expectedBillVersion:b?.version??null,categoryId:financial?inferredCategory?.id??null:null,paymentMethod:kind==='paid_income'||kind==='paid_expense'?effectiveMethod||null:null,supersedesId:parent?.id??null,expectedDocumentVersion:parent?.version??null,confirmSimilar:similar===reviewKey,reviewed:true});
+ await store.save({...(initial.structured?{reading:reviewedReading(initial.structured,description,date.trim()||null,enteredCents,details)}:{}),...(kind==='paid_income'&&initial.structured?{incomeStatement:anthropicStatement(initial.structured,enteredCents!,description.trim(),structuredIds)}:{}),id,kind,source:initial.source,description,date:date.trim()||null,amountCents:amount.trim()?parseAmount(amount.trim()):null,notes,rawText:keepText==='yes'?text:null,image:initial.image,keepImage:false,movementId:kind==='attachment'&&targetType==='movement'?targetId||null:null,billId:kind==='attachment'&&targetType==='bill'?targetId||null:null,expectedMovementVersion:m?.version??null,expectedBillVersion:b?.version??null,categoryId:financial?inferredCategory?.id??null:null,paymentMethod:kind==='paid_income'||kind==='paid_expense'?effectiveMethod||null:null,supersedesId:parent?.id??null,expectedDocumentVersion:parent?.version??null,confirmSimilar:similar===reviewKey,reviewed:true});
  committed=true;announceSaved();close();await saved();
  }catch(e){if(!committed){setError(userMessage(e));if(e instanceof DuplicateDocumentError)setDuplicate(e.documentId);}}finally{working.current=false;setBusy(false);}}
  return <Sheet title={parent?'Corregir comprobante':'Revisar antes de guardar'} close={close} busy={busy||processing} headerAction={<><ErrorNotice message={error}/>{!busy&&!processing?<ActionButton title="Guardar" testID="document-save" onPress={()=>void submit()}/>:null}</>}>
  {!parent?<Choices<EntryDirection|''> required={financial} label="Tipo de transacción" presentation="tabs" value={direction} options={[[ 'expense','↓ Gasto'],['income','↑ Ingreso']]} onChange={value=>{if(value)changeDirection(value);}}/>:null}
- {initial.structured?<Body>Documento leído: {initial.structured.document_type==='paystub'?'Talonario de pago':initial.structured.document_type==='check'?'Cheque':'Recibo de compra'}.{direction==='income'&&initial.structured.document_type==='paystub'?' Confirma que corresponde a un ingreso recibido; su desglose quedará pendiente de revisión.':''}</Body>:null}
- <Body>Origen: {captureSourceLabel[initial.source]}. {!initial.image?'Se conservarán los datos confirmados.':'El comprobante se conservará cifrado para revisión.'}</Body>
+ {initial.structured?<Body>Documento leído: {initial.structured.document_type==='paystub'?'Talonario de pago':initial.structured.document_type==='check'?'Cheque':'Recibo de compra'}.{direction==='income'&&initial.structured.document_type==='paystub'?' Confirma el importe recibido antes de guardar.':''}</Body>:null}
+ <Body>Origen: {captureSourceLabel[initial.source]}. {'Solo se conservarán los datos confirmados; la foto es temporal.'}</Body>
  <ErrorNotice message={analysisError}/>
  {processing?<PhotoAnalysis/>:initial.image&&retake?<><ActionButton title="Volver a tomar la foto" icon="camera-outline" secondary onPress={()=>setRetaking(!retaking)}/>{retaking?<ReceiptPhotoButtons onCapture={retake}/>:null}</>:null}
- <Body>El reconocimiento puede equivocarse. Confirma los campos; nada se registra como pagado automáticamente.</Body>{initial.warning?<Body>{initial.warning}</Body>:null}{proposal.warnings.map(w=><Body key={w} muted>{w}</Body>)}
+ <Body>El reconocimiento puede equivocarse. Confirma los campos; nada se registra como pagado automáticamente.</Body>{initial.warning?<Body>{initial.warning}</Body>:null}{proposal.warnings.length?<Body muted>Revisa la fecha y el importe antes de guardar.</Body>:null}
  {initial.image?<Image source={{uri:`data:${initial.image.mime};base64,${initial.image.base64}`}} accessibilityLabel="Vista temporal para revisar el documento" style={{width:'100%',height:280}} resizeMode="contain"/>:null}
  {!initial.structured?<>
  <Field label="Texto a revisar" testID="document-text" value={text} onChangeText={value=>{setText(value);}} multiline maxLength={20000}/>
@@ -87,7 +86,6 @@ export function ReviewForm({retake,processing=false,analysisError='',initial,dat
  {hasSimilar?<Choices label="Detectamos un registro similar" value={similar===reviewKey?'yes':'no'} options={[[ 'no','Revisar antes de duplicar'],['yes','Confirmo que es otro registro distinto']]} onChange={value=>setSimilar(value==='yes'?reviewKey:'')}/>:null}
  <Body>Al guardar confirmas que revisaste la foto, el total, la fecha y el tipo de registro. Los duplicados se comprueban automáticamente.</Body>
  {same?<ActionButton title="Ver recibo similar ya guardado" secondary onPress={()=>openExisting(same.id)}/>:null}
- {details?<ReadingDetailsForm key={direction+initial.structured?.document_type} context={direction||undefined} documentType={initial.structured?.document_type} value={details} onChange={setDetails}/>:null}
  {duplicate?<ActionButton title="Abrir comprobante ya existente" secondary onPress={()=>openExisting(duplicate)}/>:null}
  </Sheet>;
 }

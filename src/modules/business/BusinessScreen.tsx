@@ -19,6 +19,8 @@ export default function BusinessScreen() {
  useEffect(()=>{if(!focused)return;let active=true;void getMoneyStore().then(async ledger=>{const s=new BusinessStore(ledger);const d=await s.snapshot();if(active){setStore(s);setData(d);}}).catch(e=>{if(active)setError(userMessage(e));});return()=>{active=false;};},[focused]);
  const holder=data.holders.find(h=>h.id===editing);
  return <Screen title="Negocio" subtitle="Titulares, nombres comerciales y proyectos." demo={false} keyboardForm>
+  <ActionButton title="Para el contable" testID="business-accountant" icon="document-text-outline" secondary onPress={()=>router.push('/tax')}/>
+  <ActionButton title="Cheques y talonarios del negocio" testID="business-income-documents" icon="document-outline" secondary onPress={()=>router.push({pathname:'/income-documents',params:{context:'business'}})}/>
   <ErrorNotice message={error}/>{notice?<Card row><Body>{notice}</Body></Card>:null}
   <Card row><Body>Organiza cada titular legal por separado. Los perfiles se guardan en el almacenamiento local cifrado de EduMoney, sin exigir una cuenta en línea.</Body></Card>
   {!store?<Card row><Body>Abriendo perfiles locales…</Body></Card>:editing?<HolderForm key={editing} store={store} version={holder?.version??0} initial={holder?{holder,dbas:data.dbas.filter(d=>d.holderId===holder.id),projects:data.projects.filter(p=>p.holderId===holder.id)}:undefined} cancel={()=>setEditing(null)} done={async()=>{await load();setEditing(null);setNotice('Perfil comercial guardado localmente.');}}/>:<ActionButton title="Añadir titular" testID="business-create" onPress={()=>{setNotice('');setEditing('new');}}/>}
