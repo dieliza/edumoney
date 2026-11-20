@@ -52,3 +52,64 @@ describe('Negocio 2: movimientos, repartos, documentos y CPA',()=>{
  }finally{db.close();}});
 
 });
+
+describe('CPA export date scope',()=>{
+ it('keeps all dates as the unchanged default; includes both endpoints and counts allocation rows',async()=>{
+  const {db,store}=await setup();
+  try{
+   for(const [id,date] of [['before','2024-02-27'],['from','2024-02-28'],['leap','2024-02-29'],['to','2024-03-01'],['after','2024-03-02']] as const)
+    await store.save(entry({id,date,description:id}));
+   const s=await store.snapshot();
+   const all=businessExport(s,'h',null,[]);
+   expect(all.rows).toHaveLength(10);
+   expect(all).not.toHaveProperty('period');
+   const period={from:'2024-02-28',to:'2024-03-01'};
+   const report=businessExport(s,'h',null,[],period);
+   expect(report.period).toEqual(period);
+   expect(new Set(report.rows.map(r=>r.date))).toEqual(new Set(['2024-02-28','2024-02-29','2024-03-01']));
+   expect(report.rows).toHaveLength(6);
+   expect(report.csv.split('\r\n')).toHaveLength(7);
+   expect(report.totals.expenseCents).toBe(30000);
+   expect(businessExport(s,'h','h-p1',[],period).totals.expenseCents).toBe(18000);
+   expect(businessExport(s,'h',null,[],{from:'2024-02-29',to:'2024-02-29'}).rows).toHaveLength(2);
+  }finally{db.close();}
+ });
+ it('rejects absent, non-Gregorian, noncanonical and reversed bounds without falling back to all dates',async()=>{
+  const {db,store}=await setup();
+  try{
+   const s=await store.snapshot();
+   for(const [from,to] of [['','2024-02-29'],['2024-02-29',''],['2023-02-29','2024-01-01'],['2024-04-31','2024-05-01'],['2024-2-01','2024-03-01'],['2024-02-28T00:00:00Z','2024-03-01'],['2024-03-02','2024-03-01']])
+    expect(()=>businessExport(s,'h',null,[],{from,to})).toThrow(/Desde|fechas/);
+   const empty=businessExport(s,'h',null,[],{from:'2024-02-29',to:'2024-02-29'});
+   expect(empty.rows).toHaveLength(0);
+   expect(empty.csv.split('\r\n')).toHaveLength(1);
+  }finally{db.close();}
+ });
+ it('scopes transactions, document links, pending detail, totals and reference data without guessing historical reserves',async()=>{
+  const {db,store,ledger}=await setup();
+  try{
+   await holder(ledger,'outside');
+   const inId=await store.save(entry({id:'in-period',date:'2026-11-03',description:'in period',allocations:[{projectId:'h-p1',amountCents:10000}]}));
+   const outId=await store.save(entry({id:'out-of-range',date:'2026-11-02',description:'secret earlier transaction',allocations:[{projectId:'h-p2',amountCents:10000}]}));
+   await store.save(entry({id:'other-holder',holderId:'outside',date:'2026-11-03',description:'outside holder',confirmSimilar:true,allocations:[{projectId:'outside-p1',amountCents:10000}]}));
+   await store.reserve('h','ivu',4321,'Current reserve, not historical',0);
+   const s=await store.snapshot();
+   const receipt=(id:string,movementId:string)=>({id,movementId,billId:null,sha256:'',encryptedPath:'local:'+id,supersedesId:null,status:'pending',source:'manual' as const,kind:'attachment' as const,description:id,date:'2026-11-08',amountCents:10000,notes:'',mime:'image/jpeg',createdAt:null,deletedAt:null,copyDeletedAt:null,version:1});
+   s.documents=[receipt('related-later-dated-receipt',inId),receipt('unrelated-receipt',outId)];
+   s.projects=s.projects.map(p=>({...p,dbaId:p.id==='h-p1'?'necessary-dba':p.id==='h-p2'?'outside-dba':null}));
+   s.dbas=[{id:'necessary-dba',holderId:'h',name:'Necessary'},{id:'outside-dba',holderId:'h',name:'Outside'}];
+   const period={from:'2026-11-03',to:'2026-11-03'};
+   const r=businessExport(s,'h',null,s.documents.map(d=>d.id),period);
+   expect(r.rows).toHaveLength(1);
+   expect(r.rows[0].documentIds).toBe('related-later-dated-receipt');
+   expect(r.documents.map(d=>d.id)).toEqual(['related-later-dated-receipt']);
+   expect(businessExport(s,'h',null,[],period).documents).toEqual([]);
+   expect(r.projects.map(p=>p.id)).toEqual(['h-p1']);
+   expect(r.dbas.map(d=>d.id)).toEqual(['necessary-dba']);
+   expect(r.pending.join(' ')).not.toMatch(/out-of-range|other-holder/);
+   expect(r.totals.expenseCents).toBe(10000);
+   expect(r.reserves).toEqual([]);
+   expect(businessExport(s,'h',null,[]).reserves).toHaveLength(1);
+  }finally{db.close();}
+ });
+});

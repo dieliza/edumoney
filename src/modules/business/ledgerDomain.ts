@@ -57,14 +57,25 @@ export function businessTotals(entries:BusinessEntry[],projectId?:string):Busine
  }
  return t;
 }
-export function businessExport(s:BusinessLedgerSnapshot,holderId:string,projectId:string|null,selectedDocumentIds:string[]) {
+export interface BusinessExportPeriod {from:string;to:string}
+export function businessExport(s:BusinessLedgerSnapshot,holderId:string,projectId:string|null,selectedDocumentIds:string[],period?:BusinessExportPeriod) {
  const holder=s.holders.find(h=>h.id===holderId);if(!holder)throw new UserInputError('Selecciona un titular existente.');
  if(projectId&&!s.projects.some(p=>p.id===projectId&&p.holderId===holderId))throw new UserInputError('El proyecto no pertenece al titular.');
- const entries=s.entries.filter(e=>e.holderId===holderId&&(!projectId||e.allocations.some(a=>a.projectId===projectId)));
+ if(period){
+  if(!validDate(period.from)||!validDate(period.to))throw new UserInputError('Escribe fechas válidas en Desde y Hasta (AAAA-MM-DD).');
+  if(period.from>period.to)throw new UserInputError('Desde no puede ser posterior a Hasta.');
+ }
+ // Local transaction dates are canonical YYYY-MM-DD. No instant or time-zone conversion.
+ const entries=s.entries.filter(e=>e.holderId===holderId&&(!projectId||e.allocations.some(a=>a.projectId===projectId))
+  &&(!period||(e.date>=period.from&&e.date<=period.to)));
  const rows=entries.flatMap(e=>entryRows(e).filter(r=>!projectId||r.projectId===projectId).map(r=>({entryId:e.id,movementId:e.movementId,holderId:e.holderId,date:e.date,description:e.description,kind:e.kind,useKind:e.useKind,percentBps:e.businessBps,justification:e.justification,cpaStatus:e.cpaStatus,stale:e.stale,includedInTotals:!e.stale&&!e.deletedAt,deletedAt:e.deletedAt,documentIds:s.documents.filter(d=>d.movementId===e.movementId).map(d=>d.id).join('|'),...r})));
  const documents=s.documents.filter(d=>selectedDocumentIds.includes(d.id)&&entries.some(e=>e.movementId===d.movementId));
  const pending=[...(holder.prClassification==='pending'?[`${holder.id}: clasificación contributiva de Puerto Rico pendiente`]:[]),...(holder.federalClassification==='pending'?[`${holder.id}: clasificación federal pendiente`]:[]),...entries.flatMap(e=>[...(e.stale?[`${e.id}: movimiento modificado; conciliar antes de sumar`]:[]),...(e.deletedAt?[`${e.id}: movimiento eliminado; excluido de totales`]:[]),...(e.kind==='income'&&netDeposit(e)===null?[`${e.id}: desglose de ventas, comisiones, devoluciones o IVU pendiente`]:[]),...(e.useKind==='pending'?[`${e.id}: uso pendiente`]:[]),...(s.documents.some(d=>d.movementId===e.movementId&&!d.deletedAt&&d.status==='pending')?[`${e.id}: comprobante pendiente de revisión`]:[]),...(e.cpaStatus!=='reviewed'?[`${e.id}: ${cpaLabels[e.cpaStatus]}`]:[]),...(!s.documents.some(d=>d.movementId===e.movementId&&!d.deletedAt&&d.status!=='corrected')?[`${e.id}: comprobante pendiente`]:[])] )];
  const headings=['entryId','movementId','holderId','projectId','date','description','kind','useKind','amountCents','commercialCents','personalCents','grossCents','commissionCents','refundCents','ivuCents','percentBps','justification','cpaStatus','stale','includedInTotals','deletedAt','documentIds'] as const;
  const csv=[headings.map(csvCell).join(','),...rows.map(r=>headings.map(k=>csvCell(r[k])).join(','))].join('\r\n');
- return {format:'EduMoney-Negocio-CPA-v1',notice:'Importes en centavos USD. Revisión comercial; no determina deducibilidad. Las filas repartidas suman una sola vez. Con desglose completo, comisiones, devoluciones e IVU se reparten proporcionalmente al neto; el bruto de cada proyecto se reconcilia al centavo con esos componentes. Las reservas son manuales del titular y no son gastos ni saldos bancarios.',holder,projectId,projects:s.projects.filter(p=>p.holderId===holderId&&(!projectId||p.id===projectId)),dbas:s.dbas.filter(d=>d.holderId===holderId),rows,totals:businessTotals(entries,projectId??undefined),reserves:s.reserves.filter(r=>r.holderId===holderId),pending,documents,csv};
+ const projectIds=new Set(rows.map(r=>r.projectId));
+ if(projectId)projectIds.add(projectId);
+ const projects=s.projects.filter(p=>p.holderId===holderId&&(period?projectIds.has(p.id):(!projectId||p.id===projectId)));
+ const dbaIds=new Set(projects.map(p=>p.dbaId));
+ return {format:'EduMoney-Negocio-CPA-v1',notice:'Importes en centavos USD. Revisión comercial; no determina deducibilidad. Las filas repartidas suman una sola vez. Con desglose completo, comisiones, devoluciones e IVU se reparten proporcionalmente al neto; el bruto de cada proyecto se reconcilia al centavo con esos componentes. Las reservas son manuales del titular y no son gastos ni saldos bancarios.',holder,projectId,...(period?{period:{from:period.from,to:period.to}}:{}),projects,dbas:s.dbas.filter(d=>d.holderId===holderId&&(!period||dbaIds.has(d.id))),rows,totals:businessTotals(entries,projectId??undefined),reserves:period?[]:s.reserves.filter(r=>r.holderId===holderId),pending,documents,csv};
 }
