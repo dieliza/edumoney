@@ -1,6 +1,5 @@
 const {Buffer}=require('node:buffer');
 const fs=require('node:fs'),z=require('node:zlib'),vm=require('node:vm'),assert=require('node:assert/strict');
-const ts=require('typescript');
 function worker(file){const source=fs.readFileSync(file,'utf8');function obj(name){const start=source.indexOf('const '+name+'=')+name.length+7;let depth=0,q=false,e=false;for(let p=start;p<source.length;p++){const c=source[p];if(q){if(e)e=false;else if(c==='\\')e=true;else if(c==='"')q=false;}else if(c==='"')q=true;else if(c==='{')depth++;else if(c==='}'&&!--depth)return JSON.parse(source.slice(start,p+1));}throw Error(name);}const routes=obj('ROUTES'),content=obj('CONTENT');return{source,routes,read:p=>z.gunzipSync(Buffer.from(content[routes[p][0]],'base64')).toString()};}
 const before=worker('/tmp/edumoney-live86-worker.js'),after=worker('/workspace/sites/edumoney-web/worker/index.js');
 assert.equal(before.source.slice(0,before.source.indexOf('const ROUTES=')),after.source.slice(0,after.source.indexOf('const ROUTES=')));
