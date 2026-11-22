@@ -1,0 +1,7 @@
+# Colores del formulario según Home
+
+Solicitud exclusivamente visual, con las dos capturas aportadas: Personal usa el verde #00774F, Comercial el violeta #7046AE y Gasto/Ingreso el rosado #AA1749 tomado de la cara del botón compartido Gastos / Ingresos. Los accesos Gastos/Ingresos bajo Editar historiales usan ese mismo rosado con letra blanca. Se reutiliza tabColors y el acabado luminoso existente. No se cambian los tamaños declarados, nombres, selección, acciones ni persistencia.
+
+Solo cambia MovementForm. Base publicada v93, hosting 9964065e4e844fb22dec5b2c61b6601da82afa54. HTML activo consultado: registro form-account-93-20261122. El parche reemplaza únicamente el contenido compilado de factory 831 y actualiza referencias de assets y caché form-colors-94-20261122. Los demás factories y servidor se conservan. La salida derivada dist/server/index.js apunta al Worker verificado y se empaqueta siguiendo el enlace para no duplicar su contenido en el espacio de trabajo; el archivo de publicación contiene el Worker real.
+
+Verificación: cinco recorridos reutilizados del artefacto aprobados (guardar ingresos/gastos en cada cuenta y conservar recurrencia al pulsar Personal de nuevo); 5/100 casos en este bloque, sin suites generales ni pruebas nuevas que repliquen estilos. TypeScript aprobado y ESLint sin errores; advertencia previa en patch-home-controls-site.cjs. Scripts, aliases, registro canónico /sw.js y precache válidos. Sin comprobación visual en teléfono físico.
