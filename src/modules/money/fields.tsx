@@ -1,3 +1,4 @@
+import { useSheetViewport } from '../../ui/useSheetViewport';
 import {SaveToast} from '../../ui/SaveToast';
 import {SelectControl} from '../../ui/SelectControl';
 import { DateField } from '../../ui/DateField';
@@ -17,8 +18,9 @@ export function Sheet({ title, close, children, headerAction, busy = false }: Pr
     headerAction?:ReactNode;
 }>) {
     const { colors } = useTheme();
+    const viewport = useSheetViewport();
     return <Modal transparent animationType="none" onRequestClose={() => { if (!busy)
-        close(); }}><KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1, justifyContent: 'center', padding: 16, backgroundColor: fixed.previewBackdrop }}>
+        close(); }}><KeyboardAvoidingView enabled={Platform.OS !== 'web'} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[{ flex: 1, justifyContent: 'center', padding: 16, backgroundColor: fixed.previewBackdrop }, Platform.OS === 'web' && viewport ? { position: 'absolute', top: viewport.top, height: viewport.height, left: 0, right: 0, flex: undefined } : undefined]}>
   <View style={{ width: '100%', maxWidth: 650, maxHeight: '92%', alignSelf: 'center' }}><View style={{flexDirection:'row',gap:8,alignItems:'center',paddingBottom:8}}><Pressable testID="sheet-dismiss-keyboard" accessibilityRole="button" accessibilityLabel="Ocultar teclado del formulario" onPress={()=>Keyboard.dismiss()} style={{minWidth:48,minHeight:48,padding:12,backgroundColor:colors.surface,borderRadius:16}}><Ionicons name="keypad-outline" size={24} color={colors.primary}/></Pressable><View style={{flex:1}}/>{!busy?<CloseButton testID="sheet-close" onPress={close}/>:null}</View>
   {headerAction?<View style={{padding:8,borderTopLeftRadius:20,borderTopRightRadius:20,backgroundColor:colors.surface}}>{headerAction}</View>:null}
   <ScrollView tabIndex={0} keyboardDismissMode="on-drag" keyboardShouldPersistTaps="handled" style={{ flexShrink: 1, width: '100%', borderRadius: 24 }}><Card style={{ gap: 16 }}>
