@@ -17,7 +17,7 @@ for(const [url,[hash,mime]]of Object.entries({...routes})){
  const raw=z.gunzipSync(Buffer.from(content[hash],'base64')).toString();const sf=ts.createSourceFile(url,raw,ts.ScriptTarget.Latest,true);const edits=[];
  for(const statement of sf.statements){const call=statement.expression;if(!call||!ts.isCallExpression(call)||call.expression.getText(sf)!=='__d')continue;const id=Number(call.arguments[1]?.getText(sf));const spec=defs.find(v=>v[0]===id);if(!spec)continue;const [,file,map]=spec;
  const built=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,esModuleInterop:true}}).outputText;
- const requires=[...built.matchAll(/require\("([^"]+)"\)/g)].map(m=>m[1]);for(const dep of requires)if(map[dep]===undefined)throw Error('Unmapped '+file+':'+dep);
+ const requires=[];const builtAst=ts.createSourceFile(file,built,ts.ScriptTarget.Latest,true);function collect(n){if(ts.isCallExpression(n)&&n.expression.getText(builtAst)==='require'&&ts.isStringLiteral(n.arguments[0]))requires.push(n.arguments[0].text);ts.forEachChild(n,collect);}collect(builtAst);for(const dep of requires)if(map[dep]===undefined)throw Error('Unmapped '+file+':'+dep);
  const mapped=Object.fromEntries(requires.map(dep=>[dep,map[dep]]));
  const factory=`__d(function(g,r,i,a,module,exports,d){const ids=${JSON.stringify(mapped)};function require(name){if(!(name in ids))throw Error('Unknown dependency');const value=r(ids[name]);return name==='react-native'?{View:value.default}:value;}\n${built}\n},${id},${JSON.stringify([...new Set(Object.values(mapped))])});`;
  edits.push({start:statement.getStart(sf),end:statement.end,value:factory});patched.push(id);
