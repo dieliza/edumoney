@@ -11,3 +11,6 @@ Base: v85, hosting 6905f7b04b3af473d56e1be9cdd33052f086e0ee. Parche exclusivo de
 Verificación: seis pruebas de viewport/revelación aprobadas. TypeScript aprobado. Verificador de bundle: 28 aliases de Sheet ejecutados; altura/scroll mínimos comprobados; selector real del bundle cambia categorías con teclado y scroll a 44px, viewport 132px, sin frase. Conserva todos los factories ajenos y backend. ESLint se completa antes de publicar. No hay infraestructura de navegador iPhone disponible; no se afirma reproducción física del teclado.
 
 Presupuesto: 6 casos unitarios + 28 renders de aliases + 1 caso de selector + 1 entrega = 36/100. No se ejecuta suite completa. La primera pasada de lint detectó Buffer no declarado en el verificador previo (script de desarrollo); se corrige la importación y se repite lint, sin cambio de producto adicional.
+
+ESLint final: aprobado. Revisión React: efectos mantienen orden fijo, cancelan animationFrame y listeners; no se remonta el input, se conserva valor/control y navegación accesible de categorías. Sin dependencias ni consultas adicionales.
+Publicación v86: aplicación 8df87fc; hosting ecbdada7b56ff0559c4f7e3885c0b1ca78dc259f; versión appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_f8728735e154819190d65afefed84cbc; deployment appgdep_6b02f4d89e208191b4a4f8df0da6c9c1. Entorno conservado en revisión 4.
