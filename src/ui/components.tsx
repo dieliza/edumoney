@@ -18,8 +18,8 @@ export {CloseButton} from './CloseButton';
 export type IconName = ComponentProps<typeof Ionicons>['name'];
 installButtonFinish();
 export function Body({ children, muted = false, style, canvas = false,numberOfLines,adjustsFontSizeToFit,minimumFontScale }: PropsWithChildren<{ muted?: boolean; canvas?:boolean;numberOfLines?:number;adjustsFontSizeToFit?:boolean;minimumFontScale?:number; style?: ComponentProps<typeof Text>['style'] }>) {
-  const { colors } = useTheme();
-  return <Text numberOfLines={numberOfLines} adjustsFontSizeToFit={adjustsFontSizeToFit} minimumFontScale={minimumFontScale} style={[{ color: canvas ? (muted?'#D7F2EE':'#F4FFFC') : muted ? colors.muted : colors.text, fontSize: 16, lineHeight: 24,flexShrink:1,maxWidth:'100%' }, style]}>{children}</Text>;
+  const { name,colors } = useTheme();
+  return <Text numberOfLines={numberOfLines} adjustsFontSizeToFit={adjustsFontSizeToFit} minimumFontScale={minimumFontScale} style={[{ color: canvas && name==='dark' ? (muted?'#D7F2EE':'#F4FFFC') : muted ? colors.muted : colors.text, fontSize: 16, lineHeight: 24,flexShrink:1,maxWidth:'100%' }, style]}>{children}</Text>;
 }
 export function Card({ children, style, chart = false, row = false }: PropsWithChildren<{ style?: StyleProp<ViewStyle>;chart?:boolean;row?:boolean }>) {
   const { colors } = useTheme();

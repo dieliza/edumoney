@@ -22,7 +22,7 @@ vi.mock('../src/modules/money/TransactionHistory',()=>({TransactionHistory:({kin
 vi.mock('../src/modules/money/TransactionFormUI',()=>({
  TransactionSheet:({title,children}:{title:string;children:ReactNode})=>createElement('section',null,createElement('h1',null,title),children),
  TransactionSegments:({label,options}:{label:string;options:readonly(readonly[string,string])[]})=>createElement('div',null,label,options.map(([key,text])=>createElement('span',{key},text))),
- TransactionLink:({title}:{title:string})=>createElement('button',null,title),TransactionSaveButton:({title}:{title:string})=>createElement('button',null,title),TransactionError:()=>null,transactionStyles:{}
+ TransactionLink:({title}:{title:string})=>createElement('button',null,title),TransactionSaveButton:({title}:{title:string})=>createElement('button',null,title),TransactionError:()=>null,useTransactionStyles:()=>({})
 }));
 const props={kind:'expense' as const,categories:[],store:{} as MoneyStore,close:()=>{},saved:async()=>{}};
 const expense:LedgerMovement={id:'m',idempotencyKey:'m',kind:'expense',amountCents:cents(500),currency:'USD',date:'2026-11-15',description:'Comida',categoryId:null,paymentMethod:'cash',taxReview:false,useKind:'personal',grossCents:null,withholdingCents:null,createdAt:'now',updatedAt:'now',deletedAt:null,incomeType:'manual',scheduleId:null,occurrenceDate:null,version:1};

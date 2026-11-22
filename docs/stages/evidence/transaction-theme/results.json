@@ -1,0 +1,14 @@
+[
+  {
+    "name": "light: formulario y pantalla compartida, borrador, persistencia y guardado",
+    "passed": true
+  },
+  {
+    "name": "dark: formulario y pantalla compartida, borrador, persistencia y guardado",
+    "passed": true
+  },
+  {
+    "name": "Automático sigue el dispositivo sin perder importe ni selección",
+    "passed": true
+  }
+]

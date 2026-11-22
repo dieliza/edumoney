@@ -67,3 +67,6 @@ La administración de cobros programados reside en Mis deudas → Cobros program
 
 ## Entrega de actualizaciones web
 Antes de publicar, comprobar las rutas reales que registra el HTML de la versión activa, no solo los archivos locales. El service worker debe registrar la ruta canónica /sw.js, usar un nombre de caché estática distinto por publicación y mantener coherentes todos los alias anteriores. Los scripts de registro y service worker deben revalidarse sin caché HTTP. Verificar que cada recurso precargado exista y preservar los manejadores de push y activación segura. No borrar IndexedDB, claves ni registros financieros para actualizar el código, ni recargar formularios sin la acción Actualizar EduMoney. Ver scripts/verify-update-delivery-site.cjs.
+
+## Apariencia de todas las pantallas
+Todas las páginas, formularios y modales deben responder al tema seleccionado (Claro, Oscuro o Automático) mediante ThemeProvider/useTheme. No fijar una pantalla completa en un tema por una imagen de referencia. Mantener contraste de textos, iconos, campos, enlaces, estados y selección en ambos temas; conservar colores semánticos como gasto/ingreso/guardar cuando sean legibles. Cambiar el tema no debe desmontar el formulario ni borrar el borrador.

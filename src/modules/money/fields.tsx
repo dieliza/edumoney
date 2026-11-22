@@ -1,4 +1,4 @@
-import {transactionFormColors as tc} from '../../ui/transactionFormStyle';
+import {transactionFormColors} from '../../ui/transactionFormStyle';
 import { useSheetViewport } from '../../ui/useSheetViewport';
 import {SaveToast} from '../../ui/SaveToast';
 import {SelectControl} from '../../ui/SelectControl';
@@ -45,7 +45,7 @@ export function Field({ label, value, onChangeText, decimal = false, multiline =
     compact?: boolean;
     presentation?:'transaction';
 }) {
-    const { colors } = useTheme(),transaction=presentation==='transaction';
+    const { colors,name } = useTheme(),tc=transactionFormColors(name),transaction=presentation==='transaction';
     const [visible, setVisible] = useState(false);
     const monetary = money ?? (decimal && !/%|APR|tasa|porcentaje/i.test(label));
     const descriptionField=/descripci[oó]n/i.test(label)&&!/^Buscar/i.test(label);

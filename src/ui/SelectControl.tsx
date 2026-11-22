@@ -1,4 +1,4 @@
-import {transactionFormColors as tc} from './transactionFormStyle';
+import {transactionFormColors} from './transactionFormStyle';
 import {useState} from 'react';
 import {Keyboard,Modal,Pressable,ScrollView,Text,View,useWindowDimensions} from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -7,7 +7,7 @@ import {fixed} from '../design/tokens';
 import {CloseButton} from './CloseButton';
 import {missingField} from './requiredFields';
 export type SelectControlProps<T extends string=string>={label:string;value:T;options:readonly (readonly [T,string])[];onChange(value:T):void;required?:boolean;compact?:boolean;action?:boolean;presentation?:'transaction';optionTestIDs?:Readonly<Record<string,string|undefined>>};
-export function SelectControl<T extends string>({label,value,options,onChange,required=false,compact=false,action=false,optionTestIDs,presentation}:SelectControlProps<T>){const {colors}=useTheme(),transaction=presentation==='transaction';const {height}=useWindowDimensions();const [open,setOpen]=useState(false);const missing=missingField(value,required),selected=options.find(([id])=>id===value)?.[1]??'Seleccionar';return <View style={{width:'100%',maxWidth:transaction?'100%':360,flexShrink:1,alignSelf:'flex-start',gap:6}}>
+export function SelectControl<T extends string>({label,value,options,onChange,required=false,compact=false,action=false,optionTestIDs,presentation}:SelectControlProps<T>){const {colors,name}=useTheme(),tc=transactionFormColors(name),transaction=presentation==='transaction';const {height}=useWindowDimensions();const [open,setOpen]=useState(false);const missing=missingField(value,required),selected=options.find(([id])=>id===value)?.[1]??'Seleccionar';return <View style={{width:'100%',maxWidth:transaction?'100%':360,flexShrink:1,alignSelf:'flex-start',gap:6}}>
  {!compact&&!action?<Text style={{fontSize:transaction?16:14,fontWeight:transaction?'500':'600',color:transaction?tc.muted:fixed.ink,backgroundColor:transaction?'transparent':'#E6F6F1',paddingHorizontal:transaction?0:4,alignSelf:'flex-start'}}>{label}</Text>:null}
  <Pressable accessibilityRole="button" accessibilityLabel={action?label:`${label}: ${selected}`} accessibilityState={{expanded:open,disabled:!options.length}} aria-invalid={missing} disabled={!options.length} onPress={()=>{Keyboard.dismiss();setOpen(true);}} style={{minHeight:48,paddingHorizontal:12,borderWidth:missing?2:1,borderColor:missing?fixed.expense:colors.line,borderRadius:12,backgroundColor:action?fixed.buttonEnd:transaction?tc.field:'#E6F6F1',flexDirection:'row',alignItems:'center',gap:12}}><Text style={{flex:1,fontSize:16,fontWeight:'600',color:action?fixed.white:fixed.ink}}>{action?label:selected}</Text><Ionicons name="chevron-down" size={20} color={action?fixed.white:colors.primary}/></Pressable>
  {missing?<Text style={{fontSize:12,color:transaction?tc.error:fixed.expense}}>Obligatorio</Text>:null}

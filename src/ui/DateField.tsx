@@ -1,4 +1,4 @@
-import {transactionFormColors as tc} from './transactionFormStyle';
+import {transactionFormColors} from './transactionFormStyle';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { Body, CloseButton } from './components';
@@ -7,7 +7,7 @@ import { fixed } from '../design/tokens';
 import { validDate, localToday } from '../modules/money/domain';
 export type DateFieldProps = {label:string;value:string;onChangeText(value:string):void;required?:boolean;testID?:string;max?:string;presentation?:'transaction'};
 export function DateField({label,value,onChangeText,required=false,testID,max,presentation}:DateFieldProps) {
-  const {colors}=useTheme(),transaction=presentation==='transaction';const [open,setOpen]=useState(false);const [month,setMonth]=useState((validDate(value)?value:localToday()).slice(0,7));
+  const {colors,name}=useTheme(),tc=transactionFormColors(name),transaction=presentation==='transaction';const [open,setOpen]=useState(false);const [month,setMonth]=useState((validDate(value)?value:localToday()).slice(0,7));
   const [year,mm]=month.split('-').map(Number);const days=new Date(year,mm,0).getDate();const offset=new Date(year,mm-1,1).getDay();
   function move(delta:number){const d=new Date(year,mm-1+delta,1,12);setMonth(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`);}
   return <View style={{gap:8,padding:transaction?0:12}}><Body style={transaction?{color:tc.muted,fontSize:16,fontWeight:'500'}:undefined}>{label}</Body><Pressable testID={testID} accessibilityRole="button" accessibilityLabel={`${label}: ${value||'Elegir fecha'}`} onPress={()=>setOpen(!open)} style={{padding:14,minHeight:50,borderRadius:12,borderWidth:required&&!value?2:1,borderColor:required&&!value?fixed.expense:colors.line,backgroundColor:transaction?tc.field:colors.surfaceAlt}}><Body style={transaction?{color:tc.fieldInk}:undefined}>📅 {value||'Elegir fecha'}</Body></Pressable>{required&&!value?<Body style={{color:transaction?tc.error:fixed.expense}}>Obligatorio</Body>:null}

@@ -1,5 +1,6 @@
-import {transactionFormColors as tc} from '../../ui/transactionFormStyle';
-import {TransactionSheet,TransactionSegments,TransactionLink,TransactionSaveButton,TransactionError,transactionStyles as styles} from './TransactionFormUI';
+import {useTheme} from '../../design/ThemeProvider';
+import {transactionFormColors} from '../../ui/transactionFormStyle';
+import {TransactionSheet,TransactionSegments,TransactionLink,TransactionSaveButton,TransactionError,useTransactionStyles} from './TransactionFormUI';
 import {saveAccountMovement} from './saveAccountMovement';
 import {useAccountScope,setAccountScope,type AccountScope} from './accountScope';
 import {recognizedPayment} from '../documents/paymentRecognition';
@@ -33,6 +34,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
     saved(): Promise<void>;
     documentReview?: { id: string; version: number };
 }) {
+    const {name:themeName}=useTheme(),tc=transactionFormColors(themeName),styles=useTransactionStyles();
     const account=useAccountScope();
     const [identity] = useState(() => ({ id: initial?.id ?? newId(), operation: initial?.idempotencyKey ?? newId(), schedule: newId() }));
     const [type,setType] = useState<EntryKind>(initial?.kind as EntryKind ?? (initialHistory==='income'?'income':initialHistory==='expense'?'expense':kind));

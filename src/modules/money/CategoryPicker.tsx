@@ -1,6 +1,7 @@
+import {useTheme} from '../../design/ThemeProvider';
 import {SelectControl} from '../../ui/SelectControl';
 import {Pressable,Text,View} from 'react-native';
-import {transactionFormColors as tc} from '../../ui/transactionFormStyle';
+import {transactionFormColors} from '../../ui/transactionFormStyle';
 import {TransactionError} from './TransactionFormUI';
 import {announceSaved} from '../../ui/saveFeedback';
 import {WheelPicker} from '../../ui/WheelPicker';
@@ -15,6 +16,7 @@ import {Field,ErrorNotice} from './fields';
 import {getMoneyStore} from './localStore';
 import type {Category} from './types';
 export function CategoryPicker({categories,kind,value,onChange,required=false,onCreated,presentation}:{categories:Category[];kind:'income'|'expense';value:string;onChange(value:string,name?:string):void;required?:boolean;onCreated?(category:Category):void;presentation?:'transaction'}){
+ const {name:themeName}=useTheme(),tc=transactionFormColors(themeName);
  const live=useRef(true);useLayoutEffect(()=>{live.current=true;return()=>{live.current=false;};},[]);
  const [extra,setExtra]=useState<Category[]>([]),[adding,setAdding]=useState(false),[name,setName]=useState(''),[error,setError]=useState(''),[busy,setBusy]=useState(false);
  const merged=[...categories,...extra.filter(c=>!categories.some(old=>old.id===c.id))];
