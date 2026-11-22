@@ -1,0 +1,22 @@
+import {readFileSync} from 'node:fs';
+import {runInNewContext} from 'node:vm';
+import {expect,it,vi} from 'vitest';
+const script=readFileSync('scripts/pwa-register.js','utf8');
+function setup({waiting=true,complete=true,fail=false}:{waiting?:boolean;complete?:boolean;fail?:boolean}={}){
+ const events=new Map<string,{fn:()=>unknown;once?:boolean}[]>(),nodes:any[]=[],intervals:(()=>unknown)[]=[];
+ const on=(scope:string)=>(name:string,fn:()=>unknown,opts?:{once?:boolean})=>{const key=scope+':'+name;events.set(key,[...(events.get(key)??[]),{fn,once:opts?.once}]);};
+ const registration={waiting:waiting?{postMessage:vi.fn()}:null,installing:null,update:fail?vi.fn(async()=>{throw Error('offline');}):vi.fn(async()=>{}),addEventListener:on('registration')};
+ const serviceWorker={controller:{},register:vi.fn(async()=>registration),addEventListener:on('worker')};
+ const document={readyState:complete?'complete':'loading',visibilityState:'visible',body:{append:vi.fn()},createElement:vi.fn((tag:string)=>{const node={tag,style:{cssText:''},setAttribute:vi.fn(),append:vi.fn(),addEventListener:on('node'+nodes.length)};nodes.push(node);return node;}),addEventListener:on('document')};
+ const window={location:{reload:vi.fn()},setInterval:vi.fn((fn:()=>unknown)=>{intervals.push(fn);return 1;}),addEventListener:on('window')};
+ runInNewContext(script,{navigator:{serviceWorker},document,window});
+ async function flush(){for(let i=0;i<12;i++)await Promise.resolve();}
+ async function fire(key:string){for(const row of [...events.get(key)??[]]){row.fn();if(row.once)events.set(key,(events.get(key)??[]).filter(v=>v!==row));}await flush();}
+ return{registration,serviceWorker,document,window,nodes,intervals,flush,fire};
+}
+it('registra la ruta canónica sin caché HTTP y comprueba al entrar',async()=>{const t=setup();await t.flush();expect(t.serviceWorker.register).toHaveBeenCalledWith('/sw.js',{updateViaCache:'none'});expect(t.registration.update).toHaveBeenCalledOnce();expect(t.window.location.reload).not.toHaveBeenCalled();});
+it('muestra Actualizar si existe una versión esperando, sin recargar ni borrar datos',async()=>{const t=setup();await t.flush();expect(t.document.body.append).toHaveBeenCalledOnce();expect(t.nodes.find(n=>n.tag==='button')?.textContent).toBe('Actualizar EduMoney');expect(t.nodes[0].style.cssText).toContain('background:#063F49');expect(t.nodes[0].style.cssText).not.toContain('background:#fff');expect(t.registration.waiting?.postMessage).not.toHaveBeenCalled();expect(t.window.location.reload).not.toHaveBeenCalled();});
+it('solo activa al pulsar Actualizar y recarga una vez tras confirmarse el controlador',async()=>{const t=setup();await t.flush();await t.fire('worker:controllerchange');expect(t.window.location.reload).not.toHaveBeenCalled();await t.fire('node2:click');expect(t.registration.waiting?.postMessage).toHaveBeenCalledWith({type:'EDUMONEY_ACTIVATE_UPDATE'});expect(t.window.location.reload).not.toHaveBeenCalled();await t.fire('worker:controllerchange');await t.fire('worker:controllerchange');expect(t.window.location.reload).toHaveBeenCalledOnce();});
+it('vuelve a comprobar al regresar, enfocar, restaurar y cada minuto visible',async()=>{const t=setup({waiting:false});await t.flush();for(const name of ['document:visibilitychange','window:focus','window:pageshow'])await t.fire(name);t.intervals[0]();await t.flush();expect(t.registration.update).toHaveBeenCalledTimes(5);expect(t.window.setInterval).toHaveBeenCalledWith(expect.any(Function),60000);t.document.visibilityState='hidden';await t.fire('window:focus');t.intervals[0]();await t.flush();expect(t.registration.update).toHaveBeenCalledTimes(5);});
+it('espera al evento load si hace falta y evita registrar dos veces por el mismo evento',async()=>{const t=setup({complete:false});expect(t.serviceWorker.register).not.toHaveBeenCalled();await t.fire('window:load');await t.fire('window:load');expect(t.serviceWorker.register).toHaveBeenCalledOnce();});
+it('sin conexión no recarga, no elimina almacenamiento y permite volver a intentar',async()=>{const t=setup({waiting:false,fail:true});await t.flush();expect(t.window.location.reload).not.toHaveBeenCalled();expect(t.document.body.append).not.toHaveBeenCalled();await t.fire('window:focus');expect(t.registration.update).toHaveBeenCalledTimes(2);expect(script).not.toMatch(/indexedDB|localStorage\.clear|deleteDatabase|\.unregister\(/);});

@@ -64,3 +64,6 @@ No mostrar selectores de método de pago si está reconocido explícitamente en 
 
 ## Cobros programados
 La administración de cobros programados reside en Mis deudas → Cobros programados, no dentro de Nueva transacción. Reutilizar confirmación, pausa y reanudación existentes sin convertir ingresos en deudas ni modificar fechas o cálculos. Los avisos de cobros pendientes deben abrir esa pestaña.
+
+## Entrega de actualizaciones web
+Antes de publicar, comprobar las rutas reales que registra el HTML de la versión activa, no solo los archivos locales. El service worker debe registrar la ruta canónica /sw.js, usar un nombre de caché estática distinto por publicación y mantener coherentes todos los alias anteriores. Los scripts de registro y service worker deben revalidarse sin caché HTTP. Verificar que cada recurso precargado exista y preservar los manejadores de push y activación segura. No borrar IndexedDB, claves ni registros financieros para actualizar el código, ni recargar formularios sin la acción Actualizar EduMoney. Ver scripts/verify-update-delivery-site.cjs.

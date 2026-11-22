@@ -10,7 +10,7 @@ function environment({waiting=true,controller=true,offline=false}={}){
  const registration={waiting:waiting?{postMessage}:null,installing:{state:'installing',addEventListener:(name:string,fn:()=>void)=>{workerEvents[name]=fn;}},update,addEventListener:(name:string,fn:()=>void)=>{regEvents[name]=fn;}};
  const register=offline?vi.fn().mockRejectedValue(Error('offline')):vi.fn().mockResolvedValue(registration);
  const serviceWorker={controller:controller?{}:null,register,addEventListener:(name:string,fn:()=>void)=>{swEvents[name]=fn;}};
- runInNewContext(source,{navigator:{serviceWorker},window:{location:{reload},addEventListener:(name:string,fn:()=>Promise<void>)=>{windowEvents[name]=fn;}},document:{body,createElement:node}});
+ runInNewContext(source,{navigator:{serviceWorker},window:{location:{reload},setInterval:()=>0,addEventListener:(name:string,fn:()=>Promise<void>)=>{windowEvents[name]=fn;}},document:{body,createElement:node,readyState:'loading',visibilityState:'visible',addEventListener:()=>{}}});
  return {windowEvents,swEvents,regEvents,workerEvents,registration,register,body,reload,postMessage,update};
 }
 it('avisa de una versión pendiente sin recargar ni descartar un formulario',async()=>{
