@@ -78,7 +78,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
             if(afterSave)afterSave();else close();
         }
         catch (e) {
-            setError(userMessage(e));
+            setError(userMessage(e)==='Usa un importe decimal con hasta dos decimales'?'Escribe el importe.':userMessage(e));
             setDuplicate(e instanceof DuplicateMovementError);
         }
         finally {
@@ -95,7 +95,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
 
   {!initial&&kind!=='income'&&kind!=='expense'?<Choices<EntryKind> label="Operación" value={type} options={(allowedKinds??['transfer','loan','debt_payment'] as EntryKind[]).map(key=>[key,kindLabels[key]] as const)} onChange={setType}/>:null}
   {initial?.scheduleId?<Body>Ingreso vinculado a una recurrencia. Esta corrección no modifica los próximos cobros.</Body>:null}
-  <View style={{flexDirection:'row',flexWrap:'wrap',gap:12}}><View style={{flex:1,minWidth:140}}><DateField required label="Fecha" value={date} onChangeText={v => { setDate(v); setDuplicate(false); }} testID="movement-date"/></View>{<View style={{flex:1,minWidth:140}}><Field compact label={type==='income'?'Importe recibido (USD)':'Importe (USD)'} value={amount} onChangeText={v => { setAmount(v); setDuplicate(false); }} decimal testID="movement-amount"/></View>}</View>
+  <View style={{flexDirection:'row',flexWrap:'wrap',gap:12}}><View style={{flex:1,minWidth:140}}><DateField required label="Fecha" value={date} onChangeText={v => { setDate(v); setDuplicate(false); }} testID="movement-date"/></View>{<View style={{flex:1,minWidth:140}}><Field compact label={type==='income'?'Importe recibido (USD)':'Importe (USD)'} value={amount} onChangeText={v => { setAmount(v); setError(''); setDuplicate(false); }} decimal testID="movement-amount"/></View>}</View>
   {type!=='expense'||commercial?<Field label="Descripción (opcional)" value={description} onChangeText={v => { setDescription(v); setDuplicate(false); }} multiline testID="movement-description"/>:null}
 
   {recognizedPayment(description)?<Body>Método identificado: {paymentLabels[recognizedPayment(description)!]}</Body>:<Choices<PaymentMethod> label={type==='income'?'Cómo recibiste el ingreso':'Método de pago'} value={method} options={type==='income'||type==='expense'?entryMethods(type):(Object.entries(paymentLabels) as [PaymentMethod,string][]).filter(([key])=>key!=='credit')} onChange={setMethod}/>}
