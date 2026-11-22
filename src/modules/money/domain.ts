@@ -75,7 +75,7 @@ export function possibleDuplicates(m: LedgerMovement, movements: LedgerMovement[
 export function monthlySummary(snapshot: Snapshot, month: string) {
     if (!validMonth(month))
         throw new UserInputError('Mes no válido.');
-    const rows = snapshot.movements.filter(m => !m.deletedAt && m.date.startsWith(month));
+    const rows = snapshot.movements.filter(m => !m.deletedAt && m.useKind!=='business' && m.date.startsWith(month));
     const total = (predicate: (m: LedgerMovement) => boolean) => addAmounts(...rows.filter(predicate).map(m => m.amountCents));
     const income = total(m => m.kind === 'income');
     const expenses = total(m => m.kind === 'expense');
@@ -91,3 +91,6 @@ export function monthlySummary(snapshot: Snapshot, month: string) {
         distribution.push({ id: 'uncategorized', name: 'Sin categoría', kind: 'expense', archived: false, spent: uncategorized, budget: null });
     return { income, expenses, loans, payments, contributions, commitments, cashFlow, available: addAmounts(cashFlow, cents(-commitments)), distribution };
 }
+
+/** Distinct category IDs for income/expense; capture source is never a financial category. */
+export function commercialCategory(kind:'income'|'expense'){return {id:`edumoney-commercial-${kind}`,name:'Comercial',kind,archived:false};}

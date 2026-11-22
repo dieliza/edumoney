@@ -47,6 +47,7 @@ export function classifyVoiceEntry(text:string,categories:Category[],today:strin
  const active=categories.filter(c=>!c.archived&&c.kind===kind&&!isVoicePlaceholder(c.name));
  const matches=active.filter(c=>{const name=normal(c.name);const aliases=groups[name]??[name];return aliases.some(a=>new RegExp(`\\b${a.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}\\b`).test(s));});
  const category=matches.length===1?matches[0]:null;
+ if(/\bcomercial\b/.test(s)||category?.id.startsWith('edumoney-commercial-')||category?.name.trim().toLocaleLowerCase('es')==='comercial')reasons.push('Para Comercial, abre Gastos / Ingresos, elige la categoría Comercial y confirma tu DBA o LLC.');
  if(!category)reasons.push('Categoría por confirmar: elige o crea una categoría que describa la transacción.');
  return {kind,amountCents,date,category,method,ready:reasons.length===0,needsPayment:needsPayment&&!!category,reasons};
 }

@@ -46,15 +46,14 @@ export default function BusinessLedgerScreen() {
   {holder?<>
    <Choices label="Vista por proyecto" value={projectId} options={[["","Todos los proyectos del titular"],...projects.map(p=>[p.id,p.name] as const)]} onChange={id=>{setProject(id);setLimit(30);}}/>
    {totals?<Card row><SectionHeading title={projectId?projects.find(p=>p.id===projectId)?.name??'Proyecto':'Resumen del titular'} onSurface/>
-    <Body>Depósitos netos registrados: {formatMoney(totals.receivedCents)}</Body>
+    <Body>Ingresos comerciales recibidos: {formatMoney(totals.receivedCents)}</Body>
     <Body>Ventas brutas: {knownMoney(totals.grossCents)} · Comisiones: {knownMoney(totals.commissionCents)} · Devoluciones: {knownMoney(totals.refundCents)}</Body>
     <Body>IVU registrado en cobros: {knownMoney(totals.ivuCents)}. No confirma tasas, exenciones ni remesas.</Body>
     <Body>Cobros con desglose pendiente: {totals.pendingIncomeCount}. Los depósitos netos conocidos se conservan; sus componentes desconocidos no se convierten en cero.</Body>
-    <Body>Gastos completos registrados: {formatMoney(totals.expenseCents)}</Body>
+    <Body>Gastos comerciales registrados: {formatMoney(totals.expenseCents)}</Body>
     <Body>Parte comercial identificada: {formatMoney(totals.commercialExpenseCents)} · Gastos de uso pendiente: {formatMoney(totals.pendingExpenseCents)}</Body>
     <Body>No es un saldo bancario confirmado. Los registros modificados fuera de Negocio o eliminados se muestran para revisar y se excluyen de estos totales. Clasificar como comercial no determina deducibilidad.</Body>
    </Card>:<ErrorNotice message={totalsError}/>}
-   {store?<><ActionButton title="Añadir ingreso comercial" testID="business-income" onPress={()=>setForm({kind:'income'})}/><ActionButton title="Registrar gasto comercial" testID="business-expense" onPress={()=>setForm({kind:'expense'})}/></>:null}
    <Card row><SectionHeading title="Reservas manuales del titular" onSurface/>
     {(Object.keys(reserveLabels) as ReserveKind[]).map(kind=>{const r=data.reserves.find(r=>r.holderId===holderId&&r.kind===kind);return <Body key={kind}>{reserveLabels[kind]}: {r?formatMoney(r.amountCents):'Sin registrar'}</Body>;})}
     <Body>Las reservas pertenecen al titular, incluso en la vista de proyecto. No crean gastos ni indican que el dinero esté depositado en una cuenta separada.</Body>
@@ -68,7 +67,7 @@ export default function BusinessLedgerScreen() {
     const share=projectId?entryRows(e).find(a=>a.projectId===projectId):null;
     const commercial=projectId?share?.commercialCents??null:commercialAmount(e);
     return <Card row key={e.id}>
-     <Body style={{fontWeight:'700'}}>{e.description}</Body><Body>{e.date} · {e.kind==='income'?'Ingreso neto':'Gasto'} · {formatMoney(share?.amountCents??e.amountCents)}</Body>
+     <Body style={{fontWeight:'700'}}>{e.description}</Body><Body>{e.date} · {e.kind==='income'?'Ingreso comercial':'Gasto comercial'} · {formatMoney(share?.amountCents??e.amountCents)}</Body>
      {projectId?<Body>Importe del registro completo: {formatMoney(e.amountCents)}. Arriba se muestra únicamente la parte de este proyecto.</Body>:null}
      <Body>Uso: {useLabels[e.useKind]}{e.useKind==='mixed'?` · ${(e.businessBps??0)/100}% comercial`:''} · Parte comercial: {commercial===null?'Pendiente':formatMoney(commercial)}</Body>
      <Body>{e.justification}</Body><Body>{cpaLabels[e.cpaStatus]}</Body>

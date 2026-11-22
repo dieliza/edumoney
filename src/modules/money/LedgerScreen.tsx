@@ -61,7 +61,7 @@ export default function LedgerScreen({initialSection,initialMonth}:{initialSecti
         const load = async () => {
             const s = await getMoneyStore();
             await refreshBills();
-            const snapshot = await s.snapshot();
+            const snapshot = await s.snapshot(true);
             if (active) { setStore(s); setData(snapshot); }
         };
         const reload = () => { void load().catch(() => { if (active) setError('No pudimos cargar tus registros cifrados. Cierra y vuelve a abrir la app.'); }); };
@@ -70,7 +70,7 @@ export default function LedgerScreen({initialSection,initialMonth}:{initialSecti
         return () => { active = false; subscription.remove(); };
     }, [focused]);
     async function refresh() { if (store)
-        setData(await store.snapshot()); }
+        setData(await store.snapshot(true)); }
     async function action(task: () => Promise<unknown>, message: string) { if (busy)
         return; setBusy(true); setError(''); try {
         await task();

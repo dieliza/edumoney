@@ -17,7 +17,7 @@ export function TransactionHistory({kind,store,onEdit,saved}:{kind:TransactionHi
  const deleting=useRef(false);
  const [busyId,setBusyId]=useState<string|null>(null),[notice,setNotice]=useState('');
  const {colors}=useTheme(),[data,setData]=useState<Snapshot|null>(null),[documents,setDocuments]=useState<{store:DocumentStore;data:DocumentsSnapshot}|null>(null),[error,setError]=useState(''),[limit,setLimit]=useState(50);
- const fetch=useCallback(async()=>{if(kind==='voice'){const s=await getDocumentStore();return {documents:{store:s,data:await s.snapshot()},data:null};}return {documents:null,data:await store.snapshot()};},[kind,store]);
+ const fetch=useCallback(async()=>{if(kind==='voice'){const s=await getDocumentStore();return {documents:{store:s,data:await s.snapshot()},data:null};}return {documents:null,data:await store.snapshot(true)};},[kind,store]);
  const reload=async()=>{await saved();const result=await fetch();setData(result.data);setDocuments(result.documents);};
  useEffect(()=>{let live=true;void fetch().then(result=>{if(live){setData(result.data);setDocuments(result.documents);}}).catch(()=>{if(live)setError('No pudimos cargar este historial. Vuelve a abrirlo.');});return()=>{live=false;};},[fetch]);
  async function remove(m:LedgerMovement){if(deleting.current)return;deleting.current=true;setBusyId(m.id);setError('');setNotice('');try{await store.deleteFromHistory(m);setData(current=>current?{...current,movements:current.movements.filter(row=>row.id!==m.id)}:current);setNotice('Transacción borrada. Puedes restaurarla desde Eliminados.');try{await reload();}catch{setError('La transacción se borró. Vuelve a abrir el historial para actualizarlo.');}}catch(e){setError(userMessage(e));}finally{deleting.current=false;setBusyId(null);}}
