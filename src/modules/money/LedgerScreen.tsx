@@ -1,8 +1,5 @@
-import {useAccountScope} from './accountScope';
-import {useAccountHistory,originalScopeMovement} from './accountScopeData';
 import {announceSaved} from '../../ui/saveFeedback';
 import {HomeVoiceEntry} from '../../ui/HomeVoiceEntry';
-import {MovementRows} from './MovementRows';
 import {MoneyOverview} from '../../ui/MoneyOverview';
 import {ActionMenu} from '../../ui/ActionMenu';
 import { userMessage } from '../../core/errors';
@@ -16,24 +13,21 @@ import { fixed } from '../../design/tokens';
 import { newId } from '../../core/id';
 import { parseAmount } from '../../core/money';
 import { ActionButton, Body, Card, Screen, SectionHeading, ui } from '../../ui/components';
-import { localToday, formatMoney, monthlySummary, validDate, validMonth } from './domain';
+import { localToday, formatMoney, monthlySummary, validMonth } from './domain';
 import { getMoneyStore } from './localStore';
 import type { MoneyStore } from './store';
-import { kindLabels, paymentLabels, type Category, type EntryKind, type LedgerMovement, type Snapshot } from './types';
+import { type Category, type EntryKind, type LedgerMovement, type Snapshot } from './types';
 import { Choices, ErrorNotice, Field, Sheet } from './fields';
 import { MovementForm } from './MovementForm';
 const empty: Snapshot = { movements: [], categories: [], budgets: [], schedules: [], commitments: [] };
 export default function LedgerScreen({initialSection,initialMonth}:{initialSection?:string;initialMonth?:string}) {
-    const { colors,name } = useTheme();
+    const { colors } = useTheme();
     const focused = useIsFocused();
-    const [showHistoryFilters,setShowHistoryFilters]=useState(false);
     const [store, setStore] = useState<MoneyStore | null>(null);
     const [data, setData] = useState(empty);
     const [error, setError] = useState('');
     const [showMonth, setShowMonth] = useState(false);
-    const [segment, setSegment] = useState(['history','categories'].includes(initialSection??'')?initialSection!:'summary');
-    const account=useAccountScope();
-    const historyData=useAccountHistory(store,account,segment==='history');
+    const [segment, setSegment] = useState(initialSection==='categories'?'categories':'summary');
     const [month, setMonth] = useState(validMonth(initialMonth??'')?initialMonth!:localToday().slice(0,7));
     const [form, setForm] = useState<{
         kind: EntryKind;
@@ -42,23 +36,7 @@ export default function LedgerScreen({initialSection,initialMonth}:{initialSecti
     } | null>(null);
     const [category, setCategory] = useState<Category | null | undefined>();
     const [budget, setBudget] = useState(false);
-    const [selected, setSelected] = useState<LedgerMovement | null>(null);
-    const [reason, setReason] = useState('');
-    const [busy, setBusy] = useState(false);
     const [notice, setNotice] = useState('');
-    const [revisions, setRevisions] = useState<{
-        action: string;
-        reason: string;
-        recordedAt: string;
-    }[] | null>(null);
-    const [query, setQuery] = useState('');
-    const [filterKind, setFilterKind] = useState('all');
-    const [filterCategory, setFilterCategory] = useState('all');
-    const [filterMethod, setFilterMethod] = useState('all');
-    const [deleted, setDeleted] = useState('active');
-    const [from, setFrom] = useState(initialSection==='history'&&validMonth(initialMonth??'')?`${initialMonth}-01`:'');
-    const [to, setTo] = useState(initialSection==='history'&&validMonth(initialMonth??'')?`${initialMonth}-${new Date(Number(initialMonth!.slice(0,4)),Number(initialMonth!.slice(5)),0).getDate()}`:'');
-    const [limit, setLimit] = useState(50);
     useEffect(() => {
         if (!focused) return;
         let active = true;
@@ -75,18 +53,6 @@ export default function LedgerScreen({initialSection,initialMonth}:{initialSecti
     }, [focused]);
     async function refresh() { if (store)
         setData(await store.snapshot(true)); }
-    async function action(task: () => Promise<unknown>, message: string) { if (busy)
-        return; setBusy(true); setError(''); try {
-        await task();
-        await refresh();
-        setNotice(message);
-    }
-    catch (e) {
-        setError(userMessage(e));
-    }
-    finally {
-        setBusy(false);
-    } }
     const { summary, summaryError } = useMemo(() => {
         try {
             return validMonth(month) ? { summary: monthlySummary(data, month), summaryError: '' } : { summary: null, summaryError: 'Escribe un mes válido en formato AAAA-MM.' };
@@ -95,37 +61,17 @@ export default function LedgerScreen({initialSection,initialMonth}:{initialSecti
             return { summary: null, summaryError: 'El total supera el rango monetario admitido. Revisa los importes registrados.' };
         }
     }, [data, month]);
-    const normalize = (v: string) => v.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('es');
-    const filterError = (from && !validDate(from)) || (to && !validDate(to)) || (from && to && from > to) ? 'Revisa el rango de fechas (AAAA-MM-DD).' : '';
-    const rows = filterError ? [] : (segment==='history'?(historyData?.movements??[]):data.movements).filter(m => (deleted === 'deleted' ? !!m.deletedAt : !m.deletedAt) && (filterKind === 'all' || m.kind === filterKind) && (filterCategory === 'all' || (m.categoryId ?? 'none') === filterCategory) && (filterMethod === 'all' || m.paymentMethod === filterMethod) && (!from || m.date >= from) && (!to || m.date <= to) && normalize(m.description).includes(normalize(query)));
-    const categoryName = (id: string | null) => data.categories.find(c => c.id === id)?.name ?? 'Sin categoría';
     return <Screen chartMonth={validMonth(month)?month:undefined} dashboard={segment==='summary'} title={segment==='categories'?'Categorías y presupuestos':'Mi dinero'} demo={false}>
   <ErrorNotice message={error}/>{notice ? <Card row><Body>{notice}</Body></Card> : null}
   {!store ? <ActivityIndicator color={colors.accent} accessibilityLabel="Cargando registros cifrados"/> : <>
-   {segment!=='summary'?<Choices label="Sección de Mi dinero" value={segment} options={segment==='categories'?[['categories','Administrar'],['summary','Mi dinero'],['analysis','Gráficas y categorías']]:[['summary','Resumen'],['history','Historial'],['analysis','Gráficas y categorías']]} onChange={v=>{if(v==='analysis')router.push({pathname:'/charts',params:{month}});else setSegment(v);}}/>:null}
+   {segment!=='summary'?<Choices label="Sección de Mi dinero" value={segment} options={[["categories","Administrar"],["summary","Mi dinero"],["analysis","Gráficas y categorías"]]} onChange={v=>{if(v==='analysis')router.push({pathname:'/charts',params:{month}});else setSegment(v);}}/>:null}
 
    {segment !== 'summary' ? <ActionMenu label="Nueva transacción" actions={[{id:'income',label:'Añadir ingreso',run:()=>setForm({kind:'income'})},{id:'expense',label:'Registrar gasto',run:()=>setForm({kind:'expense'})},{id:'transfer',label:'Registrar transferencia propia',run:()=>setForm({kind:'transfer'})}]}/> : null}
-   {segment !== 'history' && segment !== 'summary' ? <SectionHeading title={month === localToday().slice(0, 7) ? 'Este mes' : month} action={showMonth ? 'Cerrar' : 'Cambiar mes'} onPress={() => setShowMonth(!showMonth)}/> : null}
-   {segment !== 'history' && segment !== 'summary' && showMonth ? <Field label="Mes (AAAA-MM)" value={month} onChangeText={setMonth}/> : null}
-   {segment !== 'history' ? <ErrorNotice message={summaryError}/> : null}
+   {segment !== 'summary' ? <SectionHeading title={month === localToday().slice(0, 7) ? 'Este mes' : month} action={showMonth ? 'Cerrar' : 'Cambiar mes'} onPress={() => setShowMonth(!showMonth)}/> : null}
+   {segment !== 'summary' && showMonth ? <Field label="Mes (AAAA-MM)" value={month} onChangeText={setMonth}/> : null}
+   <ErrorNotice message={summaryError}/>
    {segment === 'summary' && summary ? <>
     <MoneyOverview movements={data.movements} categories={data.categories} actions={focused?<HomeVoiceEntry onExpense={()=>setForm({kind:'expense'})} onScan={()=>router.push('/documents')} categories={data.categories} saved={async date=>{await refresh();if(date)setMonth(date.slice(0,7));}}/>:null} summary={summary} month={month} currentMonth={localToday().slice(0,7)} onPeriod={()=>setShowMonth(!showMonth)} periodEditor={showMonth?<Field label="Mes (AAAA-MM)" value={month} onChangeText={setMonth}/>:null} onBreakdown={()=>router.push({pathname:'/charts',params:{month,view:'breakdown'}})}/>
-   </> : null}
-   {segment === 'history' ? <>
-    <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12}}><Body style={{color:name==='dark'?'#F0FFF9':colors.text,fontWeight:'700'}}>{Math.min(limit,rows.length)} de {rows.length} transacción(es)</Body><Pressable accessibilityRole="button" accessibilityState={{expanded:showHistoryFilters}} onPress={()=>setShowHistoryFilters(!showHistoryFilters)} style={{minHeight:44,paddingHorizontal:8,justifyContent:'center'}}><Body style={{color:colors.accent,fontSize:14,fontWeight:'700'}}>{showHistoryFilters?'Ocultar filtros':'Filtrar historial'}</Body></Pressable></View>
-    <Body style={{fontSize:12,lineHeight:18,color:name==='dark'?'#CBE4E6':colors.muted}}>{from||to?`${from||'Inicio'} → ${to||'Hoy y posteriores'}`:'Todas las fechas'} · {deleted==='deleted'?'Eliminados':'Activos'} · Toca una fila para revisar, corregir o restaurar.</Body>
-    <Body style={{fontSize:12,lineHeight:18,color:name==='dark'?'#CBE4E6':colors.muted}}>Las transacciones que superan los 50 visibles siguen guardados. El resumen mensual incluye todos los del mes, aunque todavía no los hayas desplegado.</Body>
-    {showHistoryFilters?<>
-    <Field label="Buscar descripción" value={query} onChangeText={v => { setQuery(v); setLimit(50); }}/>
-    <Choices label="Tipo" value={filterKind} options={[['all', 'Todos'], ...Object.entries(kindLabels), ['goal_contribution','Aportación a meta']]} onChange={v => { setFilterKind(v); setLimit(50); }}/>
-    <Choices label="Filtrar categoría" value={filterCategory} options={[['all', 'Todas'], ['none', 'Sin categoría'], ...data.categories.map(c => [c.id, c.name] as const)]} onChange={setFilterCategory}/>
-    <Choices label="Filtrar método" value={filterMethod} options={[['all', 'Todos los métodos'], ...Object.entries(paymentLabels)]} onChange={setFilterMethod}/>
-    <Field label="Desde (AAAA-MM-DD, opcional)" value={from} onChangeText={setFrom}/><Field label="Hasta (AAAA-MM-DD, opcional)" value={to} onChangeText={setTo}/>
-    <Choices label="Estado" value={deleted} options={[['active', 'Activos'], ['deleted', 'Eliminados']]} onChange={setDeleted}/><ErrorNotice message={filterError}/>
-    </>:null}
-    <MovementRows rows={rows.slice(0,limit)} categoryName={categoryName} onOpen={m=>{setSelected(originalScopeMovement(m));setReason('');setRevisions(null);setError('');}}/>
-    {!rows.length?<Body style={{color:name==='dark'?'#CBE4E6':colors.muted}}>No hay transacciones que coincidan. Revisa las fechas y los filtros del historial.</Body>:null}
-    {rows.length > limit ? <ActionButton title="Mostrar más transacciones" secondary onPress={() => setLimit(limit + 50)}/> : null}
    </> : null}
    {segment === 'categories' ? <>
     <ActionButton title="Crear categoría" onPress={() => setCategory(null)}/>
@@ -136,19 +82,7 @@ export default function LedgerScreen({initialSection,initialMonth}:{initialSecti
    {form ? <MovementForm key={form.initial?`${form.initial.id}:${form.initial.version}`:`new:${form.history??''}`} initialHistory={form.history} onHistoryEdit={movement=>setForm({initial:movement,kind:movement.kind as EntryKind,history:movement.kind==='income'?'income':'expense'})} historySaved={refresh} allowedKinds={['transfer']} initial={form.initial} kind={form.kind} categories={data.categories} store={store} close={() => setForm(null)} afterSave={() => setForm(form.initial&&form.history?{kind:form.history==='income'?'income':'expense',history:form.history}:null)} saved={async () => { await refresh(); setNotice('Transacción guardada en este dispositivo.'); }}/> : null}
    {category !== undefined ? <CategoryForm initial={category} store={store} saved={refresh} close={() => setCategory(undefined)}/> : null}
    {budget ? <BudgetForm data={data} month={month} store={store} saved={refresh} close={() => setBudget(false)}/> : null}
-   {selected ? <Sheet title="Detalle de la transacción" close={() => setSelected(null)} busy={busy}>
-    <Body style={{ fontWeight: '700' }}>{selected.description} · {formatMoney(selected.amountCents)}</Body><Body>{selected.date} · {kindLabels[selected.kind as EntryKind] ?? 'Aportación a meta'}</Body><Body muted>Identificador: {selected.id}</Body>
-    {selected.grossCents !== null ? <Body>Bruto registrado: {formatMoney(selected.grossCents)}</Body> : null}{selected.withholdingCents !== null ? <Body>Retención: {formatMoney(selected.withholdingCents)}</Body> : null}
-    <Body>Uso: {selected.useKind === 'unknown' ? 'Sin clasificar' : selected.useKind === 'personal' ? 'Personal' : selected.useKind === 'business' ? 'Comercial' : 'Mixto'} · {selected.taxReview ? 'Marcado para revisión' : 'Sin marca contributiva'}</Body>
-    {selected.scheduleId ? <Body muted>Vinculado a ingreso recurrente. Eliminarlo no vuelve a generar este cobro; puedes restaurarlo.</Body> : null}
-    {selected.kind==='goal_contribution'?<><Body>Las aportaciones se corrigen desde Mis metas para conservar sus vínculos.</Body><ActionButton title="Abrir Mis metas" secondary onPress={()=>{setSelected(null);router.push('/goals');}}/></>:null}
-    {selected.kind!=='goal_contribution' && !selected.deletedAt && !busy ? <ActionButton title="Editar" onPress={() => { setForm({ initial: selected, kind: selected.kind as EntryKind }); setSelected(null); }}/> : null}
-    <Field label={selected.deletedAt ? 'Motivo de restauración' : 'Motivo de eliminación'} value={reason} onChangeText={setReason} multiline/>
-    <Body muted>{selected.deletedAt ? 'La restauración vuelve a incluirlo en los cálculos.' : 'La eliminación lo retira de los cálculos y conserva su historial. Puedes restaurarlo desde Eliminados.'}</Body>
-    {selected.kind!=='goal_contribution' && !busy ? <ActionButton title={selected.deletedAt ? 'Confirmar restauración' : 'Confirmar eliminación'} secondary onPress={() => void action(async () => { await store.setDeleted(selected.id, selected.version, !selected.deletedAt, reason); setSelected(null); }, selected.deletedAt ? 'Transacción restaurada.' : 'Transacción retirada de los cálculos; disponible en Eliminados.')}/> : null}
-    {!busy ? <ActionButton title="Ver historial de correcciones" secondary onPress={() => void action(async () => setRevisions(await store.revisions(selected.id)), 'Historial cargado.')}/> : null}
-    {revisions?.length === 0 ? <Body>Sin correcciones registradas.</Body> : null}{revisions?.map((r, index) => <Body key={index}>{r.recordedAt} · {r.action === 'edit' ? 'Corrección' : r.action === 'delete' ? 'Eliminación' : 'Restauración'} · {r.reason}</Body>)}<ErrorNotice message={error}/>
-   </Sheet> : null}
+
   </>}
  </Screen>;
 }
