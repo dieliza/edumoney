@@ -1,3 +1,4 @@
+import {useCaptureAccount} from './CaptureAccount';
 import {recognizedPayment} from './paymentRecognition';
 import {captureSourceLabel,captureCategory} from './capturePolicy';
 import {entryMethods,methodForDirection,type EntryDirection} from '../money/entryContext';
@@ -23,6 +24,7 @@ import { proposeFields,proposeVoice } from './domain';
 import type { DocumentsSnapshot,ImageData,RecordKind,Source,StoredDocument } from './types';
 export interface ReviewDraft {entryKind?:EntryDirection;structured?:import('./ai/types').AnthropicReading;source:Source;text:string;image:ImageData|null;warning:string;needsAmountReview?:boolean;parent?:StoredDocument}
 export function ReviewForm({retake,processing=false,analysisError='',initial,data,store,saved,close,openExisting}:{retake?:(source:'camera'|'library',file?:File)=>void;processing?:boolean;analysisError?:string;initial:ReviewDraft;data:DocumentsSnapshot;store:DocumentStore;saved():Promise<void>;close():void;openExisting(id:string):void}){
+ const captureAccount=useCaptureAccount();
  const [retaking,setRetaking]=useState(false);
  const proposal=initial.structured?anthropicProposal(initial.structured):initial.source==='voice'?proposeVoice(initial.text):proposeFields(initial.text);const parent=initial.parent;
  const linkedKind=parent?data.movements.find(m=>m.id===parent.movementId)?.kind:undefined;
@@ -55,13 +57,14 @@ export function ReviewForm({retake,processing=false,analysisError='',initial,dat
  if((initial.image||financial)&&!amount.trim())throw new UserInputError('Escribe el importe antes de guardar.');
  if(date&&!validDate(date))throw new UserInputError('Elige una fecha válida en el calendario.');
  const m=data.movements.find(m=>m.id===targetId),b=data.bills.find(b=>b.id===targetId);
- await store.save({...(initial.structured?{reading:reviewedReading(initial.structured,description,date.trim()||null,enteredCents,details)}:{}),...(kind==='paid_income'&&initial.structured?{incomeStatement:anthropicStatement(initial.structured,enteredCents!,description.trim(),structuredIds)}:{}),id,kind,source:initial.source,description,date:date.trim()||null,amountCents:amount.trim()?parseAmount(amount.trim()):null,notes,rawText:keepText==='yes'?text:null,image:initial.image,keepImage:false,movementId:kind==='attachment'&&targetType==='movement'?targetId||null:null,billId:kind==='attachment'&&targetType==='bill'?targetId||null:null,expectedMovementVersion:m?.version??null,expectedBillVersion:b?.version??null,categoryId:financial?inferredCategory?.id??null:null,paymentMethod:kind==='paid_income'||kind==='paid_expense'?effectiveMethod||null:null,supersedesId:parent?.id??null,expectedDocumentVersion:parent?.version??null,confirmSimilar:similar===reviewKey,reviewed:true});
+ await store.save({...(!parent?captureAccount.confirmed():{}),...(initial.structured?{reading:reviewedReading(initial.structured,description,date.trim()||null,enteredCents,details)}:{}),...(kind==='paid_income'&&initial.structured?{incomeStatement:anthropicStatement(initial.structured,enteredCents!,description.trim(),structuredIds)}:{}),id,kind,source:initial.source,description,date:date.trim()||null,amountCents:amount.trim()?parseAmount(amount.trim()):null,notes,rawText:keepText==='yes'?text:null,image:initial.image,keepImage:false,movementId:kind==='attachment'&&targetType==='movement'?targetId||null:null,billId:kind==='attachment'&&targetType==='bill'?targetId||null:null,expectedMovementVersion:m?.version??null,expectedBillVersion:b?.version??null,categoryId:financial?inferredCategory?.id??null:null,paymentMethod:kind==='paid_income'||kind==='paid_expense'?effectiveMethod||null:null,supersedesId:parent?.id??null,expectedDocumentVersion:parent?.version??null,confirmSimilar:similar===reviewKey,reviewed:true});
  committed=true;announceSaved();close();await saved();
  }catch(e){if(!committed){setError(userMessage(e));if(e instanceof DuplicateDocumentError)setDuplicate(e.documentId);}}finally{working.current=false;setBusy(false);}}
  return <Sheet title={parent?'Corregir comprobante':'Revisar antes de guardar'} close={close} busy={busy||processing} headerAction={<><ErrorNotice message={error}/>{!busy&&!processing?<ActionButton title="Guardar" testID="document-save" onPress={()=>void submit()}/>:null}</>}>
+ {!parent?captureAccount.selector:null}
  {!parent?<Choices<EntryDirection|''> required={financial} label="Tipo de transacción" presentation="tabs" value={direction} options={[[ 'expense','↓ Gasto'],['income','↑ Ingreso']]} onChange={value=>{if(value)changeDirection(value);}}/>:null}
  {initial.structured?<Body>Documento leído: {initial.structured.document_type==='paystub'?'Talonario de pago':initial.structured.document_type==='check'?'Cheque':'Recibo de compra'}.{direction==='income'&&initial.structured.document_type==='paystub'?' Confirma el importe recibido antes de guardar.':''}</Body>:null}
- <Body>Origen: {captureSourceLabel[initial.source]}. {'Solo se conservarán los datos confirmados; la foto es temporal.'}</Body>
+ <Body>Origen: {captureSourceLabel[initial.source]}. {captureAccount.account==='business'?'El comprobante se conserva cifrado en tu dispositivo.':'Solo se conservarán los datos confirmados; la foto es temporal.'}</Body>
  <ErrorNotice message={analysisError}/>
  {processing?<PhotoAnalysis/>:initial.image&&retake?<><ActionButton title="Volver a tomar la foto" icon="camera-outline" secondary onPress={()=>setRetaking(!retaking)}/>{retaking?<ReceiptPhotoButtons onCapture={retake}/>:null}</>:null}
  <Body>El reconocimiento puede equivocarse. Confirma los campos; nada se registra como pagado automáticamente.</Body>{initial.warning?<Body>{initial.warning}</Body>:null}{proposal.warnings.length?<Body muted>Revisa la fecha y el importe antes de guardar.</Body>:null}

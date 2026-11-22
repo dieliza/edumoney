@@ -1,3 +1,4 @@
+import {useCaptureAccount} from '../documents/CaptureAccount';
 import {recognizedPayment} from '../documents/paymentRecognition';
 import {entryMethods,methodForDirection} from '../money/entryContext';
 import {announceSaved} from '../../ui/saveFeedback';
@@ -29,7 +30,9 @@ import {deductionCategories,statementTotals,type DeductionCategory,type IncomeSt
 import type {RecognizedEarning} from './paystubTable';
 import {recognizeIncome} from './recognition';
 type Line={id:string;categoryId:string;label:string;amount:string;rule?:DeductionRule};
-export default function IncomeDocumentsScreen({business=false}:{business?:boolean}={}){
+export default function IncomeDocumentsScreen({business:initialBusiness=false}:{business?:boolean}={}){
+ const captureAccount=useCaptureAccount(initialBusiness?'business':'');
+ const business=captureAccount.account==='business';
  const saving=useRef(false);
  const [store,setStore]=useState<IncomeStore>(),[categories,setCategories]=useState<DeductionCategory[]>([...deductionCategories]);
  const [history,setHistory]=useState<Awaited<ReturnType<IncomeStore['snapshot']>>['statements']>([]);
@@ -69,7 +72,7 @@ export default function IncomeDocumentsScreen({business=false}:{business?:boolea
   if(autoNet!=='yes'&&!net.trim())throw new UserInputError('Revisa o escribe el neto del talonario antes de guardar.');
   if(!methodForDirection(method,'income'))throw new UserInputError('Selecciona cómo recibiste este ingreso.');
   const statement=draft();statementTotals(statement);
-  if(editing){await store.editStatement(editing,statement,date,method);}else{const docs=await getDocumentStore();await docs.save({...(reading?{reading:reviewedReading({...reading,period_start:statement.periodStart,period_end:statement.periodEnd,gross_cents:statement.grossCents,net_cents:statement.netCents,deductions:statement.deductions.map(d=>({label:d.label,category:d.categoryId,amount_cents:d.amountCents}))},statement.issuer,date,statement.netCents,reading.details?{...reading.details,reference:statement.reference||null}:undefined)}:{}),context:business?'business':'personal',id,kind:'paid_income',source,description:issuer.trim()|| (kind==='check'?'Cheque recibido':'Talonario de pago'),date,amountCents:statement.netCents,notes:'Comprobante de ingreso revisado. Deducciones del empleado conservadas en su desglose, sin crear gastos separados.',rawText:null,image,keepImage:business&&!!image,movementId:null,billId:null,expectedMovementVersion:null,expectedBillVersion:null,categoryId:null,paymentMethod:method,supersedesId:null,expectedDocumentVersion:null,confirmSimilar:confirmedKey===reviewKey,reviewed:true,incomeStatement:statement});}
+  if(editing){await store.editStatement(editing,statement,date,method);}else{const docs=await getDocumentStore();await docs.save({...(reading?{reading:reviewedReading({...reading,period_start:statement.periodStart,period_end:statement.periodEnd,gross_cents:statement.grossCents,net_cents:statement.netCents,deductions:statement.deductions.map(d=>({label:d.label,category:d.categoryId,amount_cents:d.amountCents}))},statement.issuer,date,statement.netCents,reading.details?{...reading.details,reference:statement.reference||null}:undefined)}:{}),...captureAccount.confirmed(),id,kind:'paid_income',source,description:issuer.trim()|| (kind==='check'?'Cheque recibido':'Talonario de pago'),date,amountCents:statement.netCents,notes:'Comprobante de ingreso revisado. Deducciones del empleado conservadas en su desglose, sin crear gastos separados.',rawText:null,image,keepImage:business&&!!image,movementId:null,billId:null,expectedMovementVersion:null,expectedBillVersion:null,categoryId:null,paymentMethod:method,supersedesId:null,expectedDocumentVersion:null,confirmSimilar:confirmedKey===reviewKey,reviewed:true,incomeStatement:statement});}
   announceSaved();clearForm();setNotice(kind==='paystub'?'Guardado exitosamente. Talonario e ingreso registrados.':'Guardado exitosamente. Cheque e ingreso registrados.');
   try{await refresh(store);}catch{setNotice('Guardado exitosamente. El ingreso quedó guardado; vuelve a abrir esta sección para actualizar el historial.');}
  }catch(e){if(!(e instanceof DuplicateDocumentError)&&userMessage(e).includes('similar'))setSimilarKey(reviewKey);setError(e instanceof DuplicateDocumentError?'Este comprobante ya existe. Abre Mis documentos; no se creó otro ingreso.':userMessage(e));}finally{saving.current=false;setBusy(false);}}
@@ -86,6 +89,7 @@ export default function IncomeDocumentsScreen({business=false}:{business?:boolea
   <Choices required label="Confirmación del ingreso" value={received} options={[[ 'no','Todavía no confirmo haberlo recibido'],['yes','Confirmo que ya recibí este ingreso y revisé las cifras']]} onChange={setReceived}/>
   {!busy&&store?<ActionButton title="Guardar" testID="income-document-save" onPress={()=>void save()}/>:busy&&!photoBusy?<View accessibilityLiveRegion="polite" style={{flexDirection:'row',alignItems:'center',gap:10}}><ActivityIndicator accessibilityLabel="Guardando talonario"/><Body>Guardando ingreso…</Body></View>:null}
   <ErrorNotice message={error}/>{notice?<Card row><Body>{notice}</Body></Card>:null}
+  {!editing?captureAccount.selector:null}
   <Card row><Body>{business?'Fotografía el talonario completo y revisa bruto, neto y deducciones. Las reglas y porcentajes son los que tú configures.':'Fotografía el cheque o talonario y revisa la fecha y el importe que recibiste. También puedes escribirlos a mano.'}</Body><Body muted>{business?'El comprobante se conserva cifrado en este dispositivo.':'En la parte personal solo se guardan los datos. La foto es temporal y se descarta al guardar.'}</Body></Card>
   <Choices label="Tipo de comprobante" value={kind} options={[[ 'paystub','Talonario de pago'],['check','Cheque']]} onChange={value=>{setKind(value);setComplete('pending');}}/>
   {photoBusy?<PhotoAnalysis/>:null}

@@ -8,12 +8,12 @@ export interface VoiceEntryStores {
  ledger:{snapshot():Promise<{categories:Category[]}>;saveCategory(id:string,name:string,kind:'income'|'expense'):Promise<unknown>};
 }
 /** Reuses encrypted document persistence, financial validation and duplicate protection. */
-export async function saveVoiceEntry(stores:VoiceEntryStores,text:string,id:string,today:string,_newCategoryId:()=>string,pending?:{id:string;version:number},confirmedMethod?:PaymentMethod){
+export async function saveVoiceEntry(stores:VoiceEntryStores,text:string,id:string,today:string,_newCategoryId:()=>string,pending?:{id:string;version:number},confirmedMethod?:PaymentMethod,account?:{context:'personal'|'business';businessHolderId?:string}){
  const content=text.trim();if(!content||content.length>20000)throw new UserInputError('Escribe o dicta entre 1 y 20,000 caracteres.');
  const {categories}=await stores.ledger.snapshot();const p=classifyVoiceEntry(content,categories,today,confirmedMethod);
  if(pending&&!p.ready){await stores.documents.updateVoiceNote(pending.id,pending.version,content);notifyInboxChanged();return p;}
  const categoryId=p.category?.id??null;
  const metadata=p.ready?'Registro confirmado desde Home.':`Pendiente de revisión: ${p.reasons.join(' ')} No modifica los totales.`;
- await stores.documents.save({...(pending?{resolveVoiceNote:pending}:{}),id,source:'voice',kind:p.ready?(p.kind==='income'?'paid_income':'paid_expense'):'note',description:content.replace(/\s+/g,' ').slice(0,100),date:p.ready?p.date:null,amountCents:p.ready?p.amountCents:null,notes:`${metadata}\n\n${content}`.slice(0,20000),rawText:content,image:null,keepImage:false,movementId:null,billId:null,expectedMovementVersion:null,expectedBillVersion:null,categoryId:p.ready?categoryId:null,paymentMethod:p.ready?p.method:null,supersedesId:null,expectedDocumentVersion:null,confirmSimilar:false,reviewed:true});
+ await stores.documents.save({...account,...(pending?{resolveVoiceNote:pending}:{}),id,source:'voice',kind:p.ready?(p.kind==='income'?'paid_income':'paid_expense'):'note',description:content.replace(/\s+/g,' ').slice(0,100),date:p.ready?p.date:null,amountCents:p.ready?p.amountCents:null,notes:`${metadata}${account?.context==='business'?' Cuenta: Comercial.':''}\n\n${content}`.slice(0,20000),rawText:content,image:null,keepImage:false,movementId:null,billId:null,expectedMovementVersion:null,expectedBillVersion:null,categoryId:p.ready?categoryId:null,paymentMethod:p.ready?p.method:null,supersedesId:null,expectedDocumentVersion:null,confirmSimilar:false,reviewed:true});
  notifyInboxChanged();return p;
 }
