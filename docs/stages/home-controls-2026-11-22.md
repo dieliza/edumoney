@@ -1,0 +1,11 @@
+# Controles de Home y gráfica comercial vacía
+
+Solicitud acotada: Transacciones junto a Comercial, amarillo; distinguir Personal y Comercial por color; quitar la flecha del Top 3; mantener gráfica comercial independiente visible. La captura comercial muestra ingresos, gastos y disponible a cero y el componente anterior omitía el SVG cuando no había sectores. No se infiere que existan o falten registros en el dispositivo del usuario ni se reclasifican datos.
+
+Home muestra una fila: Personal verde, Comercial violeta y Transacciones amarillo con texto oscuro. Conserva selección accesible y ruta account/month; tamaños flexibles y letra de 14px en teléfono. Se conserva el saldo y el resto de acciones. Top 3 conserva filas, cantidades, porcentajes, iconos de categoría y barras; únicamente se retira su botón de navegación.
+
+TransactionOverview conserva el SVG incluso sin sectores: círculo neutro con «Sin registros» para datos vacíos; no se fabrica un porcentaje ni se dibuja un sector financiero de relleno. Si existen ingresos pero no sectores representables o disponible negativo, la etiqueta es «Sin sectores». Los sectores comerciales reales mantienen su cuenta, mes, importes y la proyección anterior, comprobada con casos con datos y sin ellos. Ningún cambio en consultas, cálculos, clasificación, captura, presupuesto o historial.
+
+Base v90: hosting 12fed797b247a8f8f45033695b774b661e7867a4. Preparación/verificación reciben el Worker original por stdin desde git show para no duplicar archivos grandes. Solo factories 825, 826 y 931 cambian; se preservan los demás factories, proyección financiera original y backend. Registro /sw.js, caché controls-91-20261122, aliases y precache comprobados.
+
+Validación: ocho pruebas previas de Home y tres pruebas nuevas de estructura/colores, Top 3 sin flecha y círculo neutro sin porcentajes ficticios, aprobadas. Verificador ejecuta cinco recorridos (Home/ruta, gráficas Personal y Comercial, Comercial vacío y apertura de presupuesto existente), preservación y entrega. TypeScript y ESLint aprobados. Presupuesto conservador 18/100 incluyendo verificadores; sin suite completa. La prueba nueva se renombró .test.ts porque la configuración no incluye .test.tsx; se ejecutó explícitamente y pasó. No hay navegador físico iPhone disponible; no se afirma prueba visual en dispositivo.

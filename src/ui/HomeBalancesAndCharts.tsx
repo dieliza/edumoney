@@ -28,7 +28,7 @@ type Commercial=ReturnType<typeof commercialHomeOverview>;
 type Props={summary:Summary;month:string;movements?:LedgerMovement[];categories?:Category[]};
 type Account='personal'|'commercial';
 export function HomeBalanceView({summary,month,movements=[],categories=[],commercial,error='',account='personal',onAccountChange}:Props&{commercial:Commercial|null;error?:string;account?:Account;onAccountChange?(account:Account):void}){
- const {name,colors}=useTheme(),{width}=useWindowDimensions();const ink=name==='dark'?'#F1FFFC':colors.text;
+ const {colors}=useTheme(),{width}=useWindowDimensions();
  const isPersonal=account==='personal',label=isPersonal?'Personal':'Comercial';
  const selected=isPersonal?{summary,movements,categories}:commercial;
  return <View style={{gap:16}}>
@@ -40,10 +40,12 @@ export function HomeBalanceView({summary,month,movements=[],categories=[],commer
    </View>
    <Body style={{fontSize:12,lineHeight:18,color:'#E0F8ED'}}>Según tus registros · No es un saldo bancario confirmado</Body>
   </LinearGradient>
-  <View accessibilityRole="tablist" accessibilityLabel="Cuenta del resumen" style={{flexDirection:'row',alignItems:'center',gap:12}}>
-   {([['personal','Personal'],['commercial','Comercial']] as const).map(([value,title])=><Pressable key={value} testID={`home-account-${value}`} accessibilityRole="tab" accessibilityLabel={title} accessibilityState={{selected:account===value}} onPress={()=>onAccountChange?.(value)} style={{minHeight:44,paddingHorizontal:16,paddingVertical:8,borderRadius:12,borderWidth:1,borderColor:account===value?'#44E58B':colors.line,backgroundColor:account===value?'#00774F':'transparent',justifyContent:'center'}}><Body style={{fontSize:18,fontWeight:'800',color:account===value?'#FFFFFF':ink}}>{title}</Body></Pressable>)}
+  <View style={{flexDirection:'row',alignItems:'stretch',gap:8}}>
+   <View accessibilityRole="tablist" accessibilityLabel="Cuenta del resumen" style={{flex:2,flexDirection:'row',gap:8}}>
+    {([['personal','Personal','#00774F'],['commercial','Comercial','#7046AE']] as const).map(([value,title,color])=><Pressable key={value} testID={`home-account-${value}`} accessibilityRole="tab" accessibilityLabel={title} accessibilityState={{selected:account===value}} onPress={()=>onAccountChange?.(value)} style={{flex:1,minWidth:0,minHeight:44,paddingHorizontal:width<430?8:16,paddingVertical:8,borderRadius:12,borderWidth:account===value?2:1,borderColor:account===value?'#EDFFF2':colors.line,backgroundColor:color,justifyContent:'center',alignItems:'center'}}><Body style={{fontSize:width<430?14:18,fontWeight:'800',color:'#FFFFFF',textAlign:'center'}}>{title}</Body></Pressable>)}
+   </View>
+   <Pressable testID="home-transactions" accessibilityRole="button" accessibilityLabel={`Transacciones ${label.toLocaleLowerCase('es')}`} onPress={()=>router.push({pathname:'/charts',params:{account,month}})} style={{flex:1,minWidth:0,minHeight:44,paddingHorizontal:8,paddingVertical:8,alignItems:'center',justifyContent:'center',borderRadius:12,borderWidth:1,borderColor:'#FFD36A',backgroundColor:'#FFB600'}}><Body style={{fontSize:width<430?14:18,color:'#14313B',fontWeight:'800',textAlign:'center'}}>Transacciones</Body></Pressable>
   </View>
-  <Pressable testID="home-transactions" accessibilityRole="button" accessibilityLabel={`Transacciones ${label.toLocaleLowerCase('es')}`} onPress={()=>router.push({pathname:'/charts',params:{account,month}})} style={{alignSelf:'flex-end',minHeight:44,paddingHorizontal:12,justifyContent:'center',borderRadius:12,borderWidth:1,borderColor:colors.line}}><Body style={{color:ink,fontWeight:'700'}}>Transacciones</Body></Pressable>
  </View>;
 }
 export function HomeBalancesAndCharts(props:Props){
