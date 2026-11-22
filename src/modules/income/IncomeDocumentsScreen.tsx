@@ -1,3 +1,5 @@
+import {useAccountHistory} from '../money/accountScopeData';
+import type {MoneyStore} from '../money/store';
 import {useCaptureAccount} from '../documents/CaptureAccount';
 import {recognizedPayment} from '../documents/paymentRecognition';
 import {entryMethods,methodForDirection} from '../money/entryContext';
@@ -33,6 +35,7 @@ type Line={id:string;categoryId:string;label:string;amount:string;rule?:Deductio
 export default function IncomeDocumentsScreen({business:initialBusiness=false}:{business?:boolean}={}){
  const captureAccount=useCaptureAccount(initialBusiness?'business':'');
  const business=captureAccount.account==='business';
+ const [scopeLedger,setScopeLedger]=useState<MoneyStore|null>(null);const scopeHistory=useAccountHistory(scopeLedger,captureAccount.account,true);const scopeIds=new Set(scopeHistory?.movements.map(m=>m.id)??[]);
  const saving=useRef(false);
  const [store,setStore]=useState<IncomeStore>(),[categories,setCategories]=useState<DeductionCategory[]>([...deductionCategories]);
  const [history,setHistory]=useState<Awaited<ReturnType<IncomeStore['snapshot']>>['statements']>([]);
@@ -52,7 +55,7 @@ export default function IncomeDocumentsScreen({business:initialBusiness=false}:{
  const [categoryId,setCategoryId]=useState(''),[categoryRule,setCategoryRule]=useState<DeductionRule>(blankRule),[useRule,setUseRule]=useState('no');
  const [categoryName,setCategoryName]=useState(''),[adding,setAdding]=useState(false);const [id,setId]=useState(newId);
  async function refresh(s:IncomeStore){const data=await s.snapshot();setCategories(data.categories);setHistory(data.statements);}
- useEffect(()=>{let active=true;void getMoneyStore().then(async ledger=>{const s=new IncomeStore(ledger);const data=await s.snapshot();if(active){setStore(s);setCategories(data.categories);setHistory(data.statements);}}).catch(e=>{if(active)setError(userMessage(e));});return()=>{active=false;};},[]);
+ useEffect(()=>{let active=true;void getMoneyStore().then(async ledger=>{setScopeLedger(ledger);const s=new IncomeStore(ledger);const data=await s.snapshot();if(active){setStore(s);setCategories(data.categories);setHistory(data.statements);}}).catch(e=>{if(active)setError(userMessage(e));});return()=>{active=false;};},[]);
  const optional=(value:string)=>value.trim()?parseAmount(value.trim()):null;
  function calculatedLine(d:Line){const calculation=d.rule?calculateDeduction(d.rule,optional(gross),d.rule.base==='threshold'&&d.rule.mode==='percentage'?payerHistory(history,d.rule.payer,d.rule.year,date,editing?.documentId):0):undefined;return {id:d.id,categoryId:d.categoryId,label:d.label.trim()||categories.find(c=>c.id===d.categoryId)?.name||'Deducción',amountCents:calculation?.amountCents??optional(d.amount),...(calculation?{calculation}: {})};}
  function draft():IncomeStatement{const deductions=lines.map(calculatedLine);const g=optional(gross);if(autoNet==='yes'&&(g===null||deductions.some(d=>d.amountCents===null)))throw new UserInputError('Completa el bruto y todas las deducciones para calcular el neto.');return {version:1,...(earnings.length?{earnings}:{}),kind,issuer:issuer.trim(),reference:reference.trim(),periodStart:start||null,periodEnd:end||null,grossCents:g,netCents:autoNet==='yes'?cents(g!-addAmounts(...deductions.map(d=>cents(d.amountCents!)))):parseAmount(net.trim()),totalDeductionsCents:deductions.every(d=>d.amountCents!==null)?addAmounts(...deductions.map(d=>cents(d.amountCents!))):null,deductions,complete:complete==='complete'};}
@@ -127,6 +130,6 @@ export default function IncomeDocumentsScreen({business:initialBusiness=false}:{
   {similarKey===reviewKey?<Choices label="Coincidencia con otro registro" value={confirmedKey===reviewKey?'yes':'no'} options={[[ 'no','Revisar el ingreso existente'],['yes','Verifiqué que es un pago distinto con su propia referencia']]} onChange={value=>setConfirmedKey(value==='yes'?reviewKey:'')}/>:null}
   <ErrorNotice message={error}/>
   <SectionHeading title="Comprobantes guardados"/>{!history.length?<Card row><Body>Todavía no hay cheques o talonarios guardados en esta sección.</Body></Card>:null}
-  {history.slice(0,30).map(row=><Card row key={row.documentId}><Body style={{fontWeight:'700'}}>{row.statement.issuer||'Comprobante de ingreso'}</Body><Body>Neto registrado: {formatMoney(row.statement.netCents)} · {business?(row.statement.complete?'Desglose revisado':'Desglose pendiente'):'Ingreso recibido'}</Body>{business?row.statement.deductions.map(d=><Body key={d.id}>{d.label||categories.find(c=>c.id===d.categoryId)?.name}: {d.calculation?.rule.mode==='percentage'?`${d.calculation.rule.percentage}% · Base ${formatMoney(d.calculation.baseCents)} · `:''}{d.amountCents===null?'Pendiente':formatMoney(d.amountCents)}</Body>):null}<ActionButton secondary title={business?"Editar este cheque":"Editar este ingreso"} onPress={()=>openStatement(row)}/><Body muted>{business?'Estos son los datos originales del comprobante. Revisa su desglose al corregir la transacción.':'Los datos del pago se conservan sin guardar una foto nueva.'}</Body></Card>)}
+  {history.filter(row=>scopeIds.has(row.movementId)).slice(0,30).map(row=><Card row key={row.documentId}><Body style={{fontWeight:'700'}}>{row.statement.issuer||'Comprobante de ingreso'}</Body><Body>Neto registrado: {formatMoney(row.statement.netCents)} · {business?(row.statement.complete?'Desglose revisado':'Desglose pendiente'):'Ingreso recibido'}</Body>{business?row.statement.deductions.map(d=><Body key={d.id}>{d.label||categories.find(c=>c.id===d.categoryId)?.name}: {d.calculation?.rule.mode==='percentage'?`${d.calculation.rule.percentage}% · Base ${formatMoney(d.calculation.baseCents)} · `:''}{d.amountCents===null?'Pendiente':formatMoney(d.amountCents)}</Body>):null}<ActionButton secondary title={business?"Editar este cheque":"Editar este ingreso"} onPress={()=>openStatement(row)}/><Body muted>{business?'Estos son los datos originales del comprobante. Revisa su desglose al corregir la transacción.':'Los datos del pago se conservan sin guardar una foto nueva.'}</Body></Card>)}
  </Screen>;
 }

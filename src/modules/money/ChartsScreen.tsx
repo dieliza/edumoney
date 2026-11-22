@@ -1,3 +1,4 @@
+import {useAccountScope} from './accountScope';
 import {MonthControl,monthLabel} from '../../ui/MonthControl';
 import {useCallback,useEffect,useMemo,useRef,useState} from 'react';
 import {ActivityIndicator,AppState,Pressable,View} from 'react-native';
@@ -16,7 +17,8 @@ import {historicalSeries} from './analysisModel';
 import type {Snapshot} from './types';
 const empty:Snapshot={movements:[],categories:[],budgets:[],schedules:[],commitments:[]};
 export default function ChartsScreen({initialMonth,initialView}:{initialMonth?:string;initialView?:string}){
- const params=useLocalSearchParams<{account?:string}>(),commercial=params.account==='commercial',focused=useIsFocused(),{name,colors}=useTheme();
+ const activeAccount=useAccountScope();
+ const params=useLocalSearchParams<{account?:string}>(),commercial=params.account?params.account==='commercial':activeAccount==='business',focused=useIsFocused(),{name,colors}=useTheme();
  const request=useRef(0);const [scope,setScope]=useState<boolean|null>(null);
  const [data,setData]=useState(empty),[business,setBusiness]=useState<BusinessLedgerSnapshot|null>(null),[loaded,setLoaded]=useState(false),[month,setMonth]=useState(validMonth(initialMonth??'')?initialMonth!:localToday().slice(0,7)),[trends,setTrends]=useState(initialView==='trends'),[count,setCount]=useState('6'),[error,setError]=useState(''),[showMonth,setShowMonth]=useState(false);
  const load=useCallback(async()=>{const ticket=++request.current;const store=await getMoneyStore();const next=await store.snapshot(!commercial);const nextBusiness=commercial?await new BusinessLedgerStore(store).snapshot():null;if(ticket!==request.current)return;setData(next);setBusiness(nextBusiness);setScope(commercial);setError('');setLoaded(true);},[commercial]);

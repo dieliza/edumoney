@@ -1,3 +1,4 @@
+import {installButtonFinish} from './buttonFinish';
 import {beginSaveAction,getSaveNotice,serverSaveNotice,subscribeSaveNotice} from './saveFeedback';
 import {ChartSurface} from './ChartSurface';
 import {RecordSurface} from './RecordSurface';
@@ -15,9 +16,10 @@ import {HeaderActions} from './HeaderActions';
 import { Brand } from './Brand';
 export {CloseButton} from './CloseButton';
 export type IconName = ComponentProps<typeof Ionicons>['name'];
-export function Body({ children, muted = false, style, canvas = false }: PropsWithChildren<{ muted?: boolean; canvas?:boolean; style?: ComponentProps<typeof Text>['style'] }>) {
+installButtonFinish();
+export function Body({ children, muted = false, style, canvas = false,numberOfLines,adjustsFontSizeToFit,minimumFontScale }: PropsWithChildren<{ muted?: boolean; canvas?:boolean;numberOfLines?:number;adjustsFontSizeToFit?:boolean;minimumFontScale?:number; style?: ComponentProps<typeof Text>['style'] }>) {
   const { colors } = useTheme();
-  return <Text style={[{ color: canvas ? (muted?'#D7F2EE':'#F4FFFC') : muted ? colors.muted : colors.text, fontSize: 16, lineHeight: 24,flexShrink:1,maxWidth:'100%' }, style]}>{children}</Text>;
+  return <Text numberOfLines={numberOfLines} adjustsFontSizeToFit={adjustsFontSizeToFit} minimumFontScale={minimumFontScale} style={[{ color: canvas ? (muted?'#D7F2EE':'#F4FFFC') : muted ? colors.muted : colors.text, fontSize: 16, lineHeight: 24,flexShrink:1,maxWidth:'100%' }, style]}>{children}</Text>;
 }
 export function Card({ children, style, chart = false, row = false }: PropsWithChildren<{ style?: StyleProp<ViewStyle>;chart?:boolean;row?:boolean }>) {
   const { colors } = useTheme();

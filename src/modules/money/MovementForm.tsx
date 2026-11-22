@@ -1,3 +1,5 @@
+import {saveAccountMovement} from './saveAccountMovement';
+import {useAccountScope} from './accountScope';
 import {recognizedPayment} from '../documents/paymentRecognition';
 import {entryMethods} from './entryContext';
 import {announceSaved} from '../../ui/saveFeedback';
@@ -11,7 +13,7 @@ import {ActivityIndicator,Pressable,View} from 'react-native';
 import { newId } from '../../core/id';
 import { parseAmount } from '../../core/money';
 import { ActionButton, Body } from '../../ui/components';
-import { commercialCategory, localToday, formatMoney, inputAmount } from './domain';
+import { localToday, formatMoney, inputAmount } from './domain';
 import { Choices, ErrorNotice, Field, Sheet } from './fields';
 import { DuplicateMovementError, type MoneyStore } from './store';
 import { kindLabels, paymentLabels, type Category, type EntryKind, type IncomeSchedule, type LedgerMovement, type PaymentMethod } from './types';
@@ -29,6 +31,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
     saved(): Promise<void>;
     documentReview?: { id: string; version: number };
 }) {
+    const account=useAccountScope();
     const [identity] = useState(() => ({ id: initial?.id ?? newId(), operation: initial?.idempotencyKey ?? newId(), schedule: newId() }));
     const [type,setType] = useState<EntryKind>(initial?.kind as EntryKind ?? (initialHistory==='income'?'income':initialHistory==='expense'?'expense':kind));
     const [amount, setAmount] = useState(initial ? inputAmount(initial.amountCents) : '');
@@ -38,7 +41,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
     const availableCategories=[...categories,...addedCategories.filter(c=>!categories.some(old=>old.id===c.id))];
     const [category, setCategory] = useState(initial?.categoryId ?? '');
     const [categoryName,setCategoryName] = useState(categories.find(c=>c.id===initial?.categoryId)?.name??'');
-    const commercial=(type==='income'||type==='expense')&&(category===commercialCategory(type).id||categoryName.trim().toLocaleLowerCase('es')==='comercial');
+    const commercial=(type==='income'||type==='expense')&&(initial?initial.useKind==='business':account==='business');
     const [holders,setHolders]=useState<{id:string;name:string}[]>([]),[holderId,setHolderId]=useState('');
     const [method, setMethod] = useState<PaymentMethod>((initial ? (initial.paymentMethod ?? '') : 'bank') as PaymentMethod);
     const [incomeType, setIncomeType] = useState(initial?.incomeType ?? 'manual');
@@ -62,18 +65,18 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
             if(type==='expense'&&!category)throw new UserInputError('Elige o crea una categoría para el gasto.');
             const now = new Date().toISOString();
             const scheduleId = !initial && type === 'income' && incomeType === 'recurring' ? identity.schedule : initial?.scheduleId ?? null;
-            const m: LedgerMovement = { id: identity.id, idempotencyKey: identity.operation, kind: type, amountCents: parseAmount(amount.trim()), currency: 'USD', date, description: commercial?(description.trim()||`${type==='income'?'Ingreso':'Gasto'} comercial`):type==='expense'?(initial?.description||categoryName||categories.find(c=>c.id===category)?.name||'Gasto'):(description.trim()||categoryName||categories.find(c=>c.id===category)?.name||kindLabels[type]), categoryId: category || null, paymentMethod: recognizedPayment(description)||method, taxReview: tax === 'yes', useKind: use, grossCents: type === 'income' ? initial?.grossCents??null : null, withholdingCents: type === 'income' ? initial?.withholdingCents??null : null, createdAt: initial?.createdAt ?? now, updatedAt: now, deletedAt: null, incomeType: type === 'income' ? incomeType : 'manual', scheduleId, occurrenceDate: initial?.occurrenceDate ?? (scheduleId ? date : null), version: initial?.version ?? 1 };
+            const m: LedgerMovement = { id: identity.id, idempotencyKey: identity.operation, kind: type, amountCents: parseAmount(amount.trim()), currency: 'USD', date, description: commercial?(description.trim()||categoryName||categories.find(c=>c.id===category)?.name||`${type==='income'?'Ingreso':'Gasto'} comercial`):type==='expense'?(initial?.description||categoryName||categories.find(c=>c.id===category)?.name||'Gasto'):(description.trim()||categoryName||categories.find(c=>c.id===category)?.name||kindLabels[type]), categoryId: category || null, paymentMethod: recognizedPayment(description)||method, taxReview: commercial||tax === 'yes', useKind: commercial?'business':initial?use:'personal', grossCents: type === 'income' ? initial?.grossCents??null : null, withholdingCents: type === 'income' ? initial?.withholdingCents??null : null, createdAt: initial?.createdAt ?? now, updatedAt: now, deletedAt: null, incomeType: type === 'income' ? incomeType : 'manual', scheduleId, occurrenceDate: initial?.occurrenceDate ?? (scheduleId ? date : null), version: initial?.version ?? 1 };
             let schedule: IncomeSchedule | undefined;
             if (!initial && scheduleId) {
                 if (!/^\d+$/.test(interval))
                     throw new UserInputError('El intervalo debe ser un número entero.');
                 schedule = { id: scheduleId, description: m.description, amountCents: m.amountCents, categoryId: m.categoryId, paymentMethod: m.paymentMethod, cadence, intervalCount: Number(interval), anchorDate: date, nextDate: date, active: true };
             }
-            if(commercial)await store.saveCommercial(m,holderId,allowDuplicate);
+            if(initial&&commercial)await store.saveCommercial(m,holderId,allowDuplicate);
             else if (initial)
                 await (documentReview?store.edit(m,undefined,allowDuplicate,documentReview):store.editFromHistory(m,allowDuplicate));
             else
-                await store.create(m, allowDuplicate, schedule);
+                await saveAccountMovement(store,m,account,holderId,allowDuplicate,schedule);
             announceSaved();await saved();
             if(afterSave)afterSave();else close();
         }
@@ -89,9 +92,9 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
   {!initial&&(kind==='income'||kind==='expense')?<Choices<'income'|'expense'> compact label="Tipo de transacción" presentation="tabs" value={type as 'income'|'expense'} options={[["expense","↓ Gasto"],["income","↑ Ingreso"]]} onChange={value=>{setHistoryPane(null);setType(value);if(value==='income'&&method==='credit')setMethod('bank');setCategory('');setCategoryName('');setDuplicate(false);setError('');}}/>:null}
   {!initial&&onHistoryEdit?<View style={{gap:6}}><Body muted style={{fontSize:13}}>Historiales</Body><View style={{flexDirection:'row',gap:8}}>{(type==='income'?([['income','Ingresos']] as const):type==='expense'?([['expense','Gastos']] as const):([['expense','Gastos'],['income','Ingresos']] as const)).map(([value,label])=><Pressable key={value} accessibilityRole="button" accessibilityState={{selected:historyPane===value}} onPress={()=>setHistoryPane(historyPane===value?null:value)} style={{flex:1,minHeight:44,paddingHorizontal:8,borderWidth:1,borderColor:'#5C9B8E',borderRadius:10,alignItems:'center',justifyContent:'center',backgroundColor:historyPane===value?'#D9F5E8':'transparent'}}><Body style={{fontSize:13,fontWeight:'700',...(historyPane===value?{color:'#005B43'}:{})}}>{label}</Body></Pressable>)}</View></View>:null}
   {!initial&&historyPane&&onHistoryEdit?<TransactionHistory key={historyPane} kind={historyPane} store={store} onEdit={onHistoryEdit} saved={historySaved??saved}/>:<>
-  {(type === 'income' || type === 'expense') ? <CategoryPicker key={type} required={type==='expense'} categories={availableCategories} onCreated={created=>setAddedCategories(old=>[...old,created])} kind={type} value={category} onChange={(id,name)=>{setCategory(id);setCategoryName(name??'');if(id.startsWith('edumoney-commercial-')||name?.trim().toLocaleLowerCase('es')==='comercial')setIncomeType('manual');setDuplicate(false);}}/> : null}
-  {commercial?<><Body style={{color:'#006D50',fontWeight:'800'}}>Comercial · Se guarda en Negocio y no se suma a tus totales personales.</Body>{holders.length?<Choices required label="DBA o LLC" value={holderId} options={[["","Seleccionar negocio"],...holders.map(h=>[h.id,h.name] as const)]} onChange={setHolderId}/>:<><Body>Crea primero tu DBA o LLC en Negocio.</Body><ActionButton title="Ir a Negocio" secondary onPress={()=>{close();router.push('/(tabs)/business');}}/></>}</>:null}
-  {type==='income'&&!initial&&!commercial?<ActionButton title="Cheque o talonario" icon="camera-outline" onPress={()=>{close();router.push('/income-documents');}}/>:null}
+  {(type === 'income' || type === 'expense') ? <CategoryPicker key={type} required={type==='expense'} categories={availableCategories} onCreated={created=>setAddedCategories(old=>[...old,created])} kind={type} value={category} onChange={(id,name)=>{setCategory(id);setCategoryName(name??'');if(commercial)setIncomeType('manual');setDuplicate(false);}}/> : null}
+  {commercial?<><Body style={{color:'#006D50',fontWeight:'800'}}>Comercial</Body>{holders.length?<Choices required label="DBA o LLC" value={holderId} options={[["","Seleccionar negocio"],...holders.map(h=>[h.id,h.name] as const)]} onChange={setHolderId}/>:<><Body>Crea primero tu DBA o LLC en Negocio.</Body><ActionButton title="Ir a Negocio" secondary onPress={()=>{close();router.push('/(tabs)/business');}}/></>}</>:null}
+  {type==='income'&&!initial?<ActionButton title="Cheque o talonario" icon="camera-outline" onPress={()=>{close();router.push('/income-documents');}}/>:null}
 
   {!initial&&kind!=='income'&&kind!=='expense'?<Choices<EntryKind> label="Operación" value={type} options={(allowedKinds??['transfer','loan','debt_payment'] as EntryKind[]).map(key=>[key,kindLabels[key]] as const)} onChange={setType}/>:null}
   {initial?.scheduleId?<Body>Ingreso vinculado a una recurrencia. Esta corrección no modifica los próximos cobros.</Body>:null}

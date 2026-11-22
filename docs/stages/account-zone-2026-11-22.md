@@ -1,0 +1,13 @@
+# Cuenta seleccionada y acabado de botones
+
+Solicitud: sustituir la categoría Comercial por el selector Personal / Comercial de Home como contexto de registro. Conservar las categorías reales y reflejar cada transacción en su cuenta, Negocio/CPA, revisión contributiva comercial, gráficas e historiales. Acabado luminoso sin recolorear ni redimensionar botones; etiquetas de Home completas.
+
+La cuenta activa se comparte entre módulos y capturas mediante un almacén externo de React. Nueva transacción usa esa cuenta, no el nombre de la categoría. Se retira Comercial de las opciones sin borrar categorías ni transacciones históricas. Se conservan las validaciones, duplicados, identidad de errores y escrituras atómicas existentes. Las nuevas operaciones comerciales mantienen su categoría real y su titular DBA/LLC, entrada comercial, asignación y revisión pendiente para el contable. La revisión no declara deducibilidad. Personal conserva su política de solo datos y ausencia de preguntas contributivas; Negocio conserva sus imágenes cifradas locales.
+
+Escáner, fotos, voz y talonarios heredan la selección. El acceso Cheque o talonario está disponible también desde ingreso comercial. Historial de transacciones e historial de talonarios se filtran por cuenta; la actualización de datos confirmados refresca el historial. Gráficas sin parámetro de cuenta siguen la cuenta activa; rutas explícitas mantienen su cuenta. El Top 3 sigue la cuenta seleccionada. No se modifican las fórmulas ni importes históricos.
+
+El acabado web usa iluminación neutra con gradiente y sombras en controles semánticos, sin cambiar fondo base, color de letra, tamaños ni eventos. Las etiquetas de los tres controles de Home se mantienen en una línea y ajustan su letra al ancho disponible. No se modifica navegación, API, límites, sincronización ni administración.
+
+Base publicada v91, hosting 87cba76e566909609c443397a2beed77e3338453. Parche acotado de factories 796, 815, 831, 833, 945, 1145, 1147, 931, 952, 962, 820, 821 y 825. Se preserva el resto de factories y servidor. Caché scope-92-20261122 y registro canónico /sw.js; aliases, precache y sintaxis comprobados por el verificador.
+
+Validación: casos seleccionados de persistencia por cuenta, reintento, duplicados, categorías antiguas, voz y pendientes, herencia de captura, resumen financiero, acabado y artefacto publicado. TypeScript y ESLint sin errores; ESLint mantiene una advertencia previa en patch-home-controls-site.cjs. Presupuesto conservador reservado: 97/100, incluidas repeticiones, dos arranques del verificador fallidos y siete recorridos finales; no ejecutar suites generales. No hay navegador físico iPhone disponible: la comprobación de disposición es estructural, no una captura en ese dispositivo.

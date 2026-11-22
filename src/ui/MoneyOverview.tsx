@@ -1,10 +1,9 @@
-import {HomeBalancesAndCharts} from './HomeBalancesAndCharts';
+import {HomeBalancesAndCharts,AccountExpenseTopThree} from './HomeBalancesAndCharts';
 import type {Category,LedgerMovement} from '../modules/money/types';
 import {type ReactNode} from 'react';
 import {Pressable,View} from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {Body} from './components';
-import {ExpenseTopThree} from './ExpenseTopThree';
 import {useTheme} from '../design/ThemeProvider';
 import {type monthlySummary} from '../modules/money/domain';
 type Props={movements?:LedgerMovement[];categories?:Category[];summary:ReturnType<typeof monthlySummary>;month:string;currentMonth:string;periodEditor?:ReactNode;actions:ReactNode;onPeriod():void;onBreakdown():void};
@@ -13,5 +12,5 @@ export function MoneyOverview(p:Props){const {colors,name}=useTheme();const head
  {p.periodEditor}
  <HomeBalancesAndCharts summary={p.summary} month={p.month} movements={p.movements} categories={p.categories}/>
  {p.actions}
- <ExpenseTopThree items={p.summary.distribution} month={p.month} onOpen={p.onBreakdown}/>
+ <AccountExpenseTopThree summary={p.summary} movements={p.movements} categories={p.categories} month={p.month} onOpen={p.onBreakdown}/>
  </View>;}

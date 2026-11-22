@@ -5,7 +5,7 @@ import { UserInputError } from '../../core/errors';
 import type { Movement } from '../../core/models';
 import { MovementRepository } from './repository';
 import { cents } from '../../core/money';
-import { localToday, commercialCategory, nextOccurrence, possibleDuplicates, validDate, validMonth, validateMovement } from './domain';
+import { localToday, nextOccurrence, possibleDuplicates, validDate, validMonth, validateMovement } from './domain';
 import type { Budget, Category, IncomeSchedule, LedgerMovement, Snapshot } from './types';
 export interface SqlDb {
     execAsync(sql: string): Promise<void>;
@@ -110,26 +110,23 @@ export class MoneyStore {
     async saveCommercial(input:LedgerMovement,holderId:string,allowDuplicate=false){
         if(input.kind!=='income'&&input.kind!=='expense')throw new UserInputError('Comercial corresponde a un gasto o ingreso.');
         if(input.scheduleId||input.incomeType==='recurring')throw new UserInputError('Los cobros programados conservan su registro original. Registra el comercial como cobro recibido.');
-        const category=commercialCategory(input.kind),m={...input,categoryId:category.id,useKind:'business' as const};
+        const m={...input,useKind:'business' as const};
         validateMovement(m);if(m.date>localToday())throw new UserInputError('Elige la fecha de un gasto o ingreso ya realizado.');
         return this.write(async()=>{
             if(!await this.db.getFirstAsync("SELECT id FROM business_holders WHERE id=? AND legal_form IN ('individual','llc')",holderId))throw new UserInputError('Selecciona un DBA o LLC de Negocio.');
-            const existingCategory=await this.db.getFirstAsync<Category>("SELECT id,name,kind,archived FROM categories WHERE lower(trim(name))='comercial' AND kind=?",m.kind);
-            if(existingCategory)m.categoryId=existingCategory.id;
             const previous=await this.db.getFirstAsync<LedgerMovement>(movementSelect+' WHERE idempotency_key=?',m.idempotencyKey);
             const entry=previous?await this.db.getFirstAsync<{holderId:string}>("SELECT holder_id AS holderId FROM business_entries WHERE movement_id=?",previous.id):null;
             if(entry){if(entry.holderId===holderId&&canonical(readMovement(previous!))===canonical(m))return;throw new UserInputError('Este registro ya pertenece a Negocio. Revísalo allí, sin duplicarlo ni cambiar su titular.');}
             if(previous&&(previous.id!==m.id||previous.version!==m.version||previous.deletedAt))throw new UserInputError('La transacción cambió. Vuelve a abrirla.');
             if(!allowDuplicate&&possibleDuplicates(m,await this.movements()).length)throw new DuplicateMovementError();
-            if(!existingCategory)await this.db.runAsync('INSERT INTO categories(id,name,kind,archived) VALUES(?,?,?,0)',category.id,category.name,category.kind);
-            else if(existingCategory.archived)await this.db.runAsync('UPDATE categories SET archived=0 WHERE id=?',existingCategory.id);
             await this.validateCategory(m);
             if(previous){await this.guardLinks(previous.id);await this.revision(readMovement(previous),'edit','Clasificación comercial confirmada');await this.db.runAsync('UPDATE movements SET kind=?,amount_cents=?,date=?,description=?,category_id=?,payment_method=?,use_kind=?,updated_at=?,version=version+1 WHERE id=?',m.kind,m.amountCents,m.date,m.description.trim(),m.categoryId,m.paymentMethod,'business',new Date().toISOString(),m.id);}
             else await this.insert(m);
+            if(m.kind==='expense')await recordExpenseGuide(this.db,{...m,version:previous?previous.version+1:m.version},{use:'business',topic:'unknown',paid:'unknown',reimbursed:'unknown',eligible:'unknown',purpose:'',businessPercent:'',personalOnly:'unknown'});
             const projectId=`commercial-general:${holderId}`,entryId=`commercial-entry:${m.id}`,version=previous?previous.version+1:m.version;
             const project=await this.db.getFirstAsync<{id:string}>("SELECT id FROM business_projects WHERE holder_id=? AND (id=? OR lower(trim(name))='actividad comercial') ORDER BY rowid LIMIT 1",holderId,projectId);
             if(!project)await this.db.runAsync('INSERT INTO business_projects(id,holder_id,dba_id,name) VALUES(?,?,NULL,?)',projectId,holderId,'Actividad comercial');
-            await this.db.runAsync("INSERT INTO business_entries(id,holder_id,movement_id,kind,movement_version,use_kind,business_bps,justification,cpa_status,gross_cents,commission_cents,refund_cents,ivu_cents,updated_at) VALUES(?,?,?,?,?,'business',NULL,?,'pending',NULL,NULL,NULL,NULL,?)",entryId,holderId,m.id,m.kind,version,'Categoría Comercial confirmada por el usuario',new Date().toISOString());
+            await this.db.runAsync("INSERT INTO business_entries(id,holder_id,movement_id,kind,movement_version,use_kind,business_bps,justification,cpa_status,gross_cents,commission_cents,refund_cents,ivu_cents,updated_at) VALUES(?,?,?,?,?,'business',NULL,?,'pending',NULL,NULL,NULL,NULL,?)",entryId,holderId,m.id,m.kind,version,'Cuenta Comercial seleccionada por el usuario',new Date().toISOString());
             await this.db.runAsync('INSERT INTO business_allocations(entry_id,holder_id,project_id,amount_cents) VALUES(?,?,?,?)',entryId,holderId,project?.id??projectId,m.amountCents);
         });
     }

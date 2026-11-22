@@ -1,3 +1,5 @@
+import {useAccountScope} from './accountScope';
+import {useAccountHistory,originalScopeMovement} from './accountScopeData';
 import {announceSaved} from '../../ui/saveFeedback';
 import {HomeVoiceEntry} from '../../ui/HomeVoiceEntry';
 import {MovementRows} from './MovementRows';
@@ -30,6 +32,8 @@ export default function LedgerScreen({initialSection,initialMonth}:{initialSecti
     const [error, setError] = useState('');
     const [showMonth, setShowMonth] = useState(false);
     const [segment, setSegment] = useState(['history','categories'].includes(initialSection??'')?initialSection!:'summary');
+    const account=useAccountScope();
+    const historyData=useAccountHistory(store,account,segment==='history');
     const [month, setMonth] = useState(validMonth(initialMonth??'')?initialMonth!:localToday().slice(0,7));
     const [form, setForm] = useState<{
         kind: EntryKind;
@@ -93,7 +97,7 @@ export default function LedgerScreen({initialSection,initialMonth}:{initialSecti
     }, [data, month]);
     const normalize = (v: string) => v.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('es');
     const filterError = (from && !validDate(from)) || (to && !validDate(to)) || (from && to && from > to) ? 'Revisa el rango de fechas (AAAA-MM-DD).' : '';
-    const rows = filterError ? [] : data.movements.filter(m => (deleted === 'deleted' ? !!m.deletedAt : !m.deletedAt) && (filterKind === 'all' || m.kind === filterKind) && (filterCategory === 'all' || (m.categoryId ?? 'none') === filterCategory) && (filterMethod === 'all' || m.paymentMethod === filterMethod) && (!from || m.date >= from) && (!to || m.date <= to) && normalize(m.description).includes(normalize(query)));
+    const rows = filterError ? [] : (segment==='history'?(historyData?.movements??[]):data.movements).filter(m => (deleted === 'deleted' ? !!m.deletedAt : !m.deletedAt) && (filterKind === 'all' || m.kind === filterKind) && (filterCategory === 'all' || (m.categoryId ?? 'none') === filterCategory) && (filterMethod === 'all' || m.paymentMethod === filterMethod) && (!from || m.date >= from) && (!to || m.date <= to) && normalize(m.description).includes(normalize(query)));
     const categoryName = (id: string | null) => data.categories.find(c => c.id === id)?.name ?? 'Sin categoría';
     return <Screen chartMonth={validMonth(month)?month:undefined} dashboard={segment==='summary'} title={segment==='categories'?'Categorías y presupuestos':'Mi dinero'} demo={false}>
   <ErrorNotice message={error}/>{notice ? <Card row><Body>{notice}</Body></Card> : null}
@@ -119,7 +123,7 @@ export default function LedgerScreen({initialSection,initialMonth}:{initialSecti
     <Field label="Desde (AAAA-MM-DD, opcional)" value={from} onChangeText={setFrom}/><Field label="Hasta (AAAA-MM-DD, opcional)" value={to} onChangeText={setTo}/>
     <Choices label="Estado" value={deleted} options={[['active', 'Activos'], ['deleted', 'Eliminados']]} onChange={setDeleted}/><ErrorNotice message={filterError}/>
     </>:null}
-    <MovementRows rows={rows.slice(0,limit)} categoryName={categoryName} onOpen={m=>{setSelected(m);setReason('');setRevisions(null);setError('');}}/>
+    <MovementRows rows={rows.slice(0,limit)} categoryName={categoryName} onOpen={m=>{setSelected(originalScopeMovement(m));setReason('');setRevisions(null);setError('');}}/>
     {!rows.length?<Body style={{color:name==='dark'?'#CBE4E6':colors.muted}}>No hay transacciones que coincidan. Revisa las fechas y los filtros del historial.</Body>:null}
     {rows.length > limit ? <ActionButton title="Mostrar más transacciones" secondary onPress={() => setLimit(limit + 50)}/> : null}
    </> : null}
