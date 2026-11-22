@@ -1,3 +1,4 @@
+import {useMonthlyBudget} from './MonthlyBudgetEditor';
 import {NavigationRail} from '../../ui/NavigationRail';
 import { useCallback,useEffect,useState } from 'react';
 import { ActivityIndicator,AppState,Pressable,View } from 'react-native';
@@ -14,6 +15,7 @@ import { GoalForm } from './GoalForm';
 import { ContributionForm } from './ContributionForm';
 const empty:GoalSnapshot={goals:[],contributions:[],movements:[],events:[]};
 export default function GoalsScreen(){
+ const monthlyBudget=useMonthlyBudget();
  const focused=useIsFocused();const [store,setStore]=useState<GoalStore|null>(null);const [data,setData]=useState(empty);const [error,setError]=useState('');const [busy,setBusy]=useState(false);
  const [form,setForm]=useState<Goal|true|null>(null);const [detailId,setDetailId]=useState<string|null>(null);const [contribute,setContribute]=useState<Goal|null>(null);const [reason,setReason]=useState('');const [archived,setArchived]=useState(false);const [limit,setLimit]=useState(30);
  const load=useCallback(async()=>{const s=await getGoalStore();const d=await s.snapshot();setStore(s);setData(d);},[]);
@@ -21,7 +23,8 @@ export default function GoalsScreen(){
  async function action(task:()=>Promise<unknown>){if(busy)return;setBusy(true);setError('');try{await task();await load();}catch(e){setError(userMessage(e));}finally{setBusy(false);}}
  const detail=data.goals.find(g=>g.id===detailId);const today=localToday();
  return <Screen title="Mis metas" demo={false} subtitle="Dale un propósito a cada paso que das.">
- <NavigationRail label="Planificar mis metas" items={[{title:'Simular ahorro',icon:'trending-up-outline',run:()=>router.push({pathname:'/decisions',params:{kind:'saving'}})},{title:'Fondo de emergencia',icon:'shield-checkmark-outline',run:()=>router.push({pathname:'/decisions',params:{kind:'emergency'}})}]}/>
+ <NavigationRail label="Planificar mis metas" items={[{title:'Simular ahorro',icon:'trending-up-outline',run:()=>router.push({pathname:'/decisions',params:{kind:'saving'}})},{title:'Fondo de emergencia',icon:'shield-checkmark-outline',run:()=>router.push({pathname:'/decisions',params:{kind:'emergency'}})},{title:'Mi presupuesto mensual',icon:'calendar-outline',run:monthlyBudget.open}]}/>
+ {monthlyBudget.editor}
  <ErrorNotice message={error}/><ActionButton title="Crear nueva meta" testID="goal-create" icon="add-circle-outline" onPress={()=>{setForm(true);setError('');}}/>
  {!store?<ActivityIndicator accessibilityLabel="Cargando metas cifradas"/>:null}
 

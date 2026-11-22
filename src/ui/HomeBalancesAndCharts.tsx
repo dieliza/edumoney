@@ -2,7 +2,7 @@ import {useEffect,useState} from 'react';
 import {Pressable,View,useWindowDimensions} from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 import {Body} from './components';
-import {MonthlyCharts} from './MonthlyCharts';
+import {router} from 'expo-router';
 import {useTheme} from '../design/ThemeProvider';
 import {formatMoney,monthlySummary} from '../modules/money/domain';
 import {cents} from '../core/money';
@@ -43,9 +43,7 @@ export function HomeBalanceView({summary,month,movements=[],categories=[],commer
   <View accessibilityRole="tablist" accessibilityLabel="Cuenta del resumen" style={{flexDirection:'row',alignItems:'center',gap:12}}>
    {([['personal','Personal'],['commercial','Comercial']] as const).map(([value,title])=><Pressable key={value} testID={`home-account-${value}`} accessibilityRole="tab" accessibilityLabel={title} accessibilityState={{selected:account===value}} onPress={()=>onAccountChange?.(value)} style={{minHeight:44,paddingHorizontal:16,paddingVertical:8,borderRadius:12,borderWidth:1,borderColor:account===value?'#44E58B':colors.line,backgroundColor:account===value?'#00774F':'transparent',justifyContent:'center'}}><Body style={{fontSize:18,fontWeight:'800',color:account===value?'#FFFFFF':ink}}>{title}</Body></Pressable>)}
   </View>
-  <View testID={`home-${account}-chart`} style={{minWidth:0,gap:8}}>
-   {selected?<MonthlyCharts canvas={name==='dark'} key={`${account}-${month}`} summary={selected.summary} movements={selected.movements} categories={selected.categories} month={month} compact initialIndividual={false}/>:<View accessibilityLiveRegion="polite"><Body style={{color:ink}}>{error||'Cargando ingresos y gastos comerciales…'}</Body></View>}
-  </View>
+  <Pressable testID="home-transactions" accessibilityRole="button" accessibilityLabel={`Transacciones ${label.toLocaleLowerCase('es')}`} onPress={()=>router.push({pathname:'/charts',params:{account,month}})} style={{alignSelf:'flex-end',minHeight:44,paddingHorizontal:12,justifyContent:'center',borderRadius:12,borderWidth:1,borderColor:colors.line}}><Body style={{color:ink,fontWeight:'700'}}>Transacciones</Body></Pressable>
  </View>;
 }
 export function HomeBalancesAndCharts(props:Props){

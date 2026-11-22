@@ -1,0 +1,8 @@
+import {readFileSync} from 'node:fs';
+import {runInNewContext} from 'node:vm';
+import ts from 'typescript';
+import {expect,it} from 'vitest';
+const code=ts.transpileModule(readFileSync('src/ui/MonthControl.tsx','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,target:ts.ScriptTarget.ES2022}}).outputText;
+function setup(){let state:any=null;const sent:string[]=[];const exports:any={};const jsx={jsx:(type:any,props:any)=>({type,props}),jsxs:(type:any,props:any)=>({type,props})};runInNewContext(code,{exports,require:(name:string)=>name==='react'?{useState:()=>[state,(value:any)=>{state=value;}]}:name==='react/jsx-runtime'?jsx:name==='react-native'?{View:'View'}:{Choices:'Choices',Field:'Field'}});const render=(value='2026-11')=>exports.MonthControl({value,onChange:(v:string)=>sent.push(v)});return{sent,render,exports};}
+it('permite elegir el mes conservando el año y muestra el nombre en español',()=>{const t=setup(),view=t.render();view.props.children[0].props.children.props.onChange('02');expect(t.sent).toEqual(['2026-02']);expect(t.exports.monthLabel('2026-02')).toBe('febrero de 2026');});
+it('no emite años incompletos y al cambiar externamente el período descarta el borrador anterior',()=>{const t=setup();let view=t.render();view.props.children[1].props.children.props.onChangeText('202');expect(t.sent).toHaveLength(0);view=t.render();expect(view.props.children[1].props.children.props.value).toBe('202');view.props.children[1].props.children.props.onChangeText('2027');expect(t.sent).toEqual(['2027-11']);view=t.render('2027-11');expect(view.props.children[1].props.children.props.value).toBe('2027');});

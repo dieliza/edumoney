@@ -1,48 +1,28 @@
-import {chartTabSize,chartViewColors,chartKindColors} from './chartControls';
-import {categoryDisplayName} from './categoryLabels';
-import {MonthlyCharts} from '../../ui/MonthlyCharts';
-import {ExpenseDonut} from '../../ui/ExpenseDonut';
-import {categoryAppearance} from '../../ui/categoryAppearance';
-import {useCallback,useEffect,useMemo,useState} from 'react';
+import {MonthControl,monthLabel} from '../../ui/MonthControl';
+import {useCallback,useEffect,useMemo,useRef,useState} from 'react';
 import {ActivityIndicator,AppState,Pressable,View} from 'react-native';
-import {router,useIsFocused} from 'expo-router';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import {ActionButton,Body,Card,Screen} from '../../ui/components';
+import {useIsFocused,useLocalSearchParams} from 'expo-router';
+import {Body,Card,Screen} from '../../ui/components';
+import {TransactionOverview} from '../../ui/TransactionOverview';
+import {commercialHomeOverview} from '../../ui/commercialHomeOverview';
 import {HistoryTrend} from '../../ui/HistoryTrend';
-import {TransactionChart} from '../../ui/TransactionChart';
-import {Choices,ErrorNotice,Field} from './fields';
+import {Choices,ErrorNotice} from './fields';
 import {useTheme} from '../../design/ThemeProvider';
+import {BusinessLedgerStore} from '../business/ledgerStore';
+import type {BusinessLedgerSnapshot} from '../business/ledgerTypes';
 import {getMoneyStore} from './localStore';
-import {formatMoney,localToday,monthlySummary,validMonth} from './domain';
+import {localToday,monthlySummary,validMonth} from './domain';
 import {historicalSeries} from './analysisModel';
-import {transactionChartRows,transactionCategoryTotals,type ChartKind} from './transactionChartModel';
 import type {Snapshot} from './types';
 const empty:Snapshot={movements:[],categories:[],budgets:[],schedules:[],commitments:[]};
 export default function ChartsScreen({initialMonth,initialView}:{initialMonth?:string;initialView?:string}){
- const {colors}=useTheme(),focused=useIsFocused();
- const [data,setData]=useState(empty),[loaded,setLoaded]=useState(false),[month,setMonth]=useState(validMonth(initialMonth??'')?initialMonth!:localToday().slice(0,7)),[view,setView]=useState(initialView==='summary'?'summary':initialView==='breakdown'?'breakdown':initialView==='trends'?'trends':'transactions'),[count,setCount]=useState('6'),[category,setCategory]=useState('all'),[details,setDetails]=useState(false),[error,setError]=useState(''),[showMonth,setShowMonth]=useState(false),[kind,setKind]=useState<ChartKind>('all'),[breakdownKind,setBreakdownKind]=useState<'income'|'expense'>('expense');
- const load=useCallback(async()=>{const store=await getMoneyStore();setData(await store.snapshot(true));setLoaded(true);},[]);
- useEffect(()=>{if(!focused)return;const refresh=()=>void load().catch(()=>setError('No pudimos cargar el análisis cifrado. Vuelve a abrir la sección.'));refresh();const sub=AppState.addEventListener('change',s=>{if(s==='active')refresh();});return()=>sub.remove();},[focused,load]);
- const result=useMemo(()=>{try{return {summary:monthlySummary(data,month),trend:historicalSeries(data,month,Number(count),category),transactions:transactionChartRows(data.movements,data.categories,month,kind,category),breakdown:transactionCategoryTotals(data.movements,data.categories,month,breakdownKind),error:''};}catch{return {summary:null,trend:[],transactions:[],breakdown:[],error:'Elige un mes válido (AAAA-MM). No se calcularon cifras con un período inválido.'};}},[data,month,count,category,kind,breakdownKind]);
- const summary=result.summary,categoryName=category==='all'?undefined:category==='uncategorized'?'Gastos sin categoría':category==='income-uncategorized'?'Ingresos sin categoría':categoryDisplayName(data.categories.find(c=>c.id===category)?.name??'Categoría');
- const categories=[['all','Todas las categorías'],...data.categories.map(c=>[c.id,`${c.kind==='income'?'Ingreso':'Gasto'} · ${categoryDisplayName(c.name)}${c.archived?' (archivada)':''}`] as const),['uncategorized','Gastos sin categoría'],['income-uncategorized','Ingresos sin categoría']] as const;
- return <Screen title="Ingresos y gastos" demo={false}><ErrorNotice message={error||result.error}/>
- <Choices tabSize={chartTabSize} tabColors={chartViewColors} compact label="Vista del análisis" presentation="tabs" small value={view} onChange={setView} options={[["summary","Resumen"],["transactions","Cada transacción"],["trends","Tendencias mensuales"],["breakdown","Desglose mensual"]]}/>
- <Pressable accessibilityRole="button" onPress={()=>setShowMonth(!showMonth)} style={{minHeight:44,flexDirection:'row',gap:8,alignItems:'center',alignSelf:'flex-end',paddingHorizontal:12,borderRadius:12,backgroundColor:colors.surface}}><Ionicons name="calendar-outline" size={18} color={colors.primary}/><Body style={{fontSize:13}}>Mes: {month}</Body><Ionicons name="chevron-down" size={15} color={colors.primary}/></Pressable>{showMonth?<Field label="Mes de referencia (AAAA-MM)" value={month} onChangeText={setMonth}/>:null}
- {!loaded?<ActivityIndicator accessibilityLabel="Cargando análisis local"/>:null}
- {summary&&view==='summary'?<Card chart><MonthlyCharts compact initialIndividual={false} summary={summary} movements={data.movements} categories={data.categories} month={month}/></Card>:null}
- {summary&&view==='transactions'?<>
- <Choices compact small presentation="tabs" label="Tipo de transacción" value={kind} onChange={value=>{setKind(value as ChartKind);setCategory('all');}} options={[["all","Ambos"],["income","Ingresos"],["expense","Gastos"]]}/>
- <Choices compact label="Categoría de las transacciones" value={category} onChange={setCategory} options={categories.filter(([id])=>id==='all'||kind==='all'||id===(kind==='income'?'income-uncategorized':'uncategorized')||data.categories.some(c=>c.id===id&&c.kind===kind))}/>
- <Card chart><Body style={{fontSize:20,fontWeight:'800'}}>Cada ingreso y gasto · {month}</Body><TransactionChart key={`${month}:${kind}:${category}`} rows={result.transactions}/></Card></>:null}
- {summary&&view==='trends'?<>
- <Choices compact label="Comparar" presentation="tabs" small value={count} onChange={setCount} options={[["6","Últimos 6 meses"],["12","Últimos 12 meses"]]}/><Choices compact label="Analizar categoría" value={category} onChange={v=>{setCategory(v);setDetails(false);setKind('all');}} options={categories}/>
- <Card chart><Body style={{fontWeight:'800',fontSize:20}}>{categoryName?`Evolución de ${categoryName}`:'Evolución de ingresos y gastos'}</Body><HistoryTrend compact rows={result.trend} categoryName={categoryName}/></Card>
- {category!=='all'?<><ActionButton title={details?'Ocultar transacciones individuales':'Ver transacciones individuales del mes'} secondary onPress={()=>setDetails(!details)}/>{details?<Card chart><TransactionChart key={`${month}:${category}`} rows={transactionChartRows(data.movements,data.categories,month,'all',category)}/></Card>:null}</>:null}</>:null}
- {summary&&view==='breakdown'?<>
- <Choices tabSize={chartTabSize} tabColors={chartKindColors} compact small presentation="tabs" label="Desglose de categorías" value={breakdownKind} onChange={v=>setBreakdownKind(v as 'income'|'expense')} options={[["expense","Gastos"],["income","Ingresos"]]}/>
- <Card chart><Body style={{fontWeight:'800',fontSize:21}}>Categorías de {breakdownKind==='income'?'ingresos':'gastos'} · {month}</Body><ExpenseDonut legend={false} label={breakdownKind==='income'?'Ingresos':'Gastos'} items={result.breakdown} total={breakdownKind==='income'?summary.income:summary.expenses}/>
- {result.breakdown.map(c=><Pressable key={c.id} accessibilityRole="button" accessibilityLabel={`Ver ${c.count} transacciones de ${c.name}: ${formatMoney(c.spent)}`} onPress={()=>{setCategory(c.id);setKind(breakdownKind);setView('transactions');}} style={{minHeight:56,flexDirection:'row',gap:12,alignItems:'center',borderBottomWidth:1,borderColor:colors.line,paddingVertical:10}}><View style={{width:32,height:32,borderRadius:9,backgroundColor:categoryAppearance(c.id,c.name).color,alignItems:'center',justifyContent:'center'}}><Ionicons name={categoryAppearance(c.id,c.name).icon} size={20} color="#FFFFFF"/></View><View style={{flex:1}}><Body>{c.name}{c.archived?' (archivada)':''}</Body><Body muted style={{fontSize:12}}>{c.count} transacción(es)</Body></View><Body style={{fontWeight:'700'}}>{formatMoney(c.spent)}</Body><Ionicons name="chevron-forward" size={20} color={colors.accent}/></Pressable>)}
- <Body muted>Toca una categoría para ver cada transacción. Su evolución está en Tendencias mensuales.</Body></Card></>:null}
- <View style={{gap:10}}><ActionButton title="Categorías y presupuestos" icon="options-outline" secondary onPress={()=>router.push({pathname:'/money',params:{section:'categories',month:validMonth(month)?month:localToday().slice(0,7)}})}/><ActionButton title="Transacciones mensuales" icon="list-outline" secondary onPress={()=>router.push({pathname:'/money',params:{section:'history',month:validMonth(month)?month:localToday().slice(0,7)}})}/></View></Screen>;
+ const params=useLocalSearchParams<{account?:string}>(),commercial=params.account==='commercial',focused=useIsFocused(),{name,colors}=useTheme();
+ const request=useRef(0);const [scope,setScope]=useState<boolean|null>(null);
+ const [data,setData]=useState(empty),[business,setBusiness]=useState<BusinessLedgerSnapshot|null>(null),[loaded,setLoaded]=useState(false),[month,setMonth]=useState(validMonth(initialMonth??'')?initialMonth!:localToday().slice(0,7)),[trends,setTrends]=useState(initialView==='trends'),[count,setCount]=useState('6'),[error,setError]=useState(''),[showMonth,setShowMonth]=useState(false);
+ const load=useCallback(async()=>{const ticket=++request.current;const store=await getMoneyStore();const next=await store.snapshot(!commercial);const nextBusiness=commercial?await new BusinessLedgerStore(store).snapshot():null;if(ticket!==request.current)return;setData(next);setBusiness(nextBusiness);setScope(commercial);setError('');setLoaded(true);},[commercial]);
+ const cancel=useCallback(()=>{request.current++;},[]);
+ useEffect(()=>{if(!focused)return;let live=true;const refresh=()=>{void load().catch(()=>{if(live){setError('No pudimos cargar las transacciones. Vuelve a abrir la sección.');setLoaded(false);}});};refresh();const sub=AppState.addEventListener('change',s=>{if(s==='active')refresh();});return()=>{live=false;cancel();sub.remove();};},[focused,load,cancel]);
+ const result=useMemo(()=>{if(!loaded||scope!==commercial||!validMonth(month)||commercial&&!business)return null;const selected=commercial?commercialHomeOverview(business!,data.categories,month):{summary:monthlySummary(data,month),movements:data.movements,categories:data.categories};const trendData=commercial?{...empty,categories:data.categories,movements:[...new Set(business!.movements.map(m=>m.date.slice(0,7)))].flatMap(period=>commercialHomeOverview(business!,data.categories,period).movements)}:data;return {...selected,trend:historicalSeries(trendData,month,Number(count),'all')};},[loaded,scope,month,commercial,business,data,count]);
+ return <Screen title={`Transacciones · ${commercial?'Comercial':'Personal'}`} demo={false}><ErrorNotice message={error}/><View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center',gap:8}}><Pressable accessibilityRole="button" accessibilityState={{selected:trends}} onPress={()=>setTrends(!trends)} style={{minHeight:44,padding:10,borderRadius:12,backgroundColor:trends?'#7046AE':'#00774F'}}><Body style={{color:'#FFFFFF',fontWeight:'800'}}>{trends?'Ver gráficas':'Tendencias mensuales'}</Body></Pressable><Pressable accessibilityRole="button" onPress={()=>setShowMonth(!showMonth)} style={{minHeight:44,padding:10,borderRadius:12,borderWidth:1,borderColor:colors.line}}><Body canvas={name==='dark'}>Mes: {monthLabel(month)}</Body></Pressable></View>{showMonth?<MonthControl value={month} onChange={setMonth}/>:null}{!validMonth(month)?<ErrorNotice message="Elige un mes válido (AAAA-MM)."/>:null}{!loaded&&!error?<ActivityIndicator accessibilityLabel="Cargando transacciones"/>:null}
+ {result?(trends?<><Choices compact presentation="tabs" label="Comparar" value={count} onChange={setCount} options={[[ '6','Últimos 6 meses'],['12','Últimos 12 meses']]}/><Card chart><HistoryTrend compact rows={result.trend}/></Card></>:<TransactionOverview summary={result.summary} movements={result.movements} categories={result.categories} month={month}/>):null}</Screen>;
 }

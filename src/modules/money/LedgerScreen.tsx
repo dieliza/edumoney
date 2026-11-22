@@ -125,7 +125,6 @@ export default function LedgerScreen({initialSection,initialMonth}:{initialSecti
    </> : null}
    {segment === 'categories' ? <>
     <ActionButton title="Crear categoría" onPress={() => setCategory(null)}/>
-    {validMonth(month) ? <ActionButton title="Definir presupuesto mensual" secondary onPress={() => setBudget(true)}/> : null}
     {summary ? <Distribution summary={summary} budget/> : null}
     <SectionHeading title="Tus categorías"/>
     {data.categories.map(c => <Pressable key={c.id} accessibilityRole="button" accessibilityLabel={`Editar categoría ${c.name}`} onPress={() => setCategory(c)}><Card row><Body>{c.name} · {c.kind === 'expense' ? 'Gasto' : 'Ingreso'}{c.archived ? ' · Archivada' : ''}</Body></Card></Pressable>)}
