@@ -8,7 +8,7 @@ import type {LedgerMovement} from '../src/modules/money/types';
 import {cents} from '../src/core/money';
 vi.mock('../src/ui/NeonActionButton',()=>({NeonActionButton:()=>null}));
 vi.mock('../src/modules/documents/readerSetup',()=>({allowReceiptCamera:()=>true}));
-vi.mock('react-native',()=>({View:({children}:{children:ReactNode})=>createElement('div',null,children),Pressable:({children,accessibilityLabel}:{children:ReactNode;accessibilityLabel?:string})=>createElement('button',{'aria-label':accessibilityLabel},children),ActivityIndicator:()=>null}));
+vi.mock('react-native',()=>({Text:({children}:{children:ReactNode})=>createElement('span',null,children),View:({children}:{children:ReactNode})=>createElement('div',null,children),Pressable:({children,accessibilityLabel}:{children:ReactNode;accessibilityLabel?:string})=>createElement('button',{'aria-label':accessibilityLabel},children),ActivityIndicator:()=>null}));
 vi.mock('expo-linear-gradient',()=>({LinearGradient:({children}:{children:ReactNode})=>createElement('div',null,children)}));
 vi.mock('@expo/vector-icons/Ionicons',()=>({default:()=>null}));
 vi.mock('expo-router',()=>({router:{push:vi.fn()}}));
@@ -19,9 +19,14 @@ vi.mock('../src/modules/money/fields',()=>({Sheet:({title,children,headerAction}
 vi.mock('../src/ui/DateField',()=>({DateField:()=>createElement('label',null,'Fecha')}));
 vi.mock('../src/modules/money/CategoryPicker',()=>({CategoryPicker:()=>createElement('div',null,'CATEGORY_PICKER')}));
 vi.mock('../src/modules/money/TransactionHistory',()=>({TransactionHistory:({kind}:{kind:string})=>createElement('div',null,`HISTORY_${kind}`)}));
+vi.mock('../src/modules/money/TransactionFormUI',()=>({
+ TransactionSheet:({title,children}:{title:string;children:ReactNode})=>createElement('section',null,createElement('h1',null,title),children),
+ TransactionSegments:({label,options}:{label:string;options:readonly(readonly[string,string])[]})=>createElement('div',null,label,options.map(([key,text])=>createElement('span',{key},text))),
+ TransactionLink:({title}:{title:string})=>createElement('button',null,title),TransactionSaveButton:({title}:{title:string})=>createElement('button',null,title),TransactionError:()=>null,transactionStyles:{}
+}));
 const props={kind:'expense' as const,categories:[],store:{} as MoneyStore,close:()=>{},saved:async()=>{}};
 const expense:LedgerMovement={id:'m',idempotencyKey:'m',kind:'expense',amountCents:cents(500),currency:'USD',date:'2026-11-15',description:'Comida',categoryId:null,paymentMethod:'cash',taxReview:false,useKind:'personal',grossCents:null,withholdingCents:null,createdAt:'now',updatedAt:'now',deletedAt:null,incomeType:'manual',scheduleId:null,occurrenceDate:null,version:1};
-it('editar muestra Guardar sin pedir motivo y conserva el editor',()=>{const html=renderToStaticMarkup(createElement(MovementForm,{...props,initial:expense}));expect(html).toContain('Editar transacción');expect(html).toContain('>Guardar</button>');expect(html).not.toMatch(/Motivo|razón/);expect(html).toContain('CATEGORY_PICKER');});
-it('Nueva transacción conserva selector Gasto/Ingreso y ofrece solo los historiales de gastos e ingresos',()=>{const html=renderToStaticMarkup(createElement(MovementForm,{...props,onHistoryEdit:()=>{}}));expect(html).toContain('↓ Gasto');expect(html).toContain('↑ Ingreso');expect(html).toContain('Historiales');expect(html).toContain('>Gastos</span>');expect(html).not.toContain('>Ingresos</span>');expect(html).toContain('Guardar gasto');expect(html).not.toContain('Mis dictados');});
+it('editar muestra Guardar sin pedir motivo y conserva el editor',()=>{const html=renderToStaticMarkup(createElement(MovementForm,{...props,initial:expense}));expect(html).toContain('Editar transacción');expect(html).toContain('>Guardar gasto</button>');expect(html).not.toMatch(/Motivo|razón/);expect(html).toContain('CATEGORY_PICKER');});
+it('Nueva transacción conserva selector Gasto/Ingreso y ofrece solo los historiales de gastos e ingresos',()=>{const html=renderToStaticMarkup(createElement(MovementForm,{...props,onHistoryEdit:()=>{}}));expect(html).toContain('Gasto');expect(html).toContain('Ingreso');expect(html).toContain('Editar historiales');expect(html).not.toContain('>Gastos</span>');expect(html).not.toContain('>Ingresos</span>');expect(html).toContain('Guardar gasto');expect(html).not.toContain('Mis dictados');});
 it('abrir cada historial cambia el contenido sin mezclarlo con el formulario nuevo',()=>{for(const initialHistory of ['expense','income','voice'] as const){const html=renderToStaticMarkup(createElement(MovementForm,{...props,onHistoryEdit:()=>{},initialHistory}));expect(html).toContain(`HISTORY_${initialHistory}`);expect(html).not.toContain('CATEGORY_PICKER');expect(html).not.toContain('Guardar gasto');}});
 it('la pantalla del escáner mantiene cámara y fotos sin Mis dictados',()=>{const html=renderToStaticMarkup(createElement(ReceiptPhotoButtons,{onCapture:()=>{},presentation:'hero'}));expect(html).toContain('Escanear recibo');expect(html).toContain('Buscar en fotos');expect(html).toContain('capture="environment"');expect(html).not.toContain('Mis dictados');});

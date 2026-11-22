@@ -1,0 +1,14 @@
+{
+  "count": 2,
+  "results": [
+    {
+      "name": "crear categoría, seleccionarla y conservar categorías almacenadas",
+      "passed": true
+    },
+    {
+      "name": "editar desde historial personal conserva registro y actualiza importe",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

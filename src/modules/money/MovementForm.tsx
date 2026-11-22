@@ -1,3 +1,5 @@
+import {transactionFormColors as tc} from '../../ui/transactionFormStyle';
+import {TransactionSheet,TransactionSegments,TransactionLink,TransactionSaveButton,TransactionError,transactionStyles as styles} from './TransactionFormUI';
 import {saveAccountMovement} from './saveAccountMovement';
 import {useAccountScope,setAccountScope,type AccountScope} from './accountScope';
 import {recognizedPayment} from '../documents/paymentRecognition';
@@ -9,12 +11,12 @@ import { DateField } from '../../ui/DateField';
 import { CategoryPicker } from './CategoryPicker';
 import { userMessage, UserInputError } from '../../core/errors';
 import { useEffect,useRef,useState } from 'react';
-import {ActivityIndicator,Pressable,View} from 'react-native';
+import {Text,View} from 'react-native';
 import { newId } from '../../core/id';
 import { parseAmount } from '../../core/money';
-import { ActionButton, Body } from '../../ui/components';
+import { ActionButton } from '../../ui/components';
 import { localToday, formatMoney, inputAmount } from './domain';
-import { Choices, ErrorNotice, Field, Sheet } from './fields';
+import { Choices, Field } from './fields';
 import { DuplicateMovementError, type MoneyStore } from './store';
 import { kindLabels, paymentLabels, type Category, type EntryKind, type IncomeSchedule, type LedgerMovement, type PaymentMethod } from './types';
 export function MovementForm({ initial, kind, categories, store, close, saved, documentReview,allowedKinds,onHistoryEdit,historySaved,initialHistory,afterSave }: {
@@ -54,6 +56,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState('');
     const [duplicate, setDuplicate] = useState(false);
+    const [showOptions,setShowOptions]=useState(Boolean(initial&&(initial.kind==='income'||initial.useKind==='business')));
     useEffect(()=>{if(!commercial)return;let live=true;void store.read(db=>db.getAllAsync<{id:string;name:string}>("SELECT id,legal_name AS name FROM business_holders WHERE legal_form IN ('individual','llc') ORDER BY rowid")).then(rows=>{if(live){setHolders(rows);if(rows.length===1)setHolderId(rows[0].id);}}).catch(()=>{if(live)setError('No pudimos cargar tus negocios. Vuelve a abrir el formulario.');});return()=>{live=false;};},[commercial,store]);
     async function submit(allowDuplicate = false) {
         if (submitting.current)
@@ -88,33 +91,41 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
             submitting.current=false;setBusy(false);
         }
     }
-    return <Sheet title={initial ? 'Editar transacción' : 'Nueva transacción'} close={close} busy={busy} headerAction={!historyPane&&!busy?<><ErrorNotice message={error}/><ActionButton title={initial?'Guardar':type==='expense'?'Guardar gasto':type==='income'?'Guardar ingreso':'Guardar transacción'} onPress={()=>{setDuplicate(false);void submit();}}/></>:null}>
-  {!initial&&(kind==='income'||kind==='expense')?<Choices<'income'|'expense'> compact label="Tipo de transacción" presentation="tabs" tabColors={{expense:'#AA1749',income:'#00569A'}} value={type as 'income'|'expense'} options={[["expense","↓ Gasto"],["income","↑ Ingreso"]]} onChange={value=>{setHistoryPane(null);setType(value);if(value==='income'&&method==='credit')setMethod('bank');setCategory('');setCategoryName('');setDuplicate(false);setError('');}}/>:null}
-  {!initial&&(type==='income'||type==='expense')?<Choices<AccountScope> compact label="Cuenta de la transacción" presentation="tabs" tabColors={{personal:'#00774F',business:'#7046AE'}} value={account} options={[["personal","Personal"],["business","Comercial"]]} onChange={value=>{if(value===account)return;setAccountScope(value);if(value==='business')setIncomeType('manual');setDuplicate(false);setError('');}}/>:null}
-  {!initial&&onHistoryEdit?<View style={{gap:6}}><Body muted style={{fontSize:13}}>Editar historiales</Body><View style={{flexDirection:'row',gap:8}}>{(type==='income'?([['income','Ingresos']] as const):type==='expense'?([['expense','Gastos']] as const):([['expense','Gastos'],['income','Ingresos']] as const)).map(([value,label])=><Pressable key={value} accessibilityRole="button" accessibilityState={{selected:historyPane===value}} onPress={()=>setHistoryPane(historyPane===value?null:value)} style={{flex:1,minHeight:44,paddingHorizontal:8,borderWidth:1,borderColor:historyPane===value?'#FFFFFF':'#AA1749',borderRadius:10,alignItems:'center',justifyContent:'center',backgroundColor:'#AA1749'}}><Body style={{fontSize:13,fontWeight:'700',color:'#FFFFFF'}}>{label}</Body></Pressable>)}</View></View>:null}
-  {!initial&&historyPane&&onHistoryEdit?<TransactionHistory key={`${historyPane}:${account}`} kind={historyPane} store={store} onEdit={onHistoryEdit} saved={historySaved??saved}/>:<>
-  {(type === 'income' || type === 'expense') ? <CategoryPicker key={type} required={type==='expense'} categories={availableCategories} onCreated={created=>setAddedCategories(old=>[...old,created])} kind={type} value={category} onChange={(id,name)=>{setCategory(id);setCategoryName(name??'');if(commercial)setIncomeType('manual');setDuplicate(false);}}/> : null}
-  {commercial?<><Body style={{color:'#006D50',fontWeight:'800'}}>Comercial</Body>{holders.length?<Choices required label="DBA o LLC" value={holderId} options={[["","Seleccionar negocio"],...holders.map(h=>[h.id,h.name] as const)]} onChange={setHolderId}/>:<><Body>Crea primero tu DBA o LLC en Negocio.</Body><ActionButton title="Ir a Negocio" secondary onPress={()=>{close();router.push('/(tabs)/business');}}/></>}</>:null}
-  {type==='income'&&!initial?<ActionButton title="Cheque o talonario" icon="camera-outline" onPress={()=>{close();router.push('/income-documents');}}/>:null}
-
-  {!initial&&kind!=='income'&&kind!=='expense'?<Choices<EntryKind> label="Operación" value={type} options={(allowedKinds??['transfer','loan','debt_payment'] as EntryKind[]).map(key=>[key,kindLabels[key]] as const)} onChange={setType}/>:null}
-  {initial?.scheduleId?<Body>Ingreso vinculado a una recurrencia. Esta corrección no modifica los próximos cobros.</Body>:null}
-  <View style={{flexDirection:'row',flexWrap:'wrap',gap:12}}><View style={{flex:1,minWidth:140}}><DateField required label="Fecha" value={date} onChangeText={v => { setDate(v); setDuplicate(false); }} testID="movement-date"/></View>{<View style={{flex:1,minWidth:140}}><Field compact label={type==='income'?'Importe recibido (USD)':'Importe (USD)'} value={amount} onChangeText={v => { setAmount(v); setError(''); setDuplicate(false); }} decimal testID="movement-amount"/></View>}</View>
-  {type!=='expense'||commercial?<Field label="Descripción (opcional)" value={description} onChangeText={v => { setDescription(v); setDuplicate(false); }} multiline testID="movement-description"/>:null}
-
-  {recognizedPayment(description)?<Body>Método identificado: {paymentLabels[recognizedPayment(description)!]}</Body>:<Choices<PaymentMethod> label={type==='income'?'Cómo recibiste el ingreso':'Método de pago'} value={method} options={type==='income'||type==='expense'?entryMethods(type):(Object.entries(paymentLabels) as [PaymentMethod,string][]).filter(([key])=>key!=='credit')} onChange={setMethod}/>}
-  {type === 'expense' && method === 'credit' ? <Body>La compra cuenta como gasto y consume presupuesto. El pago posterior de la tarjeta reduce el flujo de efectivo, sin volver a contar la compra.</Body> : null}
-  {type === 'transfer' ? <Body>Transacción entre tus propias cuentas: no aumenta ingresos ni gastos y no cambia el total estimado.</Body> : null}
-  {type === 'loan' ? <Body>El préstamo recibido aumenta el flujo disponible, pero no es un ingreso ganado.</Body> : null}
-  {type === 'debt_payment' ? <Body>Este pago reduce el flujo disponible. No vuelve a contarse como gasto. El desglose de principal, intereses y cargos se añadirá en Deudas.</Body> : null}
-  {type === 'income'&&!commercial ? <>
-   {!initial?.scheduleId ? <Choices<LedgerMovement['incomeType']> label="Clase de ingreso" value={incomeType} options={initial ? [['manual', 'Manual'], ['extraordinary', 'Extraordinario']] : [['manual', 'Manual'], ['recurring', 'Recurrente'], ['extraordinary', 'Extraordinario']]} onChange={setIncomeType}/> : null}
-   {!initial && incomeType === 'recurring' ? <View style={{ gap: 14 }}><Choices<'weekly' | 'monthly'> label="Frecuencia" value={cadence} options={[['weekly', 'Semanas'], ['monthly', 'Meses']]} onChange={setCadence}/><Field label="Cada cuántas semanas o meses (1–120)" value={interval} onChangeText={setInterval}/><Body>Al guardar confirmas el primer cobro. Los siguientes aparecerán como previstos y solo se sumarán cuando confirmes que los recibiste.</Body></View> : null}
-  </> : null}
-  <ErrorNotice message={error}/>
-  {busy?<ActivityIndicator accessibilityLabel="Guardando cambios"/>:null}
-  {!busy && duplicate ? <><Body>Si son dos operaciones distintas, puedes conservar ambas. Comprueba el historial antes de confirmar.</Body><ActionButton title="Guardar como operación distinta" secondary onPress={() => void submit(true)}/></> : null}
-  {initial ? <Body muted>Original: {formatMoney(initial.amountCents)} · {initial.date}. La versión anterior se conserva en el historial cifrado.</Body> : null}
- </>}
- </Sheet>;
+    const moneyEntry=type==='income'||type==='expense';
+    const openOptions=showOptions;
+    const sectionTitle=moneyEntry?`${initial?'Editar':'Registrar'} ${type==='expense'?'gasto':'ingreso'} ${commercial?'comercial':'personal'}`:`${initial?'Editar':'Registrar'} ${kindLabels[type].toLocaleLowerCase('es')}`;
+    const saveTitle=type==='expense'?'Guardar gasto':type==='income'?'Guardar ingreso':'Guardar transacción';
+    return <TransactionSheet title={initial?'Editar transacción':'Nueva transacción'} close={close} busy={busy}>
+  {!initial&&(kind==='income'||kind==='expense')?<TransactionSegments<'income'|'expense'> label="Tipo de transacción" value={type as 'income'|'expense'} options={[["expense","Gasto"],["income","Ingreso"]]} disabled={busy} onChange={value=>{setHistoryPane(null);setType(value);if(value==='income'&&method==='credit')setMethod('bank');setCategory('');setCategoryName('');setDuplicate(false);setError('');}}/>:null}
+  {!initial&&moneyEntry?<TransactionSegments<AccountScope> compact label="Cuenta de la transacción" value={account} options={[["personal","Personal"],["business","Comercial"]]} disabled={busy} onChange={value=>{if(value===account)return;setAccountScope(value);if(value==='business')setIncomeType('manual');setDuplicate(false);setError('');}}/>:null}
+  {!initial&&historyPane&&onHistoryEdit?<><TransactionLink title="Volver al registro" onPress={()=>setHistoryPane(null)}/><View style={styles.history}><TransactionHistory key={`${historyPane}:${account}`} kind={historyPane} store={store} onEdit={onHistoryEdit} saved={historySaved??saved}/></View></>:<View style={styles.section} testID="movement-form-body">
+   <Text accessibilityRole="header" style={styles.heading}>{sectionTitle}</Text>
+   {moneyEntry?<CategoryPicker key={type} presentation="transaction" required={type==='expense'} categories={availableCategories} onCreated={created=>setAddedCategories(old=>[...old,created])} kind={type as 'income'|'expense'} value={category} onChange={(id,name)=>{setCategory(id);setCategoryName(name??'');if(commercial)setIncomeType('manual');setDuplicate(false);}}/>:null}
+   {!initial&&kind!=='income'&&kind!=='expense'?<Choices<EntryKind> controlPresentation="transaction" label="Operación" value={type} options={(allowedKinds??['transfer','loan','debt_payment'] as EntryKind[]).map(key=>[key,kindLabels[key]] as const)} onChange={setType}/>:null}
+   <Field presentation="transaction" compact required label="Importe (USD)" value={amount} onChangeText={v=>{setAmount(v);setError('');setDuplicate(false);}} decimal testID="movement-amount"/>
+   <DateField presentation="transaction" required label="Fecha" value={date} onChangeText={v=>{setDate(v);setDuplicate(false);}} testID="movement-date"/>
+   {recognizedPayment(description)?<View style={{gap:8}}><Text style={styles.text}>Método de pago</Text><View style={styles.readOnly}><Text style={{fontSize:16,color:tc.fieldInk}}>{paymentLabels[recognizedPayment(description)!]}</Text></View></View>:<Choices<PaymentMethod> controlPresentation="transaction" label="Método de pago" value={method} options={moneyEntry?entryMethods(type as 'income'|'expense'):(Object.entries(paymentLabels) as [PaymentMethod,string][]).filter(([key])=>key!=='credit')} onChange={setMethod}/>}
+   {type==='expense'&&method==='credit'?<Text style={styles.text}>La compra cuenta como gasto y consume presupuesto. El pago posterior de la tarjeta reduce el flujo de efectivo, sin volver a contar la compra.</Text>:null}
+   {type==='transfer'?<Text style={styles.text}>Transacción entre tus propias cuentas: no aumenta ingresos ni gastos y no cambia el total estimado.</Text>:null}
+   {type==='loan'?<Text style={styles.text}>El préstamo recibido aumenta el flujo disponible, pero no es un ingreso ganado.</Text>:null}
+   {type==='debt_payment'?<Text style={styles.text}>Este pago reduce el flujo disponible. No vuelve a contarse como gasto. El desglose de principal, intereses y cargos se añadirá en Deudas.</Text>:null}
+   {commercial&&holders.length!==1?<View style={styles.options}>{holders.length?<Choices controlPresentation="transaction" required label="DBA o LLC" value={holderId} options={[["","Seleccionar negocio"],...holders.map(h=>[h.id,h.name] as const)]} onChange={setHolderId}/>:<><Text style={styles.text}>Crea primero tu DBA o LLC en Negocio.</Text><ActionButton title="Ir a Negocio" secondary onPress={()=>{close();router.push('/(tabs)/business');}}/></>}</View>:null}
+   {type!=='expense'||commercial||initial?.scheduleId?<TransactionLink title={openOptions?'Ocultar opciones':'Más opciones'} disabled={busy} onPress={()=>setShowOptions(!showOptions)} testID="movement-more-options"/>:null}
+   {openOptions?<View style={styles.options}>
+    {commercial&&holders.length===1?<Choices controlPresentation="transaction" required label="DBA o LLC" value={holderId} options={[["","Seleccionar negocio"],...holders.map(h=>[h.id,h.name] as const)]} onChange={setHolderId}/>:null}
+    {type!=='expense'||commercial?<Field presentation="transaction" compact label="Descripción (opcional)" value={description} onChangeText={v=>{setDescription(v);setDuplicate(false);}} multiline testID="movement-description"/>:null}
+    {type==='income'&&!initial?<TransactionLink title="Cheque o talonario" onPress={()=>{close();router.push('/income-documents');}}/>:null}
+    {initial?.scheduleId?<Text style={styles.text}>Ingreso vinculado a una recurrencia. Esta corrección no modifica los próximos cobros.</Text>:null}
+    {type==='income'&&!commercial?<>
+     {!initial?.scheduleId?<Choices<LedgerMovement['incomeType']> controlPresentation="transaction" label="Clase de ingreso" value={incomeType} options={initial?[['manual','Manual'],['extraordinary','Extraordinario']]:[['manual','Manual'],['recurring','Recurrente'],['extraordinary','Extraordinario']]} onChange={setIncomeType}/>:null}
+     {!initial&&incomeType==='recurring'?<><Choices<'weekly'|'monthly'> controlPresentation="transaction" label="Frecuencia" value={cadence} options={[[ 'weekly','Semanas'],['monthly','Meses']]} onChange={setCadence}/><Field presentation="transaction" compact label="Cada cuántas semanas o meses (1–120)" value={interval} onChangeText={setInterval}/><Text style={styles.text}>Al guardar confirmas el primer cobro. Los siguientes aparecerán como previstos y solo se sumarán cuando confirmes que los recibiste.</Text></>:null}
+    </>:null}
+   </View>:null}
+   {initial?<Text style={styles.text}>Original: {formatMoney(initial.amountCents)} · {initial.date}. La versión anterior se conserva en el historial cifrado.</Text>:null}
+   <TransactionError message={error}/>
+   {!busy&&duplicate?<><Text style={styles.text}>Si son dos operaciones distintas, puedes conservar ambas. Comprueba el historial antes de confirmar.</Text><TransactionLink title="Guardar como operación distinta" onPress={()=>void submit(true)}/></>:null}
+   <TransactionSaveButton title={saveTitle} busy={busy} onPress={()=>{setDuplicate(false);void submit();}}/>
+   {!initial&&onHistoryEdit?<TransactionLink title="Editar historiales" disabled={busy} testID="movement-edit-histories" onPress={()=>setHistoryPane(type==='income'?'income':'expense')}/>:null}
+  </View>}
+ </TransactionSheet>;
 }

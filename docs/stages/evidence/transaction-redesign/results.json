@@ -1,0 +1,76 @@
+{
+  "count": 17,
+  "results": [
+    {
+      "name": "expense personal: guarda una vez, clasifica, balance y confirmación",
+      "passed": true
+    },
+    {
+      "name": "income personal: guarda una vez, clasifica, balance y confirmación",
+      "passed": true
+    },
+    {
+      "name": "expense business: guarda una vez, clasifica, balance y confirmación",
+      "passed": true
+    },
+    {
+      "name": "income business: guarda una vez, clasifica, balance y confirmación",
+      "passed": true
+    },
+    {
+      "name": "crear categoría, seleccionarla y conservar categorías almacenadas",
+      "passed": false,
+      "error": "Error: expect(locator).toBeVisible() failed\n\nLocator: getByRole('header', { name: 'Registrar gasto personal' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByRole('header', { name: 'Registrar gasto personal' }) with timeout 5000ms\n  - waiting for getByRole('header', { name: 'Registrar gasto personal' })\n"
+    },
+    {
+      "name": "validaciones conservan borrador y no escriben",
+      "passed": true
+    },
+    {
+      "name": "pulsaciones repetidas personal: un registro",
+      "passed": true
+    },
+    {
+      "name": "pulsaciones repetidas business: un registro",
+      "passed": true
+    },
+    {
+      "name": "editar desde historial personal conserva registro y actualiza importe",
+      "passed": false,
+      "error": "Error: expect(locator).toHaveCount(expected) failed\n\nLocator:  getByTestId('transaction-sheet')\nExpected: 0\nReceived: 1\nTimeout:  5000ms\n\nCall log:\n  - Expect \"toHaveCount\" getByTestId('transaction-sheet') with timeout 5000ms\n  - waiting for getByTestId('transaction-sheet')\n    14 × locator resolved to 1 element\n       - unexpected value \"1\"\n"
+    },
+    {
+      "name": "restricción comercial previa sigue evitando cambiar registros asignados",
+      "passed": true
+    },
+    {
+      "name": "opciones de ingreso y recurrencia permanecen accesibles",
+      "passed": true
+    },
+    {
+      "name": "visual 320x740: orden, foco, scroll, estilos aislados",
+      "passed": true
+    },
+    {
+      "name": "visual 390x844: orden, foco, scroll, estilos aislados",
+      "passed": true
+    },
+    {
+      "name": "visual 360x800: orden, foco, scroll, estilos aislados",
+      "passed": true
+    },
+    {
+      "name": "visual 820x1180: orden, foco, scroll, estilos aislados",
+      "passed": true
+    },
+    {
+      "name": "visual 1280x900: orden, foco, scroll, estilos aislados",
+      "passed": true
+    },
+    {
+      "name": "viewport reducido simula teclado sin perder importe ni foco",
+      "passed": true
+    }
+  ],
+  "errors": []
+}
