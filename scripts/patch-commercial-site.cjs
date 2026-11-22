@@ -43,12 +43,12 @@ if(new Set(patched).size!==11)throw Error('Expected eleven module IDs: '+patched
 // Rename every JS importer affected by changed chunk URLs so neither HTTP cache nor
 // an old service worker can retain a manifest pointing at stale business chunks.
 let grew=true;
-while(grew){grew=false;for(const url of baselineURLs){if(!url.endsWith('.js')||renamed.has(url))continue;const raw=z.gunzipSync(Buffer.from(content[routes[url][0]],'base64')).toString();if([...renamed.keys()].some(old=>raw.includes(old)||raw.includes(old.split('/').pop()))){renamed.set(url,url.replace(/\.js$/,'-commercial20261122.js'));grew=true;}}}
+while(grew){grew=false;for(const url of baselineURLs){if(!url.endsWith('.js')||renamed.has(url))continue;const raw=z.gunzipSync(Buffer.from(content[routes[url][0]],'base64')).toString();if([...renamed.keys()].some(old=>raw.includes(old)||raw.includes(old.split('/').pop()))){renamed.set(url,url.replace(/\.js$/,'-commercial20261122r2.js'));grew=true;}}}
 for(const [url,[hash,mime]]of Object.entries(routes)){
  if(!/javascript|text\/html|application\/json/.test(mime))continue;
  const raw=z.gunzipSync(Buffer.from(content[hash],'base64')).toString();let out=raw;
  for(const [old,next]of renamed){out=out.split(old).join(next);out=out.split(old.split('/').pop()).join(next.split('/').pop());}
- if(url==='/sw.js')out=out.replace(/edumoney-shell-[a-zA-Z0-9-]+/g,'edumoney-shell-commercial-20261122');
+ if(url==='/sw.js')out=out.replace(/edumoney-shell-[a-zA-Z0-9-]+/g,'edumoney-shell-commercial-20261122r2');
  if(out!==raw){const h=crypto.createHash('sha256').update(out).digest('hex');content[h]=z.gzipSync(out,{level:9}).toString('base64');routes[url]=[h,mime];}if(renamed.has(url))routes[renamed.get(url)]=routes[url];
 }
 const used=new Set(Object.values(routes).map(([hash])=>hash));const surrounding=source.slice(0,rr.start)+source.slice(rr.end,cr.start)+source.slice(cr.end);for(const hash of Object.keys(content))if(!used.has(hash)&&!surrounding.includes(hash))delete content[hash];
