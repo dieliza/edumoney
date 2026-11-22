@@ -39,8 +39,8 @@ export function HomeBalanceView({summary,month,movements=[],categories=[],commer
    <Body style={{fontSize:12,lineHeight:18,color:'#E0F8ED'}}>Según tus registros · No son saldos bancarios confirmados</Body>
   </LinearGradient>
   <View style={{flexDirection:width>=1000?'row':'column',gap:20,alignItems:'stretch'}}>
-   <View testID="home-personal-chart" style={{flex:1,minWidth:0,gap:8}}><Body style={{fontSize:20,fontWeight:'800',color:ink}}>Personal</Body><MonthlyCharts key={`personal-${month}`} summary={summary} movements={movements} categories={categories} month={month} compact initialIndividual={false}/></View>
-   <View testID="home-commercial-chart" style={{flex:1,minWidth:0,gap:8}}><Body style={{fontSize:20,fontWeight:'800',color:ink}}>Comercial</Body>{commercial?<MonthlyCharts key={`commercial-${month}`} summary={commercial.summary} movements={commercial.movements} categories={commercial.categories} month={month} compact initialIndividual={false}/>:<View accessibilityLiveRegion="polite"><Body style={{color:ink}}>{error||'Cargando ingresos y gastos comerciales…'}</Body></View>}</View>
+   <View testID="home-personal-chart" style={{flex:1,minWidth:0,gap:8}}><Body style={{fontSize:20,fontWeight:'800',color:ink}}>Personal</Body><MonthlyCharts canvas={name==='dark'} key={`personal-${month}`} summary={summary} movements={movements} categories={categories} month={month} compact initialIndividual={false}/></View>
+   <View testID="home-commercial-chart" style={{flex:1,minWidth:0,gap:8}}><Body style={{fontSize:20,fontWeight:'800',color:ink}}>Comercial</Body>{commercial?<MonthlyCharts canvas={name==='dark'} key={`commercial-${month}`} summary={commercial.summary} movements={commercial.movements} categories={commercial.categories} month={month} compact initialIndividual={false}/>:<View accessibilityLiveRegion="polite"><Body style={{color:ink}}>{error||'Cargando ingresos y gastos comerciales…'}</Body></View>}</View>
   </View>
  </View>;
 }

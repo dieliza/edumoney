@@ -15,9 +15,9 @@ import {HeaderActions} from './HeaderActions';
 import { Brand } from './Brand';
 export {CloseButton} from './CloseButton';
 export type IconName = ComponentProps<typeof Ionicons>['name'];
-export function Body({ children, muted = false, style }: PropsWithChildren<{ muted?: boolean; style?: ComponentProps<typeof Text>['style'] }>) {
+export function Body({ children, muted = false, style, canvas = false }: PropsWithChildren<{ muted?: boolean; canvas?:boolean; style?: ComponentProps<typeof Text>['style'] }>) {
   const { colors } = useTheme();
-  return <Text style={[{ color: muted ? colors.muted : colors.text, fontSize: 16, lineHeight: 24,flexShrink:1,maxWidth:'100%' }, style]}>{children}</Text>;
+  return <Text style={[{ color: canvas ? (muted?'#D7F2EE':'#F4FFFC') : muted ? colors.muted : colors.text, fontSize: 16, lineHeight: 24,flexShrink:1,maxWidth:'100%' }, style]}>{children}</Text>;
 }
 export function Card({ children, style, chart = false, row = false }: PropsWithChildren<{ style?: StyleProp<ViewStyle>;chart?:boolean;row?:boolean }>) {
   const { colors } = useTheme();
@@ -25,18 +25,18 @@ export function Card({ children, style, chart = false, row = false }: PropsWithC
   if(chart)return <ChartSurface style={style}>{children}</ChartSurface>;
   return <View style={[{ backgroundColor: colors.surface, borderRadius: 20, padding: 16, borderWidth: 1, borderColor: colors.line, gap: 10, boxShadow: '0px 5px 18px rgba(0, 26, 40, 0.06)' }, style]}>{children}</View>;
 }
-export function IconBadge({ icon, tone = 'mint', size = 48 }: { icon: IconName; tone?: 'mint' | 'blue' | 'coral' | 'violet'; size?: number }) {
+export function IconBadge({ icon, tone = 'mint', size = 48, iconColor }: { icon: IconName; tone?: 'mint' | 'blue' | 'coral' | 'violet'; size?: number;iconColor?:string }) {
   const { colors } = useTheme();
   const ink = { mint: fixed.iconMint, blue: fixed.iconBlue, coral: fixed.iconCoral, violet: fixed.iconViolet }[tone];
   return <View accessible={false} aria-hidden importantForAccessibility="no-hide-descendants" style={{ width: size, height: size, borderRadius: size / 3, backgroundColor: colors[tone], alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-    <Ionicons name={icon} size={size * 0.52} color={ink} />
+    <Ionicons name={icon} size={size * 0.52} color={iconColor??ink} />
   </View>;
 }
 /** Acceso del panel: el mismo control visual para registros reales y demostraciones. */
-export function DashboardAction({ title, icon, tone = 'mint', onPress, testID, accessibilityLabel, compact = false }: { title: string; accessibilityLabel?: string; compact?: boolean; icon: IconName; tone?: 'mint' | 'blue' | 'coral' | 'violet'; onPress(): void; testID?: string }) {
+export function DashboardAction({ title, icon, tone = 'mint', onPress, testID, accessibilityLabel, compact = false, canvas = false, iconColor }: { title: string; accessibilityLabel?: string; compact?: boolean;canvas?:boolean;iconColor?:string; icon: IconName; tone?: 'mint' | 'blue' | 'coral' | 'violet'; onPress(): void; testID?: string }) {
   const { colors } = useTheme();
   return <Pressable testID={testID} accessibilityRole="button" accessibilityLabel={accessibilityLabel ?? title} onPress={onPress} style={({ pressed }) => ({ flexBasis: compact ? '22%' : '46%', flexGrow: 1, flexShrink: 1, minWidth: compact ? 58 : undefined, minHeight: compact ? 86 : 110, padding: compact ? 7 : 16, gap: compact ? 3 : 8, alignItems: 'center', justifyContent: 'center', borderRadius: 18, borderWidth: 1, borderColor: colors.line, backgroundColor: colors[tone], opacity: pressed ? 0.7 : 1 })}>
-    <IconBadge icon={icon} tone={tone} size={compact ? 36 : 42}/><Body style={{ fontSize: compact ? 12 : 14, fontWeight: '700', textAlign: 'center' }}>{title}</Body>
+    <IconBadge icon={icon} tone={tone} iconColor={iconColor} size={compact ? 36 : 42}/><Body canvas={canvas} style={{ fontSize: compact ? 12 : 14, fontWeight: '700', textAlign: 'center' }}>{title}</Body>
   </Pressable>;
 }
 export function ActionButton({ title, onPress, icon, secondary = false, testID }: { title: string; onPress(): void; icon?: IconName; secondary?: boolean; testID?: string }) {
