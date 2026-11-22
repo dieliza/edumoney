@@ -12,3 +12,5 @@ Verification: 21 selected Vitest cases passed (11 real SQLite commercial tests, 
 
 
 Initial publication succeeded as Sites version 80, source b9e9a05dd9b1a4bfeb4558560a19a9abb0cf9483, saved version appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_25d46bab642481918b76a0b647e8daf6, deployment appgdep_6b0270e233d08191985f1895bb3473d8, existing environment revision 4 preserved. Final follow-up normalizes existing custom Commercial IDs to the visible built-in wheel option without changing their stored IDs or records. Release URLs/cache receive a new r2 suffix.
+
+Final publication succeeded: Sites version 81; implementation 0a60d9c plus existing-category selection follow-up 57fd2b2; source 76f38f61662afbe5a0e00b30d5adf510f90bf8d8; saved version appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_318d4924154c819190dbf646fa62c4f4; deployment appgdep_6b02715d5fcc8191983c878060b3576d; existing environment revision 4 preserved. URL https://edumoney-web.diegoluissantospabon.chatgpt.site . All 27 focused checks and required source/syntax checks passed. No physical-device validation claimed.
