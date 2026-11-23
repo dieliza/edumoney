@@ -18,7 +18,7 @@ import { deductionApprovalStamp, prepararExpedienteGuiado } from './annual-snaps
 import {
   estimateWorkCredit, TAX_YEAR_RULES, WORK_CREDIT_ELIGIBILITY_KEYS, type WorkCreditInput, type WorkCreditResult,
 } from './year-rules';
-import { emptyForm482Intake, form482ActivityFlags, form482BusinessFields, form482OtherFields, type Draft482Field, type Form482Intake2025 } from './form482-intake-2025';
+import { emptyForm482Intake, form482ActivityFlags, form482BusinessFields, form482OtherFields, form482PriorFields, type Draft482Field, type Form482Intake2025 } from './form482-intake-2025';
 import { resolveForm4822025 } from './form482-resolve-2025';
 import type { AnnualSummaryKind } from './annual-summary-pdf';
 
@@ -43,6 +43,7 @@ const FORM_COVERAGE = [
   ['retail', 'Solo venta de mercancía'],
   ['salary-services', 'Sueldos y servicios'],
   ['salary-retail', 'Sueldos y ventas de mercancía'],
+  ['retail-services', 'Ventas y servicios, sin sueldos'],
   ['mixed', 'Sueldos, servicios y ventas de mercancía'],
 ] as const;
 const NO_PROFILES: PerfilContributivo[] = [];
@@ -142,7 +143,7 @@ export default function PlanillaScreen() {
       setSaved(old);
       setSource(data);
       setC(closure);
-      setDraftNumbers(Object.fromEntries(Object.entries(closure.draft482?.values ?? {}).map(([id, value]) => [id, decimal(value)])));
+      setDraftNumbers(Object.fromEntries(Object.entries(closure.draft482?.values ?? {}).map(([id, value]) => [id, id === 'priorOriginYear' ? String(value) : decimal(value)])));
       setComponents(Object.fromEntries(completionFields.map(f => {
         const n = closure.components?.[f.id];
         return [f.id, n == null ? '' : decimal(n)];
@@ -282,6 +283,9 @@ export default function PlanillaScreen() {
   const negativeBusinessResult = draftBusinessFields.some(([key]) =>
     (key === 'goodsGain' || key === 'serviceGain') && /^-/.test(draftNumbers[key]?.trim() ?? ''));
   const askLossConfirmation = negativeBusinessResult && draftActivities.k !== draftActivities.m;
+  const askPrincipal = negativeBusinessResult && draftActivities.k && draftActivities.m;
+  const askPrior = !negativeBusinessResult && draftActivities.k !== draftActivities.m;
+  const shownPriorFields = askPrior && draft.priorLossScope ? form482PriorFields : [];
   function updateDraft(change: Partial<Form482Intake2025>) {
     setC(prev => ({ ...prev, draft482: { ...(prev.draft482 ?? emptyForm482Intake()), ...change } }));
   }
@@ -304,9 +308,15 @@ export default function PlanillaScreen() {
         draft482: year === 2025 && c.draft482 ? {
           ...c.draft482,
           singleActivityLossConfirmed: askLossConfirmation && c.draft482.singleActivityLossConfirmed === true,
-          values: Object.fromEntries([...draftBusinessFields, ...form482OtherFields].flatMap(([key]) => {
+          currentLossPrincipal: askPrincipal ? c.draft482.currentLossPrincipal : undefined,
+          priorLossScope: askPrior ? c.draft482.priorLossScope : undefined,
+          priorLossExpiry: askPrior && c.draft482.priorLossScope && c.draft482.priorLossPrincipal ? c.draft482.priorLossExpiry : undefined,
+          priorLossPrincipal: askPrior && c.draft482.priorLossScope ? c.draft482.priorLossPrincipal : undefined,
+          values: Object.fromEntries([...draftBusinessFields, ...form482OtherFields, ...shownPriorFields].flatMap<[Draft482Field, number]>(([key]) => {
             const raw = draftNumbers[key]?.trim();
-            return raw ? [[key, parseAmount(raw.replace(',', '.'))]] : [];
+            if (!raw) return [];
+            if (key === 'priorOriginYear') return [[key,/^\d{4}$/.test(raw) ? Number(raw) : -1]];
+            return [[key, parseAmount(raw.replace(',', '.'))]];
           })),
         } : undefined,
         guided: profiles.length ? { perfiles: profiles, respuestas: validGuided.answers } : undefined,
@@ -544,15 +554,42 @@ export default function PlanillaScreen() {
             value={draft.individualResident ? 'yes' : 'no'} options={[[ 'no', 'No o no lo sé' ], [ 'yes', 'Sí' ]]}
             onChange={value => updateDraft({individualResident: value === 'yes', standardMethodConfirmed: false})}/>
           <Choices label="¿De dónde vinieron tus ingresos?" value={draft.incomeCoverage ?? 'unknown'} options={FORM_COVERAGE}
-            onChange={value => updateDraft({incomeCoverage: value === 'unknown' ? null : value, standardMethodConfirmed: false, singleActivityLossConfirmed: false})}/>
+            onChange={value => updateDraft({incomeCoverage: value === 'unknown' ? null : value, standardMethodConfirmed: false, singleActivityLossConfirmed: false, currentLossPrincipal:undefined, priorLossScope:undefined, priorLossPrincipal:undefined})}/>
           {[...draftBusinessFields, ...form482OtherFields].filter(([key]) => key !== 'grossFor17' || draft.incomeCoverage !== 'salary').map(([key, label]) =>
             <Field key={key} label={`${label} (USD, dólares enteros)`} value={draftNumbers[key] ?? ''}
-              onChangeText={value => {setDraftNumbers(prev => ({...prev,[key]:value})); updateDraft({standardMethodConfirmed:false, singleActivityLossConfirmed:false});}} decimal={!key.endsWith('Gain')}/>)}
+              onChangeText={value => {setDraftNumbers(prev => ({...prev,[key]:value})); updateDraft({standardMethodConfirmed:false, singleActivityLossConfirmed:false, currentLossPrincipal:undefined, priorLossScope:draft.priorLossScope ? 'review' : undefined});}} decimal={!key.endsWith('Gain')}/>)}
           {askLossConfirmation ? <>
             <Body>Escribe la pérdida verificada con un signo menos. No se toma de los gastos del resumen anual.</Body>
             <Choices label="¿La pérdida fue de tu única actividad y no incluye pérdidas de años anteriores ni requiere ajuste de contribución básica alterna?"
               value={draft.singleActivityLossConfirmed ? 'yes' : 'no'} options={[[ 'no', 'Por revisar' ], [ 'yes', 'Lo confirmé' ]]}
               onChange={value => updateDraft({singleActivityLossConfirmed:value === 'yes', standardMethodConfirmed:false})}/>
+          </> : null}
+          {askPrincipal ? <>
+            <Body>Este cálculo cubre una actividad de ventas y una de servicios, sin arrastres, tasas especiales ni ajuste por contribución básica alterna.</Body>
+            <Choices label="Si verificaste que solo hubo esas dos actividades y que cumplen esas condiciones, ¿cuál era la principal?"
+              value={draft.currentLossPrincipal ?? 'unknown'} options={[[ 'unknown', 'Por revisar' ], [ 'K', 'Venta de mercancía' ], [ 'M', 'Servicios' ]]}
+              onChange={value=>updateDraft({currentLossPrincipal:value==='unknown' ? undefined : value, standardMethodConfirmed:false})}/>
+          </> : null}
+          {askPrior ? <>
+            <Choices label="¿Vas a usar una pérdida de 2021 a 2024 de esta misma actividad?"
+              value={draft.priorLossScope ? 'yes' : 'no'} options={[[ 'no', 'No añadir arrastre' ], [ 'yes', 'Añadir pérdida anterior' ]]}
+              onChange={value=>updateDraft({priorLossScope:value==='yes' ? 'review' : undefined, priorLossPrincipal:undefined, standardMethodConfirmed:false})}/>
+            {draft.priorLossScope ? <>
+              <Body>Solo para un año de origen y la misma actividad activa. Indica el importe ya revisado en tu anejo; no uses el total de gastos de EduMoney.</Body>
+              {shownPriorFields.map(([key,label])=><Field key={key} label={label} value={draftNumbers[key] ?? ''}
+                onChangeText={value=>{setDraftNumbers(prev=>({...prev,[key]:value})); updateDraft({priorLossScope:'review',standardMethodConfirmed:false});}}
+                maxLength={key==='priorOriginYear' ? 4 : 17} decimal={key!=='priorOriginYear'}/>)}
+              <Choices label="¿Era esta actividad tu negocio principal?"
+                value={draft.priorLossPrincipal===undefined ? 'unknown' : draft.priorLossPrincipal ? 'yes' : 'no'}
+                options={[[ 'unknown','Por revisar' ],[ 'yes','Sí' ],[ 'no','No' ]]}
+                onChange={value=>updateDraft({priorLossPrincipal:value==='unknown' ? undefined : value==='yes',priorLossScope:'review',standardMethodConfirmed:false})}/>
+              {draft.priorLossPrincipal===true ? <Field label="Vencimiento confirmado (AAAA-MM-DD)" value={draft.priorLossExpiry ?? ''}
+                maxLength={10} onChangeText={priorLossExpiry=>updateDraft({priorLossExpiry,priorLossScope:'review',standardMethodConfirmed:false})}/> : null}
+              <Choices label="¿Confirmaste que la pérdida sigue vigente, tiene ajuste cero y no hay otras pérdidas, cambios de actividad ni ajuste de contribución básica alterna?"
+                value={draft.priorLossScope==='confirmed' ? 'yes' : 'no'}
+                options={[[ 'no','Por revisar' ],[ 'yes','Lo confirmé' ]]}
+                onChange={value=>updateDraft({priorLossScope:value==='yes'?'confirmed':'review',standardMethodConfirmed:false})}/>
+            </> : null}
           </> : null}
           <Choices label="¿Verificaste todos los ingresos y que aplica la tabla regular, sin tasas especiales ni pensión pagada por divorcio?"
             value={draft.standardMethodConfirmed ? 'yes' : 'no'} options={[[ 'no', 'Todavía no' ], [ 'yes', 'Sí, lo verifiqué' ]]}

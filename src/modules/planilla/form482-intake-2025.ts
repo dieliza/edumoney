@@ -17,12 +17,25 @@ export const form482OtherFields = [
   ['grossFor17','Ingreso bruto verificado según las instrucciones de la línea 17'],
 ] as const;
 
-export type Draft482Field = typeof form482BusinessFields[number][0] | typeof form482OtherFields[number][0];
+export const form482PriorFields = [
+  ['priorOriginYear','Año en que surgió la pérdida (2021 a 2024)'],
+  ['priorOriginal','Pérdida original en dólares, sin signo menos'],
+  ['priorUsed','Cantidad usada antes de 2025, en dólares'],
+  ['priorAvailable','Saldo disponible, en dólares (línea 14 del historial)'],
+  ['priorBase','Ingreso neto ajustado de 2025 en dólares (Parte IV, línea 3)'],
+  ['priorAllowed','Deducción de 2025 verificada en el anejo (Parte IV, línea 8), en dólares'],
+] as const;
+export type Draft482Field = typeof form482BusinessFields[number][0] | typeof form482OtherFields[number][0] |
+  typeof form482PriorFields[number][0];
 export interface Form482Intake2025 {
   individualResident: boolean;
-  incomeCoverage: 'salary' | 'services' | 'retail' | 'salary-services' | 'salary-retail' | 'mixed' | null;
+  incomeCoverage: 'salary' | 'services' | 'retail' | 'salary-services' | 'salary-retail' | 'retail-services' | 'mixed' | null;
   standardMethodConfirmed: boolean;
   singleActivityLossConfirmed?: boolean;
+  currentLossPrincipal?: 'K' | 'M';
+  priorLossScope?: 'review' | 'confirmed';
+  priorLossPrincipal?: boolean;
+  priorLossExpiry?: string;
   givenName: string;
   paternalSurname: string;
   maternalSurname: string;
@@ -30,13 +43,18 @@ export interface Form482Intake2025 {
   values: Partial<Record<Draft482Field, number>>;
 }
 
-const validKeys = new Set<string>([...form482BusinessFields, ...form482OtherFields].map(([id]) => id));
+const validKeys = new Set<string>([...form482BusinessFields, ...form482OtherFields, ...form482PriorFields].map(([id]) => id));
 const personalText = /^[\p{L}\p{M} .’'-]{0,60}$/u;
 export function validateForm482Intake2025(data: Form482Intake2025, year: number) {
-  const allowed = [null, 'salary', 'services', 'retail', 'salary-services', 'salary-retail', 'mixed'];
+  const allowed = [null, 'salary', 'services', 'retail', 'salary-services', 'salary-retail', 'retail-services', 'mixed'];
   if (year !== 2025 || !data || typeof data !== 'object' ||
       typeof data.individualResident !== 'boolean' || typeof data.standardMethodConfirmed !== 'boolean' ||
       (data.singleActivityLossConfirmed !== undefined && typeof data.singleActivityLossConfirmed !== 'boolean') ||
+      (data.currentLossPrincipal !== undefined && data.currentLossPrincipal !== 'K' && data.currentLossPrincipal !== 'M') ||
+      (data.priorLossScope !== undefined && data.priorLossScope !== 'review' && data.priorLossScope !== 'confirmed') ||
+      (data.priorLossPrincipal !== undefined && typeof data.priorLossPrincipal !== 'boolean') ||
+      (data.priorLossExpiry !== undefined && (typeof data.priorLossExpiry !== 'string' ||
+        (data.priorLossExpiry !== '' && !/^\d{4}-\d{2}-\d{2}$/.test(data.priorLossExpiry)))) ||
       !allowed.includes(data.incomeCoverage) || typeof data.givenName !== 'string' || typeof data.paternalSurname !== 'string' ||
       typeof data.middleInitial !== 'string' || !/^[\p{L}]?$/u.test(data.middleInitial) ||
       typeof data.maternalSurname !== 'string' || !personalText.test(data.maternalSurname) || !personalText.test(data.givenName) || !personalText.test(data.paternalSurname) || !data.values ||
@@ -44,6 +62,11 @@ export function validateForm482Intake2025(data: Form482Intake2025, year: number)
     throw new UserInputError('Revisa los datos del borrador 482 de 2025.');
   }
   for (const [key, value] of Object.entries(data.values)) {
+    if (key === 'priorOriginYear') {
+      if (!Number.isInteger(value) || value < 2021 || value > 2024)
+        throw new UserInputError('Para este recorrido, indica un año de origen entre 2021 y 2024.');
+      continue;
+    }
     if (!validKeys.has(key) || !Number.isSafeInteger(value) || (value < 0 && !isSignedBusinessResult(key)) || value % 100 !== 0) {
       throw new UserInputError('Para trasladar a la planilla informativa, confirma los dólares enteros del encasillado. Conserva los centavos en tus registros.');
     }
@@ -60,8 +83,8 @@ export function isSignedBusinessResult(key: string) {
 
 export function form482ActivityFlags(coverage: Form482Intake2025['incomeCoverage']) {
   return {
-    k: coverage === 'retail' || coverage === 'salary-retail' || coverage === 'mixed',
-    m: coverage === 'services' || coverage === 'salary-services' || coverage === 'mixed',
+    k: coverage === 'retail' || coverage === 'salary-retail' || coverage === 'retail-services' || coverage === 'mixed',
+    m: coverage === 'services' || coverage === 'salary-services' || coverage === 'retail-services' || coverage === 'mixed',
     wage: coverage === 'salary' || coverage === 'salary-retail' || coverage === 'salary-services' || coverage === 'mixed',
   };
 }

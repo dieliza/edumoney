@@ -6,9 +6,10 @@ import { UserInputError } from '../../core/errors';
 export const HACIENDA_BUSINESS_2025_URL = 'https://hacienda.pr.gov/sites/default/files/480.8_2025_anejos_0.pdf';
 export const HACIENDA_BUSINESS_2025_SHA256 = '61cc10f1bddd9312a56411458118eb22357610168ba4354113170064d31639ab';
 
+type PriorDisplay = {adjustedGainCents:number; deductionCents:number; availableCents:number};
 export type OfficialBusiness2025Values = {
-  K?: { goodsReceiptsCents?: number; netGainCents?: number };
-  M?: { serviceReceiptsCents?: number; netGainCents?: number };
+  K?: { goodsReceiptsCents?: number; netGainCents?: number; prior?:PriorDisplay };
+  M?: { serviceReceiptsCents?: number; netGainCents?: number; prior?:PriorDisplay };
   B?: { professionalWithholdingCents?: number; totalOtherPaymentsCents?: number };
 };
 export type OfficialBusiness2025Transfers = Partial<Record<'2Q' | '2S' | '27B', number>>;
@@ -63,11 +64,21 @@ export async function appendOfficialBusiness2025(
   if (values.K) {
     const [p1, p2] = await append([22, 23]);
     write(p1, values.K.goodsReceiptsCents, [146, 215, 533.55], 'K II 1a');
+    if (values.K.prior) {
+      write(p2,values.K.prior.adjustedGainCents,[463,512,704.46],'K IV 3');
+      write(p2,values.K.prior.deductionCents,[463,512,642.84],'K IV 8');
+      write(p2,values.K.prior.availableCents,[456,502,166.92],'K VII 14');
+    }
     if (write(p2, values.K.netGainCents, [463, 512, 606.48], 'K IV 9', true) && whole(values.K.netGainCents)) transfers['2Q'] = values.K.netGainCents;
   }
   if (values.M) {
     const [p1, p2] = await append([26, 27]);
     write(p1, values.M.serviceReceiptsCents, [466, 515, 526.86], 'M II 1');
+    if (values.M.prior) {
+      write(p2,values.M.prior.adjustedGainCents,[463,512,704.16],'M IV 3');
+      write(p2,values.M.prior.deductionCents,[463,512,642.54],'M IV 8');
+      write(p2,values.M.prior.availableCents,[456,501,225.78],'M VI 14');
+    }
     if (write(p2, values.M.netGainCents, [463, 512, 606.18], 'M IV 9', true) && whole(values.M.netGainCents)) transfers['2S'] = values.M.netGainCents;
   }
   return { omitted, transfers };

@@ -45,10 +45,10 @@ function putAmount(pages: PDFPage[], font: PDFFont, amount: PlanField | undefine
   return true;
 }
 
-function putDollars(page: PDFPage, font: PDFFont, dollars: number, left: number, right: number, y: number) {
+function putDollars(page: PDFPage, font: PDFFont, dollars: number, left: number, right: number, y: number, signed = false) {
   const text = String(dollars);
   const x = right - font.widthOfTextAtSize(text, 8);
-  if (!Number.isSafeInteger(dollars) || dollars < 0 || x < left) return false;
+  if (!Number.isSafeInteger(dollars) || (!signed && dollars < 0) || x < left) return false;
   page.drawText(text, { x, y, size: 8, font, color: ink });
   return true;
 }
@@ -89,7 +89,7 @@ export async function appendOfficialForm482Draft(pdf: PDFDocument, c: Closure, r
     const write = (line: Form482AmountLine, value: number | undefined) => {
       if (value === undefined) return;
       const { page, left, right, baseline } = FORM_482_2025.amounts[line];
-      if (!putDollars(pages[page], font, value, left, right, baseline)) {
+      if (!putDollars(pages[page], font, value, left, right, baseline, line==='2Q'||line==='2S')) {
         notes.push(`Línea ${line}: el importe no cabe en el encasillado.`);
       }
     };

@@ -1,6 +1,7 @@
 import type { Closure } from './engine';
 import { form482ActivityFlags } from './form482-intake-2025';
 import { calculateForm4822025 } from './form482-calculation-2025';
+import { reviewCurrentBusinessLoss2025, reviewPriorBusinessLoss2025 } from './reviewed-business-losses-2025';
 import type { OfficialBusiness2025Values } from './official-business-2025';
 
 const whole = (value: number | null | undefined, signed = false) =>
@@ -20,23 +21,46 @@ export function resolveForm4822025(c: Closure) {
   const gainM = m ? whole(values.serviceGain, true) : 0;
   const validK = !k || (whole(values.goodsReceipts) !== undefined && gainK !== undefined && gainK <= whole(values.goodsReceipts)!);
   const validM = !m || (whole(values.serviceReceipts) !== undefined && gainM !== undefined && gainM <= whole(values.serviceReceipts)!);
-  // 2025 official instructions pp.17–18 and 87–88: an ordinary verified
-  // current loss cannot reduce salaries. Here only the single-activity case
-  // without another qualifying trade/business, a carryover or CBA is covered.
+  // No special methods, cross-business carryovers, or alternate tax offsets.
+  const ordinary = eligibility && !c.components?.['20'] && !c.components?.['21'] && !c.components?.['23'];
   const hasLoss = (gainK ?? 0) < 0 || (gainM ?? 0) < 0;
-  const lossCanStayInAnnex = hasLoss && (k !== m) && draft.singleActivityLossConfirmed === true;
-  const kTransfer = eligibility && validK && k && (!hasLoss || lossCanStayInAnnex) ? Math.max(0, values.goodsGain!) : undefined;
-  const mTransfer = eligibility && validM && m && (!hasLoss || lossCanStayInAnnex) ? Math.max(0, values.serviceGain!) : undefined;
-  const sum = salary !== undefined && gainK !== undefined && gainM !== undefined && validK && validM && (!hasLoss || lossCanStayInAnnex)
-    ? salary + Math.max(0, gainK) + Math.max(0, gainM) : undefined;
+  const includePrior = draft.priorLossScope !== undefined;
+  const lossCanStayInAnnex = hasLoss && ordinary && !includePrior && (k !== m) && draft.singleActivityLossConfirmed === true;
+  const twoActivities = hasLoss && k && m && !includePrior && validK && validM ? reviewCurrentBusinessLoss2025({
+    year:c.year, ordinaryScopeVerified:ordinary, completeBusinessesVerified:draft.currentLossPrincipal !== undefined,
+    principal:draft.currentLossPrincipal ?? null,
+    businesses:[{schedule:'K',businessId:'retail',verified:true,regularPartIVLine9Cents:values.goodsGain!},
+      {schedule:'M',businessId:'services',verified:true,regularPartIVLine9Cents:values.serviceGain!}],
+  }) : undefined;
+  const prior = includePrior && !hasLoss && k !== m ? reviewPriorBusinessLoss2025({
+    year:c.year, ordinaryScopeVerified:ordinary,
+    singleBusinessAndLossYearVerified:draft.priorLossScope==='confirmed' && draft.priorLossPrincipal!==undefined,
+    activeBusiness:{businessId:k?'retail':'services',schedule:k?'K':'M',regularPartIVLine3Cents:values.priorBase ?? NaN,verified:true},
+    origin:{businessId:k?'retail':'services',taxYear:values.priorOriginYear ?? NaN,originalCents:values.priorOriginal ?? NaN,
+      previouslyAppliedCents:values.priorUsed ?? NaN,adjustmentReductionCents:0,availableCents:values.priorAvailable ?? NaN,
+      expiresOn:draft.priorLossPrincipal===false ? null : draft.priorLossExpiry ?? '',verified:true},
+  }) : undefined;
+  const priorGain = k ? values.goodsGain : values.serviceGain;
+  const priorReceipts = k ? values.goodsReceipts : values.serviceReceipts;
+  const priorDisplay = prior?.status==='reviewed' && whole(values.priorAllowed) !== undefined &&
+    values.priorAllowed! <= prior.deductionCents && values.priorBase! <= (priorReceipts ?? -1) &&
+    priorGain === values.priorBase! - values.priorAllowed!
+    ? {adjustedGainCents:values.priorBase!,deductionCents:values.priorAllowed!,availableCents:prior.availableCents} : undefined;
+  const validLosses = (!hasLoss || lossCanStayInAnnex || twoActivities?.status === 'reviewed') && (!includePrior || !!priorDisplay);
+  const kTransfer = eligibility && validK && k && validLosses
+    ? (twoActivities?.status==='reviewed' ? twoActivities.transfers['2Q'] : Math.max(0,values.goodsGain!)) : undefined;
+  const mTransfer = eligibility && validM && m && validLosses
+    ? (twoActivities?.status==='reviewed' ? twoActivities.transfers['2S'] : Math.max(0,values.serviceGain!)) : undefined;
+  const sum = salary !== undefined && (!k || kTransfer !== undefined) && (!m || mTransfer !== undefined) && validLosses
+    ? salary + (kTransfer ?? 0) / 100 + (mTransfer ?? 0) / 100 : undefined;
   const agi = sum !== undefined && Number.isSafeInteger(sum) ? sum : undefined;
   const gross = incomeCoverage === 'salary' ? salary : whole(values.grossFor17);
   const paidB = whole(c.components?.['27B']);
   const serviceTax = m ? whole(values.professionalWithheld) : undefined;
   const validB = serviceTax === undefined || (paidB !== undefined && paidB >= serviceTax);
   const anejos: OfficialBusiness2025Values = {
-    ...(k ? { K: eligibility ? { goodsReceiptsCents: values.goodsReceipts, netGainCents: kTransfer !== undefined ? values.goodsGain : undefined } : {} } : {}),
-    ...(m ? { M: eligibility ? { serviceReceiptsCents: values.serviceReceipts, netGainCents: mTransfer !== undefined ? values.serviceGain : undefined } : {} } : {}),
+    ...(k ? { K: eligibility ? { goodsReceiptsCents: values.goodsReceipts, netGainCents: kTransfer !== undefined ? values.goodsGain : undefined, prior:priorDisplay } : {} } : {}),
+    ...(m ? { M: eligibility ? { serviceReceiptsCents: values.serviceReceipts, netGainCents: mTransfer !== undefined ? values.serviceGain : undefined, prior:priorDisplay } : {} } : {}),
     ...(m || paidB !== undefined ? { B: eligibility ? {
       professionalWithholdingCents: m ? values.professionalWithheld : undefined,
       totalOtherPaymentsCents: validB && paidB !== undefined ? paidB * 100 : undefined,
@@ -72,9 +96,14 @@ export function resolveForm4822025(c: Closure) {
   if (wage && (salary === undefined || wageTax === undefined)) issues.push('Faltan los sueldos o la retención en dólares enteros verificados en todos los comprobantes.');
   if (!validK) issues.push('Anejo K: confirma ventas y la ganancia revisada; la ganancia no puede superar las ventas informadas.');
   if (!validM) issues.push('Anejo M: confirma los ingresos brutos y la ganancia revisada; la ganancia no puede superar los ingresos informados.');
-  if (hasLoss) issues.push(lossCanStayInAnnex
-    ? 'Pérdida del año: se conserva en el anejo, pero el traslado a la contribución regular es cero. No reduce sueldos ni se determina el arrastre.'
-    : 'La pérdida queda pendiente: verifica si fue una sola actividad, si hubo saldo de años anteriores o si corresponde la contribución básica alterna.');
+  if (hasLoss) issues.push(twoActivities?.status==='reviewed'
+    ? 'La pérdida del año se conserva en el anejo. Si es del negocio principal, solo se aplica contra la ganancia del otro negocio, no contra sueldos.'
+    : lossCanStayInAnnex
+      ? 'Pérdida del año: se conserva en el anejo, pero el traslado a la contribución regular es cero. No reduce sueldos ni se determina el arrastre.'
+      : (twoActivities?.reason ?? 'La pérdida queda pendiente: revisa el tipo de actividad, el arrastre y la contribución básica alterna.'));
+  if (includePrior && !priorDisplay) issues.push(prior?.status==='pending' ? prior.reason :
+    'El arrastre no se trasladó: revisa la misma actividad, los saldos, el límite de la línea 8 y la ganancia de la línea 9.');
+  if (priorDisplay) issues.push('Arrastre revisado de la misma actividad. Confirma el detalle del historial en el anejo y el saldo que quede para años futuros.');
   if (!validB) issues.push('Anejo B: el total de pagos y retenciones debe incluir la retención real de servicios.');
   if (c.components?.['23']) issues.push('Se informó contribución opcional en la línea 23. No se mezcla con el recorrido de cálculo regular.');
   return {
