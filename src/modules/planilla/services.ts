@@ -1,12 +1,13 @@
 import { Asset } from 'expo-asset';
 import { download } from '../../web/files';
 import type { Closure } from './engine';
+import type { WorkCreditInput } from './year-rules';
 import { evaluateClosure } from './engine';
-export async function generateClosurePDF(c: Closure, mode: 'review' | 'laboratory' = 'review') {
+export async function generateClosurePDF(c: Closure, mode: 'review' | 'laboratory' = 'review', creditInput?: WorkCreditInput) {
   let template: Uint8Array | undefined;
   if (c.year === 2025) { const asset = Asset.fromModule(require('../../../assets/tax/2025/form-482-informativo.pdf')); const response = await fetch(asset.uri); if (!response.ok) throw Error('No se pudo abrir la plantilla oficial incluida.'); template = new Uint8Array(await response.arrayBuffer()); }
   let ctTemplate: Uint8Array | undefined;
-  if (c.year === 2025 && (c.guided?.respuestas.some(r => r.clave === 'creditos' && r.valor === true) || !!c.components?.['27C'])) {
+  if (c.year === 2025 && (c.guided?.respuestas.some(r => r.clave === 'creditos' && r.valor === true) || !!c.components?.['27C'] || !!creditInput)) {
     const asset = Asset.fromModule(require('../../../assets/tax/2025/schedule-ct-informativo.pdf'));
     const response = await fetch(asset.uri);
     if (!response.ok) throw Error('No se pudo abrir el Anejo CT de referencia incluido.');
@@ -19,9 +20,9 @@ export async function generateClosurePDF(c: Closure, mode: 'review' | 'laborator
     if (!response.ok) throw Error('No se pudo abrir la plantilla de los anejos.');
     businessTemplate = new Uint8Array(await response.arrayBuffer());
   }
-  const { buildClosurePDF } = await import('./pdf'); return buildClosurePDF(c, evaluateClosure(c, mode), template, ctTemplate, businessTemplate);
+  const { buildClosurePDF } = await import('./pdf'); return buildClosurePDF(c, evaluateClosure(c, mode), template, ctTemplate, businessTemplate, creditInput);
 }
-export async function shareClosurePDF(c: Closure) { download(await generateClosurePDF(c), `EduMoney-cierre-${c.year}-no-radicado.pdf`, 'application/pdf'); }
+export async function shareClosurePDF(c: Closure, creditInput?: WorkCreditInput) { download(await generateClosurePDF(c,'review',creditInput), `EduMoney-cierre-${c.year}-no-radicado.pdf`, 'application/pdf'); }
 
 export async function shareAnnualSummaryPDF(result: import('./annual-summary-pdf').AnnualSummary, kind: import('./annual-summary-pdf').AnnualSummaryKind) {
   const { buildAnnualSummaryPDF } = await import('./annual-summary-pdf');

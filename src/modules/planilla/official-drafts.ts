@@ -115,7 +115,7 @@ export async function appendOfficialForm482Draft(pdf: PDFDocument, c: Closure, r
     }
     for (const [line, dollars] of Object.entries(prepared.lines)) write(line as Form482AmountLine, dollars);
     for (const line of ['2Q','2S'] as const) {
-      const n = business?.transfers[line] ?? (line === '2Q' ? tailors.K?.netGainCents : tailors.M?.netGainCents);
+      const n = line === '2Q' ? prepared.kTransfer : prepared.mTransfer;
       if (n !== undefined) write(line, n / 100);
     }
     // On the regular table row, tick the oval at the left of the printed option number.

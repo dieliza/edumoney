@@ -18,7 +18,7 @@ import { deductionApprovalStamp, prepararExpedienteGuiado } from './annual-snaps
 import {
   estimateWorkCredit, TAX_YEAR_RULES, WORK_CREDIT_ELIGIBILITY_KEYS, type WorkCreditInput, type WorkCreditResult,
 } from './year-rules';
-import { emptyForm482Intake, form482BusinessFields, form482OtherFields, type Draft482Field, type Form482Intake2025 } from './form482-intake-2025';
+import { emptyForm482Intake, form482ActivityFlags, form482BusinessFields, form482OtherFields, type Draft482Field, type Form482Intake2025 } from './form482-intake-2025';
 import { resolveForm4822025 } from './form482-resolve-2025';
 import type { AnnualSummaryKind } from './annual-summary-pdf';
 
@@ -41,7 +41,9 @@ const FORM_COVERAGE = [
   ['salary', 'Solo sueldos'],
   ['services', 'Solo servicios'],
   ['retail', 'Solo venta de mercancía'],
-  ['mixed', 'Combinación de sueldos, servicios o ventas'],
+  ['salary-services', 'Sueldos y servicios'],
+  ['salary-retail', 'Sueldos y ventas de mercancía'],
+  ['mixed', 'Sueldos, servicios y ventas de mercancía'],
 ] as const;
 const NO_PROFILES: PerfilContributivo[] = [];
 const NO_ANSWERS: RespuestaContributiva[] = [];
@@ -126,6 +128,7 @@ export default function PlanillaScreen() {
   const [showDraft, setShowDraft] = useState(false);
   const [draftNumbers, setDraftNumbers] = useState<Partial<Record<Draft482Field, string>>>({});
   const [showCredit, setShowCredit] = useState(false);
+  const [creditInput, setCreditInput] = useState<WorkCreditInput>();
   const [reload, setReload] = useState(0);
 
   useEffect(() => {
@@ -224,6 +227,7 @@ export default function PlanillaScreen() {
     setShowExpenses(false);
     setExpensePage(0);
     setShowCredit(false);
+    setCreditInput(undefined);
     setShowDraft(false);
     setLoadedYear(undefined);
     setYear(next);
@@ -273,9 +277,11 @@ export default function PlanillaScreen() {
   }
 
   const draft = c.draft482 ?? emptyForm482Intake();
-  const draftBusinessFields = form482BusinessFields.filter(([key]) => draft.incomeCoverage === 'mixed' ||
-    (draft.incomeCoverage === 'retail' && key.startsWith('goods')) ||
-    (draft.incomeCoverage === 'services' && !key.startsWith('goods')));
+  const draftActivities = form482ActivityFlags(draft.incomeCoverage);
+  const draftBusinessFields = form482BusinessFields.filter(([key]) => key.startsWith('goods') ? draftActivities.k : draftActivities.m);
+  const negativeBusinessResult = draftBusinessFields.some(([key]) =>
+    (key === 'goodsGain' || key === 'serviceGain') && /^-/.test(draftNumbers[key]?.trim() ?? ''));
+  const askLossConfirmation = negativeBusinessResult && draftActivities.k !== draftActivities.m;
   function updateDraft(change: Partial<Form482Intake2025>) {
     setC(prev => ({ ...prev, draft482: { ...(prev.draft482 ?? emptyForm482Intake()), ...change } }));
   }
@@ -297,6 +303,7 @@ export default function PlanillaScreen() {
         ...c,
         draft482: year === 2025 && c.draft482 ? {
           ...c.draft482,
+          singleActivityLossConfirmed: askLossConfirmation && c.draft482.singleActivityLossConfirmed === true,
           values: Object.fromEntries([...draftBusinessFields, ...form482OtherFields].flatMap(([key]) => {
             const raw = draftNumbers[key]?.trim();
             return raw ? [[key, parseAmount(raw.replace(',', '.'))]] : [];
@@ -479,7 +486,7 @@ export default function PlanillaScreen() {
           <Body>Estimación separada del resumen anual. Usa las cantidades que verificaste en el Anejo CT; EduMoney no las toma de tus ingresos brutos.</Body>
           <ActionButton title={showCredit ? 'Cerrar estimador' : 'Abrir estimador 2025'} secondary testID="closure-work-credit-toggle"
             onPress={() => setShowCredit(value => !value)}/>
-          {showCredit ? <WorkCreditEstimate/> : null}
+          {showCredit ? <WorkCreditEstimate initial={creditInput} onReviewed={setCreditInput}/> : null}
         </> : <>
           <Body>No hay cálculo ni PDF oficial de 2026 disponible aquí. EduMoney no aplica las reglas de 2025 a ese año.</Body>
           <OfficialLink href={TAX_YEAR_RULES[2026].informationReturns.source}>Hacienda: comprobantes e informativas 2026</OfficialLink>
@@ -537,11 +544,17 @@ export default function PlanillaScreen() {
             value={draft.individualResident ? 'yes' : 'no'} options={[[ 'no', 'No o no lo sé' ], [ 'yes', 'Sí' ]]}
             onChange={value => updateDraft({individualResident: value === 'yes', standardMethodConfirmed: false})}/>
           <Choices label="¿De dónde vinieron tus ingresos?" value={draft.incomeCoverage ?? 'unknown'} options={FORM_COVERAGE}
-            onChange={value => updateDraft({incomeCoverage: value === 'unknown' ? null : value, standardMethodConfirmed: false})}/>
+            onChange={value => updateDraft({incomeCoverage: value === 'unknown' ? null : value, standardMethodConfirmed: false, singleActivityLossConfirmed: false})}/>
           {[...draftBusinessFields, ...form482OtherFields].filter(([key]) => key !== 'grossFor17' || draft.incomeCoverage !== 'salary').map(([key, label]) =>
             <Field key={key} label={`${label} (USD, dólares enteros)`} value={draftNumbers[key] ?? ''}
-              onChangeText={value => {setDraftNumbers(prev => ({...prev,[key]:value})); updateDraft({standardMethodConfirmed:false});}} decimal/>)}
-          <Choices label="¿Verificaste todos los ingresos, y confirmas que aplica la tabla regular, sin tasas especiales, pérdidas ni pensión pagada por divorcio?"
+              onChangeText={value => {setDraftNumbers(prev => ({...prev,[key]:value})); updateDraft({standardMethodConfirmed:false, singleActivityLossConfirmed:false});}} decimal={!key.endsWith('Gain')}/>)}
+          {askLossConfirmation ? <>
+            <Body>Escribe la pérdida verificada con un signo menos. No se toma de los gastos del resumen anual.</Body>
+            <Choices label="¿La pérdida fue de tu única actividad y no incluye pérdidas de años anteriores ni requiere ajuste de contribución básica alterna?"
+              value={draft.singleActivityLossConfirmed ? 'yes' : 'no'} options={[[ 'no', 'Por revisar' ], [ 'yes', 'Lo confirmé' ]]}
+              onChange={value => updateDraft({singleActivityLossConfirmed:value === 'yes', standardMethodConfirmed:false})}/>
+          </> : null}
+          <Choices label="¿Verificaste todos los ingresos y que aplica la tabla regular, sin tasas especiales ni pensión pagada por divorcio?"
             value={draft.standardMethodConfirmed ? 'yes' : 'no'} options={[[ 'no', 'Todavía no' ], [ 'yes', 'Sí, lo verifiqué' ]]}
             onChange={value => updateDraft({standardMethodConfirmed: value === 'yes'})}/>
           <Body muted>En «Cálculo salarial y comprobantes» puedes confirmar la retención, el Crédito por Trabajo, otros pagos y el resto de los componentes del saldo. Si no hubo sueldos en un caso mixto, confirma cero solo si lo verificaste.</Body>
@@ -590,13 +603,15 @@ export default function PlanillaScreen() {
       {result.fields.map(f => <Body key={f.id}>Línea {f.id} · {f.label}: {fieldStateLabels[f.state]} · {f.state === 'not_applicable' ? 'No aplica' : f.valueCents === null ? missing : decimal(f.valueCents)}</Body>)}
       {[...result.missing, ...result.excluded, ...result.validationPending].map((text, i) => <Body key={i}>{text}</Body>)}
       </>}
+      {!synthetic ? <ErrorNotice message={error}/> : null}
       {stale && !synthetic ? <Body>Tu expediente cambió. Revisa y guarda la entrevista antes de descargar el borrador.</Body> : null}
       {!synthetic && saved && !stale && !busy ? <ActionButton title={year === 2025 ? 'Descargar borrador PDF del 482' : 'Compartir resumen de revisión'} testID="closure-pdf-share" onPress={() => {
         setBusy(true);
-        void shareClosurePDF(saved.closure)
-          .then(() => setNotice('Se preparó el PDF del expediente. EduMoney no lo envió a Hacienda.'))
+        setError('');
+        void shareClosurePDF(saved.closure, creditInput)
+          .then(() => {setNotice('Se preparó el PDF del expediente. EduMoney no lo envió a Hacienda.'); setReview(false);})
           .catch(e => setError(userMessage(e)))
-          .finally(() => { setBusy(false); setReview(false); });
+          .finally(() => setBusy(false));
       }}/> : null}
     </Sheet> : null}
   </Screen>;
@@ -640,20 +655,24 @@ function creditResultText(r: WorkCreditResult) {
   return 'Falta confirmar el estado para radicar, los importes o los dependientes cualificados. No se calculó un crédito.';
 }
 
-function WorkCreditEstimate() {
-  const [filingStatus, setFilingStatus] = useState<WorkCreditInput['filingStatus']>('uncertain');
-  const [eligibility, setEligibility] = useState<WorkCreditInput['eligibility']>({});
-  const [earned, setEarned] = useState('');
-  const [otherIncome, setOtherIncome] = useState('');
-  const [dependents, setDependents] = useState('');
+function WorkCreditEstimate({ initial, onReviewed }: {initial?:WorkCreditInput; onReviewed:(input?:WorkCreditInput)=>void}) {
+  const [filingStatus, setFilingStatus] = useState<WorkCreditInput['filingStatus']>(initial?.filingStatus ?? 'uncertain');
+  const [eligibility, setEligibility] = useState<WorkCreditInput['eligibility']>(initial?.eligibility ?? {});
+  const [earned, setEarned] = useState(initial ? decimal(initial.earnedIncome.cents) : '');
+  const [otherIncome, setOtherIncome] = useState(initial ? decimal(initial.otherIncome.cents) : '');
+  const [dependents, setDependents] = useState(initial?.qualifiedDependents.count?.toString() ?? '');
   const [assessed, setAssessed] = useState(false);
-  const [verified, setVerified] = useState(false);
+  const [verified, setVerified] = useState(!!initial);
   const [error, setError] = useState('');
-  const [result, setResult] = useState<WorkCreditResult>();
+  const [result, setResult] = useState<WorkCreditResult | undefined>(() => initial ? estimateWorkCredit(initial) : undefined);
+  function clearResult() {
+    setResult(undefined);
+    onReviewed(undefined);
+  }
   function changeAmount(update: (next: string) => void, value: string) {
     update(value);
     setVerified(false);
-    setResult(undefined);
+    clearResult();
     setError('');
   }
   function run() {
@@ -662,23 +681,26 @@ function WorkCreditEstimate() {
     const count = numericAnswer('dependientes', dependents);
     if (earnedCents === undefined || otherCents === undefined || count === undefined) {
       setError('Revisa los importes no negativos y el número entero de dependientes.');
-      setResult(undefined);
+      clearResult();
       return;
     }
     setError('');
-    setResult(estimateWorkCredit({
+    const input:WorkCreditInput = {
       taxYear: 2025, filingStatus, eligibility,
       earnedIncome: { cents: earnedCents, verified },
       otherIncome: { cents: otherCents, verified },
       qualifiedDependents: { count, verified },
-    }));
+    };
+    const estimate = estimateWorkCredit(input);
+    setResult(estimate);
+    onReviewed(estimate.status === 'estimated' ? input : undefined);
   }
   return <>
     <OfficialLink href={TAX_YEAR_RULES[2025].workCredit.sources[0]}>Hacienda: Anejo CT 2025 en español</OfficialLink>
     <OfficialLink href={TAX_YEAR_RULES[2025].workCredit.sources[2]}>Hacienda: importes y límites de 2025</OfficialLink>
-    <Body muted>No escribas identificación personal. Los datos del estimador no se guardan ni pasan a tu entrevista o borrador.</Body>
+    <Body muted>No escribas identificación personal. El estimador no guarda los datos. Si descargas el borrador en esta sesión, adjunta los totales verificados en el Anejo CT sin cambiar tu 482.</Body>
     <Choices label="¿Cómo presentarías tu planilla?" value={filingStatus} options={CREDIT_FILING}
-      onChange={value => { setFilingStatus(value); setResult(undefined); }}/>
+      onChange={value => { setFilingStatus(value); clearResult(); }}/>
     <Field label="Ingreso ganado verificado, Anejo CT línea 1D (USD)" testID="closure-ct-earned" value={earned}
       onChangeText={value => changeAmount(setEarned, value)} decimal maxLength={17}/>
     <Field label="Otros ingresos verificados, Anejo CT línea 2D (USD)" testID="closure-ct-other" value={otherIncome}
@@ -688,7 +710,7 @@ function WorkCreditEstimate() {
     <Body muted>Escribe cero solo si lo verificaste. Para trabajo por cuenta propia, revisa las reglas especiales del anejo antes de confirmar el ingreso ganado.</Body>
     <Choices label="¿Verificaste ambos importes y los dependientes con las instrucciones y comprobantes?"
       value={verified ? 'yes' : 'unknown'} options={[[ 'unknown', 'Pendiente' ], [ 'yes', 'Verifiqué los tres datos' ]]}
-      presentation="tabs" onChange={value => { setVerified(value === 'yes'); setResult(undefined); }}/>
+      presentation="tabs" onChange={value => { setVerified(value === 'yes'); clearResult(); }}/>
     <ActionButton title={assessed ? 'Ocultar requisitos' : 'Revisar requisitos antes de estimar'} secondary
       testID="closure-ct-requirements" onPress={() => setAssessed(value => !value)}/>
     {assessed ? WORK_CREDIT_ELIGIBILITY_KEYS.map(key => <Choices key={key} label={CREDIT_ELIGIBILITY_LABELS[key]}
@@ -696,7 +718,7 @@ function WorkCreditEstimate() {
       options={CLOSURE_OPTIONS} presentation="tabs"
       onChange={choice => {
         setEligibility(prev => ({ ...prev, [key]: choice === 'unknown' ? null : choice === 'yes' }));
-        setResult(undefined);
+        clearResult();
       }}/>) : null}
     <ActionButton title="Estimar Crédito por Trabajo 2025" testID="closure-ct-estimate" onPress={run}/>
     <ErrorNotice message={error}/>

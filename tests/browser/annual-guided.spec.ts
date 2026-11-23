@@ -7,16 +7,18 @@ test('Planilla guiada persiste y descarga sin radicar', async ({page}) => {
   await page.getByTestId('web-password-repeat').fill('QA-example-only-2025!');
   await page.getByTestId('web-unlock').click();
   await expect(page.getByText('¿De dónde vinieron tus ingresos?', {exact:false})).toBeVisible({timeout:25000});
-  await page.getByText('Incluir', {exact:true}).first().click();
-  await expect(page.getByText('¿Viviste en Puerto Rico durante todo el año?', {exact:true})).toBeVisible();
-  await page.getByText('Sí',{exact:true}).first().click();
+  const salaryProfile = page.getByRole('radiogroup', {name:'Empleado con salario', exact:true});
+  await salaryProfile.getByRole('radio', {name:'Incluir', exact:true}).click();
+  const residency = page.getByRole('radiogroup', {name:'¿Viviste en Puerto Rico durante todo el año?', exact:true});
+  await expect(residency).toBeVisible();
+  await residency.getByRole('radio', {name:'Sí', exact:true}).click();
   await page.getByTestId('closure-reason').fill('Prueba ficticia de cierre');
   await page.getByTestId('closure-save').click();
   await expect(page.getByText('Entrevista guardada en el expediente local.',{exact:false})).toBeVisible();
   await page.reload();
   await page.getByTestId('web-password').fill('QA-example-only-2025!');
   await page.getByTestId('web-unlock').click();
-  await expect(page.getByRole('radio',{name:'Sí',exact:true}).first()).toHaveAttribute('aria-checked','true',{timeout:25000});
+  await expect(residency.getByRole('radio',{name:'Sí',exact:true})).toHaveAttribute('aria-checked','true',{timeout:25000});
   for (const id of ['closure-annual-pdf','closure-withholding-pdf']) {
     const [download] = await Promise.all([page.waitForEvent('download'), page.getByTestId(id).click()]);
     expect(download.suggestedFilename()).toMatch(/EduMoney-.*-2025\.pdf/);

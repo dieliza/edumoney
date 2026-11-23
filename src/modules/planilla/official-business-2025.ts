@@ -16,8 +16,9 @@ export type OfficialBusiness2025Transfers = Partial<Record<'2Q' | '2S' | '27B', 
 type Box = readonly [left: number, right: number, baseline: number];
 const ink = rgb(0, 0.14, 0.45);
 const whole = (n: unknown): n is number => typeof n === 'number' && Number.isSafeInteger(n) && n >= 0 && n % 100 === 0;
-function put(page: PDFPage, font: PDFFont, value: unknown, [left, right, y]: Box) {
-  if (!whole(value)) return false;
+function put(page: PDFPage, font: PDFFont, value: unknown, [left, right, y]: Box, signed = false) {
+  if (!whole(value) && !(signed && typeof value === 'number' && whole(Math.abs(value)))) return false;
+  if (typeof value !== 'number') return false;
   const text = String(value / 100);
   const x = right - font.widthOfTextAtSize(text, 8);
   if (x < left) return false;
@@ -45,9 +46,9 @@ export async function appendOfficialBusiness2025(
     })) throw new UserInputError('Los anejos oficiales no tienen el formato revisado.');
     return (await pdf.copyPages(src, indices)).map(p => pdf.addPage(p));
   }
-  const write = (page: PDFPage, value: unknown, box: Box, line: string) => {
+  const write = (page: PDFPage, value: unknown, box: Box, line: string, signed = false) => {
     if (value === undefined) return false;
-    if (put(page, font, value, box)) return true;
+    if (put(page, font, value, box, signed)) return true;
     omitted.push(line + ': importe fuera del formato de la casilla, con centavos o sujeto a revisión de pérdidas.');
     return false;
   };
@@ -62,12 +63,12 @@ export async function appendOfficialBusiness2025(
   if (values.K) {
     const [p1, p2] = await append([22, 23]);
     write(p1, values.K.goodsReceiptsCents, [146, 215, 533.55], 'K II 1a');
-    if (write(p2, values.K.netGainCents, [463, 512, 606.48], 'K IV 9')) transfers['2Q'] = values.K.netGainCents;
+    if (write(p2, values.K.netGainCents, [463, 512, 606.48], 'K IV 9', true) && whole(values.K.netGainCents)) transfers['2Q'] = values.K.netGainCents;
   }
   if (values.M) {
     const [p1, p2] = await append([26, 27]);
     write(p1, values.M.serviceReceiptsCents, [466, 515, 526.86], 'M II 1');
-    if (write(p2, values.M.netGainCents, [463, 512, 606.18], 'M IV 9')) transfers['2S'] = values.M.netGainCents;
+    if (write(p2, values.M.netGainCents, [463, 512, 606.18], 'M IV 9', true) && whole(values.M.netGainCents)) transfers['2S'] = values.M.netGainCents;
   }
   return { omitted, transfers };
 }
