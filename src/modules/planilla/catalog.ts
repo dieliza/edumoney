@@ -1,7 +1,7 @@
 /** Solo años revisados expresamente; no heredar reglas al año siguiente. */
 export const SOURCES={
  form:{url:'https://hacienda.pr.gov/sites/default/files/individuos_2025_rev._20_jun_25_informativo.pdf',year:2025,revision:'20 jun 2025'},
- instructions:{url:'https://hacienda.pr.gov/sites/default/files/inst_individuos_2025_27_feb_262.pdf',year:2025,revision:'27 feb 2026'},
+ instructions:{url:'https://hacienda.pr.gov/sites/default/files/inst_individuos_2025_1_abr_26.pdf',year:2025,revision:'1 abr 2026'},
  filing:{url:'https://hacienda.pr.gov/publicaciones/carta-circular-de-rentas-internas-num-26-02-cc-ri-26-02',year:2025,revision:'5 feb 2026'},
  repository:{url:'https://hacienda.pr.gov/node/5770',year:2025,revision:'Consultado 9 nov 2026'},
 } as const;
