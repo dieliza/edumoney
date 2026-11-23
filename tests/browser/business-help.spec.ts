@@ -1,0 +1,31 @@
+import { expect,test } from '@playwright/test';
+
+test('Negocio: la ayuda emerge, cierra con X o Escape y conserva el conteo',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await page.goto('/business');
+ await page.getByTestId('web-password').fill('QA-negocio-ficticio-2026!');
+ await page.getByTestId('web-password-repeat').fill('QA-negocio-ficticio-2026!');
+ await page.getByTestId('web-unlock').click();
+ await page.getByTestId('business-legal-name').fill('Taller de prueba ficticio');
+ await page.getByRole('button',{name:/^Forma jurídica:/}).click();
+ await page.getByRole('radio',{name:/Comerciante individual/}).click();
+ await page.getByTestId('business-save').click();
+ await page.getByRole('button',{name:'Nómina: Taller de prueba ficticio'}).click();
+ await page.getByRole('button',{name:'Añadir empleado'}).click();
+ const input = page.getByTestId('record-allowances');
+ const help = page.getByTestId('help-allowances');
+ const panel = page.getByRole('dialog',{name:/Ayuda: Concesiones por deducciones/});
+ await input.fill('2');
+ expect((await input.boundingBox())?.width).toBeLessThan(130);
+ await expect(panel).toHaveCount(0);
+ await help.click();
+ await expect(panel).toBeVisible();
+ await expect(panel.getByText(/menos contribución de cada cheque/)).toBeVisible();
+ await panel.getByRole('button',{name:'Cerrar explicación'}).click();
+ await expect(panel).toHaveCount(0);
+ await expect(input).toHaveValue('2');
+ await help.click();
+ await page.keyboard.press('Escape');
+ await expect(panel).toHaveCount(0);
+ await expect(input).toHaveValue('2');
+});

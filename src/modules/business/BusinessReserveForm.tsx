@@ -7,6 +7,8 @@ import { decimal } from '../tax/domain';
 import { reserveLabels } from './ledgerDomain';
 import type { Reserve,ReserveKind } from './ledgerTypes';
 import type { BusinessLedgerStore } from './ledgerStore';
+import { BusinessFieldHelp } from './BusinessFieldHelp';
+import { ledgerHelp } from './ledgerHelpCopy';
 export function BusinessReserveForm({holderId,reserves,store,done,close}:{holderId:string;reserves:Reserve[];store:BusinessLedgerStore;done():Promise<void>;close():void}){
  const [kind,setKind]=useState<ReserveKind>('tax');
  const [amount,setAmount]=useState(()=>{const r=reserves.find(r=>r.kind==='tax');return r?decimal(r.amountCents):'';});
@@ -14,8 +16,12 @@ export function BusinessReserveForm({holderId,reserves,store,done,close}:{holder
  async function save(){if(busy)return;setBusy(true);setError('');try{await store.reserve(holderId,kind,parseAmount(amount.trim()),note,reserves.find(r=>r.kind===kind)?.version??0);await done();close();}catch(e){setError(userMessage(e));}finally{setBusy(false);}}
  return <Sheet title="Reservas manuales del titular" close={close} busy={busy}>
   <Body>Registra cuánto decides mantener reservado para cada obligación. Cambiar una reserva no crea un gasto, no mueve dinero y no confirma fondos disponibles en el banco.</Body>
+  <BusinessFieldHelp label="Tipo de reserva" help={ledgerHelp.reserveKind} testID="business-help-reserve-type">
   <Choices<ReserveKind> label="Tipo de reserva" value={kind} options={Object.entries(reserveLabels) as [ReserveKind,string][]} onChange={k=>{setKind(k);const r=reserves.find(r=>r.kind===k);setAmount(r?decimal(r.amountCents):'');setNote('');}}/>
+  </BusinessFieldHelp>
+  <BusinessFieldHelp label="Cantidad total reservada" help={ledgerHelp.reserveTotal} testID="business-help-reserve-total">
   <Field label="Cantidad total que mantienes reservada USD" value={amount} onChangeText={setAmount} decimal/>
+  </BusinessFieldHelp>
   <Field label="Motivo del importe o cambio" value={note} onChangeText={setNote} multiline maxLength={2000}/>
   <ErrorNotice message={error}/>{!busy?<ActionButton title="Guardar reserva manual" onPress={()=>void save()}/>:null}
  </Sheet>;
