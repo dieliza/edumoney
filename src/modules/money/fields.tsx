@@ -1,7 +1,8 @@
 import { isRequiredField, isCalculationField, missingField } from '../../ui/requiredFields';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Modal, Pressable, ScrollView, TextInput, View, KeyboardAvoidingView, Keyboard, Platform } from 'react-native';
-import { useState, type PropsWithChildren } from 'react';
+import { useCallback, useMemo, useRef, useState, type PropsWithChildren, type ReactNode } from 'react';
+import { SheetOverlayContext } from '../../ui/SheetOverlay';
 import { useTheme } from '../../design/ThemeProvider';
 import { fixed } from '../../design/tokens';
 import { Body, Card, CloseButton } from '../../ui/components';
@@ -11,16 +12,31 @@ export function Sheet({ title, close, children, busy = false }: PropsWithChildre
     busy?: boolean;
 }>) {
     const { colors } = useTheme();
-    return <Modal transparent animationType="none" onRequestClose={() => { if (!busy)
-        close(); }}><KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1, justifyContent: 'center', padding: 16, backgroundColor: fixed.previewBackdrop }}>
-  <View style={{ width: '100%', maxWidth: 650, maxHeight: '92%', alignSelf: 'center' }}><View style={{flexDirection:'row',gap:8,alignItems:'center',paddingBottom:8}}><Pressable testID="sheet-dismiss-keyboard" accessibilityRole="button" accessibilityLabel="Ocultar teclado del formulario" onPress={()=>Keyboard.dismiss()} style={{minWidth:48,minHeight:48,padding:12,backgroundColor:colors.surface,borderRadius:16}}><Ionicons name="keypad-outline" size={24} color={colors.primary}/></Pressable><View style={{flex:1}}/>{!busy?<CloseButton testID="sheet-close" onPress={close}/>:null}</View>
+    const [overlay, setOverlay] = useState<ReactNode>(null);
+    const restore = useRef<(() => void) | null>(null);
+    const clearOverlay = useCallback(() => {
+        setOverlay(null);
+        const onClose = restore.current;
+        restore.current = null;
+        onClose?.();
+    }, []);
+    const overlayHost = useMemo(() => ({
+        show(panel: ReactNode, onClose: () => void) { restore.current = onClose; setOverlay(panel); },
+        close: clearOverlay,
+    }), [clearOverlay]);
+    return <Modal transparent animationType="none" onRequestClose={() => {
+        if (overlay) clearOverlay();
+        else if (!busy) close();
+    }}><KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1, justifyContent: 'center', padding: 16, backgroundColor: fixed.previewBackdrop }}>
+  <View aria-hidden={overlay ? true : undefined} importantForAccessibility={overlay ? 'no-hide-descendants' : 'auto'}
+    pointerEvents={overlay ? 'none' : 'auto'} style={{ width: '100%', maxWidth: 650, maxHeight: '92%', alignSelf: 'center' }}><View style={{flexDirection:'row',gap:8,alignItems:'center',paddingBottom:8}}><Pressable testID="sheet-dismiss-keyboard" accessibilityRole="button" accessibilityLabel="Ocultar teclado del formulario" onPress={()=>Keyboard.dismiss()} style={{minWidth:48,minHeight:48,padding:12,backgroundColor:colors.surface,borderRadius:16}}><Ionicons name="keypad-outline" size={24} color={colors.primary}/></Pressable><View style={{flex:1}}/>{!busy?<CloseButton testID="sheet-close" onPress={close}/>:null}</View>
   <ScrollView tabIndex={0} keyboardDismissMode="on-drag" keyboardShouldPersistTaps="handled" style={{ flexShrink: 1, width: '100%', borderRadius: 24 }}><Card style={{ gap: 16 }}>
-   <Body style={{ fontSize: 23, fontWeight: '800', paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: colors.line }}>{title}</Body>{children}
+   <Body style={{ fontSize: 23, fontWeight: '800', paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: colors.line }}>{title}</Body><SheetOverlayContext.Provider value={overlayHost}>{children}</SheetOverlayContext.Provider>
    {busy ? <Body>Guardando en este dispositivo…</Body> : null}
   </Card></ScrollView>
- </View></KeyboardAvoidingView></Modal>;
+ </View>{overlay}</KeyboardAvoidingView></Modal>;
 }
-export function Field({ label, value, onChangeText, decimal = false, multiline = false, testID, maxLength, secure = false, required, calculationRequired = isCalculationField(label) }: {
+export function Field({ label, value, onChangeText, decimal = false, multiline = false, testID, maxLength, secure = false, required, integer = false, afterInput, calculationRequired = isCalculationField(label) }: {
     label: string;
     value: string;
     onChangeText(value: string): void;
@@ -28,6 +44,8 @@ export function Field({ label, value, onChangeText, decimal = false, multiline =
     multiline?: boolean;
     testID?: string;
     maxLength?: number;
+    integer?: boolean;
+    afterInput?: ReactNode;
     secure?: boolean;
     required?: boolean;
     calculationRequired?: boolean;
@@ -36,7 +54,8 @@ export function Field({ label, value, onChangeText, decimal = false, multiline =
     const [visible, setVisible] = useState(false);
     const needed = required ?? isRequiredField(label);
     const missing = missingField(value, needed || calculationRequired);
-    return <View style={{ gap: 6, padding: 12, borderRadius: 16, backgroundColor: colors.surface }}><Body style={{ fontSize: 14, fontWeight: '600' }}>{label}</Body><TextInput secureTextEntry={secure && !visible} autoCorrect={secure ? false : undefined} autoCapitalize={secure ? 'none' : undefined} testID={testID} accessibilityLabel={label} accessibilityHint={missing ? (calculationRequired ? 'Necesario para calcular. Completa este dato.' : 'Campo obligatorio sin completar.') : undefined} aria-invalid={missing} value={value} onChangeText={onChangeText} keyboardType={decimal ? 'decimal-pad' : 'default'} multiline={multiline} maxLength={maxLength ?? (multiline ? 240 : 100)} style={{ minHeight: 50, borderWidth: missing ? 2 : 1, borderColor: missing ? fixed.expense : colors.line, borderRadius: 12, padding: 12, color: colors.text, backgroundColor: colors.surfaceAlt, fontSize: 17 }} placeholderTextColor={colors.muted}/>{secure ? <Pressable accessibilityRole="button" accessibilityLabel={visible ? "Ocultar contraseña" : "Mostrar contraseña"} onPress={() => setVisible(!visible)} style={{minHeight:44,justifyContent:"center",alignSelf:"flex-start",paddingHorizontal:12}}><Ionicons name={visible ? "eye-off-outline" : "eye-outline"} size={24} color={colors.primary}/></Pressable> : null}{missing ? <Body style={{fontSize:12,lineHeight:18,color:fixed.expense}}>{calculationRequired ? 'Necesario para calcular' : 'Obligatorio'}</Body> : null}</View>;
+    const input = <TextInput secureTextEntry={secure && !visible} autoCorrect={secure ? false : undefined} autoCapitalize={secure ? 'none' : undefined} testID={testID} accessibilityLabel={label} accessibilityHint={missing ? (calculationRequired ? 'Necesario para calcular. Completa este dato.' : 'Campo obligatorio sin completar.') : undefined} aria-invalid={missing} value={value} onChangeText={onChangeText} keyboardType={integer ? 'number-pad' : decimal ? 'decimal-pad' : 'default'} multiline={multiline} maxLength={maxLength ?? (multiline ? 240 : 100)} style={{ width: integer ? 108 : undefined, maxWidth: integer ? '100%' : undefined, minHeight: 50, borderWidth: missing ? 2 : 1, borderColor: missing ? fixed.expense : colors.line, borderRadius: 12, padding: 12, color: colors.text, backgroundColor: colors.surfaceAlt, fontSize: 17 }} placeholderTextColor={colors.muted}/>;
+    return <View style={{ gap: 6, padding: 12, borderRadius: 16, backgroundColor: colors.surface }}><Body style={{ fontSize: 14, fontWeight: '600' }}>{label}</Body>{afterInput ? <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8 }}>{input}{afterInput}</View> : input}{secure ? <Pressable accessibilityRole="button" accessibilityLabel={visible ? "Ocultar contraseña" : "Mostrar contraseña"} onPress={() => setVisible(!visible)} style={{minHeight:44,justifyContent:"center",alignSelf:"flex-start",paddingHorizontal:12}}><Ionicons name={visible ? "eye-off-outline" : "eye-outline"} size={24} color={colors.primary}/></Pressable> : null}{missing ? <Body style={{fontSize:12,lineHeight:18,color:fixed.expense}}>{calculationRequired ? 'Necesario para calcular' : 'Obligatorio'}</Body> : null}</View>;
 }
 export function Choices<T extends string>({ label, value, options, onChange, presentation = 'select', required = false }: {
     label: string;

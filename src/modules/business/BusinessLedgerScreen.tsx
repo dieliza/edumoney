@@ -17,6 +17,8 @@ import { BusinessEntryForm } from './BusinessEntryForm';
 import { BusinessReceiptForm } from './BusinessReceiptForm';
 import { BusinessReserveForm } from './BusinessReserveForm';
 import { BusinessExportForm } from './BusinessExportForm';
+import { BusinessFieldHelp } from './BusinessFieldHelp';
+import { ledgerHelp } from './ledgerHelpCopy';
 const knownMoney=(value:number|null)=>value===null?'Pendiente de completar desglose':formatMoney(value);
 const empty:BusinessLedgerSnapshot={holders:[],dbas:[],projects:[],entries:[],reserves:[],documents:[],movements:[]};
 const receiptStatus=(document:StoredDocument)=>document.deletedAt?'Retirado':statusOptions.find(([code])=>code===document.status)?.[1]??'Estado por confirmar';
@@ -42,20 +44,36 @@ export default function BusinessLedgerScreen() {
  return <Screen title="Movimientos de Negocio" demo={false} subtitle="Ingresos, gastos, recibos y reservas locales." keyboardForm>
   <ActionButton title="Volver a Negocio" secondary onPress={()=>router.dismissTo('/business')}/><ErrorNotice message={error}/>{notice?<Card><Body>{notice}</Body></Card>:null}
   {!store?<Card><Body>Abriendo registros comerciales…</Body></Card>:null}
+  <BusinessFieldHelp label="Vista por titular legal" help={ledgerHelp.holder} testID="business-help-ledger-holder">
   <Choices label="Vista por titular legal" value={holderId} options={[["","Seleccionar titular"],...data.holders.map(h=>[h.id,h.legalName] as const)]} onChange={id=>{setHolder(id);setProject('');setNotice('');setLimit(30);}}/>
+  </BusinessFieldHelp>
   {holder?<>
+   <BusinessFieldHelp label="Vista por proyecto" help={ledgerHelp.project} testID="business-help-ledger-project">
    <Choices label="Vista por proyecto" value={projectId} options={[["","Todos los proyectos del titular"],...projects.map(p=>[p.id,p.name] as const)]} onChange={id=>{setProject(id);setLimit(30);}}/>
+   </BusinessFieldHelp>
    {totals?<Card><SectionHeading title={projectId?projects.find(p=>p.id===projectId)?.name??'Proyecto':'Resumen del titular'} onSurface/>
+    <BusinessFieldHelp label="Ventas brutas y depósitos netos" help={ledgerHelp.deposits} testID="business-help-ledger-deposits">
     <Body>Depósitos netos registrados: {formatMoney(totals.receivedCents)}</Body>
     <Body>Ventas brutas: {knownMoney(totals.grossCents)} · Comisiones: {knownMoney(totals.commissionCents)} · Devoluciones: {knownMoney(totals.refundCents)}</Body>
+    </BusinessFieldHelp>
+    <BusinessFieldHelp label="IVU registrado en cobros" help={ledgerHelp.taxCollected} testID="business-help-ledger-ivu">
     <Body>IVU registrado en cobros: {knownMoney(totals.ivuCents)}. No confirma tasas, exenciones ni remesas.</Body>
+    </BusinessFieldHelp>
+    <BusinessFieldHelp label="Cobros con desglose pendiente" help={ledgerHelp.missingBreakdown} testID="business-help-ledger-breakdown">
     <Body>Cobros con desglose pendiente: {totals.pendingIncomeCount}. Los depósitos netos conocidos se conservan; sus componentes desconocidos no se convierten en cero.</Body>
+    </BusinessFieldHelp>
     <Body>Gastos completos registrados: {formatMoney(totals.expenseCents)}</Body>
+    <BusinessFieldHelp label="Parte comercial y uso pendiente" help={ledgerHelp.expenseShare} testID="business-help-ledger-expenses">
     <Body>Parte comercial identificada: {formatMoney(totals.commercialExpenseCents)} · Gastos de uso pendiente: {formatMoney(totals.pendingExpenseCents)}</Body>
+    </BusinessFieldHelp>
+    <BusinessFieldHelp label="Conciliación de registros" help={ledgerHelp.reconcile} testID="business-help-ledger-reconcile">
     <Body>No es un saldo bancario confirmado. Los registros modificados fuera de Negocio o eliminados se muestran para revisar y se excluyen de estos totales. Clasificar como comercial no determina deducibilidad.</Body>
+    </BusinessFieldHelp>
    </Card>:<ErrorNotice message={totalsError}/>}
    {store?<><ActionButton title="Añadir ingreso comercial" testID="business-income" onPress={()=>setForm({kind:'income'})}/><ActionButton title="Registrar gasto comercial" testID="business-expense" onPress={()=>setForm({kind:'expense'})}/></>:null}
-   <Card><SectionHeading title="Reservas manuales del titular" onSurface/>
+   <Card><BusinessFieldHelp label="Reservas manuales del titular" help={ledgerHelp.reserves} testID="business-help-ledger-reserves">
+    <SectionHeading title="Reservas manuales del titular" onSurface/>
+   </BusinessFieldHelp>
     {(Object.keys(reserveLabels) as ReserveKind[]).map(kind=>{const r=data.reserves.find(r=>r.holderId===holderId&&r.kind===kind);return <Body key={kind}>{reserveLabels[kind]}: {r?formatMoney(r.amountCents):'Sin registrar'}</Body>;})}
     <Body>Las reservas pertenecen al titular, incluso en la vista de proyecto. No crean gastos ni indican que el dinero esté depositado en una cuenta separada.</Body>
     <ActionButton title="Ajustar reservas manuales" secondary onPress={()=>setReserving(true)}/>

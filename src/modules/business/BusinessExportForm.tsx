@@ -7,6 +7,7 @@ import { formatMoney } from '../money/domain';
 import { businessExport } from './ledgerDomain';
 import { shareBusinessExport } from './export';
 import type { BusinessLedgerSnapshot } from './ledgerTypes';
+import { BusinessFieldHelp } from './BusinessFieldHelp';
 export function BusinessExportForm({data,holderId,projectId,close}:{data:BusinessLedgerSnapshot;holderId:string;projectId:string|null;close():void}) {
  const [selected,setSelected]=useState<string[]>([]),[images,setImages]=useState('no'),[busy,setBusy]=useState(false),[error,setError]=useState('');
  const report=businessExport(data,holderId,projectId,selected);
@@ -24,7 +25,7 @@ export function BusinessExportForm({data,holderId,projectId,close}:{data:Busines
   {report.pending.map((p,i)=><Body key={i}>{p}</Body>)}
   <Body style={{fontWeight:'700'}}>Comprobantes a incluir</Body>
   {documents.map(d=><ActionButton key={d.id} title={`${selected.includes(d.id)?'Retirar':'Incluir'} comprobante: ${d.description||d.id} · ${d.status}`} secondary onPress={()=>setSelected(current=>current.includes(d.id)?current.filter(id=>id!==d.id):[...current,d.id])}/>)}
-  <Choices label="Copias de imágenes en el expediente JSON" value={images} options={[["no","Compartir solo datos y referencias"],["yes","Incluir copias de los comprobantes seleccionados"]]} onChange={setImages}/>
+  <BusinessFieldHelp label="Copias de comprobantes" help={{text:"Un comprobante es la evidencia de un pago, como una foto de un recibo. Si incluyes copias, la persona a quien le envíes el expediente podrá ver esas imágenes. Si dejas solo datos y referencias, las fotos no viajan."}}><Choices label="Copias de imágenes en el expediente JSON" value={images} options={[["no","Compartir solo datos y referencias"],["yes","Incluir copias de los comprobantes seleccionados"]]} onChange={setImages}/></BusinessFieldHelp>
   <Body>Compartir genera un archivo legible fuera del respaldo cifrado. Tú eliges el destino. No se envía automáticamente ni confirma deducibilidad.</Body>
   <ErrorNotice message={error}/>{!busy?<><ActionButton title="Confirmar y compartir expediente JSON" onPress={()=>void share('json')}/><ActionButton title="Compartir CSV de movimientos" secondary onPress={()=>void share('csv')}/></>:<Body>Preparando archivo local…</Body>}
  </Sheet>;
