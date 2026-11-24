@@ -1,0 +1,4 @@
+PASS original modules, stores and all reviewed UI dependencies: 7 bundles
+PASS newer business help and runtime/API handlers preserved
+PASS canonical worker, cache, old aliases, assets and safe activation/push preserved
+PASS active published bundle includes reviewed design and selected themes
