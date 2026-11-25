@@ -17,7 +17,7 @@
   "result": "Todos los casos pasan en su última ejecución; se corrigió una expectativa de texto anterior y se repitió solo ese caso",
   "user_answer_first_transfer": "Sí, crear el apartado únicamente al confirmar la primera transferencia",
   "pending_answer": null,
-  "publication": "Versión privada en despliegue; producción 109 sin cambios",
+  "publication": "Versión privada publicada correctamente; producción 109 sin cambios",
   "existing_goals": "Se conservan objetivos existentes; nueva meta sin dinero inicial, edición conserva capital y tipo. Interpretación comunicada antes de continuar.",
   "checks": {
     "typecheck": "passed",

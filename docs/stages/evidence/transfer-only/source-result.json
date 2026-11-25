@@ -5,5 +5,10 @@
   "local_build": "passed",
   "package_checks": 1,
   "artifact_checks": 8,
-  "scope": "private trial only"
+  "scope": "private trial only",
+  "status": "succeeded",
+  "deployment_id": "appgdep_6b071a7dfc5881919ee0f182eeb2022a",
+  "version_id": "appgprj_6b070495eb5481918c579fa02cb7441a~appgver_362126cdce148191bce345bb9b672b23",
+  "url": "https://edumoney-fondos-prueba-20261125.diegoluissantospabon.chatgpt.site",
+  "production_unchanged": true
 }
