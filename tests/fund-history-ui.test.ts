@@ -8,6 +8,8 @@ vi.mock('react-native',()=>({View:()=>null,ActivityIndicator:()=>null}));
 vi.mock('../src/ui/components',()=>({ActionButton:()=>null,Body:()=>null,Card:()=>null,SectionHeading:()=>null}));
 vi.mock('../src/ui/MeaningHelp',()=>({MeaningHelp:()=>null}));
 vi.mock('../src/modules/money/fields',()=>({ErrorNotice:()=>null}));
+vi.mock('../src/modules/funds/FundSheet',()=>({FundSheet:()=>null,FundBody:()=>null,FundError:()=>null}));
+vi.mock('../src/modules/money/TransactionFormUI',()=>({TransactionLink:()=>null}));
 vi.mock('../src/modules/funds/TransferEditor',()=>({TransferEditor:()=>null}));
 vi.mock('../src/modules/funds/useFunds',()=>({useFunds:()=>({store:{reverse:h.reverse},data:h.data,error:'',reload:h.reload})}));
 type Node=ReactElement<Record<string,unknown>>;
@@ -16,3 +18,5 @@ function start(){h.values=[];h.cursor=0;h.reverse.mockClear();h.reload.mockClear
 function draw(){h.cursor=0;return nodes(FundTransfers({scope:'personal',kind:'savings',allowTransfer:true}));}
 it('abre Editar historiales y permite corregir la transferencia original sin crear fondos',()=>{start();let t=draw();expect(t.some(n=>n.props.title==='Crear fondo')).toBe(false);expect(t.some(n=>n.props.testID==='funds-new-transfer')).toBe(true);expect(t.some(n=>n.props.testID==='fund-transfer-edit-t')).toBe(false);(t.find(n=>n.props.testID==='fund-history-edit')!.props.onPress as ()=>void)();t=draw();(t.find(n=>n.props.testID==='fund-transfer-edit-t')!.props.onPress as ()=>void)();t=draw();expect(t.find(n=>n.props.initial)?.props.initial).toMatchObject({id:'t',amountCents:10000,date:'2026-11-25'});expect(h.reverse).not.toHaveBeenCalled();});
 it('elimina desde el historial con versión y evita duplicar dos pulsaciones',async()=>{start();(draw().find(n=>n.props.testID==='fund-history-edit')!.props.onPress as ()=>void)();const remove=draw().find(n=>n.props.testID==='fund-transfer-delete-t')!.props.onPress as ()=>void;remove();remove();await vi.waitFor(()=>expect(h.reload).toHaveBeenCalledOnce());expect(h.reverse).toHaveBeenCalledExactlyOnceWith('t',1,'Eliminada desde Editar historiales');});
+
+it('el enlace inferior abre y permite corregir también las transferencias eliminadas sin reactivarlas',()=>{start();const data=h.data as FundData;data.transfers[0]={...data.transfers[0],reversedAt:'2026-11-25',reversalReason:'Duplicada'};let t=draw();const entry=t.find(n=>n.props.testID==='fund-history-edit')!;expect(t.indexOf(entry)).toBeGreaterThan(t.findIndex(n=>n.props.children==='Prueba'));(entry.props.onPress as ()=>void)();t=draw();expect(t.some(n=>n.props.title==='Editar historiales')).toBe(true);expect(t.some(n=>n.props.testID==='fund-transfer-delete-t')).toBe(false);(t.find(n=>n.props.testID==='fund-transfer-edit-t')!.props.onPress as ()=>void)();expect(draw().find(n=>n.props.initial)?.props.initial).toMatchObject({id:'t',reversedAt:'2026-11-25'});expect(h.reverse).not.toHaveBeenCalled();});

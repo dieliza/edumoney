@@ -192,7 +192,7 @@ export class MoneyStore {
     /** Same reversible deletion and link guards as the detail view, without a confirmation prompt. */
     async deleteFromHistory(m:LedgerMovement){
         const document=await this.read(db=>db.getFirstAsync<{id:string;version:number}>("SELECT id,version FROM documents WHERE movement_id=? AND deleted_at IS NULL AND status<>'corrected' ORDER BY rowid DESC LIMIT 1",m.id));
-        return this.setDeleted(m.id,m.version,true,'Eliminación desde el historial de gastos',document??undefined);
+        return this.setDeleted(m.id,m.version,true,m.kind==='income'?'Eliminación desde el historial de ingresos':'Eliminación desde el historial de gastos',document??undefined);
     }
     async setDeleted(id: string, version: number, deleted: boolean, reason: string, documentReview?: { id: string; version: number }) {
         return this.write(async () => {

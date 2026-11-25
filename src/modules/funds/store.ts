@@ -66,6 +66,19 @@ export class FundsStore{
    data=await readFundData(db);const changed=data.transfers.find(t=>t.id===input.id)!;validateAllocationTimeline(data,input.scope,{...changed,date:old&&old.date<input.date?old.date:input.date});
   });
  }
+ /** Correct an eliminated record without reactivating it or changing any balances. */
+ async editReversed(input:TransferInput,expectedVersion:number){
+  validateTransfer(input,this.today());
+  return this.ledger.transaction(async db=>{
+   const old=await db.getFirstAsync<FundTransfer>(transferSelect+' WHERE id=?',input.id);
+   if(!old||!old.reversedAt)fail('Abre de nuevo el historial de la transferencia eliminada.');
+   if(old.scope!==input.scope||old.fromId!==input.fromId||old.toId!==input.toId)fail('Una transferencia eliminada conserva su origen y destino.');
+   if(transferKey(old)===transferKey(input))return;
+   if(old.version!==expectedVersion)fail('La transferencia cambió. Abre de nuevo su historial.');
+   await event(db,input.id,'edit-reversed',old,'Corrección de datos; la transferencia continúa eliminada');
+   await db.runAsync('UPDATE fund_transfers SET amount_cents=?,date=?,description=?,version=version+1 WHERE id=?',input.amountCents,input.date,input.description.trim(),input.id);
+  });
+ }
  async reverse(id:string,version:number,reason:string){
   if(!reason.trim()||reason.trim().length>240)fail('Escribe el motivo para revertir (hasta 240 caracteres).');
   return this.ledger.transaction(async db=>{const t=await db.getFirstAsync<FundTransfer>(transferSelect+' WHERE id=?',id);if(!t)fail('Transferencia no encontrada.');if(t.reversedAt)return;if(t.version!==version)fail('La transferencia cambió. Vuelve a abrirla.');await event(db,id,'reverse',t,reason);await db.runAsync('UPDATE fund_transfers SET reversed_at=?,reversal_reason=?,version=version+1 WHERE id=?',new Date().toISOString(),reason.trim(),id);await db.runAsync('UPDATE goals SET version=version+1 WHERE id IN (SELECT goal_id FROM money_funds WHERE id IN (?,?))',t.fromId,t.toId);validateAllocationTimeline(await readFundData(db),t.scope,t);});

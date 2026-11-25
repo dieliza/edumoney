@@ -1,0 +1,14 @@
+{
+  "build": "history-footer-7c4c4885086d",
+  "modules": [
+    815,
+    1145,
+    21009,
+    21025,
+    21026,
+    21027
+  ],
+  "protectedModules": 1411,
+  "assets": 36,
+  "tests": 1
+}
