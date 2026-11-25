@@ -1,0 +1,9 @@
+
+> edumoney@1.0.0 lint
+> eslint .
+
+
+/workspace/edumoney/scripts/patch-home-controls-site.cjs
+  24:121  warning  'req' is assigned a value but never used  no-unused-vars
+
+✖ 1 problem (0 errors, 1 warning)

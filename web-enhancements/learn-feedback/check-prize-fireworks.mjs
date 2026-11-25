@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 
+function contrast(a,b){const l=hex=>{const c=hex.slice(1).match(/../g).map(v=>parseInt(v,16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return c[0]*.2126+c[1]*.7152+c[2]*.0722;};return(Math.max(l(a),l(b))+.05)/(Math.min(l(a),l(b))+.05);}
 const bundle=fs.readFileSync(process.argv[2],'utf8');
 const at=bundle.indexOf('_e.EducationPanel=function');
 const begin=bundle.lastIndexOf('\n__d(',at);
@@ -12,7 +13,7 @@ const jsx=(type,props,key)=>({type,props,key});
 const state=[];
 const progress=new Map();
 const legacy={id:'learn-20',badgeId:'learn-20',title:'Legacy',symbol:'★',basis:'Legacy',earnedAt:'2026-11-15'};
-let cursor=0, done, claims=0, stamps=1;
+let cursor=0, done, claims=0, stamps=1, themeName='dark';
 const a={
  useState(initial){const i=cursor++;if(!(i in state))state[i]=initial;return [state[i],v=>{state[i]=v}]},
  useRef(){return {current:true}}, useCallback:f=>f, useEffect(){}
@@ -30,7 +31,7 @@ const store={
 };
 const modules=[{isDebtTip:()=>false},a,{},{},{},{},'Pressable','View',{useIsFocused:()=>true},
  types('Card','Body','ActionButton','ProgressBar','SectionHeading'),types('Sheet','Choices','ErrorNotice'),
- {useTheme:()=>({colors:{mint:'mint'}})},{getEducationStore:async()=>store},{initialCatalog:catalog},{},{jsx,jsxs:jsx,Fragment:'Fragment'}];
+ {useTheme:()=>({name:themeName,colors:{mint:'mint'}})},{getEducationStore:async()=>store},{initialCatalog:catalog},{},{jsx,jsxs:jsx,Fragment:'Fragment'}];
 const exports={};
 vm.runInNewContext(bundle.slice(begin,end),{__d:factory=>factory(null,n=>modules[n],null,null,{},exports,modules.map((_,i)=>i))});
 const render=(achievementsOnly=false)=>{cursor=0;return exports.EducationPanel({achievementsOnly})};
@@ -66,7 +67,11 @@ for(let j=0;j<order.length;j++){
  if(j<10){assert.equal(reward().props.award.title,expected[j][1]);assert.equal(reward().props.award.symbol,expected[j][0]);assert.equal(reward().props.animate,j!==1);}
  else assert.equal(reward().props.award,undefined);
  const node=reward();const presentation=node.type(node.props);if(j<10){assert(status(presentation,expected[j][2]));assert(status(presentation,expected[j][1]));}
- const bursts=all(presentation,n=>n.props?.dataSet?.eduBurst==='true');assert.equal(bursts.length,j===1?0:3);
+ const bursts=all(presentation,n=>n.props?.dataSet?.eduBurst==='true');assert.equal(bursts.length,3);
+ const scene=all(presentation,n=>n.props?.dataSet?.eduPrizeScene==='true')[0];assert(scene);assert.equal(scene.props.style.height,156);assert(all(scene,n=>n.props?.dataSet?.eduFireworks==='true').length);const overlay=all(scene,n=>n.props?.dataSet?.eduFireworks==='true')[0];assert.equal(overlay.props.style.position,'absolute');assert.equal(overlay.props.dataSet.eduMotion,j===1?'still':'animate');
+ assert.equal(presentation.props.style.backgroundColor,'#142D38');
+ for(const body of all(presentation,n=>n.type==='Body')){assert(body.props.style?.color,'Every prize text must override inherited row ink');assert(contrast(body.props.style.color,presentation.props.style.backgroundColor)>=4.5,'Prize contrast');}
+ if(j===3){themeName='light';const light=node.type(node.props);assert.equal(light.props.style.backgroundColor,'#F2F8FA');for(const body of all(light,n=>n.type==='Body'))assert(['#102F42','#526675'].includes(body.props.style.color));themeName='dark';}
  if(j===0){assert.equal(node.props.hasNext,true);node.props.onContinue();assert(sheet());assert.equal(reward(),undefined);}
  if(j===1)state[9]=false;
  close();
@@ -80,4 +85,4 @@ assert(all(panel,n=>Array.isArray(n.props?.children)&&n.props.children.includes(
 
 
 assert(!bundle.includes('Desactivar celebraciones animadas'));
-const css=fs.readFileSync(new URL('./prize-fireworks.css',import.meta.url),'utf8');assert(css.includes('prefers-reduced-motion:reduce'));assert(css.includes('3.5s both'));assert(css.includes('var(--delay) 2 both'));console.log('Passed: ten prize titles/messages, read-only/wrong/repeat do not reward, next action clears reward, finite fireworks, reduced motion, eleventh cap, progress/legacy preservation.');
+const css=fs.readFileSync(new URL('./prize-fireworks.css',import.meta.url),'utf8');assert(css.includes('prefers-reduced-motion:reduce'));assert(css.includes('4.3s both'));assert(css.includes('var(--delay) 2 both'));assert(css.includes('display:flex;overflow:hidden'));assert(!css.includes('display:none'));console.log('Passed: ten prize titles/messages, read-only/wrong/repeat do not reward, next action clears reward, explicit light/dark text, fireworks over the image with a visible static finale, finite animation, reduced motion, eleventh cap and progress preservation.');

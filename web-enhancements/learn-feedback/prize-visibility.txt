@@ -1,0 +1,12 @@
+function w({award:e,animate:t,inline:inTip=!1,onContinue,hasNext=!1}){
+const notice=(0,a.useRef)(null),theme=(0,y.useTheme)(),dark=theme.name==='dark',ink=dark?'#F6F9FA':'#102F42',muted=dark?'#CEE8E8':'#526675',background=dark?'#142D38':'#F2F8FA';
+(0,a.useEffect)(()=>{if(inTip)notice.current?.scrollIntoView?.({block:'start',behavior:'auto'});},[inTip]);
+return(0,p.jsxs)(l.default,{ref:notice,dataSet:{eduPrizeCard:'true',eduPrizeTheme:dark?'dark':'light'},accessibilityRole:'status',accessibilityLiveRegion:'polite',style:{backgroundColor:background,padding:16,borderRadius:16,gap:12,minWidth:0,width:'100%',alignSelf:'stretch'},children:[
+(0,p.jsxs)(l.default,{dataSet:{eduPrizeScene:'true'},style:{height:156,width:'100%',position:'relative',alignItems:'center',justifyContent:'center'},children:[
+e?(0,p.jsx)(u.Body,{style:{color:ink,fontSize:64,lineHeight:80,textAlign:'center'},children:e.symbol}):null,
+(0,p.jsx)(l.default,{dataSet:{eduFireworks:'true',eduMotion:t?'animate':'still'},pointerEvents:'none',accessibilityElementsHidden:!0,importantForAccessibility:'no-hide-descendants',ariaHidden:!0,style:{position:'absolute',left:0,right:0,top:0,bottom:0},children:Array.from({length:3},(_,burst)=>(0,p.jsx)(l.default,{dataSet:{eduBurst:'true'},children:Array.from({length:12},(_,spark)=>(0,p.jsx)(l.default,{dataSet:{eduSpark:'true'}},spark))},burst))})]}),
+(0,p.jsx)(u.Body,{style:{color:ink,fontSize:24,lineHeight:32,fontWeight:'800',textAlign:'center'},children:e?.title??'¡Bien hecho!'}),
+(0,p.jsx)(u.Body,{style:{color:ink,fontSize:16,lineHeight:24},children:e?.message??'¡Excelente avance! Tu progreso quedó guardado.'}),
+e?.basis?(0,p.jsx)(u.Body,{style:{color:muted,fontSize:14,lineHeight:22},children:e.basis}):null,
+inTip?(0,p.jsxs)(l.default,{dataSet:{eduNextLesson:'true',...(t?{eduAfterFireworks:'true'}:{})},style:{gap:10},children:[(0,p.jsx)(u.Body,{style:{color:ink,fontSize:16,lineHeight:24},children:hasNext?'Ya puedes continuar a la próxima lección.':'Completaste las lecciones disponibles en esta sección.'}),(0,p.jsx)(u.ActionButton,{title:hasNext?'Continuar a la próxima lección':'Volver a Aprende',onPress:onContinue})]}):null]})
+}},860,[1135,13,101,103,222,105,246,110,790,796,797,792,1136,1139,1138,7]);
