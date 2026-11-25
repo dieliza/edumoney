@@ -24,7 +24,7 @@ const store={
  async snapshot(){
    const copy=[...progress.values()].map(x=>({...x})).reverse();
    done?.();
-   return {progress:copy,awards:[legacy],learned:copy.filter(x=>x.learnedAt).length,animations:true};
+   return {progress:copy,awards:[legacy],learned:copy.filter(x=>x.learnedAt).length,animations:false};
  },
  async claimCelebration(){claims++;return null}
 };
@@ -79,4 +79,5 @@ assert(all(panel,n=>n.props?.title==='Otros reconocimientos').length);
 assert(all(panel,n=>Array.isArray(n.props?.children)&&n.props.children.includes('Legacy')).length);
 
 
+assert(!bundle.includes('Desactivar celebraciones animadas'));
 const css=fs.readFileSync(new URL('./prize-fireworks.css',import.meta.url),'utf8');assert(css.includes('prefers-reduced-motion:reduce'));assert(css.includes('3.5s both'));assert(css.includes('var(--delay) 2 both'));console.log('Passed: ten prize titles/messages, read-only/wrong/repeat do not reward, next action clears reward, finite fireworks, reduced motion, eleventh cap, progress/legacy preservation.');

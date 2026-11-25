@@ -18,9 +18,9 @@ export function EducationPanel({achievementsOnly=false,debtOnly=false}:{achievem
  async function run(work:()=>Promise<unknown>){if(busy)return;setBusy(true);setError('');try{await work();await refresh();}catch{setError('No pudimos guardar el avance. Puedes volver a intentarlo.');}finally{setBusy(false);}}
  const completed=catalog.current.filter(t=>snapshot.progress.some(p=>p.tipId===t.id&&p.learnedAt)).length;
  return <>
- <ErrorNotice message={error}/>{award?<><Celebration award={award} animate={snapshot.animations&&!reduce}/><ActionButton title="Continuar" secondary onPress={()=>{setAward(null);void refresh();}}/></>:null}
+ <ErrorNotice message={error}/>{award?<><Celebration award={award} animate={!reduce}/><ActionButton title="Continuar" secondary onPress={()=>{setAward(null);void refresh();}}/></>:null}
  {achievementsOnly?<>
- <SectionHeading title="Mis logros"/><Card row><Body>{snapshot.learned} consejos y lecciones aprendidos</Body><Body muted>Reconocimientos digitales sin valor monetario ni certificación profesional. El aprendizaje anterior se conserva aunque cambie el ciclo.</Body><ActionButton title={snapshot.animations?'Desactivar celebraciones animadas':'Activar celebraciones animadas'} secondary onPress={()=>void run(async()=>{await (await getEducationStore()).animations(!snapshot.animations);})}/></Card>
+ <SectionHeading title="Mis logros"/><Card row><Body>{snapshot.learned} consejos y lecciones aprendidos</Body><Body muted>Reconocimientos digitales sin valor monetario ni certificación profesional. El aprendizaje anterior se conserva aunque cambie el ciclo.</Body></Card>
  <View style={{gap:10}}>{educationBadges.map(b=><Card row key={b.id}><Body style={{fontWeight:'700'}}>{b.symbol} {b.title} · {b.count} aprendidos</Body><Body>{snapshot.awards.some(a=>a.badgeId===b.id)?'Obtenido':`${Math.min(snapshot.learned,b.count)} de ${b.count}`}</Body></Card>)}</View>
  {snapshot.awards.map(a=><Card row key={a.id}><Body style={{fontWeight:'700'}}>{a.symbol} {a.title}</Body><Body>{new Date(a.earnedAt).toLocaleDateString()}</Body><Body muted>{a.basis}</Body></Card>)}
  </>:<>

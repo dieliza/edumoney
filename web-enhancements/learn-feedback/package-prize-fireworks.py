@@ -18,6 +18,8 @@ panel=re.sub(r'const TIP_PRIZES=\[.*?\];function tipPrizes',lambda _: 'const TIP
 panel=once(panel,'symbol:next[0],title:next[1]','symbol:next[0],title:next[1],message:next[2]')
 panel=once(panel,'const earnedTipPrizes=tipPrizes(E.progress)',"const availableTips=(P?S.history:S.current).filter(entry=>i?(0,t.isDebtTip)(entry):!(0,t.isDebtTip)(entry)),nextTip=availableTips.find(entry=>entry.id!==D?.id&&!E.progress.some(row=>row.tipId===entry.id&&row.learnedAt));const earnedTipPrizes=tipPrizes(E.progress)")
 panel=once(panel,'award:currentTipPrize,animate:E.animations&&!q,inline:!0','award:currentTipPrize,animate:E.animations&&!q,inline:!0,hasNext:!!nextTip,onContinue:()=>{L(nextTip??null);$(\'\');V(\'\');R(\'\');setLearnedNow(null)}')
+panel=once(panel,",(0,p.jsx)(u.ActionButton,{title:E.animations?'Desactivar celebraciones animadas':'Activar celebraciones animadas',secondary:!0,onPress:()=>{J(async()=>{await(await(0,j.getEducationStore)()).animations(!E.animations)})}})","")
+panel=panel.replace('animate:E.animations&&!q','animate:!q')
 w=panel.index('function w({award:');panel=panel[:w]+'''function w({award:e,animate:t,inline:inTip=!1,onContinue,hasNext=!1}){const notice=(0,a.useRef)(null);(0,a.useEffect)(()=>{if(inTip)notice.current?.scrollIntoView?.({block:"nearest"});},[inTip]);return(0,p.jsx)(l.default,{ref:notice,accessibilityRole:"status",accessibilityLiveRegion:"polite",children:(0,p.jsxs)(u.Card,{row:!0,style:{flexDirection:"column",alignItems:"stretch"},children:[
 e?(0,p.jsx)(l.default,{dataSet:{eduPrizeImage:"true"},children:(0,p.jsx)(u.Body,{style:{fontSize:64,lineHeight:80,textAlign:"center"},children:e.symbol})}):null,
 (0,p.jsx)(l.default,{dataSet:{eduPrizeTitle:"true"},children:(0,p.jsx)(u.Body,{style:{fontSize:24,lineHeight:32,fontWeight:"800",textAlign:"center"},children:e?.title??"¡Bien hecho!"})}),
@@ -26,7 +28,11 @@ t?(0,p.jsx)(l.default,{dataSet:{eduFireworks:"true"},pointerEvents:"none",access
 e?.basis?(0,p.jsx)(u.Body,{muted:!0,children:e.basis}):null,
 inTip?(0,p.jsxs)(l.default,{dataSet:{eduNextLesson:"true",...(t?{eduAfterFireworks:"true"}:{})},children:[(0,p.jsx)(u.Body,{children:hasNext?"Ya puedes continuar a la próxima lección.":"Completaste las lecciones disponibles en esta sección."}),(0,p.jsx)(u.ActionButton,{title:hasNext?"Continuar a la próxima lección":"Volver a Aprende",onPress:onContinue})]}):null]})})}},860,[1135,13,101,103,222,105,246,110,790,796,797,792,1136,1139,1138,7]);'''
 assert panel!=baseline
-newbundle=bundle[:start]+panel+bundle[end:];css=(root/'prize-fireworks.css').read_text();build='aprende-premio-texto-'+hashlib.sha256((newbundle+css).encode()).hexdigest()[:12];new=old.rsplit('.js',1)[0]+'-'+build+'.js';cssurl='/'+build+'.css'
+newbundle=bundle[:start]+panel+bundle[end:]
+newbundle=once(newbundle,'enabled:!e.enabled','enabled:!0')
+control="(0,P.jsx)(f.default,{accessibilityRole:\"button\",onPress:()=>{E()},style:{minHeight:44,justifyContent:'center'},children:(0,P.jsx)(y.default,{style:{color:w.primary,fontWeight:'700'},children:I.enabled?'Pausar bandeja':'Activar bandeja'})})"
+newbundle=once(newbundle,control,"!I.enabled?"+control.replace("I.enabled?'Pausar bandeja':'Activar bandeja'","'Activar bandeja'")+":null")
+css=(root/'prize-fireworks.css').read_text();build='aprende-premio-texto-'+hashlib.sha256((newbundle+css).encode()).hexdigest()[:12];new=old.rsplit('.js',1)[0]+'-'+build+'.js';cssurl='/'+build+'.css'
 put(new,newbundle,routes[old][1]);put(cssurl,css,'text/css; charset=utf-8');html=once(html,old,new);html=once(html,'</head>',f'<link rel="stylesheet" href="{cssurl}"></head>');html=re.sub(r'/register-sw.js\?build=[^" ]+','/register-sw.js?build='+build,html);put('/index.html',html,routes['/index.html'][1])
 sw=get('/sw.js');sw=re.sub(r"const CACHE='[^']+'",f"const CACHE='edumoney-shell-{build}'",sw);assets,_=json.JSONDecoder().raw_decode(sw.split('const ASSETS=',1)[1]);assets=list(dict.fromkeys(assets+[new,cssurl]));assert set(assets)<=set(routes);sw=re.sub(r'const ASSETS=\[[^;]+\];','const ASSETS='+json.dumps(assets,separators=(',',':'))+';',sw)
 for uri in list(routes):

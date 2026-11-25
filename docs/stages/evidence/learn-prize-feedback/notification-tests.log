@@ -1,0 +1,12 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/notification-controls.test.ts tests/notification-inbox.test.ts
+
+
+ RUN  v5.1.0 /workspace/edumoney
+
+
+ Test Files  2 passed (2)
+      Tests  7 passed (7)
+   Start at  04:30:56
+   Duration  636ms (transform 43%, tests 29%, import 22%, worker 5%)

@@ -17,3 +17,10 @@ La copia local de publicación tenía cambios sin guardar ajenos a este trabajo 
 Preparado y verificado, SIN publicar. La revisión automática rechazó el comando que crearía el commit y enviaría los cambios a origin/main: interpretó la instrucción retenida de no publicar sin aprobación como pendiente para esta corrección nueva. No se eludió el rechazo ni se hizo el commit/push remoto. Pendiente aprobación explícita del propietario para publicar. El sitio público permanece en la versión 102.
 
 Para retomar tras autorización: abrir la última fuente pública mediante Sites, preservar actualizaciones posteriores, copiar estos cuatro archivos a web-enhancements/learn-feedback, ejecutar package-prize-fireworks.py sobre el Worker base adecuado, volver a verificar el módulo empaquetado, guardar el commit enviado y desplegar con Sites. Si cambió el módulo desde la versión 102, adaptar las coincidencias verificadas antes de empaquetar.
+
+
+## Ajuste adicional: quitar desactivación
+
+Se retiró el selector de celebraciones de Mi progreso y se ignora la antigua preferencia interna para mostrar celebraciones (se conserva la adaptación de accesibilidad del dispositivo). Se retiró Pausar bandeja; si aún no está activada, se mantiene Activar bandeja y solo permite pasar a enabled=true. Una vez aceptada, ese control desaparece. No se modificaron ni solicitaron permisos externos automáticamente. Se conservaron lecturas, reintentos y marcas de notificación.
+
+Verificación adicional: siete pruebas de controles/bandeja aprobadas, TypeScript y compilación Python aprobadas; el recorrido de diez premios vuelve a pasar aun con la antigua preferencia animations=false. Se verificó la sintaxis del módulo de notificaciones preparado. No se cambió la lógica financiera ni se publicó. Sigue pendiente la aprobación de publicación solicitada anteriormente.
