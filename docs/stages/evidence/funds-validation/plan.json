@@ -1,0 +1,22 @@
+{
+  "request": "Valídalo",
+  "date": "2026-11-25",
+  "previous_implementation_block_closed_at": 100,
+  "validation_block_limit": 100,
+  "planned_cases": 47,
+  "selection": {
+    "funds": 21,
+    "greeting": 8,
+    "scan_delete": 3,
+    "funds_meaning": 2,
+    "funds_ui": 5,
+    "published_artifact": 8
+  },
+  "data": "SQLite aislado con datos ficticios; sin escrituras en datos personales ni producción",
+  "browser_qa": "No disponible: falta la herramienta de control del navegador en este chat",
+  "source_cases_passed": 39,
+  "artifact_cases_passed": 8,
+  "promotion_guard_passed": true,
+  "consumed_conservative": 48,
+  "visual_validation": "Usuario revisó y aprobó la versión privada; agente no usó navegador ni dispositivo real"
+}

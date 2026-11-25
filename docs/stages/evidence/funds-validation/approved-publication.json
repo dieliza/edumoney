@@ -1,0 +1,11 @@
+{
+  "project_id": "appgprj_6af65a2177c48191b95b917e1ca2a2f0",
+  "commit_sha": "b17a1a0d64e6ee0916c174c5b9de19d8f296c836",
+  "base_commit": "03a7449658b58361aa39ed3c9653cb34d2ade7e1",
+  "approved_trial_commit": "44677b59800b13a615959dd20233bada1666bde5",
+  "user_approved": true,
+  "source_tests_passed": 39,
+  "artifact_tests_passed": 8,
+  "promotion_guard_passed": true,
+  "local_build_passed": true
+}

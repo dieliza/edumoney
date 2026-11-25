@@ -74,3 +74,15 @@ Hay accesos contextuales en la tarjeta verde, la ficha de cada fondo, el histori
 Verificación adicional: dos casos nuevos de catálogo y apertura/cierre/contraste; una comprobación del paquete real que conserva sin cambios los otros 1,409 módulos y la actualización segura. Las tres pasaron. TypeScript y ESLint sin errores; permanece la advertencia anterior de `req`. Presupuesto acumulado conservador: **100 de 100**; 72 escenarios únicos. No se ejecutaron más pruebas ni CI.
 
 Actualización de ayudas publicada correctamente en el mismo enlace privado. Commit web: `44677b59800b13a615959dd20233bada1666bde5`. Despliegue: `appgdep_6b0707eb208881919dede084442ad685`. El EduMoney público permanece sin cambios.
+
+## Validación solicitada y aprobación de producción
+
+A solicitud «Valídalo», se abrió un bloque de validación separado del bloque de implementación cerrado. Pasaron **39 casos de código** (fondos 21, saludos 8, eliminación de escaneos 3, ayudas 2, render estático 5) y **8 casos del paquete exacto publicado** en la versión privada 2, commit `44677b59800b13a615959dd20233bada1666bde5`.
+
+La verificación del paquete ahora descubre los recursos desde el HTML vigente; no usa la lista de recursos de la primera versión. Comprueba también el nombre de caché vigente y abre la ayuda actual en ambos temas.
+
+Después, el propietario indicó que había revisado la versión de prueba, que estaba muy bien y que se publicara. Se recibió así la aprobación pendiente de producción. La aprobación visual procede del usuario; no se atribuye al agente una revisión de Safari o dispositivos reales.
+
+La promoción conserva byte por byte los manejadores del servidor, todas las rutas anteriores y el manifiesto de producción. Solo sustituye el paquete de interfaz por el aprobado; no copia datos, contraseñas ni secretos de la prueba. La comprobación de promoción y la compilación pasaron. Bloque de validación: **48 de 100** consumidos conservadoramente (47 casos y una comprobación de promoción); no se ejecutó CI ni la suite general.
+
+Versión pública guardada: **109**, commit `b17a1a0d64e6ee0916c174c5b9de19d8f296c836`. Publicación con compilación remota por falta de espacio local accesible para el archivo de despliegue; el estado final se registra tras confirmación del servidor.
