@@ -17,6 +17,8 @@
   "source_cases_passed": 39,
   "artifact_cases_passed": 8,
   "promotion_guard_passed": true,
-  "consumed_conservative": 48,
-  "visual_validation": "Usuario revisó y aprobó la versión privada; agente no usó navegador ni dispositivo real"
+  "consumed_conservative": 51,
+  "visual_validation": "Usuario revisó y aprobó la versión privada; agente no usó navegador ni dispositivo real",
+  "publication": "Versión 109 publicada tras aprobación del propietario",
+  "live_checks": "HTML, service worker canónico y bundle activo comprobados por HTTP anónimo. Primer cliente Python rechazado 403; diagnóstico y lectura con agente Mozilla devolvieron 200."
 }

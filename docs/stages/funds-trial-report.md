@@ -86,3 +86,9 @@ Después, el propietario indicó que había revisado la versión de prueba, que 
 La promoción conserva byte por byte los manejadores del servidor, todas las rutas anteriores y el manifiesto de producción. Solo sustituye el paquete de interfaz por el aprobado; no copia datos, contraseñas ni secretos de la prueba. La comprobación de promoción y la compilación pasaron. Bloque de validación: **48 de 100** consumidos conservadoramente (47 casos y una comprobación de promoción); no se ejecutó CI ni la suite general.
 
 Versión pública guardada: **109**, commit `b17a1a0d64e6ee0916c174c5b9de19d8f296c836`. Publicación con compilación remota por falta de espacio local accesible para el archivo de despliegue; el estado final se registra tras confirmación del servidor.
+
+## Publicación pública confirmada
+
+Versión **109**, estado **succeeded**, URL https://edumoney-web.diegoluissantospabon.chatgpt.site . Despliegue `appgdep_6b070a2ae2b88191a09edfe20a50cbcb`. Se conservaron el acceso público y el manifiesto de producción.
+
+Se verificaron por HTTP anónimo el HTML, `/sw.js` y el bundle común activo: los tres sirven la revisión aprobada `funds-help-3fb59bc0002f`. El cliente Python inicial recibió 403; la lectura anónima con agente Mozilla devolvió 200. No fue una prueba de navegador ni una operación sobre registros del usuario. Contando diagnóstico y repetición, el bloque consumió **51 de 100** conservadoramente.

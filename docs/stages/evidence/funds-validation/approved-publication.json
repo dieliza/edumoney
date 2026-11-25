@@ -7,5 +7,13 @@
   "source_tests_passed": 39,
   "artifact_tests_passed": 8,
   "promotion_guard_passed": true,
-  "local_build_passed": true
+  "local_build_passed": true,
+  "status": "succeeded",
+  "deployment_id": "appgdep_6b070a2ae2b88191a09edfe20a50cbcb",
+  "version_id": "appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_5e905c268078819196328af75eaa94db",
+  "version_number": 109,
+  "url": "https://edumoney-web.diegoluissantospabon.chatgpt.site",
+  "public_access_confirmed": true,
+  "live_http_check_passed": true,
+  "consumed_conservative": 51
 }
