@@ -1,0 +1,12 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/entry-direction-ui.test.ts -t crea y selecciona|cambiar a gasto|creación de método inválido|manual entry|personal income accepts
+
+
+ RUN  v5.1.0 /dev/shm/edumoney-payment-method-work
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed | 13 skipped (18)
+   Start at  13:43:56
+   Duration  724ms (tests 44%, transform 41%, import 15%, worker 1%)

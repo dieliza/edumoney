@@ -1,0 +1,12 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/entry-direction-ui.test.ts -t el editor elimina
+
+
+ RUN  v5.1.0 /dev/shm/edumoney-payment-method-work
+
+
+ Test Files  1 passed (1)
+      Tests  4 passed | 14 skipped (18)
+   Start at  13:42:39
+   Duration  491ms (tests 61%, transform 20%, import 17%, worker 1%)

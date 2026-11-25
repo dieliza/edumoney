@@ -1,0 +1,12 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/income-payment-methods.test.ts
+
+
+ RUN  v5.1.0 /dev/shm/edumoney-payment-method-work
+
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  13:28:51
+   Duration  586ms (transform 54%, tests 35%, import 10%, worker 2%)

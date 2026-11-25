@@ -1,3 +1,4 @@
+import {isCustomIncomePayment} from './incomePaymentMethods';
 import { UserInputError } from '../../core/errors';
 import { addAmounts, cents } from '../../core/money';
 import type { LedgerMovement, Snapshot, IncomeSchedule } from './types';
@@ -33,7 +34,7 @@ export function validateMovement(m: LedgerMovement) {
         throw new UserInputError('Tipo de transacción no disponible en esta etapa.');
     if (!['manual', 'recurring', 'extraordinary'].includes(m.incomeType) || !['personal', 'business', 'mixed', 'unknown'].includes(m.useKind))
         throw new UserInputError('Clasificación no válida.');
-    if (!['cash', 'check', 'debit', 'credit', 'bank', 'other'].includes(m.paymentMethod || ''))
+    if (!['cash', 'check', 'debit', 'credit', 'bank', 'other'].includes(m.paymentMethod || '') && !(m.kind==='income'&&isCustomIncomePayment(m.paymentMethod)))
         throw new UserInputError('Selecciona un método de pago.');
     if (m.kind !== 'expense' && m.paymentMethod === 'credit')
         throw new UserInputError('El crédito como método corresponde a una compra, no a un cobro o pago de deuda.');

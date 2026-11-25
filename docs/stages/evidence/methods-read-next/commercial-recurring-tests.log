@@ -1,0 +1,12 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/income-payment-methods.test.ts -t comercial admite|recurrente conserva
+
+
+ RUN  v5.1.0 /dev/shm/edumoney-payment-method-work
+
+
+ Test Files  1 passed (1)
+      Tests  2 passed | 6 skipped (8)
+   Start at  13:32:18
+   Duration  358ms (transform 47%, tests 30%, import 20%, worker 3%)
