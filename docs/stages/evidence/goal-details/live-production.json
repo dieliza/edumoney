@@ -1,0 +1,9 @@
+{
+  "origin": "https://edumoney-web.diegoluissantospabon.chatgpt.site",
+  "build": "goal-details-68782b16c5cb",
+  "html_status": 200,
+  "service_worker_status": 200,
+  "common_bundle_status": 200,
+  "scope": "Anonymous HTTP resources; no records or browser interaction",
+  "passed": true
+}

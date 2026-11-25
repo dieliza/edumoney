@@ -15,3 +15,5 @@ Verificaciones: 37 ejecuciones de código contando repeticiones; una comprobaci�
 La integración cambia ocho módulos y conserva los otros 1,409, incluyendo premios, fuegos artificiales, controles móviles y funciones de cuenta. No se realizó navegación en Safari ni una revisión visual en dispositivos reales.
 
 Commit candidato: d3fc4c4e39e2f00ec0e0b776c6ffdf24844fd7f2, preparado sobre producción 111. Publicación en curso.
+
+Publicación confirmada: versión **112**, estado **succeeded**, URL https://edumoney-web.diegoluissantospabon.chatgpt.site . Despliegue `appgdep_6b0730339e548191a46a1ff18dc1cffc`. HTML, service worker canónico y bundle común comprobados por HTTP anónimo: 200 y revisión `goal-details-68782b16c5cb`. Total conservador con la comprobación HTTP: **49 de 100**.
