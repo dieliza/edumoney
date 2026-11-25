@@ -21,12 +21,13 @@ import { localToday, formatMoney, inputAmount } from './domain';
 import { Choices, Field } from './fields';
 import { DuplicateMovementError, type MoneyStore } from './store';
 import { kindLabels, paymentLabels, type Category, type EntryKind, type IncomeSchedule, type LedgerMovement, type PaymentMethod } from './types';
-export function MovementForm({ initial, kind, categories, store, close, saved, documentReview,allowedKinds,onHistoryEdit,historySaved,initialHistory,afterSave }: {
+export function MovementForm({ initial, kind, categories, store, close, saved, documentReview,allowedKinds,onHistoryEdit,historySaved,initialHistory,afterSave,onDeleteDocument }: {
     initial?: LedgerMovement;
     onHistoryEdit?(movement:LedgerMovement):void;
     historySaved?():Promise<void>;
     initialHistory?:TransactionHistoryKind;
     afterSave?():void;
+    onDeleteDocument?():void;
     kind: EntryKind;
     allowedKinds?:readonly EntryKind[];
     categories: Category[];
@@ -149,6 +150,7 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
    <TransactionError message={error}/>
    {!busy&&duplicate?<><Text style={styles.text}>Si son dos operaciones distintas, puedes conservar ambas. Comprueba el historial antes de confirmar.</Text><TransactionLink title="Guardar como operación distinta" onPress={()=>void submit(true)}/></>:null}
    {!deleting?<TransactionSaveButton title={saveTitle} busy={busy} onPress={()=>{setDuplicate(false);void submit();}}/>:null}
+   {documentReview&&onDeleteDocument?<TransactionLink title="Eliminar escaneo" testID="movement-delete-scan" disabled={busy} onPress={onDeleteDocument}/>:null}
    {initial&&!documentReview?<Pressable testID="movement-delete" accessibilityRole="button" accessibilityLabel={deleting?'Eliminando transacción':'Eliminar transacción'} accessibilityState={{disabled:busy,busy:deleting}} disabled={busy} onPress={()=>void remove()} style={{minHeight:48,padding:12,borderWidth:1,borderColor:tc.error,borderRadius:12,alignItems:'center',justifyContent:'center',opacity:busy?0.6:1}}><Text style={{color:tc.error,fontWeight:'700',fontSize:16}}>{deleting?'Eliminando…':'🗑 Eliminar transacción'}</Text></Pressable>:null}
    {!initial&&onHistoryEdit?<TransactionLink title="Editar historiales" disabled={busy} testID="movement-edit-histories" onPress={()=>setHistoryPane(type==='income'?'income':'expense')}/>:null}
   </View>}

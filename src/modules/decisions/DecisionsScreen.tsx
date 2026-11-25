@@ -1,3 +1,4 @@
+import {SimulationPlanCTA} from '../funds/SimulationPlanCTA';
 import {announceSaved} from '../../ui/saveFeedback';
 import { useCallback,useEffect,useState,useRef } from 'react';
 import { AppState } from 'react-native';
@@ -40,7 +41,7 @@ export default function DecisionsScreen(){
  {field('margin','Margen mensual elegido para comparar (opcional; puede ser negativo)',false)}
  <Card row><Body muted>El margen es la cantidad mensual que tú eliges después de tus otros compromisos. Un registro mensual parcial no confirma capacidad de pago. Si lo dejas vacío, el efecto sobre presupuesto queda pendiente.</Body></Card>
  <ActionButton title="Calcular escenario" testID="decision-calculate" onPress={calculate}/>
- {result?<><ResultCard input={result}/><Field label="Nombre del escenario para guardar" testID="decision-name" value={name} onChangeText={value=>{setName(value);setSaveId(newId());}}/>{!busy&&store?<ActionButton title="Guardar escenario" testID="decision-save" onPress={()=>void save()}/>:null}</>:null}
+ {result?<><ResultCard input={result}/><SimulationPlanCTA key={saveId} input={result}/><Field label="Nombre del escenario para guardar" testID="decision-name" value={name} onChangeText={value=>{setName(value);setSaveId(newId());}}/>{!busy&&store?<ActionButton title="Guardar escenario" testID="decision-save" onPress={()=>void save()}/>:null}</>:null}
  <SectionHeading title="Escenarios guardados"/>
  {!displayedSaved.length?<Card row><Body>Aún no has guardado escenarios. No hay ofertas ni cantidades precargadas.</Body></Card>:null}
  {displayedSaved.slice(0,limit).map(s=><Card row key={s.id}><Body style={{fontWeight:'700'}}>{s.name} · {kinds.find(([k])=>k===s.kind)?.[1]}</Body><Body muted>Guardado {s.createdAt.slice(0,10)} · Fórmula {s.formulaVersion}</Body><ActionButton title={`Cargar escenario: ${s.name}`} secondary onPress={()=>{setError('');if(s.formulaVersion!==1){setError('La versión de cálculo de este escenario necesita revisión.');return;}try{simulate(s.input);setDraft(draftFrom(s.input));setResult(s.input);setName(`${s.name} copia`);setSaveId(newId());setNotice('Copia cargada. Puedes modificar cantidades y calcular de nuevo; el original se conserva.');}catch(e){setError(userMessage(e));}}}/><ActionButton title={`Eliminar escenario: ${s.name}`} secondary onPress={()=>setDeleting(s.id)}/>{deleting===s.id&&store&&!busy?<><Body>Solo se eliminará este escenario de prueba; no modifica transacciones.</Body><ActionButton title="Confirmar eliminación del escenario" onPress={()=>{setBusy(true);void store.deleteScenario(s.id).then(load).then(()=>{setComparison(null);setDeleting('');}).catch(e=>setError(userMessage(e))).finally(()=>setBusy(false));}}/></>:null}</Card>)}

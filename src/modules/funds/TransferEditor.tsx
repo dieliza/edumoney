@@ -1,0 +1,18 @@
+import {FundSheet as Sheet,FundBody as Body,FundError as ErrorNotice} from './FundSheet';
+import {useRef,useState} from 'react';
+import {newId} from '../../core/id';
+import {parseAmount} from '../../core/money';
+import {userMessage} from '../../core/errors';
+import {ActionButton} from '../../ui/components';
+import {Field,Choices} from '../money/fields';
+import {DateField} from '../../ui/DateField';
+import {inputAmount,localToday,formatMoney} from '../money/domain';
+import type {AccountScope} from '../money/accountScope';
+import type {Fund,FundTransfer} from './types';
+import type {FundsStore} from './store';
+export function TransferEditor({store,scope,funds,initial,from=null,to=null,close,saved}:{store:FundsStore;scope:AccountScope;funds:Fund[];initial?:FundTransfer;from?:string|null;to?:string|null;close():void;saved():Promise<void>}){
+ const [id]=useState(()=>initial?.id??newId()),[source,setSource]=useState(initial?.fromId??from??''),[destination,setDestination]=useState(initial?.toId??to??''),[amount,setAmount]=useState(initial?inputAmount(initial.amountCents):''),[date,setDate]=useState(initial?.date??localToday()),[description,setDescription]=useState(initial?.description??''),[confirmed,setConfirmed]=useState(false),[busy,setBusy]=useState(false),[error,setError]=useState('');const saving=useRef(false);
+ const options:[string,string][]=[['','Balance disponible'],...funds.map(f=>[f.id,f.name+' · '+formatMoney(f.balanceCents)] as [string,string])];
+ async function save(){if(saving.current)return;if(!confirmed){setError('Confirma que realizaste esta transferencia interna.');return;}saving.current=true;setBusy(true);setError('');try{await store.transfer({id,scope,fromId:source||null,toId:destination||null,amountCents:parseAmount(amount),date,description},initial?.version);await saved();close();}catch(e){setError(userMessage(e));}finally{saving.current=false;setBusy(false);}}
+ return <Sheet title={initial?'Corregir transferencia':'Transferir fondos'} close={close} busy={busy}><Body style={{fontWeight:'700'}}>{scope==='personal'?'Cuenta personal':'Cuenta comercial'}</Body><Choices controlPresentation="transaction" label="Origen" value={source} options={options} onChange={setSource}/><Choices controlPresentation="transaction" label="Destino" value={destination} options={options} onChange={setDestination}/><Field presentation="transaction" compact money={false} label="Cantidad (USD)" value={amount} onChangeText={setAmount} decimal required testID="transfer-amount"/><DateField presentation="transaction" label="Fecha" required value={date} onChangeText={setDate} max={localToday()}/><Field presentation="transaction" compact label="Descripción (opcional)" value={description} onChangeText={setDescription} multiline/><Body>Registra un cambio de distribución dentro de EduMoney. No ejecuta operaciones bancarias ni registra ingresos o gastos.</Body><Choices controlPresentation="transaction" label="Confirmación" value={confirmed?'yes':''} options={[["","Sin confirmar"],["yes","Confirmo que realicé esta distribución"]]} onChange={v=>setConfirmed(v==='yes')}/><ErrorNotice message={error}/><ActionButton title={busy?'Guardando…':initial?'Guardar corrección':'Confirmar transferencia'} testID="fund-transfer-save" onPress={()=>void save()}/></Sheet>;
+}

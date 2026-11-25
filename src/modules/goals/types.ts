@@ -5,5 +5,5 @@ export interface GoalInput {id:string;name:string;kind:GoalKind;targetCents:numb
 export interface Goal extends GoalInput {version:number;archived:boolean;savedCents:number}
 export interface Contribution {id:string;goalId:string;movementId:string;amountCents:number;date:string;createdMovement:boolean;reversedAt:string|null;reversalReason:string|null}
 export interface GoalEvent {goalId:string;reason:string;recordedAt:string}
-export interface GoalSnapshot {goals:Goal[];contributions:Contribution[];events:GoalEvent[];movements:LedgerMovement[]}
+export interface GoalSnapshot {fundTransfers?:{id:string;goalId:string;amount:number;date:string;description:string;reversedAt:string|null}[];goals:Goal[];contributions:Contribution[];events:GoalEvent[];movements:LedgerMovement[]}
 export interface ContributionInput {id:string;goalId:string;expectedVersion:number;amountCents:number;date:string;paymentMethod:string;existingMovementId:string|null;confirmSimilar:boolean}

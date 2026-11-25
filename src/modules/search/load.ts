@@ -5,6 +5,8 @@ import {paymentLabels} from '../money/types';
 type Row=Record<string,unknown>;
 type Source={table:string;section:string;path:string;names:string[];fields:string[];date?:string;amount?:string;business?:boolean};
 const sources:Source[]=[
+ {table:'money_funds',section:'Fondos',path:'/funds',names:['name'],fields:['name','kind','scope','budget_month'],amount:'target_cents'},
+ {table:'fund_transfers',section:'Transferencias internas',path:'/funds',names:['description'],fields:['description','scope','reversed_at'],date:'date',amount:'amount_cents'},
  {table:'categories',section:'Categorías',path:'/money',names:['name'],fields:['name','kind','archived']},
  {table:'bills',section:'Facturas',path:'/bills',names:['provider'],fields:['provider','recurrence','voided_at'],date:'due_date',amount:'amount_cents'},
  {table:'debts',section:'Deudas',path:'/debts',names:['name'],fields:['name','due_date','closing_date','archived'],date:'due_date',amount:'balance_cents'},
@@ -57,6 +59,8 @@ export async function loadSearchItems(store:MoneyStore):Promise<SearchItem[]>{
    if(s.table==='categories')params.section='categories';
    if(s.table==='debts')params.debtId=id;
    if(s.table==='goals')params.goalId=id;
+   if(s.table==='money_funds'){params.fundId=id;params.scope=str(r.scope);}
+   if(s.table==='fund_transfers'){params.transferId=id;params.scope=str(r.scope);}
    if(s.table==='documents')params.documentId=id;
    if(s.table==='documents'&&r.source==='voice'){delete params.documentId;params.dictation=id;}
    if(s.table==='bills')params.billId=id;

@@ -1,0 +1,58 @@
+# EduMoney: fondos y transferencias — versión de prueba
+
+Fecha: 2026-11-25. Rama: `feat/funds-trial`. Base de la aplicación: `0918187`. Base web pública conservada: versión 108, commit `03a7449658b58361aa39ed3c9653cb34d2ade7e1`.
+
+## Resultado
+
+- Home tiene saludo por hora local y primer nombre, tarjeta «Resumen de tu dinero» con cinco accesos, balance disponible/total y reservas separadas. El primer nombre se configura en Configuración → Seguridad → Tu perfil, dentro del espacio cifrado; los espacios anteriores no tenían nombre registrado. Sin nombre, aparece únicamente el saludo horario, sin nombres inventados ni apellidos.
+- Cuatro acciones con simbología: monedas/flecha, recibo enmarcado, micrófono y flechas opuestas. Distribución adaptable de cuatro columnas o dos por dos en pantallas estrechas. Se conserva el selector personal/comercial y el acceso a Transacciones.
+- «¿En qué gastaste más?» conserva el cálculo de tres categorías acumuladas, cantidades, porcentajes y barras del período; no usa las tres transacciones recientes.
+- Administración de fondos: crear, consultar y editar; añadir/retirar mediante transferencias confirmadas; historial con corrección por versión y reversión auditada. Ubicaciones bancarias, cooperativas, efectivo, cuentas digitales y otras ubicaciones editables.
+- Simulaciones de ahorro/emergencia pueden convertirse en planes con objetivo, aportación prevista, frecuencia, fecha y ubicación. Empiezan con cero ahorro realizado: ni el capital ni intereses simulados se convierten automáticamente en dinero real.
+- Presupuestos planificados y reservas efectivas se distinguen. El editor mensual abre la administración de su reserva; guardar un límite no reserva dinero. Las metas anteriores se conservan y sus aportaciones se integran sin sumarlas dos veces.
+- Se puede eliminar/restaurar un escaneo desde su ficha y desde la edición del documento. Es una eliminación lógica con historial: no elimina su ingreso/gasto ni borra imágenes históricas o la fototeca.
+- Búsqueda universal y explicaciones incluyen fondos. Modales y textos responden al tema seleccionado.
+
+## Integridad y datos
+
+Migración aditiva 19: `money_locations`, `money_funds`, `fund_transfers`, `fund_events` y `local_profile`. No reemplaza registros anteriores ni cambia autenticación/permisos. Nuevas tablas incluidas en respaldo cifrado/sincronización; importaciones antiguas siguen aceptadas. Validación final evita restauraciones con fondos de otra cuenta.
+
+Dinero expresado en centavos enteros seguros. Transferencias transaccionales, identificadores idempotentes, versiones optimistas, eventos de auditoría y comprobación cronológica de disponibilidad. No generan filas de ingreso/gasto; no ejecutan operaciones bancarias. No se admite reservar dinero inexistente ni gastar un fondo negativo. Un balance disponible negativo causado por gastos reales sí se muestra, sin ocultarlo.
+
+Los fondos son existencias acumuladas hasta la fecha seleccionada; las gráficas de ingresos/gastos siguen mostrando flujos del mes. Reservas previstas, facturas futuras y presupuestos planificados no se confunden con dinero efectivamente apartado. Aperturas de metas anteriores se conservan como dinero ya indicado por el usuario, no como ingresos nuevos. Participaciones mixtas personal/comercial se distribuyen una sola vez conservando el registro original para edición.
+
+Ejemplo verificado: total $2,000; disponible $1,200; ahorros $400; emergencia $300; presupuesto $100. Reservar $20 adicionales deja $1,180/$420 y mantiene $2,000. Editar y revertir recalcula el reparto sin duplicar registros.
+
+## Archivos principales
+
+- `src/modules/funds/*`, `src/app/funds.tsx`: modelo, administración, transferencias, ubicaciones y conversión de simulaciones.
+- `src/storage/schemaV19.ts`, `migrate.ts`, `modules/backup/store.ts`: persistencia y compatibilidad de respaldos.
+- `src/ui/FundsSummary.tsx`, `MoneyOverview.tsx`, `HomeBalancesAndCharts.tsx`, `HomeVoiceEntry.tsx`, `NeonActionButton.tsx`, `ExpenseTopThree.tsx`: nuevo Home y símbolos.
+- `src/modules/profile/*`, `settings/SettingsScreen.tsx`: primer nombre y saludo local.
+- `modules/goals/*`, `progress/store.ts`, `money/ChartsScreen.tsx`, `ui/TransactionOverview.tsx`: metas, progreso, presupuestos y gráficas.
+- `modules/money/scopedMovements.ts`, `store.ts`, `accountScopeData.ts`: separación de cantidades por cuenta, preservando el original editable.
+- `modules/documents/store.ts`, `DocumentsScreen.tsx`, `money/MovementForm.tsx`: eliminar/restaurar escaneos.
+- `modules/search/{load,model}.ts`, `ui/meaningCatalog.ts`: acceso y ayuda para fondos.
+- `web-enhancements/funds-trial/*`: integración progresiva en el paquete público 108, sin reemplazar premios/fuegos artificiales, controles nativos web, acceso/biometría, vínculos de cuenta o notificaciones existentes.
+
+## Verificaciones
+
+69 escenarios únicos cubiertos; presupuesto conservador de 97 ejecuciones de 100, incluyendo repeticiones y arranques. No se lanzó la suite completa ni CI.
+
+- 21 casos de fondos: reparto, idempotencia, retiradas, correcciones, reversión, cronología, falta de saldo, negativos reales, separación comercial/mixta, metas previas, planes, ubicaciones, reservas, respaldo/restauración y migración desde 18.
+- 8 casos de saludo: límites horarios locales, ausencia de nombre, primer nombre y normalización.
+- 3 casos de eliminación de escaneo: conserva balances/transacción, restauración/versiones e impide usarlo para dictados.
+- 19 casos existentes de metas y 5 de respaldos. Se actualizaron tres expectativas de texto obsoletas; los tres casos se repitieron y pasaron.
+- 5 casos de renderizado estático: tarjeta en ambos temas, cinco accesos/importes, símbolos, saludo, invitación de simulación y contraste de formulario.
+- 8 comprobaciones sobre el paquete web final: identidades/dependencias, ruta real, migración/respaldos, transferencias SQLite/idempotencia/reversión, render inicial de Home/Metas/Fondos, eliminación/perfil, temas/símbolos y grafo/caché/aislamiento. Un primer intento detectó una función de notificación ausente en el adaptador de prueba; se completó ese adaptador y las ocho comprobaciones pasaron.
+- TypeScript sin errores. ESLint sin errores; advertencia anterior en `scripts/patch-home-controls-site.cjs` por variable `req` sin usar.
+
+Las expectativas de esquema de los tests de educación/lecturas se actualizaron a 19; esas suites completas no se ejecutaron para respetar el límite. Se preservó el módulo web de premios/fuegos artificiales en la integración.
+
+## Alcance de la prueba y pendientes
+
+Proyecto privado de prueba: `appgprj_6b070495eb5481918c579fa02cb7441a`, independiente del EduMoney público. No se copian datos, contraseñas ni secretos del sitio actual. Utilizar datos ficticios; para probar el saludo, completar Tu perfil. Los servicios que necesitan secretos externos no se reconfiguraron en este proyecto.
+
+Pendiente validación visual/interactiva en Safari iPhone, Android, iPad y PWA real: el entorno no ofrece el controlador de navegador requerido, por lo que no se improvisó otro ni se afirmaron esas pruebas. También queda pendiente una sincronización real entre dispositivos en este origen de prueba; se verificó el formato persistido/restaurable con SQLite y respaldo.
+
+No se actualiza el sitio público hasta que el usuario valide esta versión y apruebe producción. La publicación privada se registrará abajo al confirmar su estado.

@@ -1,0 +1,1864 @@
+{
+  "buildName": "funds-trial-facc5058306d",
+  "routeId": 21023,
+  "profileId": 21012,
+  "moneyAuxId": 21026,
+  "found": [
+    10,
+    805,
+    807,
+    811,
+    821,
+    825,
+    826,
+    859,
+    931,
+    939,
+    947,
+    982,
+    815,
+    831,
+    832,
+    887,
+    959,
+    1061,
+    1145,
+    20010,
+    20011,
+    20013
+  ],
+  "report": [
+    {
+      "compiled": "src/modules/money/scopedMovements.ts",
+      "id": 21008,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../../core/money": 814,
+        "../business/ledgerDomain": 900
+      }
+    },
+    {
+      "compiled": "src/modules/funds/read.ts",
+      "id": 21007,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../money/store": 815,
+        "../money/scopedMovements": 21008
+      }
+    },
+    {
+      "compiled": "src/ui/MonthControl.tsx",
+      "id": 21003,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../modules/money/fields": 797
+      }
+    },
+    {
+      "compiled": "src/modules/goals/MonthlyBudgetEditor.tsx",
+      "id": 21004,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../../ui/MonthControl": 21003,
+        "../../ui/saveFeedback": 802,
+        "../../ui/components": 796,
+        "../money/fields": 797,
+        "../money/localStore": 798,
+        "../money/domain": 813,
+        "../../core/money": 814,
+        "../../core/errors": 799
+      }
+    },
+    {
+      "reuse": "src/ui/NavigationRail.tsx",
+      "id": 812
+    },
+    {
+      "reuse": "src/modules/goals/GoalForm.tsx",
+      "id": 810
+    },
+    {
+      "compiled": "src/modules/goals/ContributionForm.tsx",
+      "id": 811,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../../ui/saveFeedback": 802,
+        "../../core/id": 803,
+        "../../core/money": 814,
+        "../../core/errors": 799,
+        "../../ui/components": 796,
+        "../money/fields": 797,
+        "../money/domain": 813
+      }
+    },
+    {
+      "compiled": "src/modules/goals/GoalsScreen.tsx",
+      "id": 805,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../funds/read": 21007,
+        "./MonthlyBudgetEditor": 21004,
+        "../../ui/NavigationRail": 812,
+        "../../core/errors": 799,
+        "../../ui/components": 796,
+        "../money/domain": 813,
+        "../money/fields": 797,
+        "./localStore": 806,
+        "./domain": 808,
+        "./GoalForm": 810,
+        "./ContributionForm": 811
+      }
+    },
+    {
+      "compiled": "src/modules/funds/domain.ts",
+      "id": 21010,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/domain": 813
+      }
+    },
+    {
+      "compiled": "src/modules/funds/types.ts",
+      "id": 21011,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836
+      }
+    },
+    {
+      "compiled": "src/modules/funds/store.ts",
+      "id": 21009,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/domain": 813,
+        "./domain": 21010,
+        "./read": 21007,
+        "./types": 21011
+      }
+    },
+    {
+      "compiled": "src/modules/goals/store.ts",
+      "id": 807,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../funds/store": 21009,
+        "../funds/read": 21007,
+        "../funds/domain": 21010,
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/store": 815,
+        "../money/repository": 816,
+        "../money/domain": 813,
+        "./domain": 808
+      }
+    },
+    {
+      "compiled": "src/modules/documents/CaptureAccount.tsx",
+      "id": 21006,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../money/accountScope": 20004,
+        "../../core/errors": 799,
+        "../money/fields": 797,
+        "../money/localStore": 798
+      }
+    },
+    {
+      "compiled": "src/ui/NeonActionButton.tsx",
+      "id": 832,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836
+      }
+    },
+    {
+      "reuse": "src/modules/documents/voice.ts",
+      "id": 823
+    },
+    {
+      "compiled": "src/ui/HomeVoiceEntry.tsx",
+      "id": 821,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../modules/documents/CaptureAccount": 21006,
+        "./saveFeedback": 802,
+        "./components": 796,
+        "./VoiceActivity": 822,
+        "./NeonActionButton": 832,
+        "../modules/money/fields": 797,
+        "../modules/documents/voice": 823,
+        "../modules/documents/voiceEntry": 833,
+        "../modules/documents/saveVoiceEntry": 834,
+        "../modules/documents/localStore": 835,
+        "../modules/money/localStore": 798,
+        "../modules/money/domain": 813,
+        "../modules/money/types": 830,
+        "../core/id": 803,
+        "../core/errors": 799
+      }
+    },
+    {
+      "compiled": "src/modules/profile/greeting.ts",
+      "id": 21013,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836
+      }
+    },
+    {
+      "compiled": "src/modules/profile/ProfileName.tsx",
+      "id": 21012,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../../ui/components": 796,
+        "../money/fields": 797,
+        "../money/localStore": 798,
+        "../../storage/changeEvents": 871,
+        "../../core/errors": 799,
+        "./greeting": 21013
+      }
+    },
+    {
+      "compiled": "src/ui/FundsSummary.tsx",
+      "id": 21014,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "./components": 796,
+        "../modules/money/domain": 813
+      }
+    },
+    {
+      "compiled": "src/modules/funds/useFunds.ts",
+      "id": 21015,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../money/localStore": 798,
+        "../../storage/changeEvents": 871,
+        "../../core/errors": 799,
+        "./store": 21009
+      }
+    },
+    {
+      "reuse": "src/ui/categoryAppearance.ts",
+      "id": 838
+    },
+    {
+      "reuse": "src/ui/expenseSegments.ts",
+      "id": 839
+    },
+    {
+      "reuse": "src/modules/money/analysisModel.ts",
+      "id": 840
+    },
+    {
+      "compiled": "src/ui/ExpenseTopThree.tsx",
+      "id": 826,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../modules/money/categoryLabels": 837,
+        "./categoryAppearance": 838,
+        "./expenseSegments": 839,
+        "./components": 796,
+        "../design/ThemeProvider": 792,
+        "../modules/money/analysisModel": 840,
+        "../modules/money/domain": 813
+      }
+    },
+    {
+      "compiled": "src/ui/HomeBalancesAndCharts.tsx",
+      "id": 21000,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "./FundsSummary": 21014,
+        "../modules/funds/useFunds": 21015,
+        "../modules/funds/domain": 21010,
+        "../modules/money/accountScope": 20004,
+        "./components": 796,
+        "./ExpenseTopThree": 826,
+        "../design/ThemeProvider": 792,
+        "../modules/money/domain": 813,
+        "../core/money": 814,
+        "../modules/business/ledgerDomain": 900,
+        "../modules/business/ledgerStore": 899,
+        "../modules/money/localStore": 798
+      }
+    },
+    {
+      "compiled": "src/ui/MoneyOverview.tsx",
+      "id": 825,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../modules/profile/ProfileName": 21012,
+        "./HomeBalancesAndCharts": 21000,
+        "./components": 796,
+        "../design/ThemeProvider": 792
+      }
+    },
+    {
+      "compiled": "src/modules/money/accountScopeData.ts",
+      "id": 21005,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "./scopedMovements": 21008,
+        "../../storage/changeEvents": 871,
+        "../business/ledgerStore": 899
+      }
+    },
+    {
+      "reuse": "src/modules/documents/VoiceDraftList.tsx",
+      "id": 945
+    },
+    {
+      "compiled": "src/modules/money/TransactionHistory.tsx",
+      "id": 1145,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "./accountScope": 20004,
+        "./accountScopeData": 21005,
+        "../../core/errors": 799,
+        "../../ui/components": 796,
+        "../../design/ThemeProvider": 792,
+        "../documents/VoiceDraftList": 945,
+        "../documents/localStore": 835,
+        "./domain": 813,
+        "./fields": 797
+      }
+    },
+    {
+      "compiled": "src/modules/money/MovementForm.tsx",
+      "id": 831,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "./incomePaymentMethods": 20006,
+        "../../design/ThemeProvider": 792,
+        "../../ui/transactionFormStyle": 20001,
+        "./TransactionFormUI": 20000,
+        "./saveAccountMovement": 20005,
+        "./accountScope": 20004,
+        "../documents/paymentRecognition": 957,
+        "./entryContext": 958,
+        "../../ui/saveFeedback": 802,
+        "./TransactionHistory": 1145,
+        "../../ui/DateField": 853,
+        "./CategoryPicker": 1147,
+        "../../core/errors": 799,
+        "../../core/id": 803,
+        "../../core/money": 814,
+        "../../ui/components": 796,
+        "./domain": 813,
+        "./fields": 797,
+        "./store": 815,
+        "./types": 830
+      }
+    },
+    {
+      "compiled": "src/modules/progress/store.ts",
+      "id": 859,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../funds/read": 21007,
+        "../money/domain": 813,
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "./domain": 857
+      }
+    },
+    {
+      "compiled": "src/storage/schemaV19.ts",
+      "id": 21016,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836
+      }
+    },
+    {
+      "compiled": "src/modules/backup/store.ts",
+      "id": 887,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../funds/read": 21007,
+        "../funds/domain": 21010,
+        "../../core/errors": 799,
+        "../../storage/schema": 1062,
+        "../../storage/schemaV2": 1063,
+        "../../storage/schemaV3": 1064,
+        "../../storage/schemaV4": 1065,
+        "../../storage/schemaV5": 1066,
+        "../../storage/schemaV6": 1067,
+        "../../storage/schemaV7": 1068,
+        "../../storage/schemaV8": 1069,
+        "../../storage/schemaV9": 1070,
+        "../../storage/schemaV10": 1071,
+        "../../storage/schemaV11": 1072,
+        "../../storage/schemaV12": 1073,
+        "../../storage/schemaV13": 1074,
+        "../../storage/schemaV14": 1075,
+        "../../storage/schemaV15": 1076,
+        "../../storage/schemaV16": 1077,
+        "../../storage/schemaV17": 1078,
+        "../../storage/schemaV18": 1079,
+        "../../storage/schemaV19": 21016
+      }
+    },
+    {
+      "reuse": "src/modules/money/transactionChartModel.ts",
+      "id": 936
+    },
+    {
+      "compiled": "src/ui/transactionOverviewModel.ts",
+      "id": 21002,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../modules/money/transactionChartModel": 936
+      }
+    },
+    {
+      "compiled": "src/ui/TransactionOverview.tsx",
+      "id": 21001,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "./components": 796,
+        "../design/ThemeProvider": 792,
+        "./transactionOverviewModel": 21002,
+        "../modules/money/domain": 813
+      }
+    },
+    {
+      "compiled": "src/ui/commercialHomeOverview.ts",
+      "id": 21017,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../modules/money/domain": 813,
+        "../core/money": 814,
+        "../modules/business/ledgerDomain": 900
+      }
+    },
+    {
+      "compiled": "src/modules/money/ChartsScreen.tsx",
+      "id": 931,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../funds/useFunds": 21015,
+        "../funds/domain": 21010,
+        "../../ui/FundsSummary": 21014,
+        "./accountScope": 20004,
+        "../../ui/MonthControl": 21003,
+        "../../ui/components": 796,
+        "../../ui/TransactionOverview": 21001,
+        "../../ui/commercialHomeOverview": 21017,
+        "../../ui/HistoryTrend": 933,
+        "./fields": 797,
+        "../../design/ThemeProvider": 792,
+        "../business/ledgerStore": 899,
+        "./localStore": 798,
+        "./domain": 813,
+        "./analysisModel": 840
+      }
+    },
+    {
+      "compiled": "src/modules/funds/FundSheet.tsx",
+      "id": 21020,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../../design/ThemeProvider": 792,
+        "../../ui/transactionFormStyle": 20001,
+        "../money/TransactionFormUI": 20000
+      }
+    },
+    {
+      "compiled": "src/modules/funds/FundEditor.tsx",
+      "id": 21019,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "./FundSheet": 21020,
+        "../../core/id": 803,
+        "../../core/money": 814,
+        "../../core/errors": 799,
+        "../../ui/components": 796,
+        "../money/fields": 797,
+        "../../ui/DateField": 853,
+        "../money/domain": 813,
+        "./read": 21007,
+        "./types": 21011
+      }
+    },
+    {
+      "reuse": "src/modules/decisions/domain.ts",
+      "id": 943
+    },
+    {
+      "compiled": "src/modules/funds/SimulationPlanCTA.tsx",
+      "id": 21018,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../../ui/components": 796,
+        "./FundEditor": 21019,
+        "./useFunds": 21015,
+        "../decisions/domain": 943,
+        "../money/domain": 813
+      }
+    },
+    {
+      "reuse": "src/modules/learning/localStore.ts",
+      "id": 942
+    },
+    {
+      "compiled": "src/modules/decisions/fields.ts",
+      "id": 21021,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../../core/money": 814,
+        "../../core/errors": 799,
+        "./domain": 943
+      }
+    },
+    {
+      "reuse": "src/modules/decisions/ResultCard.tsx",
+      "id": 941
+    },
+    {
+      "compiled": "src/modules/decisions/DecisionsScreen.tsx",
+      "id": 939,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../funds/SimulationPlanCTA": 21018,
+        "../../ui/saveFeedback": 802,
+        "../../core/id": 803,
+        "../../core/errors": 799,
+        "../../ui/components": 796,
+        "../money/fields": 797,
+        "../money/domain": 813,
+        "../learning/localStore": 942,
+        "./domain": 943,
+        "./fields": 21021,
+        "./ResultCard": 941
+      }
+    },
+    {
+      "reuse": "src/ui/PhotoAnalysis.tsx",
+      "id": 955
+    },
+    {
+      "reuse": "src/modules/documents/ai/details.ts",
+      "id": 903
+    },
+    {
+      "reuse": "src/modules/documents/ReceiptPhotoButtons.web.tsx",
+      "id": 948
+    },
+    {
+      "reuse": "src/modules/documents/filters.ts",
+      "id": 951
+    },
+    {
+      "compiled": "src/modules/documents/DocumentsScreen.tsx",
+      "id": 947,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../../design/ThemeProvider": 792,
+        "../../ui/PhotoAnalysis": 955,
+        "./ai/details": 903,
+        "./ReceiptPhotoButtons": 948,
+        "../../ui/ActionMenu": 827,
+        "../../ui/DateField": 853,
+        "./filters": 951,
+        "../../core/errors": 799,
+        "../../ui/components": 796,
+        "../money/fields": 797,
+        "../money/domain": 813,
+        "../money/MovementForm": 831,
+        "../money/localStore": 798,
+        "./localStore": 835,
+        "./ReviewForm": 952,
+        "./capture": 906
+      }
+    },
+    {
+      "compiled": "src/modules/documents/linkCaptureCommercial.ts",
+      "id": 21022,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../../core/errors": 799
+      }
+    },
+    {
+      "reuse": "src/modules/tax/expenseGuide.ts",
+      "id": 996
+    },
+    {
+      "reuse": "src/modules/bills/domain.ts",
+      "id": 850
+    },
+    {
+      "compiled": "src/modules/documents/store.ts",
+      "id": 959,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "./linkCaptureCommercial": 21022,
+        "../tax/expenseGuide": 996,
+        "../tax/guideStore": 1116,
+        "./ai/details": 903,
+        "../income/store": 965,
+        "../income/domain": 967,
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/domain": 813,
+        "../bills/domain": 850,
+        "../money/repository": 816,
+        "../money/store": 815,
+        "./domain": 813
+      }
+    },
+    {
+      "compiled": "src/storage/migrate.ts",
+      "id": 1061,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "./schema": 1062,
+        "./schemaV2": 1063,
+        "./schemaV3": 1064,
+        "./schemaV4": 1065,
+        "./schemaV5": 1066,
+        "./schemaV6": 1067,
+        "./schemaV7": 1068,
+        "./schemaV8": 1069,
+        "./schemaV9": 1070,
+        "./schemaV10": 1071,
+        "./schemaV11": 1072,
+        "./schemaV12": 1073,
+        "./schemaV13": 1074,
+        "./schemaV14": 1075,
+        "./schemaV15": 1076,
+        "./schemaV16": 1077,
+        "./schemaV17": 1078,
+        "./schemaV18": 1079,
+        "./schemaV19": 21016
+      }
+    },
+    {
+      "compiled": "src/modules/search/model.ts",
+      "id": 20010,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836
+      }
+    },
+    {
+      "compiled": "src/modules/search/load.ts",
+      "id": 20011,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../learning/content": 20016,
+        "./model": 20010,
+        "../money/types": 830
+      }
+    },
+    {
+      "compiled": "src/ui/meaningCatalog.ts",
+      "id": 20013,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836
+      }
+    },
+    {
+      "compiled": "src/modules/funds/TransferEditor.tsx",
+      "id": 21025,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "./FundSheet": 21020,
+        "../../core/id": 803,
+        "../../core/money": 814,
+        "../../core/errors": 799,
+        "../../ui/components": 796,
+        "../money/fields": 797,
+        "../../ui/DateField": 853,
+        "../money/domain": 813
+      }
+    },
+    {
+      "compiled": "src/modules/funds/FundsScreen.tsx",
+      "id": 21024,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "./FundSheet": 21020,
+        "../../ui/components": 796,
+        "../money/fields": 797,
+        "../money/accountScope": 20004,
+        "../money/domain": 813,
+        "./domain": 21010,
+        "./types": 21011,
+        "./FundEditor": 21019,
+        "./TransferEditor": 21025,
+        "./useFunds": 21015,
+        "../../core/errors": 799
+      }
+    },
+    {
+      "compiled": "src/app/funds.tsx",
+      "id": 21023,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "../modules/funds/FundsScreen": 21024
+      }
+    },
+    {
+      "compiled": "src/modules/money/store.ts",
+      "id": 21026,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "react-native-safe-area-context": 272,
+        "@expo/vector-icons/Ionicons": 791,
+        "expo-router": 790,
+        "react-native-svg": 937,
+        "expo-linear-gradient": 836,
+        "./scopedMovements": 21008,
+        "../tax/guideStore": 1116,
+        "../../storage/changeEvents": 871,
+        "../../core/errors": 799,
+        "./repository": 816,
+        "../../core/money": 814,
+        "./domain": 813
+      }
+    }
+  ],
+  "renamed": [
+    [
+      "/_expo/static/js/web/index-576f39d629bf3fa4dd6968c3d8670f3c-business20261122-commercial20261122r2-homesplit20261122-contrast20261122-switch88-capture89-graphics90-controls91-scope92-payroll96-history97-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/index-576f39d629bf3fa4dd6968c3d8670f3c-business20261122-commercial20261122r2-homesplit20261122-contrast20261122-switch88-capture89-graphics90-controls91-scope92-payroll96-history97-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/_layout-a7f31c388897364ae3fb2746f068f9fd-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/_layout-a7f31c388897364ae3fb2746f068f9fd-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/business-c9058dcfb3ce3ed5287344777764f0ce-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/business-c9058dcfb3ce3ed5287344777764f0ce-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/goals-217ca93e3da271d7289be4cda4a8e992-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/goals-217ca93e3da271d7289be4cda4a8e992-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/learn-bb563060190eb7d23b2d34e2ae755891-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/learn-bb563060190eb7d23b2d34e2ae755891-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/money-c0c10e5102942c1c7e34d2ea4147c96f-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/money-c0c10e5102942c1c7e34d2ea4147c96f-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/my-debts-1a3af37c5967b799f0c8c0b64c0f742b-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/my-debts-1a3af37c5967b799f0c8c0b64c0f742b-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/progress-8d1d8c2a8cb53821a758df7dc421383d-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/progress-8d1d8c2a8cb53821a758df7dc421383d-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/_layout-2e04785cc4243e9c65dbe984813bc7f8-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/_layout-2e04785cc4243e9c65dbe984813bc7f8-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/backup-3885fdbba04b08e2b673134336d3b85a-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/backup-3885fdbba04b08e2b673134336d3b85a-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/bills-39936c584d0053550535804d473c5d70-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/bills-39936c584d0053550535804d473c5d70-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/business-ledger-29cc3e1bd94f3e2af7320b204f89e0da-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/business-ledger-29cc3e1bd94f3e2af7320b204f89e0da-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/business-obligations-3132fc1875deea155a8cead7ac70f632-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/business-obligations-3132fc1875deea155a8cead7ac70f632-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/business-payroll-981674592f298b79d29a563f7b4f8339-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/business-payroll-981674592f298b79d29a563f7b4f8339-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/business-planning-198aace74ec44c1cb346ab328ceb19ed-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/business-planning-198aace74ec44c1cb346ab328ceb19ed-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/charts-00dae39e6d3beeaf0042283e56d5c489-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/charts-00dae39e6d3beeaf0042283e56d5c489-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/debt-lessons-133482e304c1175b26434adf0eaa341d-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/debt-lessons-133482e304c1175b26434adf0eaa341d-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/debts-d454a083cd1e6af4e5ff7f2f849d6029-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/debts-d454a083cd1e6af4e5ff7f2f849d6029-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/decisions-fc2278a4ee7fe09577fad241397ae98d-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/decisions-fc2278a4ee7fe09577fad241397ae98d-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/dictations-7f36c8b74c77ff6b82485520bfaa338d-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/dictations-7f36c8b74c77ff6b82485520bfaa338d-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/documents-d2efa75032df29c71d72b1bf574458db-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/documents-d2efa75032df29c71d72b1bf574458db-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/education-admin-e3e6db4f16571289c770c078e84445b9-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/education-admin-e3e6db4f16571289c770c078e84445b9-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/income-documents-b23764ee7b3ee3df3960b0c449885fe8-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/income-documents-b23764ee7b3ee3df3960b0c449885fe8-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/index-1c857c3ebc06cebcffe129e999753fcd-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/index-1c857c3ebc06cebcffe129e999753fcd-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/planilla-064aeb69adcb47a24d9bfe009f22e726-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/planilla-064aeb69adcb47a24d9bfe009f22e726-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/receipt-reader-d62f0fddc1ccd40e35f9be97fc29ab1e-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/receipt-reader-d62f0fddc1ccd40e35f9be97fc29ab1e-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/settings-ad39b44b11fd11a00d9cb42a2d4680b4-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/settings-ad39b44b11fd11a00d9cb42a2d4680b4-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/sync-2b8ac8aa1ad2d30abc1790249fc599e9-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/sync-2b8ac8aa1ad2d30abc1790249fc599e9-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/sync-3f29ebf4993a13e8dd05a7b0dfc7c648-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/sync-3f29ebf4993a13e8dd05a7b0dfc7c648-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/tax-42bd02cca1c36c62f9c9ba163eb6b02d-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/tax-42bd02cca1c36c62f9c9ba163eb6b02d-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/__common-c274283e4f06f201946822c54e057719-transaction-theme-99-20261124-aprende-prizes-c8d090a2fc72-aprende-premio-texto-10a49acfa403-aprende-visible-4b44c73564f2-history-delete-0cbce3f7e262-methods-read-next-3f70bd203c49-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/__common-c274283e4f06f201946822c54e057719-transaction-theme-99-20261124-aprende-prizes-c8d090a2fc72-aprende-premio-texto-10a49acfa403-aprende-visible-4b44c73564f2-history-delete-0cbce3f7e262-methods-read-next-3f70bd203c49-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/pdf-65353f3584a5a3034bb81f79903fd1f8-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/pdf-65353f3584a5a3034bb81f79903fd1f8-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ],
+    [
+      "/_expo/static/js/web/sql-wasm-inline-7f1e92f4b981c166419deea7227d458a-transaction-theme-99-20261124-universal-search-a0e20e746e99.js",
+      "/_expo/static/js/web/sql-wasm-inline-7f1e92f4b981c166419deea7227d458a-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d.js"
+    ]
+  ]
+}

@@ -1,0 +1,31 @@
+import {FundSheet as Sheet,FundBody as Body,FundError as ErrorNotice} from './FundSheet';
+import {useRef,useState} from 'react';
+import {newId} from '../../core/id';
+import {parseAmount} from '../../core/money';
+import {userMessage} from '../../core/errors';
+import {ActionButton} from '../../ui/components';
+import {Field,Choices} from '../money/fields';
+import {DateField} from '../../ui/DateField';
+import {inputAmount} from '../money/domain';
+import {goalFundId} from './read';
+import {locationKinds,type Fund,type FundInput,type FundKind,type MoneyLocation,type Cadence,type LocationKind} from './types';
+import type {FundsStore} from './store';
+import type {AccountScope} from '../money/accountScope';
+export function FundEditor({store,initial,scope,kind,locations,close,saved,plan,budget}:{store:FundsStore;initial?:Fund;scope:AccountScope;kind:FundKind;locations:MoneyLocation[];close():void;saved():Promise<void>;plan?:{target:number;contribution:number};budget?:{month:string;categoryId:string;name:string;target:number}}){
+ const [identity]=useState(()=>{const id=newId();return {id:plan?goalFundId(id):id,goalId:plan?id:initial?.goalId??null};});
+ const [name,setName]=useState(initial?.name??budget?.name??''),[target,setTarget]=useState(inputAmount(initial?.targetCents??plan?.target??budget?.target??0)),[contribution,setContribution]=useState(inputAmount(initial?.contributionCents??plan?.contribution??0));
+ const [cadence,setCadence]=useState<Cadence>(initial?.cadence??'monthly'),[date,setDate]=useState(initial?.targetDate??''),[location,setLocation]=useState(initial?.locationId??''),[error,setError]=useState(''),[busy,setBusy]=useState(false),[editingLocation,setEditingLocation]=useState<MoneyLocation|true|null>(null),[added,setAdded]=useState<MoneyLocation[]>([]);const saving=useRef(false);
+ const all=[...locations.filter(l=>!added.some(a=>a.id===l.id)),...added];
+ async function save(){if(saving.current)return;saving.current=true;setBusy(true);setError('');try{const p:FundInput={id:initial?.id??identity.id,scope,kind:initial?.kind??kind,name,goalId:identity.goalId,targetCents:parseAmount(target||'0'),contributionCents:parseAmount(contribution||'0'),cadence,targetDate:date||null,locationId:location||null,budgetMonth:initial?.budgetMonth??budget?.month??null,categoryId:initial?.categoryId??budget?.categoryId??null};if(plan)await store.createPlan(p);else await store.saveFund(p,initial?.version??0,initial?.goalVersion);await saved();close();}catch(e){setError(userMessage(e));}finally{saving.current=false;setBusy(false);}}
+ return <Sheet title={plan?'Crear plan de ahorro':initial?'Editar fondo':'Crear fondo'} close={close} busy={busy}>
+ <Field presentation="transaction" compact label={plan?'Nombre de la meta':'Nombre del fondo'} value={name} onChangeText={setName} required testID="fund-name"/>
+ <Field presentation="transaction" compact money={false} label={kind==='budget'?'Presupuesto planificado (USD)':'Cantidad objetivo (USD)'} value={target} onChangeText={setTarget} decimal testID="fund-target"/>
+ {kind!=='budget'?<><Field presentation="transaction" compact money={false} label="Aportación periódica planificada (USD)" value={contribution} onChangeText={setContribution} decimal/><Choices<Cadence> controlPresentation="transaction" label="Frecuencia de aportación" value={cadence} options={[["weekly","Semanal"],["monthly","Mensual"]]} onChange={setCadence}/><DateField presentation="transaction" label="Fecha objetivo (opcional)" value={date} onChangeText={setDate}/></>:null}
+ <Choices controlPresentation="transaction" label="Dónde guardas el dinero" value={location} options={[["","Sin indicar"],...all.map(l=>[l.id,l.name] as const),...locationKinds.map(([k,title])=>["type:"+k,title+"…"] as const)]} onChange={value=>{if(value.startsWith("type:")){const kind=value.slice(5) as LocationKind;setEditingLocation({id:newId(),kind,name:locationKinds.find(([k])=>k===kind)?.[1]??"",version:0});}else setLocation(value);}}/>
+ <ActionButton title="Añadir institución o ubicación" secondary onPress={()=>setEditingLocation(true)}/>{location?<ActionButton title="Editar ubicación seleccionada" secondary onPress={()=>setEditingLocation(all.find(l=>l.id===location)??null)}/>:null}
+ <Body muted>{plan?'El objetivo es una proyección. El plan comienza con $0.00 realizado; el ahorro inicial y los intereses simulados no se registran como dinero real.':'Cambiar el objetivo o la ubicación no mueve dinero.'} Las aportaciones solo se registran cuando las confirmes.</Body>
+ <ErrorNotice message={error}/><ActionButton title={busy?'Guardando…':plan?'Crear mi plan de ahorro':'Guardar fondo'} testID="fund-save" onPress={()=>void save()}/>
+ {editingLocation?<LocationEditor store={store} initial={editingLocation===true?undefined:editingLocation} close={()=>setEditingLocation(null)} saved={l=>{setAdded(a=>[...a.filter(x=>x.id!==l.id),l]);setLocation(l.id);}}/>:null}
+ </Sheet>;
+}
+export function LocationEditor({store,initial,close,saved}:{store:FundsStore;initial?:MoneyLocation;close():void;saved(l:MoneyLocation):void}){const [id]=useState(()=>initial?.id??newId()),[name,setName]=useState(initial?.name??''),[kind,setKind]=useState<LocationKind>(initial?.kind??'bank'),[error,setError]=useState(''),[busy,setBusy]=useState(false);const saving=useRef(false);return <Sheet title={initial?.version?'Editar ubicación':'Nueva ubicación'} close={close} busy={busy}><Choices<LocationKind> controlPresentation="transaction" label="Tipo de ubicación" value={kind} options={locationKinds} onChange={setKind}/><Field presentation="transaction" compact label="Institución o nombre de ubicación" value={name} onChangeText={setName} required/><ErrorNotice message={error}/><ActionButton title={busy?'Guardando…':'Guardar ubicación'} onPress={()=>{if(saving.current)return;saving.current=true;setBusy(true);void store.saveLocation({id,name,kind,version:initial?.version??0}).then(async()=>{const location=(await store.snapshot()).locations.find(l=>l.id===id)!;saved(location);close();}).catch(e=>setError(userMessage(e))).finally(()=>{saving.current=false;setBusy(false);});}}/></Sheet>;}

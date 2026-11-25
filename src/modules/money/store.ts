@@ -1,3 +1,4 @@
+import {scopedMovements,type ScopeEntry} from './scopedMovements';
 import {recordExpenseGuide,readExpenseGuides} from '../tax/guideStore';
 import type {ExpenseAnswers} from '../tax/expenseGuide';
 import {notifyDataCommitted} from '../../storage/changeEvents';
@@ -52,9 +53,9 @@ export class MoneyStore {
     private async movements() { return (await this.db.getAllAsync<LedgerMovement>(movementSelect + ' ORDER BY date DESC, created_at DESC')).map(readMovement); }
     async snapshot(personal = false): Promise<Snapshot> {
         return this.serialized(async () => {
-        const commercialIds=new Set(personal?(await this.db.getAllAsync<{id:string}>("SELECT movement_id AS id FROM business_entries WHERE use_kind='business'")).map(e=>e.id):[]);
+        const entries=personal?await this.db.getAllAsync<ScopeEntry>('SELECT movement_id AS movementId,movement_version AS movementVersion,kind,use_kind AS useKind,business_bps AS businessBps FROM business_entries'):[];
         return ({
-            movements: personal ? (await this.movements()).filter(m=>m.useKind!=='business'&&!commercialIds.has(m.id)) : await this.movements(),
+            movements: personal ? scopedMovements(await this.movements(),entries).filter(m=>m.useKind!=='business') : await this.movements(),
             categories: (await this.db.getAllAsync<Category>('SELECT id,name,kind,archived FROM categories ORDER BY kind,name')).map(c => ({ ...c, archived: !!c.archived })),
             budgets: await this.db.getAllAsync<Budget>('SELECT month,category_id AS categoryId,amount_cents AS amountCents FROM monthly_budgets'),
             schedules: (await this.db.getAllAsync<IncomeSchedule>(scheduleSelect + ' ORDER BY next_date')).map(s => ({ ...s, active: !!s.active })),

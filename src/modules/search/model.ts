@@ -8,6 +8,7 @@ export function searchItems(items:SearchItem[],query:string,section='Todo'){
  return results.sort((a,b)=>Number(normalizeSearch(b.title)===q)-Number(normalizeSearch(a.title)===q)||(b.date??'').localeCompare(a.date??'')||a.title.localeCompare(b.title,'es'));
 }
 export const sectionItems:SearchItem[]=[
+ ['Administrar fondos','/funds','ahorros fondo emergencia presupuestos reservados transferir transferencias internas'],
  ['Mi dinero','/money','inicio home personal comercial saldo ingresos gastos nueva transacción'],
  ['Transacciones','/charts','gráficas ingresos gastos mes tendencias'],
  ['Editar historiales','/money','editar borrar ingresos gastos historial'],

@@ -1,3 +1,6 @@
+import {FundsStore} from '../funds/store';
+import {goalFundId,readFundData} from '../funds/read';
+import {validateAllocationTimeline} from '../funds/domain';
 import { UserInputError } from '../../core/errors';
 import { cents,addAmounts } from '../../core/money';
 import { MoneyStore,movementSelect,readMovement,type SqlDb } from '../money/store';
@@ -15,8 +18,9 @@ export class GoalStore {
  async snapshot():Promise<GoalSnapshot>{return this.ledger.read(async db=>{
  const contributions=(await db.getAllAsync<Contribution>(contributionSelect+' ORDER BY m.date DESC,c.id')).map(c=>({...c,createdMovement:!!c.createdMovement}));
  const movements=(await db.getAllAsync<LedgerMovement>(movementSelect+' ORDER BY date DESC')).map(readMovement);
- const goals=(await db.getAllAsync<Goal>(goalSelect+' ORDER BY g.rowid DESC')).map(g=>({...g,archived:!!g.archived,savedCents:addAmounts(cents(g.openingCents),...contributions.filter(c=>c.goalId===g.id&&!c.reversedAt&&!movements.find(m=>m.id===c.movementId)?.deletedAt).map(c=>cents(c.amountCents)))}));
- return {goals,contributions,movements,events:await db.getAllAsync('SELECT goal_id AS goalId,reason,recorded_at AS recordedAt FROM goal_events ORDER BY id DESC')};
+ const transfers=await db.getAllAsync<{id:string;goalId:string;amount:number;date:string;description:string;reversedAt:string|null}>(`SELECT t.id,t.date,t.description,t.reversed_at AS reversedAt,f.goal_id AS goalId, CASE WHEN t.to_id=f.id THEN t.amount_cents ELSE -t.amount_cents END AS amount FROM money_funds f JOIN fund_transfers t ON t.from_id=f.id OR t.to_id=f.id WHERE f.goal_id IS NOT NULL AND t.date<=?`,this.today());
+ const goals=(await db.getAllAsync<Goal>(goalSelect+' ORDER BY g.rowid DESC')).map(g=>({...g,archived:!!g.archived,savedCents:addAmounts(cents(g.openingCents),...contributions.filter(c=>c.goalId===g.id&&!c.reversedAt&&!movements.find(m=>m.id===c.movementId)?.deletedAt).map(c=>cents(c.amountCents)),...transfers.filter(t=>t.goalId===g.id&&!t.reversedAt).map(t=>cents(t.amount)))}));
+ return {goals,contributions,movements,fundTransfers:transfers,events:await db.getAllAsync('SELECT goal_id AS goalId,reason,recorded_at AS recordedAt FROM goal_events ORDER BY id DESC')};
  });}
  async create(g:GoalInput){validateGoal(g);return this.ledger.transaction(async db=>{
  const old=await db.getFirstAsync<Goal>(goalSelect+' WHERE g.id=?',g.id);if(old){if(canonical(old)===canonical(g))return;throw new UserInputError('Este identificador ya pertenece a otra meta.');}
@@ -30,7 +34,9 @@ export class GoalStore {
  const active=await db.getAllAsync<{amount:number}>('SELECT amount_cents AS amount FROM goal_contributions WHERE goal_id=? AND reversed_at IS NULL',g.id);addAmounts(cents(g.openingCents),...active.map(c=>cents(c.amount)));
  await db.runAsync('INSERT INTO goal_events(goal_id,reason,before_json,recorded_at) VALUES(?,?,?,?)',g.id,reason.trim(),JSON.stringify(old),new Date().toISOString());
  await db.runAsync('UPDATE goals SET name=?,kind=?,target_cents=?,opening_cents=?,desired_date=?,cadence=?,archived=?,version=version+1 WHERE id=?',g.name.trim(),g.kind,g.targetCents,g.openingCents,g.desiredDate,g.cadence,Number(archived),g.id);
+ validateAllocationTimeline(await readFundData(db),'personal',undefined,false);
  });}
+ async reserve(p:ContributionInput){return new FundsStore(this.ledger,this.today).transfer({id:'goal-reserve:'+p.id,scope:'personal',fromId:null,toId:goalFundId(p.goalId),amountCents:p.amountCents,date:p.date,description:'Aportación confirmada a la meta'});}
  async contribute(p:ContributionInput){
  if(!p.id||cents(p.amountCents)<=0||!validDate(p.date)||p.date>this.today()||!['cash','check','debit','bank','other'].includes(p.paymentMethod))throw new UserInputError('Revisa importe positivo, fecha no futura y método sin crédito.');
  return this.ledger.transaction(async db=>{
@@ -59,6 +65,6 @@ export class GoalStore {
  const m=await db.getFirstAsync<LedgerMovement>(movementSelect+' WHERE id=?',p.movementId);await db.runAsync('INSERT INTO movement_revisions(movement_id,action,reason,before_json,recorded_at) VALUES(?,?,?,?,?)',p.movementId,'delete',reason.trim(),JSON.stringify(m),now);
  await db.runAsync('UPDATE movements SET deleted_at=?,updated_at=?,version=version+1 WHERE id=?',now,now,p.movementId);
  }
- await db.runAsync('UPDATE goal_contributions SET reversed_at=?,reversal_reason=? WHERE id=?',now,reason.trim(),id);await db.runAsync('UPDATE goals SET version=version+1 WHERE id=?',p.goalId);
+ await db.runAsync('UPDATE goal_contributions SET reversed_at=?,reversal_reason=? WHERE id=?',now,reason.trim(),id);await db.runAsync('UPDATE goals SET version=version+1 WHERE id=?',p.goalId);validateAllocationTimeline(await readFundData(db),'personal',undefined,false);
  });}
 }

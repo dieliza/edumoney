@@ -1,12 +1,15 @@
+import {FundsSummary,fundsAsOf} from './FundsSummary';
+import {useFunds} from '../modules/funds/useFunds';
+import {fundSummary} from '../modules/funds/domain';
+import type {FundsSummary as FundsProjection} from '../modules/funds/types';
 import {useAccountScope,setAccountScope} from '../modules/money/accountScope';
 import {useEffect,useState} from 'react';
 import {Pressable,View,useWindowDimensions} from 'react-native';
-import {LinearGradient} from 'expo-linear-gradient';
 import {Body} from './components';
 import {ExpenseTopThree} from './ExpenseTopThree';
 import {router} from 'expo-router';
 import {useTheme} from '../design/ThemeProvider';
-import {formatMoney,monthlySummary} from '../modules/money/domain';
+import {monthlySummary,localToday} from '../modules/money/domain';
 import {cents} from '../core/money';
 import {commercialAmount} from '../modules/business/ledgerDomain';
 import {BusinessLedgerStore} from '../modules/business/ledgerStore';
@@ -29,19 +32,11 @@ export function commercialHomeOverview(data:BusinessLedgerSnapshot,categories:Ca
 type Commercial=ReturnType<typeof commercialHomeOverview>;
 type Props={summary:Summary;month:string;movements?:LedgerMovement[];categories?:Category[]};
 type Account='personal'|'commercial';
-export function HomeBalanceView({summary,month,movements=[],categories=[],commercial,error='',account='personal',onAccountChange}:Props&{commercial:Commercial|null;error?:string;account?:Account;onAccountChange?(account:Account):void}){
+export function HomeBalanceView({summary,month,movements=[],categories=[],commercial,error='',account='personal',onAccountChange,fundsSummary=null,fundsError='',asOf=localToday()}:Props&{commercial:Commercial|null;error?:string;account?:Account;fundsSummary?:FundsProjection|null;fundsError?:string;asOf?:string;onAccountChange?(account:Account):void}){
  const {colors}=useTheme(),{width}=useWindowDimensions();
  const isPersonal=account==='personal',label=isPersonal?'Personal':'Comercial';
- const selected=isPersonal?{summary,movements,categories}:commercial;
  return <View style={{gap:16}}>
-  <LinearGradient colors={['#0BAE61','#00774F','#034343']} start={{x:0,y:0}} end={{x:1,y:1}} style={{borderRadius:20,padding:16,borderWidth:1,borderColor:'#44E58B',gap:12}}>
-   <Body style={{fontSize:16,fontWeight:'700',color:'#EDFFF2'}}>Saldo disponible estimado</Body>
-   <View testID={`home-${account}-balance`} accessible accessibilityLabel={selected?`Disponible ${label.toLocaleLowerCase('es')} estimado: ${formatMoney(selected.summary.available)}`:error||'Cargando disponible comercial'} style={{minWidth:0,gap:5}}>
-    <Body style={{fontSize:16,fontWeight:'800',color:'#EDFFF2'}}>{label}</Body>
-    <Body style={{fontSize:selected?(width<430?32:34):16,lineHeight:42,fontWeight:'800',color:'#FFFFFF'}}>{selected?formatMoney(selected.summary.available):error?'No disponible':'Cargando…'}</Body>
-   </View>
-   <Body style={{fontSize:12,lineHeight:18,color:'#E0F8ED'}}>Según tus registros · No es un saldo bancario confirmado</Body>
-  </LinearGradient>
+  <FundsSummary summary={fundsSummary} scope={account==='commercial'?'business':'personal'} error={fundsError} asOf={asOf}/>
   <View testID="home-account-controls" style={{flexDirection:'row',alignItems:'stretch',gap:8}}>
    <View accessibilityRole="tablist" accessibilityLabel="Cuenta del resumen" style={{flex:2,flexDirection:'row',gap:8}}>
     {([['personal','Personal','#00774F'],['commercial','Comercial','#7046AE']] as const).map(([value,title,color])=><Pressable key={value} testID={`home-account-${value}`} accessibilityRole="tab" accessibilityLabel={title} accessibilityState={{selected:account===value}} onPress={()=>onAccountChange?.(value)} style={{flex:1,minWidth:0,minHeight:44,paddingHorizontal:width<430?8:16,paddingVertical:8,borderRadius:12,borderWidth:account===value?2:1,borderColor:account===value?'#EDFFF2':colors.line,backgroundColor:color,justifyContent:'center',alignItems:'center'}}><Body numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.65} style={{fontSize:width<430?12:18,fontWeight:'800',color:'#FFFFFF',textAlign:'center'}}>{title}</Body></Pressable>)}
@@ -64,5 +59,6 @@ export function HomeBalancesAndCharts(props:Props){
  const scope=useAccountScope(),account:Account=scope==='business'?'commercial':'personal';
  const setAccount=(value:Account)=>setAccountScope(value==='commercial'?'business':'personal');
  const {current,error}=useCommercialSummary(props);
- return <HomeBalanceView {...props} account={account} onAccountChange={setAccount} commercial={error?null:current} error={error}/>;
+ const funds=useFunds(),asOf=fundsAsOf(props.month,localToday());let projection:FundsProjection|null=null;let failure=funds.error;try{if(funds.data)projection=fundSummary(funds.data,scope,asOf);}catch{failure='No pudimos calcular los fondos. Revisa los importes guardados.';}
+ return <HomeBalanceView fundsSummary={projection} fundsError={failure} asOf={asOf} {...props} account={account} onAccountChange={setAccount} commercial={error?null:current} error={error}/>;
 }
