@@ -1,8 +1,8 @@
 import {useMonthlyBudget} from './MonthlyBudgetEditor';
 import {NavigationRail} from '../../ui/NavigationRail';
-import { useCallback,useEffect,useState } from 'react';
+import { useCallback,useEffect,useState,useRef } from 'react';
 import { ActivityIndicator,AppState,Pressable,View } from 'react-native';
-import { router,useIsFocused } from 'expo-router';
+import { router,useIsFocused,useLocalSearchParams } from 'expo-router';
 import { userMessage } from '../../core/errors';
 import { ActionButton,Body,Card,ProgressBar,Screen,SectionHeading } from '../../ui/components';
 import { formatMoney,localToday } from '../money/domain';
@@ -15,11 +15,13 @@ import { GoalForm } from './GoalForm';
 import { ContributionForm } from './ContributionForm';
 const empty:GoalSnapshot={goals:[],contributions:[],movements:[],events:[]};
 export default function GoalsScreen(){
+ const {goalId}=useLocalSearchParams<{goalId?:string}>();const searchOpened=useRef('');
  const monthlyBudget=useMonthlyBudget();
  const focused=useIsFocused();const [store,setStore]=useState<GoalStore|null>(null);const [data,setData]=useState(empty);const [error,setError]=useState('');const [busy,setBusy]=useState(false);
  const [form,setForm]=useState<Goal|true|null>(null);const [detailId,setDetailId]=useState<string|null>(null);const [contribute,setContribute]=useState<Goal|null>(null);const [reason,setReason]=useState('');const [archived,setArchived]=useState(false);const [limit,setLimit]=useState(30);
  const load=useCallback(async()=>{const s=await getGoalStore();const d=await s.snapshot();setStore(s);setData(d);},[]);
  useEffect(()=>{if(!focused)return;const refresh=()=>{void load().catch(()=>setError('No pudimos cargar las metas cifradas. Vuelve a abrir esta pestaña.'));};refresh();const sub=AppState.addEventListener('change',state=>{if(state==='active')refresh();});return()=>sub.remove();},[focused,load]);
+ useEffect(()=>{if(focused&&goalId&&searchOpened.current!==goalId&&data.goals.some(g=>g.id===goalId)){searchOpened.current=goalId;setDetailId(goalId);}},[focused,goalId,data.goals]);
  async function action(task:()=>Promise<unknown>){if(busy)return;setBusy(true);setError('');try{await task();await load();}catch(e){setError(userMessage(e));}finally{setBusy(false);}}
  const detail=data.goals.find(g=>g.id===detailId);const today=localToday();
  return <Screen title="Mis metas" demo={false} subtitle="Dale un propósito a cada paso que das.">

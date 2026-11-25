@@ -41,7 +41,8 @@ export default function DebtsScreen(){
   const key=`${params.debtId??''}:${params.billId??''}`;
   if(params.debtId&&handled.current!==key){
    handled.current=key;const d=snapshot.debts.find(d=>d.id===params.debtId);const b=snapshot.bills.find(b=>b.id===params.billId);
-   if(d&&b&&!b.voidedAt&&b.amountCents>b.paidCents)setPayment({debt:d,bill:b});else setError('Revisa la deuda y factura seleccionadas; puede que ya estén pagadas o hayan cambiado.');
+   if(d&&!params.billId){setTab('debts');setDetailId(d.id);setReason('');}
+   else if(d&&b&&!b.voidedAt&&b.amountCents>b.paidCents)setPayment({debt:d,bill:b});else setError('Revisa la deuda y factura seleccionadas; puede que ya estén pagadas o hayan cambiado.');
   }
   return snapshot;
  },[params.debtId,params.billId]);

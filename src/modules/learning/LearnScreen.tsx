@@ -2,7 +2,7 @@ import {debtLessonIds} from '../education/topics';
 import { EducationPanel } from '../education/EducationPanel';
 import { useCallback,useEffect,useRef,useState } from 'react';
 import { ActivityIndicator,AppState,Pressable,View } from 'react-native';
-import { useIsFocused } from 'expo-router';
+import { useIsFocused,useLocalSearchParams } from 'expo-router';
 import { newId } from '../../core/id';
 import { useTheme } from '../../design/ThemeProvider';
 import { userMessage } from '../../core/errors';
@@ -14,6 +14,7 @@ import type { LearningSnapshot,LearningStore } from './store';
 import { readLesson,stopReading } from './speech';
 const empty:LearningSnapshot={completed:[],attempts:[],scenarios:[]};
 export default function LearnScreen({debtOnly=false}:{debtOnly?:boolean}){
+ const {lessonId:searchedLesson}=useLocalSearchParams<{lessonId?:string}>();const searchOpened=useRef('');
  const visibleLessons=lessons.filter(l=>debtOnly?debtLessonIds.has(l.id):!debtLessonIds.has(l.id));
  const {colors}=useTheme();
  const focused=useIsFocused();const [store,setStore]=useState<LearningStore|null>(null);const [data,setData]=useState(empty);const [lessonId,setLessonId]=useState<string|null>(null);const [answer,setAnswer]=useState('');const [feedback,setFeedback]=useState('');const [error,setError]=useState('');const [voiceMessage,setVoiceMessage]=useState('');const [busy,setBusy]=useState(false);const voiceRequest=useRef(0);
@@ -21,6 +22,7 @@ export default function LearnScreen({debtOnly=false}:{debtOnly?:boolean}){
  const stop=useCallback(()=>{voiceRequest.current++;void stopReading().catch(()=>undefined);},[]);
  useEffect(()=>{if(!focused){stop();return;}const refresh=()=>void load().catch(()=>setError('No pudimos cargar el avance cifrado. Vuelve a abrir Aprende.'));refresh();const sub=AppState.addEventListener('change',s=>{if(s==='active')refresh();else stop();});return()=>{sub.remove();stop();};},[focused,load,stop]);
  const lesson=lessonId?findLesson(lessonId):null;const completed=visibleLessons.filter(l=>data.completed.some(c=>c.lessonId===l.id&&c.version===l.version)).length;
+ useEffect(()=>{if(focused&&searchedLesson&&searchOpened.current!==searchedLesson&&findLesson(searchedLesson)){searchOpened.current=searchedLesson;setLessonId(searchedLesson);setAnswer('');setFeedback('');}},[focused,searchedLesson]);
  async function check(){if(!store||!lesson||busy)return;setBusy(true);setError('');try{if(answer==='')throw new Error('Selecciona una respuesta antes de comprobar.');const correct=await store.answer(newId(),lesson.id,Number(answer));await load();setFeedback(`${correct?'¡Buen paso! Lección completada.':'Puedes intentarlo de nuevo; el avance se guarda al resolver el ejercicio.'} ${lesson.explanation}`);}catch(e){setError(answer===''?'Selecciona una respuesta antes de comprobar.':userMessage(e));}finally{setBusy(false);}}
  async function read(){if(!lesson)return;const request=++voiceRequest.current;setVoiceMessage('Buscando una voz local disponible…');try{const message=await readLesson(`${lesson.title}. ${lesson.paragraphs.join(' ')} Ejercicio: ${lesson.question}. ${lesson.options.map((o,i)=>`${i+1}: ${o}`).join('. ')}`,()=>undefined,()=>setVoiceMessage('No se pudo completar la lectura. El texto sigue disponible.'));if(request===voiceRequest.current)setVoiceMessage(message);else await stopReading();}catch{setVoiceMessage('No se pudo iniciar la lectura local. El texto sigue disponible.');}}
  return <Screen title={debtOnly?"Aprende sobre deudas":"Aprende"} demo={false} subtitle="Un poco de conocimiento, más confianza para decidir.">

@@ -3,7 +3,7 @@ import {HomeVoiceEntry} from '../../ui/HomeVoiceEntry';
 import {MoneyOverview} from '../../ui/MoneyOverview';
 import {ActionMenu} from '../../ui/ActionMenu';
 import { userMessage } from '../../core/errors';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import { AppState, ActivityIndicator, Pressable, View } from 'react-native';
 import { router, useIsFocused } from 'expo-router';
 import { refreshBills } from '../bills/runtime';
@@ -20,7 +20,7 @@ import { type Category, type EntryKind, type LedgerMovement, type Snapshot } fro
 import { Choices, ErrorNotice, Field, Sheet } from './fields';
 import { MovementForm } from './MovementForm';
 const empty: Snapshot = { movements: [], categories: [], budgets: [], schedules: [], commitments: [] };
-export default function LedgerScreen({initialSection,initialMonth}:{initialSection?:string;initialMonth?:string}) {
+export default function LedgerScreen({initialSection,initialMonth,initialMovementId,initialHistory}:{initialSection?:string;initialMonth?:string;initialMovementId?:string;initialHistory?:string}) {
     const { colors } = useTheme();
     const focused = useIsFocused();
     const [store, setStore] = useState<MoneyStore | null>(null);
@@ -33,7 +33,22 @@ export default function LedgerScreen({initialSection,initialMonth}:{initialSecti
         kind: EntryKind;
         initial?: LedgerMovement;
         history?:'expense'|'income'|'voice';
-    } | null>(null);
+    } | null>(initialHistory&&!initialMovementId?{kind:initialHistory==='income'?'income':'expense',history:initialHistory==='income'?'income':'expense'}:null);
+    const searchOpened=useRef('');
+    useEffect(()=>{
+        if(!focused||!store||!initialMovementId)return;
+        const key=initialMovementId??initialHistory??'';
+        if(!key||searchOpened.current===key)return;
+        let active=true;
+        void store.snapshot().then(raw=>{
+            if(!active)return;
+            searchOpened.current=key;
+            const movement=raw.movements.find(m=>m.id===initialMovementId&&!m.deletedAt);
+            if(movement&&(movement.kind==='income'||movement.kind==='expense'))setForm({initial:movement,kind:movement.kind,history:movement.kind});
+            else setError('La transacción ya no está disponible para editar. Busca de nuevo para revisar su estado.');
+        }).catch(()=>{if(active)setError('No pudimos abrir esta transacción. Intenta de nuevo.');});
+        return()=>{active=false;};
+    },[focused,store,initialMovementId,initialHistory]);
     const [category, setCategory] = useState<Category | null | undefined>();
     const [budget, setBudget] = useState(false);
     const [notice, setNotice] = useState('');

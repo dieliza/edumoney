@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { ActivityIndicator, AppState, Pressable, View } from 'react-native';
 import { router, useIsFocused, useLocalSearchParams } from 'expo-router';
 import { userMessage } from '../../core/errors';
@@ -15,7 +15,7 @@ import type { BillsStore } from './store';
 import type { Bill, BillPayment, BillSnapshot } from './types';
 const empty:BillSnapshot={bills:[],series:[],payments:[],categories:[],movements:[]};
 export default function BillsScreen({embedded=false}:{embedded?:boolean}={}){
- const {scope}=useLocalSearchParams<{scope?:string}>();const debtOnly=scope==='debts';
+ const {scope,billId}=useLocalSearchParams<{scope?:string;billId?:string}>();const searched=useRef('');const debtOnly=scope==='debts';
  const {colors}=useTheme();const focused=useIsFocused();
  const [store,setStore]=useState<BillsStore|null>(null);const [data,setData]=useState(empty);const [reminders,setReminders]=useState('Comprobando avisos locales…');
  const [error,setError]=useState('');const [notice,setNotice]=useState('');const [busy,setBusy]=useState(false);
@@ -25,6 +25,7 @@ export default function BillsScreen({embedded=false}:{embedded?:boolean}={}){
  const load=useCallback(async()=>{const result=await refreshBills();setStore(result.store);setData(result.data);setReminders(result.reminderMessage);},[]);
  useEffect(()=>{if(!focused)return;let active=true;const refresh=()=>{void load().catch(()=>{if(active)setError('No pudimos cargar las facturas cifradas. Vuelve a abrir esta sección.');});};refresh();const subscription=AppState.addEventListener('change',s=>{if(s==='active')refresh();});return()=>{active=false;subscription.remove();};},[focused,load]);
  async function action(task:()=>Promise<unknown>,message:string){if(busy)return;setBusy(true);setError('');try{await task();await load();if(message)setNotice(message);}catch(e){setError(userMessage(e));}finally{setBusy(false);}}
+ useEffect(()=>{if(focused&&billId&&searched.current!==billId&&data.bills.some(b=>b.id===billId)){searched.current=billId;setDetailId(billId);setReason('');setRevisions([]);}},[focused,billId,data.bills]);
  const today=localToday();const detail=data.bills.find(b=>b.id===detailId);
  const rows=data.bills.filter(b=>debtOnly?!!b.debtId:!b.debtId).filter(b=>tab==='paid'?!b.voidedAt && outstanding(b)===0:tab==='calendar'?validMonth(month)&&b.dueDate.startsWith(month):showVoided?!!b.voidedAt:!b.voidedAt&&outstanding(b)>0);
  const pendingGeneration=data.series.some(s=>s.active && s.nextDate<=(today>'9999-10-01'?'9999-12-31':shiftDays(today,90)));

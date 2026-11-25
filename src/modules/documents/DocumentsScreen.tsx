@@ -8,7 +8,7 @@ import { DateField } from '../../ui/DateField';
 import { documentMatches, validDocumentRange,isScannerDocument } from './filters';
 import { useCallback,useEffect,useRef,useState } from 'react';
 import { ActivityIndicator,AppState,Image,Pressable,View } from 'react-native';
-import {useIsFocused } from 'expo-router';
+import {useIsFocused,useLocalSearchParams } from 'expo-router';
 import { userMessage } from '../../core/errors';
 import { ActionButton,Body,Card,Screen,SectionHeading } from '../../ui/components';
 import { Field,Sheet,ErrorNotice } from '../money/fields';
@@ -24,6 +24,7 @@ import { ReviewForm,type ReviewDraft } from './ReviewForm';
 import { captureImage,loadOCRFixture } from './capture';
 const empty:DocumentsSnapshot={documents:[],movements:[],bills:[],categories:[]};
 export default function DocumentsScreen(){
+ const {documentId}=useLocalSearchParams<{documentId?:string}>();const searched=useRef('');
  const {name}=useTheme();const [showDocuments,setShowDocuments]=useState(false),[privacyOpen,setPrivacyOpen]=useState(false);const focused=useIsFocused();const [store,setStore]=useState<DocumentStore|null>(null);const [data,setData]=useState(empty);const [error,setError]=useState('');const [notice,setNotice]=useState('');const [busy,setBusy]=useState(false);const [review,setReview]=useState<ReviewDraft|null>(null);const [detailId,setDetailId]=useState<string|null>(null);const [reason,setReason]=useState('');const [preview,setPreview]=useState<{base64:string;mime:string}|null>(null);const [detailText,setDetailText]=useState('');const [search,setSearch]=useState('');const [limit,setLimit]=useState(30);const capturing=useRef(false);const captureEpoch=useRef(0);const live=useRef(true);
  const [reviewRevision,setReviewRevision]=useState(0);
  const [dateFilter,setDateFilter]=useState(false),[from,setFrom]=useState(''),[to,setTo]=useState('');
@@ -33,7 +34,9 @@ export default function DocumentsScreen(){
  const invalidateCapture=useCallback(()=>{captureEpoch.current++;},[]);
  useEffect(()=>{if(!focused){live.current=false;invalidateCapture();return;}live.current=true;const refresh=()=>void load().catch(()=>setError('No pudimos cargar los documentos cifrados. Vuelve a abrir esta sección.'));refresh();const sub=AppState.addEventListener('change',s=>{if(s==='active')refresh();else{setPreview(null);}});return()=>{live.current=false;invalidateCapture();sub.remove();};},[focused,load,invalidateCapture]);
  async function capture(source:'camera'|'library',file?:File){if(busy||capturing.current)return;capturing.current=true;const captureRequest=++captureEpoch.current;setBusy(true);setError('');try{const result=await captureImage(source,file);if(captureRequest!==captureEpoch.current)return;if(result?.image&&store){const duplicate=await store.findImageDuplicate(result.image);if(duplicate){await open(duplicate);setNotice('Este recibo ya está guardado. Abrimos su ficha sin añadir otro gasto.');return;}}if(result&&live.current){setReviewRevision(v=>v+1);setReview({source,text:result.text,image:result.image,warning:result.warning,needsAmountReview:result.needsAmountReview,structured:result.structured});}}catch(e){if(captureRequest===captureEpoch.current&&live.current)setError(userMessage(e));}finally{capturing.current=false;setBusy(false);}}
- async function open(id:string){setFinanceConfirm(false);setDetailId(id);setReason('');setPreview(null);setDetailText('');setError('');if(store){const d=await store.detail(id);setDetailText([d.document?.notes,d.document?.readingJson?readingSummary(JSON.parse(d.document.readingJson)):null,d.rawText?.text,...d.events.map(e=>`${e.recordedAt.slice(0,10)} · ${e.reason}`)].filter(Boolean).join('\n'));}}
+ const open=useCallback(async(id:string)=>{setFinanceConfirm(false);setDetailId(id);setReason('');setPreview(null);setDetailText('');setError('');if(store){const d=await store.detail(id);setDetailText([d.document?.notes,d.document?.readingJson?readingSummary(JSON.parse(d.document.readingJson)):null,d.rawText?.text,...d.events.map(e=>`${e.recordedAt.slice(0,10)} · ${e.reason}`)].filter(Boolean).join('\n'));}},[store]);
+ useEffect(()=>{if(!focused||!store||!documentId||searched.current===documentId||!data.documents.some(d=>d.id===documentId))return;searched.current=documentId;setShowDocuments(true);void open(documentId).catch(()=>setError('No pudimos abrir este documento.'));},[focused,store,documentId,data.documents,open]);
+
  const detail=data.documents.find(d=>d.id===detailId&&isScannerDocument(d));const linkedMovement=data.movements.find(m=>m.id===detail?.movementId);const rangeOK=validDocumentRange(from,to);const rows=rangeOK?data.documents.filter(d=>isScannerDocument(d)&&!d.deletedAt&&documentMatches(d,search,from,to)):[];
  return <Screen back beforeBack={invalidateCapture} title="Escaneo y documentos" demo={false}>
  <ErrorNotice message={error}/>{notice?<Card row><Body>{notice}</Body></Card>:null}

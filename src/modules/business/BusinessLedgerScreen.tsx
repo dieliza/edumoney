@@ -1,4 +1,4 @@
-import { useCallback,useEffect,useState } from 'react';
+import { useCallback,useEffect,useState,useRef } from 'react';
 import { Image } from 'react-native';
 import { useIsFocused,useLocalSearchParams } from 'expo-router';
 import { userMessage } from '../../core/errors';
@@ -26,14 +26,15 @@ function ReceiptView({document,close}:{document:StoredDocument;close():void}) {
  return <Sheet title="Comprobante comercial" close={close}><Body>{document.description}</Body><Body>{document.date??'Fecha pendiente'} · {document.amountCents===null?'Importe pendiente':formatMoney(document.amountCents)}</Body><Body>{document.notes}</Body><Body>Estado: {receiptStatus(document)}. Referencia: {document.id}.</Body>{document.supersedesId?<Body>Corrige el comprobante {document.supersedesId}; no crea otro gasto.</Body>:null}{copy?<Image source={{uri:`data:${copy.mime};base64,${copy.base64}`}} accessibilityLabel="Copia local del recibo comercial" style={{width:'100%',height:360}} resizeMode="contain"/>:<Body>{document.encryptedPath&&!document.deletedAt?'Abriendo copia local…':'No hay copia local conservada.'}</Body>}<ErrorNotice message={error}/></Sheet>;
 }
 export default function BusinessLedgerScreen() {
- const params=useLocalSearchParams<{holderId?:string}>(),focused=useIsFocused();
+ const params=useLocalSearchParams<{holderId?:string;entryId?:string}>(),focused=useIsFocused();
+ const searchOpened=useRef('');
  const [holderId,setHolder]=useState(params.holderId??''),[projectId,setProject]=useState('');
  const [data,setData]=useState(empty),[store,setStore]=useState<BusinessLedgerStore>(),[error,setError]=useState(''),[notice,setNotice]=useState('');
  const [form,setForm]=useState<{kind:'income'|'expense';initial?:BusinessEntry}|null>(null);
  const [receipt,setReceipt]=useState<LedgerMovement|null>(null),[viewReceipt,setViewReceipt]=useState<StoredDocument|null>(null);
  const [reserving,setReserving]=useState(false),[exporting,setExporting]=useState(false),[limit,setLimit]=useState(30);
  const load=useCallback(async()=>{const s=new BusinessLedgerStore(await getMoneyStore());const d=await s.snapshot();setStore(s);setData(d);},[]);
- useEffect(()=>{if(!focused)return;let active=true;void getMoneyStore().then(async ledger=>{const s=new BusinessLedgerStore(ledger),d=await s.snapshot();if(active){setStore(s);setData(d);}}).catch(e=>{if(active)setError(userMessage(e));});return()=>{active=false;};},[focused]);
+ useEffect(()=>{if(!focused)return;let active=true;void getMoneyStore().then(async ledger=>{const s=new BusinessLedgerStore(ledger),d=await s.snapshot();if(active){setStore(s);setData(d);if(params.entryId&&searchOpened.current!==params.entryId){searchOpened.current=params.entryId;const entry=d.entries.find(e=>e.id===params.entryId&&!e.deletedAt);if(entry){setHolder(entry.holderId);setProject('');setForm({kind:entry.kind,initial:entry});}else setError('La transacción comercial ya no está disponible.');}}}).catch(e=>{if(active)setError(userMessage(e));});return()=>{active=false;};},[focused,params.entryId]);
  const holder=data.holders.find(h=>h.id===holderId),projects=data.projects.filter(p=>p.holderId===holderId);
  const entries=data.entries.filter(e=>e.holderId===holderId&&(!projectId||e.allocations.some(a=>a.projectId===projectId)));
  let totals:ReturnType<typeof businessTotals>|null=null,totalsError='';

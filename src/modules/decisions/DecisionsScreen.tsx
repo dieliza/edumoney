@@ -1,5 +1,5 @@
 import {announceSaved} from '../../ui/saveFeedback';
-import { useCallback,useEffect,useState } from 'react';
+import { useCallback,useEffect,useState,useRef } from 'react';
 import { AppState } from 'react-native';
 import { useIsFocused,useLocalSearchParams } from 'expo-router';
 import { newId } from '../../core/id';
@@ -13,9 +13,10 @@ import { kinds,simulate,type ScenarioInput,type SimulationKind } from './domain'
 import { blankDraft,draftFrom,inputScenario,type Draft } from './fields';
 import { ResultCard } from './ResultCard';
 export default function DecisionsScreen(){
- const params=useLocalSearchParams<{kind?:string}>();
+ const params=useLocalSearchParams<{kind?:string;scenarioId?:string}>();
  const focused=useIsFocused();const [store,setStore]=useState<LearningStore|null>(null);const [saved,setSaved]=useState<SavedScenario[]>([]);const [draft,setDraft]=useState<Draft>(()=>blankDraft(kinds.some(([k])=>k===params.kind)?params.kind as SimulationKind:'saving'));const [result,setResult]=useState<ScenarioInput|null>(null);const [name,setName]=useState('');const [saveId,setSaveId]=useState(newId);const [error,setError]=useState('');const [notice,setNotice]=useState('');const [busy,setBusy]=useState(false);const [a,setA]=useState('');const [b,setB]=useState('');const [comparison,setComparison]=useState<[SavedScenario,SavedScenario]|null>(null);const [deleting,setDeleting]=useState('');const [limit,setLimit]=useState(10);
- const load=useCallback(async()=>{const s=await getLearningStore();const d=await s.snapshot();setStore(s);setSaved(d.scenarios);},[]);
+ const searchOpened=useRef('');
+ const load=useCallback(async()=>{const s=await getLearningStore();const d=await s.snapshot();setStore(s);setSaved(d.scenarios);const found=d.scenarios.find(s=>s.id===params.scenarioId);if(!found||searchOpened.current===found.id)return;searchOpened.current=found.id;try{if(found.formulaVersion!==1)throw new Error('La versión de cálculo necesita revisión.');simulate(found.input);setDraft(draftFrom(found.input));setResult(found.input);setName(found.name+' copia');setSaveId(newId());setNotice('Copia cargada; el original se conserva.');}catch(e){setError(userMessage(e));}},[params.scenarioId]);
  useEffect(()=>{if(!focused)return;const refresh=()=>{void load().catch(()=>setError('No pudimos cargar los escenarios cifrados. Vuelve a abrir esta sección.'));};refresh();const sub=AppState.addEventListener('change',s=>{if(s==='active')refresh();});return()=>sub.remove();},[focused,load]);
  const debtContext=['loan','vehicle','home'].includes(params.kind??'');const displayedKinds=kinds.filter(([k])=>debtContext?['loan','vehicle','home'].includes(k):!['loan','vehicle','home'].includes(k));const displayedSaved=saved.filter(s=>displayedKinds.some(([k])=>s.kind===k));
  const loan=['vehicle','home','loan'].includes(draft.kind),saving=draft.kind==='saving',emergency=draft.kind==='emergency';

@@ -1,3 +1,4 @@
+import {SectionMeaning} from './MeaningHelp';
 import {installButtonFinish} from './buttonFinish';
 import {beginSaveAction,getSaveNotice,serverSaveNotice,subscribeSaveNotice} from './saveFeedback';
 import {ChartSurface} from './ChartSurface';
@@ -99,6 +100,7 @@ export function Screen({ children, title, subtitle, welcome = false, demo = true
           {!welcome && demo ? <View style={{ backgroundColor: colors.warning, borderRadius: 12, paddingVertical: 8, paddingHorizontal: 12 }}><Text style={{ color: colors.warningText, fontSize: 12, fontWeight: '600', textAlign: 'center' }}>DEMOSTRACIÓN · DATOS FICTICIOS</Text></View> : null}
           {subtitle ? <Text style={{ color: name === 'dark' ? fixed.subtitleDark : colors.muted, fontSize: 16, lineHeight: 24 }}>{subtitle}</Text> : null}
           {notice ? <View accessibilityLiveRegion="polite" style={{ backgroundColor: colors.warning, padding: 14, borderRadius: 12 }}><Text style={{ color: colors.warningText, fontSize: 15 }}>{notice}</Text></View> : null}
+          <SectionMeaning title={title}/>
           {children}
         </View>
       </ScrollView></KeyboardAvoidingView>
