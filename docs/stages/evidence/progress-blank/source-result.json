@@ -6,5 +6,12 @@
   "package_checks": 1,
   "artifact_checks": 3,
   "reproduction_checks": 1,
-  "scope": "production candidate; explicit user instruction to publish"
+  "scope": "production candidate; explicit user instruction to publish",
+  "status": "succeeded",
+  "version_number": 113,
+  "version_id": "appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_11e0ed750a348191a8878be5c81525bc",
+  "deployment_id": "appgdep_6b07334842588191967139dd8b00327f",
+  "url": "https://edumoney-web.diegoluissantospabon.chatgpt.site",
+  "live_http_verified": true,
+  "test_executions_conservative": 6
 }

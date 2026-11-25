@@ -11,3 +11,5 @@ Prevención: el generador ahora verifica que cada importación nativa usada por 
 Pruebas dirigidas: 1 reproducción del fallo, 1 comprobación de cambio único y 3 recorridos del ciclo de vida corregido. Las cinco pasan. Incluyen carga sin metas, avance real de 25% a 60%, refresco y limpieza, y mensaje de error de almacenamiento. TypeScript y ESLint sin errores; permanece la advertencia anterior de req sin usar. Compilación aprobada. No se atribuye a estas comprobaciones una navegación visual en Safari o dispositivo real.
 
 Commit candidato: 7ad505746ab5158a4e51ba96da4cf79411c17c43. Publicación de la corrección en curso; autorización de publicar sin esperar confirmación se conserva de la sesión.
+
+Corrección publicada: versión **113**, estado **succeeded**, URL https://edumoney-web.diegoluissantospabon.chatgpt.site . Despliegue `appgdep_6b07334842588191967139dd8b00327f`. HTML, service worker canónico y bundle común verificados por HTTP anónimo: 200 y revisión `progress-mount-24eeb29cab82`. Total dirigido: **6 de 100** casos conservadores incluyendo comprobación HTTP.
