@@ -13,6 +13,7 @@ const fundMeanings:Record<string,string>={
  'ahorro proyectado y realizado':'Proyectado es lo que calcula el simulador con tus supuestos. Realizado es el dinero que confirmaste como apartado. Convertir la simulación crea un plan con cero ahorro realizado; las aportaciones se registran cuando las confirmas.',
  'aportacion periodica planificada (usd)':'Es la cantidad que planeas apartar cada vez. No se cobra ni se reserva automáticamente. Cuando la realices, confirma una transferencia para actualizar tu ahorro.',
  'frecuencia de aportacion':'Indica cada cuánto planeas aportar: semanal o mensual. Es una planificación; no programa cobros ni registra aportaciones automáticamente.',
+ 'fecha final para alcanzar la meta':'Es el día en que quieres haber reunido la cantidad objetivo. Elige la fecha de culminación, no la de comienzo. La meta avanza con las aportaciones confirmadas que le asignes.',
  'fecha objetivo (opcional)':'Es la fecha en que te gustaría reunir la cantidad objetivo. No es un vencimiento de pago ni mueve dinero. Puedes dejarla vacía si todavía no la has decidido.',
  'donde guardas el dinero':'Indica dónde conservas el dinero: banco, cooperativa, efectivo en casa, cuenta digital u otra ubicación. Puedes añadir o editar su nombre. Elegirla no conecta una cuenta bancaria ni duplica tu dinero.',
  'tipo de ubicacion':'Elige si guardas el dinero en un banco, cooperativa, efectivo en casa, cuenta digital u otro lugar. Después escribe el nombre que te ayude a identificarlo.',
@@ -66,7 +67,7 @@ export function sectionMeaning(path:string,title:string):string|undefined{
  if(path.includes('funds'))return 'Aquí consultas las transferencias de esta sección. Utiliza Transferir fondos para añadir o retirar dinero y Editar historiales para corregir o eliminar una transferencia. No se convierte en un ingreso o gasto ni se mueve dinero en tu banco.';
  if(path.includes('goals'))return 'Crea una meta, registra tu ahorro y revisa el presupuesto mensual. Las metas no apartan dinero ni hacen transferencias automáticamente.';
  if(path.includes('learn')||path.includes('debt-lessons'))return 'Lee la explicación, contesta la pregunta y comprueba lo aprendido. Después del premio puedes continuar con la próxima lección.';
- if(path.includes('progress'))return 'Aquí ves lo que has aprendido y las revisiones de tu plan. Completar una revisión no registra pagos ni transacciones.';
+ if(path.includes('progress'))return 'Aquí ves lo que has aprendido, las revisiones de tu plan y el avance del dinero reunido para cada meta. Completar una revisión no registra pagos ni transacciones.';
  if(path.includes('debts'))return 'Registra lo que debes, consulta vencimientos y compara formas de pagar. Los cobros programados se confirman cuando recibes el dinero.';
  if(path.includes('bills'))return 'Añade tus facturas y sus fechas de vencimiento. Registrar una factura no confirma que ya la pagaste.';
  if(path.includes('dictations'))return 'Los dictados que necesitan corrección permanecen pendientes. Ábrelos, completa lo que falta y guarda para registrar la transacción.';

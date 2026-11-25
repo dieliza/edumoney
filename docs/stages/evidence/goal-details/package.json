@@ -1,0 +1,16 @@
+{
+  "build": "goal-details-68782b16c5cb",
+  "modules": [
+    20013,
+    21012,
+    21019,
+    21025,
+    21027,
+    805,
+    810,
+    856
+  ],
+  "protectedModules": 1409,
+  "assets": 36,
+  "tests": 1
+}

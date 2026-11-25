@@ -1,3 +1,5 @@
+import {goalPercent} from '../goals/domain';
+import {onDataCommitted} from '../../storage/changeEvents';
 import { EducationPanel } from '../education/EducationPanel';
 import { useCallback,useEffect,useMemo,useState } from 'react';
 import { ActivityIndicator,AppState } from 'react-native';
@@ -17,7 +19,7 @@ export default function ProgressScreen(){
  const {colors}=useTheme();
  const focused=useIsFocused();const [store,setStore]=useState<ProgressStore|null>(null);const [data,setData]=useState(empty);const [month,setMonth]=useState(()=>localToday().slice(0,7));const [error,setError]=useState('');const [busy,setBusy]=useState(false);const today=localToday();
  const load=useCallback(async()=>{const s=await getProgressStore();const d=await s.snapshot();setStore(s);setData(d);},[]);
- useEffect(()=>{if(!focused)return;const refresh=()=>{void load().catch(()=>setError('No pudimos cargar el progreso cifrado. Vuelve a abrir la pestaña.'));};refresh();const sub=AppState.addEventListener('change',s=>{if(s==='active')refresh();});return()=>sub.remove();},[focused,load]);
+ useEffect(()=>{if(!focused)return;const refresh=()=>{void load().catch(()=>setError('No pudimos cargar el progreso cifrado. Vuelve a abrir la pestaña.'));};refresh();const stop=onDataCommitted(refresh),sub=AppState.addEventListener('change',s=>{if(s==='active')refresh();});return()=>{stop();sub.remove();};},[focused,load]);
  async function action(task:()=>Promise<unknown>){if(busy)return;setBusy(true);setError('');try{await task();await load();}catch(e){setError(userMessage(e));}finally{setBusy(false);}}
  const result=useMemo(()=>{try{return {summary:progressSummary(data,month,today),error:''};}catch(e){return {summary:null,error:userMessage(e)};}},[data,month,today]);const s=result.summary;const plan=data.plans[0];const done=plan?.actions.filter(a=>a.completedAt).length??0;const percent=Math.floor(done/progressSteps.length*100);
  return <Screen title="Mi progreso" demo={false} subtitle="Los pequeños hábitos hacen grandes cambios.">
@@ -28,7 +30,7 @@ export default function ProgressScreen(){
  <Card row><SectionHeading title="Gastos frente al presupuesto" onSurface/><Body>Gastos registrados: {formatMoney(s.expenses)}</Body>{s.budget===null?<Body>No hay presupuesto registrado para este mes.</Body>:<><Body>Presupuesto por categorías: {formatMoney(s.budget)} · Gastado en ellas: {formatMoney(s.spent)}</Body><Body>{s.spent<=s.budget?`Margen en categorías presupuestadas: ${formatMoney(s.budget-s.spent)}.`:`Diferencia sobre categorías presupuestadas: ${formatMoney(s.spent-s.budget)}. Puedes revisar y ajustar tu plan.`}</Body></>}<Body>Gastos sin presupuesto de categoría: {formatMoney(s.uncovered)}</Body><Body muted>Incluye compras a crédito; sus pagos posteriores no se cuentan como gastos nuevos. Un margen no confirma ahorro ni saldo bancario.</Body></Card>
  <Card row><SectionHeading title="Facturas atendidas" onSurface/><Body>{s.billsPaid} de {s.billsDue} facturas con vencimiento del mes hasta hoy están completamente atendidas.</Body><Body muted>Los pagos parciales siguen pendientes. Las facturas futuras y anuladas no se cuentan aquí.</Body></Card>
  <Card row><SectionHeading title="Deudas reducidas por pagos" onSurface/><Body>{formatMoney(s.reduction)} en pagos vigentes que indicaste que reducen el saldo durante el mes.</Body><Body muted>No incluye conciliaciones ni pagos ya reflejados en un estado. No equivale a principal amortizado cuando falta el desglose.</Body></Card>
- <Card row><SectionHeading title="Metas alcanzadas" onSurface/><Body>{s.goalsCompleted} de {s.goalsTotal} metas registradas alcanzan actualmente su objetivo, incluidas las archivadas.</Body><Body muted>Se recalcula si corriges aportaciones o cambias el objetivo; conserva tu historial.</Body></Card>
+ <Card row><SectionHeading title="Metas alcanzadas" onSurface/><Body>{s.goalsCompleted} de {s.goalsTotal} metas registradas alcanzan actualmente su objetivo, incluidas las archivadas.</Body><Body muted>Se recalcula si corriges aportaciones o cambias el objetivo; conserva tu historial.</Body>{data.goals.map(g=>{const percentage=goalPercent(g.savedCents,g.targetCents);return <Card key={g.id} row><Body style={{fontWeight:'700'}}>{g.name}{g.archived?' · Archivada':''}</Body><Body>{formatMoney(g.savedCents)} de {formatMoney(g.targetCents)} · {percentage}%</Body><ProgressBar value={Math.min(100,percentage)} label={`Progreso de ${g.name}: ${percentage}%`}/><Body>Fecha final: {g.desiredDate??'Pendiente de definir'}</Body></Card>;})}</Card>
  </>:null}
  <EducationPanel achievementsOnly/>
  <SectionHeading title="Mi plan de 90 días"/>

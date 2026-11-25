@@ -1,0 +1,10 @@
+PASS 1: module identities, unique definitions and public prizes/native controls preserved
+PASS 2: /funds route registers and exports its real screen
+PASS 3: packaged migration, stores and encrypted-backup schema load
+PASS 4: packaged transfer, duplicate retry and reversal preserve total with no extra income/expense
+PASS 5: actual packaged Home/Goals/Funds first render initializes safely
+PASS 6: delete-scan edit path and new profile retain account/notification controls
+PASS 7: localized first-name greeting, five fund links, themes, original symbols and current contextual help
+PASS 8: current HTML asset graph, current cache revision, consistent aliases and separate trial identity
+PASS 9: packaged reversed-record correction preserves balances and actual income history deletion works
+PASS 10: packaged final-date form, real 25% goal progress, profile success label and current available-balance option
