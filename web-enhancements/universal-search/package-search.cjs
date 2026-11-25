@@ -35,7 +35,7 @@ function patch(raw,url){const sf=ts.createSourceFile(url,raw,99,true),edits=[];
  const node=call.arguments[0],base=node.getStart(sf),original=node.getText(sf),req=node.parameters[1].name.getText(sf),exp=node.parameters[5].name.getText(sf);let next=original;const changes=[];
  const insert=(at,text)=>changes.push({start:at-base,end:at-base,text});
  const bodyOf=name=>{const fn=all(node,n=>ts.isFunctionDeclaration(n)&&n.name?.getText(sf)===name)[0];assert(fn,'Missing screen '+id+':'+name);return fn;};
- const hook=(name,code)=>{const fn=bodyOf(name),declaration=fn.body.statements.find(n=>ts.isVariableStatement(n));assert(declaration);insert(declaration.end,`;${req}(20015).useSearchLanding${code};`);};
+ const hook=(name,code)=>{const fn=bodyOf(name),declaration=fn.body.statements.find(n=>ts.isVariableStatement(n)&&all(n,c=>ts.isCallExpression(c)&&all(c.expression,p=>ts.isPropertyAccessExpression(p)&&p.name.text==='useState').length).length);assert(declaration,'Screen state declaration missing '+id);insert(declaration.end,`;${req}(20015).useSearchLanding${code};`);};
  if([797,831,853,892].includes(id)){const imports=wrapperImports(node,sf);if(id===797)imports['../../ui/MeaningHelp']=20014;if(id===853)imports['./MeaningHelp']=20014;next=factory(compile({797:'src/modules/money/fields.tsx',831:'src/modules/money/MovementForm.tsx',853:'src/ui/DateField.web.tsx',892:'src/modules/business/BusinessLedgerScreen.tsx'}[id]),imports);}
  if(id===1108)next=factory(compile('src/ui/HeaderActions.tsx'),{'../modules/search/UniversalSearch':20012,'./ThemePicker':1109,'./NotificationBell':1110,'./SideMenu':1122});
  if(id===819)next=factory(compile('src/modules/money/MoneyScreen.tsx'),{'./LedgerScreen':820});

@@ -2,13 +2,15 @@
 
 Autorización del usuario: «publica los cambios».
 
-Aplicación: `9524ec8`. Paquete: `universal-search-08fac7954bcc`, integrado sobre la versión pública 106, sin sobrescribir el checkout con trabajo ajeno.
+Aplicación: `9524ec8`. Paquete corregido: `universal-search-a0e20e746e99`, integrado sobre la versión pública 106, sin sobrescribir el checkout con trabajo ajeno.
 
 Herramientas reproducibles: `web-enhancements/universal-search/package-search.cjs` y `check-packaged.cjs`. El empaquetador conserva las funciones financieras, premios, fuegos artificiales y métodos de pago ya publicados; mantiene los selectores web existentes. Añade enlaces a registros en los módulos de las pantallas existentes.
 
 Verificación del paquete: seis casos aprobados con las factorías reales del artefacto (SQLite, lupa/opciones/navegación, contraste y exclusión de Negocio, apertura exacta, descripción/controles y preservación de los módulos financieros/premios). Un recorrido adicional del Worker compilado comprobó portada, 107 recursos, sintaxis JS, registro canónico y alias del service worker. Se conservaron los manejadores de push y de actualización segura; no se borran datos ni se recargan formularios automáticamente.
 
-7 ejecuciones nuevas; 100/100 acumuladas conservadoramente con los bloques anteriores. No repetir más pruebas sin nueva autorización o bloque de trabajo. TypeScript aprobado. ESLint aprobado para las herramientas nuevas; el lint general solo conserva la advertencia previa de `req` sin usar en `scripts/patch-home-controls-site.cjs`.
+En este bloque nuevo de publicación autorizado por el usuario se ejecutaron 23 casos conservadoramente, incluidas repeticiones y dos fallos del montaje del nuevo caso de Goals. Sigue dentro del máximo de 100 por bloque. No se relanzó la suite completa. TypeScript aprobado. ESLint aprobado para las herramientas nuevas; el lint general solo conserva la advertencia previa de `req` sin usar en `scripts/patch-home-controls-site.cjs`.
+
+La primera publicación (107) se retiró al detectar que el enlace de búsqueda se insertaba antes de inicializar el estado de Mis metas. Se restableció la versión 106 mediante `appgdep_6b06f6d15f508191baea0ea040530b54` (succeeded). El empaquetador ahora inserta la integración después de declarar el estado; se añadió un séptimo caso que ejecuta la función real de la pantalla Goals del artefacto, junto con su gancho de presupuesto previo. Se repitieron las verificaciones del paquete y de los 107 recursos tras la corrección. No se modificó la lógica financiera ni ningún registro.
 
 No hubo revisión visual en un teléfono físico: no está disponible el controlador de navegador de Sites. Se mantuvo la adaptación de teclado/viewport ya existente. No se instaló ni usó un navegador alternativo.
 
