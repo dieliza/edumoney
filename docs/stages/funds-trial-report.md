@@ -56,3 +56,11 @@ Proyecto privado de prueba: `appgprj_6b070495eb5481918c579fa02cb7441a`, independ
 Pendiente validación visual/interactiva en Safari iPhone, Android, iPad y PWA real: el entorno no ofrece el controlador de navegador requerido, por lo que no se improvisó otro ni se afirmaron esas pruebas. También queda pendiente una sincronización real entre dispositivos en este origen de prueba; se verificó el formato persistido/restaurable con SQLite y respaldo.
 
 No se actualiza el sitio público hasta que el usuario valide esta versión y apruebe producción. La publicación privada se registrará abajo al confirmar su estado.
+
+## Publicación privada confirmada
+
+Estado: succeeded. Enlace: https://edumoney-fondos-prueba-20261125.diegoluissantospabon.chatgpt.site
+
+Commit de la aplicación: `ea990b4c9e0494720e6cc71443aab867b8d1c488`. Commit web de prueba: `833f5f391e8b9449ef2500008e390559c7af9ac2`. Despliegue: `appgdep_6b07064645c0819196f7d5bad3603728`. Compilación local aprobada; publicación con compilación remota por falta de espacio local accesible para el archivo de despliegue.
+
+TypeScript y ESLint finales aprobados; solo permanece la advertencia anterior de `req` sin usar en `scripts/patch-home-controls-site.cjs`. El sitio público no se modificó.

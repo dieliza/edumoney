@@ -1,0 +1,14 @@
+{
+  "project_id": "appgprj_6b070495eb5481918c579fa02cb7441a",
+  "commit_sha": "833f5f391e8b9449ef2500008e390559c7af9ac2",
+  "app_commit": "ea990b4c9e0494720e6cc71443aab867b8d1c488",
+  "public_site_unchanged": true,
+  "deployment_id": "appgdep_6b07064645c0819196f7d5bad3603728",
+  "version_id": "appgprj_6b070495eb5481918c579fa02cb7441a~appgver_488fc33e2bec8191a2eafa5eb0ba2bb9",
+  "status": "succeeded",
+  "url": "https://edumoney-fondos-prueba-20261125.diegoluissantospabon.chatgpt.site",
+  "publication_mode": "owner-private trial; production EduMoney unchanged",
+  "local_build": "passed",
+  "archive": "remote build fallback: insufficient accessible local disk for archive",
+  "test_budget_conservative": 97
+}
