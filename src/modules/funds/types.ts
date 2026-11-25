@@ -1,7 +1,7 @@
 import type {AccountScope} from '../money/accountScope';
 import type {LedgerMovement} from '../money/types';
 export type FundKind='savings'|'emergency'|'budget';
-export const fundLabels={savings:'Ahorros',emergency:'Fondo de emergencia',budget:'Presupuestos reservados'} as const;
+export const fundLabels={savings:'Ahorros',emergency:'Fondo de emergencia',budget:'Presupuesto mensual'} as const;
 export const locationKinds=[['bank','Banco'],['cooperative','Cooperativa'],['cash','Efectivo en casa'],['digital','Cuenta digital'],['other','Otra ubicación']] as const;
 export type LocationKind=typeof locationKinds[number][0];
 export type Cadence='weekly'|'biweekly'|'monthly';

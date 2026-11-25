@@ -2,11 +2,13 @@ import type {SqlDb} from '../money/store';
 import {movementSelect,readMovement} from '../money/store';
 import type {LedgerMovement} from '../money/types';
 import {scopedMovements} from '../money/scopedMovements';
-import type {Fund,FundData,FundTransfer,MoneyLocation} from './types';
+import {fundLabels,type Fund,type FundData,type FundTransfer,type MoneyLocation,type FundKind} from './types';
+import type {AccountScope} from '../money/accountScope';
 export const fundSelect=`SELECT id,scope,kind,name,goal_id AS goalId,target_cents AS targetCents,contribution_cents AS contributionCents,cadence,target_date AS targetDate,location_id AS locationId,budget_month AS budgetMonth,category_id AS categoryId,archived,version,created_at AS createdAt FROM money_funds`;
 export const transferSelect=`SELECT sequence,id,scope,from_id AS fromId,to_id AS toId,amount_cents AS amountCents,date,description,version,created_at AS createdAt,reversed_at AS reversedAt,reversal_reason AS reversalReason FROM fund_transfers`;
 export const goalFundId=(id:string)=>'goal:'+id;
 export const unassignedFundId='legacy-unassigned-savings';
+export const defaultFundId=(scope:AccountScope,kind:FundKind)=>'fund:'+scope+':'+kind;
 type GoalRow={id:string;name:string;kind:string;targetCents:number;openingCents:number;desiredDate:string|null;cadence:'weekly'|'monthly';archived:number;version:number};
 export async function readFundData(db:SqlDb):Promise<FundData>{
  const originals=(await db.getAllAsync<LedgerMovement>(movementSelect+' ORDER BY date,id')).map(readMovement);
@@ -30,5 +32,7 @@ export async function readFundData(db:SqlDb):Promise<FundData>{
   legacy.push({movementId:m.id,fundId:fund?.id??unassignedFundId,amountCents:m.amountCents,date:m.date});
  }
  if(legacy.some(p=>p.fundId===unassignedFundId)&&!funds.some(f=>f.id===unassignedFundId))funds.push({id:unassignedFundId,scope:'personal',kind:'savings',name:'Ahorros sin meta',goalId:null,targetCents:0,contributionCents:0,cadence:'monthly',targetDate:null,locationId:null,budgetMonth:null,categoryId:null,archived:false,version:0,createdAt:'',openingCents:0,legacyCents:0,balanceCents:0});
+ // Choices remain virtual until a confirmed transfer materializes its endpoints atomically.
+ for(const scope of ['personal','business'] as const)for(const kind of ['savings','emergency','budget'] as const){const id=defaultFundId(scope,kind);if(!funds.some(f=>f.id===id))funds.push({id,scope,kind,name:fundLabels[kind],goalId:null,targetCents:0,contributionCents:0,cadence:'monthly',targetDate:null,locationId:null,budgetMonth:null,categoryId:null,archived:false,version:0,createdAt:'',openingCents:0,legacyCents:0,balanceCents:0});}
  return {funds,movements,legacy,transfers:await db.getAllAsync<FundTransfer>(transferSelect+' ORDER BY date,sequence'),locations:await db.getAllAsync<MoneyLocation>('SELECT id,name,kind,version FROM money_locations ORDER BY name'),events:await db.getAllAsync('SELECT entity_id AS entityId,action,before_json AS beforeJson,reason,recorded_at AS recordedAt FROM fund_events ORDER BY id DESC')};
 }

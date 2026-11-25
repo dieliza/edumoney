@@ -1,0 +1,18 @@
+{
+  "build": "funds-transfer-only-d4e27f8ba308",
+  "modules": [
+    20013,
+    21007,
+    21011,
+    21014,
+    21024,
+    805,
+    810,
+    931,
+    21027,
+    21028
+  ],
+  "protectedModules": 1405,
+  "assets": 36,
+  "tests": 1
+}

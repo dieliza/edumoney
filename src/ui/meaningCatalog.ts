@@ -1,11 +1,12 @@
 const norm=(s:string)=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 export function businessHelpExcluded(path:string){return /\/(business(?:-|\/|$)|tax(?:\/|$)|planilla(?:\/|$))/.test(path);}
 const fundMeanings:Record<string,string>={
- 'resumen de tu dinero':'Balance disponible es lo que queda sin reservar. Total de fondos suma ese balance, tus ahorros, el fondo de emergencia y los presupuestos reservados. Son cantidades registradas en EduMoney, no balances bancarios confirmados. Toca cada recuadro para consultar o administrar su dinero.',
+ 'resumen de tu dinero':'Balance disponible es lo que queda sin reservar. Total de fondos suma ese balance, tus ahorros, el fondo de emergencia y los presupuestos reservados. Son cantidades registradas en EduMoney, no balances bancarios confirmados. Toca cada recuadro para consultar y editar su historial. Para añadir o retirar dinero utiliza Transferir fondos.',
  'balance disponible':'Es el dinero registrado que queda sin apartar en fondos. Reservar dinero lo reduce; retirarlo de un fondo lo aumenta. Puede ser negativo si tus pagos superan lo disponible. No es un balance bancario confirmado.',
  'total de fondos':'Suma el balance disponible, los ahorros, el fondo de emergencia y los presupuestos reservados de la cuenta elegida. Transferir entre ellos cambia el reparto, pero no este total.',
  'ahorros':'Es dinero que ya confirmaste como apartado para tus metas. Un objetivo o una simulación no añade dinero a este recuadro. Puedes registrar aportaciones y retiradas.',
  'fondo de emergencia':'Es dinero que confirmaste como reservado para imprevistos. El simulador ayuda a calcular una meta; para financiarla debes confirmar una transferencia con dinero disponible.',
+ 'presupuesto mensual':'Es el dinero que ya reservaste para los gastos del mes. Solo cambia al confirmar una transferencia entre tus fondos. Un presupuesto planificado es una referencia y no añade dinero.',
  'presupuestos reservados':'Es dinero que ya apartaste para gastos previstos. Un presupuesto planificado es solo un límite: no reserva dinero. Reservarlo no registra un gasto; el gasto se registra cuando lo realizas.',
  'transferir fondos':'Cambia cómo distribuyes tu dinero entre disponible, ahorros, emergencia y presupuestos de la misma cuenta. No es un ingreso ni un gasto y no mueve dinero en tu banco. Confírmalo solo cuando hayas realizado esa distribución.',
  'historial de transferencias':'Aquí consultas las distribuciones que confirmaste. Corregir modifica sus datos; revertir anula su efecto en EduMoney y conserva el historial. Ninguna opción cancela operaciones bancarias. Una reserva ya utilizada puede requerir corregir primero las transferencias posteriores.',
@@ -62,7 +63,7 @@ export function fieldMeaning(label:string,path=''):string|undefined{
 export function sectionMeaning(path:string,title:string):string|undefined{
  if(businessHelpExcluded(path))return undefined;
  if(path.includes('decisions'))return 'Aquí puedes comparar supuestos antes de decidir. Completa los datos que conozcas y abre «¿Qué significa?» junto a un campo si necesitas ayuda. Simular no solicita crédito ni registra pagos.';
- if(path.includes('funds'))return 'Aquí creas y administras ahorros, emergencia y presupuestos de la cuenta elegida. Un plan indica lo que deseas reunir; una transferencia confirmada registra lo que realmente apartaste. Puedes consultar, corregir y revertir esas transferencias sin convertirlas en ingresos o gastos ni mover dinero en tu banco.';
+ if(path.includes('funds'))return 'Aquí consultas las transferencias de esta sección. Utiliza Transferir fondos para añadir o retirar dinero y Editar historiales para corregir o eliminar una transferencia. No se convierte en un ingreso o gasto ni se mueve dinero en tu banco.';
  if(path.includes('goals'))return 'Crea una meta, registra tu ahorro y revisa el presupuesto mensual. Las metas no apartan dinero ni hacen transferencias automáticamente.';
  if(path.includes('learn')||path.includes('debt-lessons'))return 'Lee la explicación, contesta la pregunta y comprueba lo aprendido. Después del premio puedes continuar con la próxima lección.';
  if(path.includes('progress'))return 'Aquí ves lo que has aprendido y las revisiones de tu plan. Completar una revisión no registra pagos ni transacciones.';

@@ -1,0 +1,11 @@
+import {expect,it} from 'vitest';
+import {transferHistory,transferEndpoint} from '../src/modules/funds/history';
+import type {Fund,FundTransfer} from '../src/modules/funds/types';
+const funds=[{id:'s',scope:'personal',kind:'savings',name:'Vacaciones'},{id:'e',scope:'personal',kind:'emergency',name:'Emergencias'},{id:'p',scope:'personal',kind:'budget',name:'Mes'},{id:'b',scope:'business',kind:'savings',name:'Comercial'}] as Fund[];
+const row=(id:string,fromId:string|null,toId:string|null,date='2026-11-25',scope:'personal'|'business'='personal'):FundTransfer=>({id,scope,fromId,toId,date,sequence:Number(id),amountCents:1000,description:'Prueba',version:1,createdAt:'',reversedAt:null,reversalReason:null});
+const rows=[row('1',null,'s'),row('2','s','e'),row('3','e','p'),row('4',null,'b','2026-11-25','business'),row('5','s',null,'2026-10-01')];
+it('cada sección ve únicamente sus entradas y salidas',()=>{expect(transferHistory(rows,funds,'personal',{kind:'savings'}).map(t=>t.id)).toEqual(['2','1','5']);expect(transferHistory(rows,funds,'personal',{kind:'emergency'}).map(t=>t.id)).toEqual(['3','2']);expect(transferHistory(rows,funds,'personal',{kind:'budget'}).map(t=>t.id)).toEqual(['3']);});
+it('Transacciones reúne cada transferencia una sola vez por cuenta y mes',()=>{expect(transferHistory(rows,funds,'personal',{month:'2026-11'}).map(t=>t.id)).toEqual(['3','2','1']);expect(transferHistory(rows,funds,'business',{month:'2026-11'}).map(t=>t.id)).toEqual(['4']);});
+it('el historial de una meta no incluye otros fondos de la misma categoría',()=>{expect(transferHistory(rows,funds,'personal',{fundId:'e'}).map(t=>t.id)).toEqual(['3','2']);});
+it('conserva transferencias eliminadas y ordena sin modificar los registros',()=>{const deleted={...rows[0],reversedAt:'2026-11-26',reversalReason:'Corrección'};const input=[deleted,...rows.slice(1)],before=JSON.stringify(input);expect(transferHistory(input,funds,'personal').find(t=>t.id==='1')?.reversedAt).toBe('2026-11-26');expect(JSON.stringify(input)).toBe(before);});
+it('identifica origen y destino con el nombre del fondo y balance disponible',()=>{expect(transferEndpoint(null,funds)).toBe('Balance disponible');expect(transferEndpoint('s',funds)).toBe('Vacaciones');});

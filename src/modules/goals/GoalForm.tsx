@@ -10,14 +10,14 @@ import { goalKinds,type Goal,type GoalKind } from './types';
 import type { GoalStore } from './store';
 export function GoalForm({initial,store,saved,close}:{initial?:Goal;store:GoalStore;saved():Promise<unknown>;close():void}){
  const [id]=useState(()=>initial?.id??newId());const [name,setName]=useState(initial?.name??'');const [kind,setKind]=useState<GoalKind>(initial?.kind??'savings');
- const [target,setTarget]=useState(initial?inputAmount(initial.targetCents):'');const [opening,setOpening]=useState(initial?inputAmount(initial.openingCents):'');const [date,setDate]=useState(initial?.desiredDate??'');
+ const [target,setTarget]=useState(initial?inputAmount(initial.targetCents):'');const [date,setDate]=useState(initial?.desiredDate??'');
  const [cadence,setCadence]=useState<'weekly'|'monthly'>(initial?.cadence??'monthly');const [reason,setReason]=useState('');const [busy,setBusy]=useState(false);const [error,setError]=useState('');
- async function save(){if(busy)return;setBusy(true);setError('');try{const g={id,name,kind,targetCents:parseAmount(target),openingCents:parseAmount(opening||'0'),desiredDate:date.trim()||null,cadence};if(initial)await store.edit(g,initial.version,reason,initial.archived);else await store.create(g);announceSaved();await saved();close();}catch(e){setError(userMessage(e));}finally{setBusy(false);}}
+ async function save(){if(busy)return;setBusy(true);setError('');try{const g={id,name,kind:initial?.kind??kind,targetCents:parseAmount(target),openingCents:initial?.openingCents??0,desiredDate:date.trim()||null,cadence};if(initial)await store.edit(g,initial.version,reason,initial.archived);else await store.create(g);announceSaved();await saved();close();}catch(e){setError(userMessage(e));}finally{setBusy(false);}}
  return <Sheet title={initial?'Editar meta':'Nueva meta'} close={close} busy={busy}>
  <Field label="Nombre de la meta" testID="goal-name" value={name} onChangeText={setName}/>
- <Choices<GoalKind> label="Tipo de meta" options={goalKinds} value={kind} onChange={setKind}/>
+ {initial?<Body>Tipo de meta: {goalKinds.find(([value])=>value===initial.kind)?.[1]??initial.kind}</Body>:<Choices<GoalKind> label="Tipo de meta" options={goalKinds} value={kind} onChange={setKind}/>}
  <Field label="Cantidad objetivo" testID="goal-target" decimal value={target} onChangeText={setTarget}/>
- <Field label="Ahorro previo ya acumulado (opcional)" testID="goal-opening" decimal value={opening} onChangeText={setOpening}/><Body muted>Importe ya reservado antes de registrar aportaciones aquí. No crea ingresos ni transacciones. Al editar, cambia solo esa base previa; las aportaciones se conservan.</Body>
+ <Body muted>Define el objetivo sin añadir dinero. Para financiarlo utiliza Transferir fondos. El dinero registrado anteriormente se conserva y no se modifica desde este formulario.</Body>
  <Field label="Fecha deseada AAAA-MM-DD (opcional)" testID="goal-date" value={date} onChangeText={setDate}/>
  <Choices<'weekly'|'monthly'> label="Frecuencia de aportación sugerida" options={[[ 'monthly','Mensual'],['weekly','Semanal']]} value={cadence} onChange={setCadence}/>
  {initial?<Field testID="goal-reason" label="Motivo del cambio" value={reason} onChangeText={setReason} multiline/>:null}<ErrorNotice message={error}/>
