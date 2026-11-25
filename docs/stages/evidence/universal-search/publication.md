@@ -8,11 +8,13 @@ Herramientas reproducibles: `web-enhancements/universal-search/package-search.cj
 
 Verificación del paquete: seis casos aprobados con las factorías reales del artefacto (SQLite, lupa/opciones/navegación, contraste y exclusión de Negocio, apertura exacta, descripción/controles y preservación de los módulos financieros/premios). Un recorrido adicional del Worker compilado comprobó portada, 107 recursos, sintaxis JS, registro canónico y alias del service worker. Se conservaron los manejadores de push y de actualización segura; no se borran datos ni se recargan formularios automáticamente.
 
-En este bloque nuevo de publicación autorizado por el usuario se ejecutaron 23 casos conservadoramente, incluidas repeticiones y dos fallos del montaje del nuevo caso de Goals. Sigue dentro del máximo de 100 por bloque. No se relanzó la suite completa. TypeScript aprobado. ESLint aprobado para las herramientas nuevas; el lint general solo conserva la advertencia previa de `req` sin usar en `scripts/patch-home-controls-site.cjs`.
+En este bloque nuevo de publicación autorizado por el usuario se ejecutaron 25 casos conservadoramente, incluidas repeticiones y dos fallos del montaje del nuevo caso de Goals. Sigue dentro del máximo de 100 por bloque. No se relanzó la suite completa. TypeScript aprobado. ESLint aprobado para las herramientas nuevas; el lint general solo conserva la advertencia previa de `req` sin usar en `scripts/patch-home-controls-site.cjs`.
 
 La primera publicación (107) se retiró al detectar que el enlace de búsqueda se insertaba antes de inicializar el estado de Mis metas. Se restableció la versión 106 mediante `appgdep_6b06f6d15f508191baea0ea040530b54` (succeeded). El empaquetador ahora inserta la integración después de declarar el estado; se añadió un séptimo caso que ejecuta la función real de la pantalla Goals del artefacto, junto con su gancho de presupuesto previo. Se repitieron las verificaciones del paquete y de los 107 recursos tras la corrección. No se modificó la lógica financiera ni ningún registro.
 
 No hubo revisión visual en un teléfono físico: no está disponible el controlador de navegador de Sites. Se mantuvo la adaptación de teclado/viewport ya existente. No se instaló ni usó un navegador alternativo.
+
+También se conservaron las 34 rutas nuevas de recursos de la publicación intermedia, sin cambiar los scripts actuales, para que los clientes abiertos puedan actualizarse sin errores de recursos ausentes.
 
 El código de recursos se distribuye en tres módulos CONTENT para respetar el límite de 32 MiB por archivo. La audiencia del sitio continúa pública.
 
