@@ -1,0 +1,28 @@
+[data-edu-prize-image] {display:block;text-align:center;font-size:64px;line-height:1.25;}
+[data-edu-prize-title] {font-size:24px;font-weight:800;line-height:1.3;text-align:center;}
+[data-edu-fireworks][data-edu-fireworks] {height:150px;position:relative;overflow:hidden;pointer-events:none;}
+[data-edu-fireworks] [data-edu-burst] {position:absolute;top:55%;left:50%;width:1px;height:1px;}
+[data-edu-fireworks] [data-edu-burst]:first-child {left:22%;top:62%;--delay:0s;}
+[data-edu-fireworks] [data-edu-burst]:nth-child(2) {left:50%;top:32%;--delay:.4s;}
+[data-edu-fireworks] [data-edu-burst]:nth-child(3) {left:78%;top:60%;--delay:.8s;}
+[data-edu-fireworks] [data-edu-spark] {position:absolute;width:6px;height:6px;border-radius:50%;background:#f3b000;opacity:0;}
+[data-edu-fireworks] [data-edu-spark]:nth-child(3n) {background:#0bb8d8;}
+[data-edu-fireworks] [data-edu-spark]:nth-child(3n + 1) {background:#e83c8a;}
+[data-edu-fireworks] [data-edu-spark]:nth-child(1) {--angle:0deg;} [data-edu-fireworks] [data-edu-spark]:nth-child(2) {--angle:30deg;}
+[data-edu-fireworks] [data-edu-spark]:nth-child(3) {--angle:60deg;} [data-edu-fireworks] [data-edu-spark]:nth-child(4) {--angle:90deg;}
+[data-edu-fireworks] [data-edu-spark]:nth-child(5) {--angle:120deg;} [data-edu-fireworks] [data-edu-spark]:nth-child(6) {--angle:150deg;}
+[data-edu-fireworks] [data-edu-spark]:nth-child(7) {--angle:180deg;} [data-edu-fireworks] [data-edu-spark]:nth-child(8) {--angle:210deg;}
+[data-edu-fireworks] [data-edu-spark]:nth-child(9) {--angle:240deg;} [data-edu-fireworks] [data-edu-spark]:nth-child(10) {--angle:270deg;}
+[data-edu-fireworks] [data-edu-spark]:nth-child(11) {--angle:300deg;} [data-edu-fireworks] [data-edu-spark]:nth-child(12) {--angle:330deg;}
+@media (prefers-reduced-motion:no-preference) {
+ [data-edu-fireworks] [data-edu-spark] {animation:edumoney-firework 1.3s ease-out var(--delay) 2 both;}
+ [data-edu-next-lesson][data-edu-after-fireworks] {animation:edumoney-next .01s linear 3.5s both;}
+}
+@keyframes edumoney-firework {
+ 0% {opacity:0;transform:rotate(var(--angle)) translateX(0) scale(.3);}
+ 15% {opacity:1;}
+ 75% {opacity:1;}
+ 100% {opacity:0;transform:rotate(var(--angle)) translateX(64px) scale(.4);}
+}
+@keyframes edumoney-next {from {visibility:hidden;opacity:0;}to {visibility:visible;opacity:1;}}
+@media (prefers-reduced-motion:reduce) {[data-edu-fireworks][data-edu-fireworks] {display:none;}}
