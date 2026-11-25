@@ -24,3 +24,13 @@ Para retomar tras autorización: abrir la última fuente pública mediante Sites
 Se retiró el selector de celebraciones de Mi progreso y se ignora la antigua preferencia interna para mostrar celebraciones (se conserva la adaptación de accesibilidad del dispositivo). Se retiró Pausar bandeja; si aún no está activada, se mantiene Activar bandeja y solo permite pasar a enabled=true. Una vez aceptada, ese control desaparece. No se modificaron ni solicitaron permisos externos automáticamente. Se conservaron lecturas, reintentos y marcas de notificación.
 
 Verificación adicional: siete pruebas de controles/bandeja aprobadas, TypeScript y compilación Python aprobadas; el recorrido de diez premios vuelve a pasar aun con la antigua preferencia animations=false. Se verificó la sintaxis del módulo de notificaciones preparado. No se cambió la lógica financiera ni se publicó. Sigue pendiente la aprobación de publicación solicitada anteriormente.
+
+## Aprobación recibida
+
+El propietario respondió «Aprobado» el 25 de noviembre de 2026, autorizando publicar el conjunto preparado: premios con texto, fuegos artificiales, próxima lección y eliminación de los controles internos de desactivación. Se reabrió la fuente pública, que seguía en la versión 102, y se aplicó el empaquetador actualizado sin cambiar las demás rutas de la aplicación. El recorrido de los diez premios y las comprobaciones de notificaciones sobre el bundle final volvieron a pasar; la sintaxis del Worker también se verificó. No se repitieron los siete casos unitarios ya aprobados con entradas sin cambios.
+
+Debido al espacio insuficiente del filesystem compartido (<1 MB libre), no es posible entregar un tar de más de 30 MB desde esta sesión de memoria temporal. Se usará el fallback de compilación remota de Sites desde el commit exacto enviado. Los helpers de Sites siguen sin estar disponibles en el executor. No se alteró la copia local de publicación con cambios ajenos a este trabajo.
+
+Publicación autorizada enviada: commit de Sites 958cf1638c9ca8ed25d2e13923bff9326f69723c, versión 103 (appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_fa4a7a20719481919ece87efa0566f7a). Despliegue iniciado: appgdep_6b06c8b43a888191b9f06a008f7ef544. El servicio aceptó el guardado sin archivo y pasó a building mediante la compilación remota. Se conserva el acceso público existente.
+
+Estado final confirmado por Sites: **succeeded**, 2026-11-25T11:39:09.682680+00:00. Versión 103 publicada en https://edumoney-web.diegoluissantospabon.chatgpt.site. Esta confirmación sustituye el estado pendiente de aprobación registrado en las secciones históricas anteriores. No se hizo otra consulta de estado después del éxito.
