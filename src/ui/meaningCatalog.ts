@@ -1,7 +1,37 @@
 const norm=(s:string)=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 export function businessHelpExcluded(path:string){return /\/(business(?:-|\/|$)|tax(?:\/|$)|planilla(?:\/|$))/.test(path);}
-export function fieldMeaning(label:string):string|undefined{
+const fundMeanings:Record<string,string>={
+ 'resumen de tu dinero':'Balance disponible es lo que queda sin reservar. Total de fondos suma ese balance, tus ahorros, el fondo de emergencia y los presupuestos reservados. Son cantidades registradas en EduMoney, no balances bancarios confirmados. Toca cada recuadro para consultar o administrar su dinero.',
+ 'balance disponible':'Es el dinero registrado que queda sin apartar en fondos. Reservar dinero lo reduce; retirarlo de un fondo lo aumenta. Puede ser negativo si tus pagos superan lo disponible. No es un balance bancario confirmado.',
+ 'total de fondos':'Suma el balance disponible, los ahorros, el fondo de emergencia y los presupuestos reservados de la cuenta elegida. Transferir entre ellos cambia el reparto, pero no este total.',
+ 'ahorros':'Es dinero que ya confirmaste como apartado para tus metas. Un objetivo o una simulación no añade dinero a este recuadro. Puedes registrar aportaciones y retiradas.',
+ 'fondo de emergencia':'Es dinero que confirmaste como reservado para imprevistos. El simulador ayuda a calcular una meta; para financiarla debes confirmar una transferencia con dinero disponible.',
+ 'presupuestos reservados':'Es dinero que ya apartaste para gastos previstos. Un presupuesto planificado es solo un límite: no reserva dinero. Reservarlo no registra un gasto; el gasto se registra cuando lo realizas.',
+ 'transferir fondos':'Cambia cómo distribuyes tu dinero entre disponible, ahorros, emergencia y presupuestos de la misma cuenta. No es un ingreso ni un gasto y no mueve dinero en tu banco. Confírmalo solo cuando hayas realizado esa distribución.',
+ 'historial de transferencias':'Aquí consultas las distribuciones que confirmaste. Corregir modifica sus datos; revertir anula su efecto en EduMoney y conserva el historial. Ninguna opción cancela operaciones bancarias. Una reserva ya utilizada puede requerir corregir primero las transferencias posteriores.',
+ 'ahorro proyectado y realizado':'Proyectado es lo que calcula el simulador con tus supuestos. Realizado es el dinero que confirmaste como apartado. Convertir la simulación crea un plan con cero ahorro realizado; las aportaciones se registran cuando las confirmas.',
+ 'aportacion periodica planificada (usd)':'Es la cantidad que planeas apartar cada vez. No se cobra ni se reserva automáticamente. Cuando la realices, confirma una transferencia para actualizar tu ahorro.',
+ 'frecuencia de aportacion':'Indica cada cuánto planeas aportar: semanal o mensual. Es una planificación; no programa cobros ni registra aportaciones automáticamente.',
+ 'fecha objetivo (opcional)':'Es la fecha en que te gustaría reunir la cantidad objetivo. No es un vencimiento de pago ni mueve dinero. Puedes dejarla vacía si todavía no la has decidido.',
+ 'donde guardas el dinero':'Indica dónde conservas el dinero: banco, cooperativa, efectivo en casa, cuenta digital u otra ubicación. Puedes añadir o editar su nombre. Elegirla no conecta una cuenta bancaria ni duplica tu dinero.',
+ 'tipo de ubicacion':'Elige si guardas el dinero en un banco, cooperativa, efectivo en casa, cuenta digital u otro lugar. Después escribe el nombre que te ayude a identificarlo.',
+ 'institucion o nombre de ubicacion':'Escribe el nombre del banco, cooperativa, cuenta digital o lugar donde guardas el dinero. Es una referencia personal; no necesitas números de cuenta ni contraseñas.',
+ 'nombre del fondo':'Pon un nombre que te ayude a recordar para qué apartas el dinero. Crear el fondo no lo financia: después confirma una transferencia.',
+ 'nombre de la meta':'Pon un nombre al objetivo que quieres alcanzar. El nombre no añade ahorro ni registra una aportación.',
+ 'presupuesto planificado (usd)':'Es la cantidad que planeas dedicar a ese gasto. Guardarla no aparta dinero: la cantidad efectivamente reservada se registra mediante una transferencia.',
+};
+export function fieldMeaning(label:string,path=''):string|undefined{
  const s=norm(label);
+ if(fundMeanings[s])return fundMeanings[s];
+ if(path==='/funds'){
+  if(s==='origen')return 'Elige de dónde sale el dinero de esta distribución: balance disponible o un fondo con dinero suficiente en esa fecha.';
+  if(s==='destino')return 'Elige dónde quedará apartado el dinero. Debe ser diferente del origen y pertenecer a la misma cuenta personal o comercial.';
+  if(s==='cantidad (usd)')return 'Es la cantidad que vas a redistribuir, en dólares. Debe ser mayor que cero y no superar el dinero disponible en el origen.';
+  if(s==='fecha')return 'Indica cuándo realizaste la distribución. No se admiten fechas futuras; EduMoney comprueba que había dinero suficiente en esa fecha.';
+  if(s==='confirmacion')return 'Confirma solo una distribución que ya realizaste. Al guardar se actualizan tus fondos en EduMoney; no se hace una operación bancaria.';
+  if(s==='descripcion (opcional)')return 'Puedes anotar para qué redistribuiste este dinero. La nota queda en el historial de la transferencia.';
+ }
+
  if(s.includes('tasa nominal anual'))return s.includes('hipotetica')?'Es una tasa anual que eliges solo para simular el ahorro; no garantiza ganancias. Para 4 %, escribe 4.':'Es el interés anual que indica el contrato, antes de añadir otros cargos. Para 12 %, escribe 12. Confirma la tasa fija con el prestamista.';
  if(/\bapr\b/.test(s))return 'Es la tasa porcentual anual del crédito, que puede incluir ciertos costos además del interés. Cópiala del contrato o estado de cuenta; no la confundas con la tasa nominal.';
  if(s.includes('principal solicitado'))return 'Es el dinero que quieres pedir prestado, antes de sumar intereses. Escribe la cantidad del préstamo.';
@@ -32,7 +62,7 @@ export function fieldMeaning(label:string):string|undefined{
 export function sectionMeaning(path:string,title:string):string|undefined{
  if(businessHelpExcluded(path))return undefined;
  if(path.includes('decisions'))return 'Aquí puedes comparar supuestos antes de decidir. Completa los datos que conozcas y abre «¿Qué significa?» junto a un campo si necesitas ayuda. Simular no solicita crédito ni registra pagos.';
- if(path.includes('funds'))return 'Distribuye el dinero registrado entre disponible, ahorro, emergencia y presupuestos. Un plan no reserva dinero: confirma una transferencia para hacerlo. No se mueve dinero en tu banco.';
+ if(path.includes('funds'))return 'Aquí creas y administras ahorros, emergencia y presupuestos de la cuenta elegida. Un plan indica lo que deseas reunir; una transferencia confirmada registra lo que realmente apartaste. Puedes consultar, corregir y revertir esas transferencias sin convertirlas en ingresos o gastos ni mover dinero en tu banco.';
  if(path.includes('goals'))return 'Crea una meta, registra tu ahorro y revisa el presupuesto mensual. Las metas no apartan dinero ni hacen transferencias automáticamente.';
  if(path.includes('learn')||path.includes('debt-lessons'))return 'Lee la explicación, contesta la pregunta y comprueba lo aprendido. Después del premio puedes continuar con la próxima lección.';
  if(path.includes('progress'))return 'Aquí ves lo que has aprendido y las revisiones de tu plan. Completar una revisión no registra pagos ni transacciones.';
@@ -44,6 +74,6 @@ export function sectionMeaning(path:string,title:string):string|undefined{
  if(path.includes('settings'))return 'Ajusta la apariencia, la seguridad y las preferencias de tu aplicación. Cada opción indica qué cambia.';
  if(path.includes('backup'))return 'Un respaldo es una copia para recuperar tus datos. Guárdalo en un lugar seguro y conserva tu contraseña.';
  if(path.includes('sync'))return 'La sincronización permite mantener tus registros entre dispositivos autorizados. Revisa el estado antes de cerrar la aplicación.';
- if(path==='/'||path==='/money')return 'Elige Personal o Comercial para ver sus datos por separado. Registra ingresos y gastos, y abre Transacciones para consultar las gráficas.';
+ if(path==='/'||path==='/money')return 'Elige Personal o Comercial para ver sus datos por separado. '+fundMeanings['resumen de tu dinero']+' Usa Transferir fondos para registrar una distribución interna y Transacciones para consultar las gráficas.';
  return title?'Aquí puedes revisar '+title.toLocaleLowerCase('es')+' y abrir las opciones disponibles. Los campos obligatorios deben completarse antes de guardar.':undefined;
 }

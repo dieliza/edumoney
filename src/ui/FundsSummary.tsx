@@ -1,3 +1,4 @@
+import {MeaningHelp} from './MeaningHelp';
 import {Pressable,View,useWindowDimensions} from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 import {router} from 'expo-router';
@@ -11,7 +12,7 @@ export function FundsSummary({summary,scope,error='',asOf}:{summary:Summary|null
  const open=(kind:string)=>router.push({pathname:'/funds',params:{scope,kind,asOf}}),amount=(n:number|undefined)=>n===undefined?'…':formatMoney(n);
  return <LinearGradient testID="funds-summary-card" colors={['#008449','#006E4B','#034343']} start={{x:0,y:0}} end={{x:1,y:1}} style={{borderRadius:24,padding:small?14:20,borderWidth:2,borderColor:'#17E98D',gap:18}}>
  <Body style={{fontSize:small?23:27,lineHeight:32,fontWeight:'800',color:'#FFFFFF',textAlign:'center'}}>Resumen de tu dinero</Body>
- <Body style={{fontWeight:'700',fontSize:14,color:'#DEFFEC'}}>{scope==='personal'?'Personal':'Comercial'}</Body>
+ <MeaningHelp canvas inverse label="Resumen de tu dinero"/><Body style={{fontWeight:'700',fontSize:14,color:'#DEFFEC'}}>{scope==='personal'?'Personal':'Comercial'}</Body>
  <View style={{flexDirection:'row',gap:12,alignItems:'stretch'}}>
  <Pressable testID={`home-${scope==='business'?'commercial':'personal'}-balance`} accessibilityRole="button" accessibilityLabel="Administrar balance disponible" onPress={()=>open('available')} style={{flex:1,minWidth:0,minHeight:86,gap:5,justifyContent:'center'}}><Body style={{color:'#FFFFFF',fontWeight:'800',fontSize:small?15:18}}>Balance disponible</Body><Body adjustsFontSizeToFit minimumFontScale={0.6} numberOfLines={1} style={{fontWeight:'800',fontSize:small?29:38,lineHeight:46,color:'#FFFFFF'}}>{amount(summary?.available)}</Body></Pressable>
  <Pressable accessibilityRole="button" accessibilityLabel="Consultar total de fondos" onPress={()=>open('all')} style={{flex:1,minWidth:0,minHeight:86,padding:10,borderRadius:20,borderWidth:1.5,borderColor:'#1DE79C',backgroundColor:'rgba(0,45,45,.35)',alignItems:'center',justifyContent:'center',gap:6}}><Body style={{color:'#FFF16D',fontWeight:'800',fontSize:small?15:18,textAlign:'center'}}>Total de fondos</Body><Body adjustsFontSizeToFit minimumFontScale={0.6} numberOfLines={1} style={{fontWeight:'800',fontSize:small?27:34,lineHeight:40,color:'#FFF16D'}}>{amount(summary?.total)}</Body></Pressable>

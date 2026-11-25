@@ -17,6 +17,7 @@ vi.mock('expo-router',()=>({router:{push:vi.fn()}}));
 vi.mock('@expo/vector-icons/Ionicons',()=>({default:()=>null}));
 vi.mock('react-native-svg',()=>{const svg=(tag:string)=>function SvgMock({children,...props}:{children?:ReactNode}){return createElement(tag,props,children);};return{default:svg('svg'),Circle:svg('circle'),Defs:svg('defs'),Ellipse:svg('ellipse'),LinearGradient:svg('linearGradient'),Path:svg('path'),Rect:svg('rect'),Stop:svg('stop')};});
 vi.mock('../src/design/ThemeProvider',()=>({useTheme:()=>({name:h.theme,colors:{text:'#102F42',muted:'#526675',line:'#CCD7DD'}})}));
+vi.mock('../src/ui/MeaningHelp',()=>({MeaningHelp:()=>null}));
 vi.mock('../src/ui/components',()=>({Body:({children,style}:{children:ReactNode;style:object})=>createElement('span',{style},children),ActionButton:({title}:{title:string})=>createElement('button',null,title),Card:({children}:{children:ReactNode})=>createElement('section',null,children)}));
 vi.mock('../src/modules/money/fields',()=>({Field:()=>null,Choices:()=>null}));
 vi.mock('../src/modules/money/TransactionFormUI',()=>({TransactionSheet:()=>null,TransactionError:()=>null}));

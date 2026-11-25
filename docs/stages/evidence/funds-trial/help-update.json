@@ -1,0 +1,14 @@
+{
+  "build": "funds-help-3fb59bc0002f",
+  "modules": [
+    20013,
+    20014,
+    21014,
+    21018,
+    21024,
+    21025
+  ],
+  "protectedModules": 1409,
+  "assets": 36,
+  "tests": 1
+}

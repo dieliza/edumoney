@@ -64,3 +64,11 @@ Estado: succeeded. Enlace: https://edumoney-fondos-prueba-20261125.diegoluissant
 Commit de la aplicación: `ea990b4c9e0494720e6cc71443aab867b8d1c488`. Commit web de prueba: `833f5f391e8b9449ef2500008e390559c7af9ac2`. Despliegue: `appgdep_6b07064645c0819196f7d5bad3603728`. Compilación local aprobada; publicación con compilación remota por falta de espacio local accesible para el archivo de despliegue.
 
 TypeScript y ESLint finales aprobados; solo permanece la advertencia anterior de `req` sin usar en `scripts/patch-home-controls-site.cjs`. El sitio público no se modificó.
+
+## Ampliación de «¿Qué significa?»
+
+Se añadieron explicaciones del resumen, balance disponible, total de fondos, ahorros, emergencia, presupuestos reservados, transferencias, correcciones y reversiones; ahorro proyectado frente a realizado; aportación/frecuencia/fecha objetivo; nombre del fondo y ubicación del dinero. Origen, destino, cantidad, fecha y confirmación tienen ayuda específica dentro de Transferir fondos. Las ayudas ya existentes de Negocio se conservan.
+
+Hay accesos contextuales en la tarjeta verde, la ficha de cada fondo, el historial, el editor de transferencias y la invitación a convertir una simulación. La ayuda de la tarjeta utiliza texto claro en ambos temas. No se modificaron cálculos, registros, permisos ni tablas.
+
+Verificación adicional: dos casos nuevos de catálogo y apertura/cierre/contraste; una comprobación del paquete real que conserva sin cambios los otros 1,409 módulos y la actualización segura. Las tres pasaron. TypeScript y ESLint sin errores; permanece la advertencia anterior de `req`. Presupuesto acumulado conservador: **100 de 100**; 72 escenarios únicos. No se ejecutaron más pruebas ni CI.
