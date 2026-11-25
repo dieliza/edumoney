@@ -1,0 +1,12 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/account-zone.test.ts tests/expense-history-edit.test.ts -t eliminar desde editor|eliminar un ingreso|borrar desde historial|el zafacón
+
+
+ RUN  v5.1.0 /workspace/edumoney
+
+
+ Test Files  2 passed (2)
+      Tests  5 passed | 12 skipped (17)
+   Start at  12:55:51
+   Duration  723ms (tests 37%, transform 34%, import 26%, worker 2%)

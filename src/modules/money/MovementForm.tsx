@@ -12,7 +12,7 @@ import { DateField } from '../../ui/DateField';
 import { CategoryPicker } from './CategoryPicker';
 import { userMessage, UserInputError } from '../../core/errors';
 import { useEffect,useRef,useState } from 'react';
-import {Text,View} from 'react-native';
+import {Pressable,Text,View} from 'react-native';
 import { newId } from '../../core/id';
 import { parseAmount } from '../../core/money';
 import { ActionButton } from '../../ui/components';
@@ -56,6 +56,8 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
     const [historyPane,setHistoryPane]=useState<TransactionHistoryKind|null>(initialHistory??null);
     const submitting=useRef(false);
     const [busy, setBusy] = useState(false);
+    const [deleting,setDeleting]=useState(false),[deleted,setDeleted]=useState(false);
+    const removalCommitted=useRef(false);
     const [error, setError] = useState('');
     const [duplicate, setDuplicate] = useState(false);
     const [showOptions,setShowOptions]=useState(Boolean(initial&&(initial.kind==='income'||initial.useKind==='business')));
@@ -93,11 +95,22 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
             submitting.current=false;setBusy(false);
         }
     }
+    async function remove(){
+        if(!initial||documentReview||submitting.current)return;
+        submitting.current=true;setBusy(true);setDeleting(true);setError('');setDuplicate(false);
+        try{
+            await store.deleteFromHistory(initial);
+            removalCommitted.current=true;setDeleted(true);
+            try{await (historySaved??saved)();}catch{setError('La transacción se eliminó. Vuelve a abrir el historial para actualizarlo.');}
+        }catch(e){setError(userMessage(e));}
+        finally{submitting.current=removalCommitted.current;setBusy(false);setDeleting(false);}
+    }
     const moneyEntry=type==='income'||type==='expense';
     const openOptions=showOptions;
     const sectionTitle=moneyEntry?`${initial?'Editar':'Registrar'} ${type==='expense'?'gasto':'ingreso'} ${commercial?'comercial':'personal'}`:`${initial?'Editar':'Registrar'} ${kindLabels[type].toLocaleLowerCase('es')}`;
     const saveTitle=type==='expense'?'Guardar gasto':type==='income'?'Guardar ingreso':'Guardar transacción';
-    return <TransactionSheet title={initial?'Editar transacción':'Nueva transacción'} close={close} busy={busy}>
+    return <TransactionSheet title={deleted?'Transacción eliminada':initial?'Editar transacción':'Nueva transacción'} close={close} busy={busy}>
+  {deleted?<View testID="movement-delete-success" style={styles.section}><Text accessibilityRole="status" accessibilityLiveRegion="polite" style={styles.heading}>Transacción eliminada.</Text><TransactionError message={error}/><TransactionLink title="Cerrar" onPress={close}/></View>:<>
   {!initial&&(kind==='income'||kind==='expense')?<TransactionSegments<'income'|'expense'> label="Tipo de transacción" value={type as 'income'|'expense'} options={[["expense","Gasto"],["income","Ingreso"]]} disabled={busy} onChange={value=>{setHistoryPane(null);setType(value);if(value==='income'&&method==='credit')setMethod('bank');setCategory('');setCategoryName('');setDuplicate(false);setError('');}}/>:null}
   {!initial&&moneyEntry?<TransactionSegments<AccountScope> compact label="Cuenta de la transacción" value={account} options={[["personal","Personal"],["business","Comercial"]]} disabled={busy} onChange={value=>{if(value===account)return;setAccountScope(value);if(value==='business')setIncomeType('manual');setDuplicate(false);setError('');}}/>:null}
   {!initial&&historyPane&&onHistoryEdit?<><TransactionLink title="Volver al registro" onPress={()=>setHistoryPane(null)}/><View style={styles.history}><TransactionHistory key={`${historyPane}:${account}`} kind={historyPane} store={store} onEdit={onHistoryEdit} saved={historySaved??saved}/></View></>:<View style={styles.section} testID="movement-form-body">
@@ -126,8 +139,10 @@ export function MovementForm({ initial, kind, categories, store, close, saved, d
    {initial?<Text style={styles.text}>Original: {formatMoney(initial.amountCents)} · {initial.date}. La versión anterior se conserva en el historial cifrado.</Text>:null}
    <TransactionError message={error}/>
    {!busy&&duplicate?<><Text style={styles.text}>Si son dos operaciones distintas, puedes conservar ambas. Comprueba el historial antes de confirmar.</Text><TransactionLink title="Guardar como operación distinta" onPress={()=>void submit(true)}/></>:null}
-   <TransactionSaveButton title={saveTitle} busy={busy} onPress={()=>{setDuplicate(false);void submit();}}/>
+   {!deleting?<TransactionSaveButton title={saveTitle} busy={busy} onPress={()=>{setDuplicate(false);void submit();}}/>:null}
+   {initial&&!documentReview?<Pressable testID="movement-delete" accessibilityRole="button" accessibilityLabel={deleting?'Eliminando transacción':'Eliminar transacción'} accessibilityState={{disabled:busy,busy:deleting}} disabled={busy} onPress={()=>void remove()} style={{minHeight:48,padding:12,borderWidth:1,borderColor:tc.error,borderRadius:12,alignItems:'center',justifyContent:'center',opacity:busy?0.6:1}}><Text style={{color:tc.error,fontWeight:'700',fontSize:16}}>{deleting?'Eliminando…':'🗑 Eliminar transacción'}</Text></Pressable>:null}
    {!initial&&onHistoryEdit?<TransactionLink title="Editar historiales" disabled={busy} testID="movement-edit-histories" onPress={()=>setHistoryPane(type==='income'?'income':'expense')}/>:null}
   </View>}
+  </>}
  </TransactionSheet>;
 }

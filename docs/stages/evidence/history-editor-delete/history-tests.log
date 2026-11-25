@@ -1,0 +1,12 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/transaction-history-ui.test.ts -t editar muestra|Nueva transacción conserva|abrir cada historial
+
+
+ RUN  v5.1.0 /workspace/edumoney
+
+
+ Test Files  1 passed (1)
+      Tests  3 passed | 1 skipped (4)
+   Start at  12:56:36
+   Duration  494ms (import 44%, transform 43%, tests 11%, worker 2%)

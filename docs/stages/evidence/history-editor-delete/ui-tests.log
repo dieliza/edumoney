@@ -1,0 +1,12 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/entry-direction-ui.test.ts -t el editor|no ofrece eliminar|manual entry|personal income accepts|el borrado del historial|no añade eliminación
+
+
+ RUN  v5.1.0 /workspace/edumoney
+
+
+ Test Files  1 passed (1)
+      Tests  11 passed | 4 skipped (15)
+   Start at  12:57:41
+   Duration  1.01s (tests 58%, transform 28%, import 13%, worker 1%)
