@@ -1,7 +1,7 @@
 {
   "task": "Acceso único por Transferir fondos e historiales por apartado",
   "test_limit": 100,
-  "executed_conservative": 51,
+  "executed_conservative": 52,
   "tests": {
     "history_filters": 5,
     "funds_ui": 5,
@@ -13,12 +13,13 @@
     "goal_transfer_only_ui": 2,
     "package": 1,
     "artifact": 8,
-    "production_promotion_guard": 1
+    "production_promotion_guard": 1,
+    "live_public_resources": 1
   },
   "result": "Todos los casos pasan en su última ejecución; se corrigió una expectativa de texto anterior y se repitió solo ese caso",
   "user_answer_first_transfer": "Sí, crear el apartado únicamente al confirmar la primera transferencia",
   "pending_answer": null,
-  "publication": "Producción aprobada por el usuario; versión 110 en despliegue",
+  "publication": "Versión 110 publicada correctamente tras aprobación del usuario",
   "existing_goals": "Se conservan objetivos existentes; nueva meta sin dinero inicial, edición conserva capital y tipo. Interpretación comunicada antes de continuar.",
   "checks": {
     "typecheck": "passed",
