@@ -1,0 +1,15 @@
+{
+  "build": "progress-route-288175f34fde",
+  "modules": [
+    20010,
+    856
+  ],
+  "protectedModules": 1415,
+  "promoted": [
+    808,
+    809,
+    826
+  ],
+  "assets": 36,
+  "tests": 1
+}

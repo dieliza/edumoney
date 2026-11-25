@@ -1,0 +1,10 @@
+{
+  "build": "progress-route-288175f34fde",
+  "origin": "https://edumoney-web.diegoluissantospabon.chatgpt.site",
+  "public_html": 200,
+  "public_common": 200,
+  "public_progress": 200,
+  "subtree_checks": 4,
+  "browser_tested": false,
+  "passed": true
+}

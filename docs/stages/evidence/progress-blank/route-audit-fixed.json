@@ -1,0 +1,163 @@
+{
+  "cases": 1,
+  "independentChunks": 31,
+  "totalModules": 1417,
+  "problems": [],
+  "rows": [
+    {
+      "asset": "sql-wasm-inline-7f1e92f4b981c166419deea7227d458a-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 1,
+      "missing": 0
+    },
+    {
+      "asset": "_layout-a7f31c388897364ae3fb2746f068f9fd-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 1,
+      "missing": 0
+    },
+    {
+      "asset": "business-c9058dcfb3ce3ed5287344777764f0ce-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 4,
+      "missing": 0
+    },
+    {
+      "asset": "goals-217ca93e3da271d7289be4cda4a8e992-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 7,
+      "missing": 0
+    },
+    {
+      "asset": "learn-bb563060190eb7d23b2d34e2ae755891-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 2,
+      "missing": 0
+    },
+    {
+      "asset": "money-c0c10e5102942c1c7e34d2ea4147c96f-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 8,
+      "missing": 0
+    },
+    {
+      "asset": "my-debts-1a3af37c5967b799f0c8c0b64c0f742b-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 9,
+      "missing": 0
+    },
+    {
+      "asset": "progress-8d1d8c2a8cb53821a758df7dc421383d-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 6,
+      "missing": 0
+    },
+    {
+      "asset": "_layout-2e04785cc4243e9c65dbe984813bc7f8-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 10,
+      "missing": 0
+    },
+    {
+      "asset": "backup-3885fdbba04b08e2b673134336d3b85a-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 5,
+      "missing": 0
+    },
+    {
+      "asset": "bills-39936c584d0053550535804d473c5d70-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 2,
+      "missing": 0
+    },
+    {
+      "asset": "business-ledger-29cc3e1bd94f3e2af7320b204f89e0da-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 8,
+      "missing": 0
+    },
+    {
+      "asset": "business-obligations-3132fc1875deea155a8cead7ac70f632-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 3,
+      "missing": 0
+    },
+    {
+      "asset": "business-payroll-981674592f298b79d29a563f7b4f8339-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 10,
+      "missing": 0
+    },
+    {
+      "asset": "business-planning-198aace74ec44c1cb346ab328ceb19ed-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 8,
+      "missing": 0
+    },
+    {
+      "asset": "charts-00dae39e6d3beeaf0042283e56d5c489-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 4,
+      "missing": 0
+    },
+    {
+      "asset": "debt-lessons-133482e304c1175b26434adf0eaa341d-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 1,
+      "missing": 0
+    },
+    {
+      "asset": "debts-d454a083cd1e6af4e5ff7f2f849d6029-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 1,
+      "missing": 0
+    },
+    {
+      "asset": "decisions-fc2278a4ee7fe09577fad241397ae98d-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 5,
+      "missing": 0
+    },
+    {
+      "asset": "dictations-7f36c8b74c77ff6b82485520bfaa338d-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 2,
+      "missing": 0
+    },
+    {
+      "asset": "documents-d2efa75032df29c71d72b1bf574458db-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 10,
+      "missing": 0
+    },
+    {
+      "asset": "education-admin-e3e6db4f16571289c770c078e84445b9-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 2,
+      "missing": 0
+    },
+    {
+      "asset": "income-documents-b23764ee7b3ee3df3960b0c449885fe8-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 4,
+      "missing": 0
+    },
+    {
+      "asset": "index-1c857c3ebc06cebcffe129e999753fcd-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 1,
+      "missing": 0
+    },
+    {
+      "asset": "planilla-064aeb69adcb47a24d9bfe009f22e726-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 7,
+      "missing": 0
+    },
+    {
+      "asset": "receipt-reader-d62f0fddc1ccd40e35f9be97fc29ab1e-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 1,
+      "missing": 0
+    },
+    {
+      "asset": "settings-ad39b44b11fd11a00d9cb42a2d4680b4-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 6,
+      "missing": 0
+    },
+    {
+      "asset": "sync-2b8ac8aa1ad2d30abc1790249fc599e9-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 2,
+      "missing": 0
+    },
+    {
+      "asset": "sync-3f29ebf4993a13e8dd05a7b0dfc7c648-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 2,
+      "missing": 0
+    },
+    {
+      "asset": "tax-42bd02cca1c36c62f9c9ba163eb6b02d-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 8,
+      "missing": 0
+    },
+    {
+      "asset": "pdf-65353f3584a5a3034bb81f79903fd1f8-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde.js",
+      "modules": 1,
+      "missing": 0
+    }
+  ]
+}

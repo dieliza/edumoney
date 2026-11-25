@@ -14,7 +14,7 @@ export const sectionItems:SearchItem[]=[
  ['Editar historiales','/money','editar borrar ingresos gastos historial'],
  ['Mis metas','/goals','ahorro presupuesto mensual fondo emergencia'],
  ['Aprende','/learn','lecciones educación premios'],
- ['Mi progreso','/progress','trofeos logros plan 90 días'],
+ ['Mi progreso','/progress','trofeos logros avances metas'],
  ['Mis deudas','/debts','tarjetas préstamos pagos cobros programados'],
  ['Antes de decidir','/decisions','simulador tasa nominal anual préstamo vehículo vivienda ahorro'],
  ['Facturas','/bills','vencimientos calendario pagos'],

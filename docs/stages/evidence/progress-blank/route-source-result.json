@@ -1,0 +1,7 @@
+{
+  "project_id": "appgprj_6af65a2177c48191b95b917e1ca2a2f0",
+  "commit_sha": "0271a845abbfe45a9ef8aa15edf90ef20ae6dd10",
+  "base_commit": "7ad505746ab5158a4e51ba96da4cf79411c17c43",
+  "local_build": "passed",
+  "scope": "production candidate; explicit user instruction to publish"
+}
