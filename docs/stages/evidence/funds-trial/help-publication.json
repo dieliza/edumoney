@@ -1,0 +1,11 @@
+{
+  "project_id": "appgprj_6b070495eb5481918c579fa02cb7441a",
+  "commit_sha": "44677b59800b13a615959dd20233bada1666bde5",
+  "app_commit": "7d29e924f32df3aa8995b5b25778416635af9aca",
+  "public_site_unchanged": true,
+  "status": "succeeded",
+  "deployment_id": "appgdep_6b0707eb208881919dede084442ad685",
+  "version_id": "appgprj_6b070495eb5481918c579fa02cb7441a~appgver_d3c3148e900c8191b6f0709f1d23175f",
+  "url": "https://edumoney-fondos-prueba-20261125.diegoluissantospabon.chatgpt.site",
+  "test_budget_conservative": 100
+}

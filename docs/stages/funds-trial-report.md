@@ -72,3 +72,5 @@ Se añadieron explicaciones del resumen, balance disponible, total de fondos, ah
 Hay accesos contextuales en la tarjeta verde, la ficha de cada fondo, el historial, el editor de transferencias y la invitación a convertir una simulación. La ayuda de la tarjeta utiliza texto claro en ambos temas. No se modificaron cálculos, registros, permisos ni tablas.
 
 Verificación adicional: dos casos nuevos de catálogo y apertura/cierre/contraste; una comprobación del paquete real que conserva sin cambios los otros 1,409 módulos y la actualización segura. Las tres pasaron. TypeScript y ESLint sin errores; permanece la advertencia anterior de `req`. Presupuesto acumulado conservador: **100 de 100**; 72 escenarios únicos. No se ejecutaron más pruebas ni CI.
+
+Actualización de ayudas publicada correctamente en el mismo enlace privado. Commit web: `44677b59800b13a615959dd20233bada1666bde5`. Despliegue: `appgdep_6b0707eb208881919dede084442ad685`. El EduMoney público permanece sin cambios.
