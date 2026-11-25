@@ -18,4 +18,10 @@ También se conservaron las 34 rutas nuevas de recursos de la publicación inter
 
 El código de recursos se distribuye en tres módulos CONTENT para respetar el límite de 32 MiB por archivo. La audiencia del sitio continúa pública.
 
-Estado final y versión: se registrarán tras confirmar el despliegue.
+Publicación final confirmada: **108**, estado **succeeded**, 2026-11-25 15:03:09 UTC.
+
+- Fuente de alojamiento: `03a7449658b58361aa39ed3c9653cb34d2ade7e1`.
+- Versión: `appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_ddba69512e0c81919f2d66b958dc9e8c`.
+- Despliegue: `appgdep_6b06f86598288191baea44957cfb553c`.
+- URL: https://edumoney-web.diegoluissantospabon.chatgpt.site
+- Audiencia pública conservada; build remoto utilizado por falta de espacio para empaquetar el tar localmente.

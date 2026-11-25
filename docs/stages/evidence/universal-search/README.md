@@ -23,7 +23,7 @@ No se crearon tablas, APIs ni servicios. No se cambiaron cálculos, sincronizaci
 - TypeScript sin errores; ESLint sin errores. Advertencia previa ajena al alcance en `scripts/patch-home-controls-site.cjs` (`req` sin usar).
 - `git diff --check` sin errores.
 
-Pendiente: revisión visual en Safari/iPhone, Android/iPad y empaquetado de esta nueva versión web. Estas funciones nuevas aún no se han publicado. No se usó un navegador alternativo al flujo de Sites.
+Publicadas en la versión 108; ver `publication.md` para los identificadores y verificaciones del artefacto. Pendiente: revisión visual en Safari/iPhone y Android/iPad físicos. No se usó un navegador alternativo al flujo de Sites.
 
 ## Publicación anterior autorizada
 
