@@ -17,3 +17,9 @@ Por falta de espacio compartido (<1 MB), el repositorio actual se abrió en una 
 ## Bloqueo de publicación
 
 La revisión automática rechazó el comando de commit y push a origin/main. Motivo: interpreta que la aprobación anterior cubría únicamente la versión 103 y exige otra aprobación explícita para esta reparación posterior. No se eludió el rechazo. No se creó una versión pública nueva; el sitio permanece en la 103. Se conserva el módulo revisado en ../learn-prize-feedback/reviewed-visibility-panel.txt y el código de empaquetado en web-enhancements/learn-feedback.
+
+## Aprobación de publicación recibida
+
+El propietario respondió «Sí» el 25 de noviembre de 2026 a la pregunta explícita de publicar esta reparación. Se reabrió la fuente pública, que seguía en la versión 103, y se reconstruyó la corrección desde el commit local bbe0f3a. Se mantienen el resto de las pantallas, los datos y las preferencias ya aprobadas. La copia de publicación se procesa en memoria temporal y se usará compilación remota de Sites por falta de espacio para un archivo local.
+
+Publicación confirmada: **versión 104**, commit de Sites 8cc97e1bf71030293d9f3f6939042f6a27b628e1. Versión guardada: appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_27863c1ea3008191a831a89cc268f4f9. Despliegue: appgdep_6b06cc63e8c881918f7383405e148160. Estado terminal succeeded, 2026-11-25T11:54:54.552122+00:00. URL: https://edumoney-web.diegoluissantospabon.chatgpt.site. Se reejecutó el recorrido de premios y contraste sobre el módulo final con éxito. La aprobación y este resultado sustituyen el bloqueo histórico descrito anteriormente.
