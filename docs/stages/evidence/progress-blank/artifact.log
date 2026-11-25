@@ -1,0 +1,3 @@
+PASS 1: actual packaged Progress mounts and finishes its first empty-data load
+PASS 2: real goal progress, data-commit/resume refresh and focus cleanup work
+PASS 3: storage failure shows the existing error within the screen and cleans up safely

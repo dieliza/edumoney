@@ -1,0 +1,10 @@
+{
+  "project_id": "appgprj_6af65a2177c48191b95b917e1ca2a2f0",
+  "commit_sha": "7ad505746ab5158a4e51ba96da4cf79411c17c43",
+  "base_commit": "d3fc4c4e39e2f00ec0e0b776c6ffdf24844fd7f2",
+  "local_build": "passed",
+  "package_checks": 1,
+  "artifact_checks": 3,
+  "reproduction_checks": 1,
+  "scope": "production candidate; explicit user instruction to publish"
+}
