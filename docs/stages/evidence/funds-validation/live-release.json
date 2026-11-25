@@ -1,0 +1,10 @@
+{
+  "url": "https://edumoney-web.diegoluissantospabon.chatgpt.site",
+  "http_status": 200,
+  "build": "funds-help-3fb59bc0002f",
+  "canonical_sw_status": 200,
+  "active_common_status": 200,
+  "verification": "Anonymous HTTP resources only; not browser/device interaction",
+  "tests": 1,
+  "initial_http_check": "Python default client received 403; anonymous Mozilla user agent received 200"
+}
