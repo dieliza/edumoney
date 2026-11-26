@@ -1,3 +1,4 @@
+import {SceneThemeChoice} from './SceneThemeChoice';
 import { useState } from 'react';
 import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -35,6 +36,7 @@ export function ThemePicker({ color,compact=false }: { color: string;compact?:bo
               <Text style={{ color: colors.muted, fontSize: 14 }}>{choice.detail}</Text></View>
             {preference === choice.value ? <Ionicons name="checkmark-circle" size={24} color={colors.primary} /> : null}
           </Pressable>)}
+          <SceneThemeChoice/>
         </View>
         </ScrollView>
       </View>

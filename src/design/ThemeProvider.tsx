@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type PropsWithChildren } from 'react';
 import { ActivityIndicator, Appearance, Platform, Text, useColorScheme, View } from 'react-native';
 import { createThemePreferences } from './preference';
+import {applyCrashBoat} from './crashBoat';
 import { fixed, palettes, resolveTheme, type ThemePreference, type ThemeName, type Palette } from './tokens';
 const preferences = createThemePreferences(AsyncStorage);
 interface ThemeState { name: ThemeName; preference: ThemePreference; colors: Palette; setPreference(value: ThemePreference): void; notice: string | null }
@@ -26,11 +27,12 @@ export function ThemeProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     if (ready && Platform.OS !== 'web') {
       // RN 0.88: 'auto' restaura el seguimiento del sistema. Solo afecta a esta app.
-      Appearance.setColorScheme(preference === 'automatic' ? 'auto' : preference);
+      Appearance.setColorScheme(preference === 'automatic' ? 'auto' : resolveTheme(preference, system));
     }
-  }, [preference, ready]);
+  }, [preference, ready,system]);
+  useEffect(()=>ready?applyCrashBoat(preference):undefined,[preference,ready]);
   const name = resolveTheme(preference, system);
-  const value = useMemo(() => ({ name, preference, colors: palettes[name], setPreference, notice }), [name, preference, setPreference, notice]);
+  const value = useMemo(() => ({ name, preference, colors: preference==='crash-boat'?{...palettes[name],muted:'#304551'}:palettes[name], setPreference, notice }), [name, preference, setPreference, notice]);
   if (!ready) return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: palettes[name].background }}>
     <ActivityIndicator color={palettes[name].accent} accessibilityLabel="Cargando tu preferencia de apariencia" />
     <Text style={{ color: name === 'dark' ? fixed.white : fixed.ink, marginTop: 12 }}>Preparando EduMoney…</Text>
@@ -46,7 +48,7 @@ export function useTheme() {
 /** Presentación de gráficas y filas sobre el fondo nativo de la pantalla. */
 export function NativeSurfaceTheme({children}:PropsWithChildren){
   const theme=useTheme();
-  const value=useMemo(()=>({...theme,colors:theme.name==='dark'?{...theme.colors,
+  const value=useMemo(()=>theme.preference==='crash-boat'?theme:({...theme,colors:theme.name==='dark'?{...theme.colors,
     surface:'transparent',surfaceAlt:'rgba(255,255,255,0.06)',text:'#F0FFF9',muted:'#CEE8E8',
     primary:'#8DEBC4',line:'rgba(206,238,232,0.25)',mint:'rgba(42,218,153,0.12)',
     coral:'rgba(255,98,133,0.12)',progressTrack:'rgba(210,244,234,0.16)',

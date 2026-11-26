@@ -1,4 +1,4 @@
-export type ThemePreference = 'light' | 'dark' | 'automatic';
+export type ThemePreference = 'light' | 'dark' | 'automatic' | 'crash-boat';
 export type ThemeName = 'light' | 'dark';
 export const space = { xs: 6, sm: 12, md: 18, lg: 24, xl: 32, xxl: 48 };
 export const radius = { card: 24, control: 16, pill: 100 };
@@ -22,9 +22,9 @@ export const palettes = {
 };
 export type Palette = typeof palettes.light | typeof palettes.dark;
 export const resolveTheme = (preference: ThemePreference, system: string | null | undefined): ThemeName =>
-  preference === 'automatic' ? (system === 'dark' ? 'dark' : 'light') : preference;
+  preference === 'automatic' ? (system === 'dark' ? 'dark' : 'light') : preference === 'crash-boat' ? 'light' : preference;
 export const parsePreference = (value: string | null): ThemePreference =>
-  value === 'light' || value === 'dark' || value === 'automatic' ? value : 'automatic';
+  value === 'light' || value === 'dark' || value === 'automatic' || value === 'crash-boat' ? value : 'automatic';
 
 /** Colores semánticos compartidos: iconos, gráficos, estados y degradados. */
 export const fixed = {"white": "#FFFFFF", "ink": "#102F42", "tabBorderDark": "#1C455B", "tabMutedLight": "#536976", "tabMutedDark": "#C4D8E2", "balance": "#00634B", "income": "#007451", "expense": "#C12945", "successStart": "#008461", "successEnd": "#006458", "onSuccess": "#F0FFF9", "award": "#FFE18B", "heroDarkStart": "#075547", "heroDarkEnd": "#093E51", "heroLightStart": "#DDF6E8", "heroLightEnd": "#DCEFF9", "welcomeMutedDark": "#CEE6E9", "brandOnDark": "#F0FAF8", "brandAccentDark": "#81E8B6", "previewBackdrop": "#00000088", "themeBackdrop": "#00000099", "buttonStart": "#00805C", "buttonEnd": "#006248", "iconMint": "#006B50", "iconBlue": "#0066A5", "iconCoral": "#BB2638", "iconViolet": "#773DB1", "progressStart": "#008464", "progressEnd": "#2FBA91", "waveBlue": "#39BFD0", "waveGreen": "#78D38A", "subtitleDark": "#D2E9EF", "headingDark": "#F4FAFC", "chartHousing": "#0079B5", "chartFood": "#DB384F", "chartTransport": "#CC9B12", "chartServices": "#159DAB", "chartDebt": "#8D54CA", "chartOther": "#008963"} as const;

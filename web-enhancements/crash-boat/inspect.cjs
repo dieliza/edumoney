@@ -1,0 +1,1 @@
+const fs=require('fs'),g=require('../funds-trial/host-graph.cjs')(process.argv[2]);const ids=[789,792,982,1081,1082,1109];fs.writeFileSync('/workspace/edumoney/docs/stages/evidence/crash-boat/before.json',JSON.stringify(Object.fromEntries(ids.map(id=>[id,g.defs.get(id)])),null,2));console.log(JSON.stringify({modules:ids,assets:g.active.size}));
