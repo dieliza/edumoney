@@ -1,20 +1,12 @@
 {
-  "buildName": "budget-refinements-6128d8fe143b",
+  "buildName": "budget-refinements-9a11afcaea92",
   "baseVersion": 131,
+  "baseHasRefinements": true,
   "modified": [
-    33000,
-    33004,
-    33007,
-    33005,
-    33006,
-    33008,
-    33002,
-    21027
+    33002
   ],
-  "added": [
-    34000
-  ],
-  "protectedModules": 1426,
+  "added": [],
+  "protectedModules": 1434,
   "report": [
     {
       "compiled": "src/modules/budget/domain.ts",
@@ -27,16 +19,6 @@
         "../funds/domain": 21010
       },
       "source_sha256": "f3f64121b67decdeb09000525914b9b7f00c9d7efb8d50f360c2b0f3283253b9"
-    },
-    {
-      "compiled": "src/modules/budget/BudgetPresentation.web.tsx",
-      "id": 34000,
-      "imports": {
-        "react/jsx-runtime": 7,
-        "../../ui/transactionFormStyle": 20001,
-        "../../design/ThemeProvider": 792
-      },
-      "source_sha256": "6b399e9b5bfe4eb2226b2caa2ad9d0d08a13d74a616476cbd998b2d81c49840d"
     },
     {
       "compiled": "src/modules/budget/BudgetControls.web.tsx",
@@ -133,7 +115,7 @@
         "./AnnualExpenses.web": 33008,
         "./BudgetHistory.web": 33009
       },
-      "source_sha256": "37494261377815c4256c83b1c41b4cd54cdfed662c6dfe423429290fcfb3f5c3"
+      "source_sha256": "10633d3946373ad94d2218abff6571a8dd5f7c140765c8fd79a1b17c18bbefb1"
     }
   ],
   "historyPresentation": {

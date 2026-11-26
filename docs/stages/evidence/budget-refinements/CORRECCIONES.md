@@ -21,3 +21,17 @@ El paquete se aplica a la versión publicada, verifica las huellas de sus fuente
 No se dispone aquí de navegador interactivo ni iPad/iPhone/Safari físicos; no se afirma haber realizado capturas o revisión física. Las capturas del usuario se utilizan para identificar los problemas de contraste y distribución.
 
 El estado final de publicación se registra en `source-result.json`.
+
+Se comprobó además que transferir con un borrador conserva los vínculos personalizados de fondos y no guarda automáticamente las cantidades pendientes. La transferencia sigue siendo un registro independiente del presupuesto.
+
+## Resultado
+
+Publicado en producción: **versión 132**, build `budget-refinements-9a11afcaea92`, commit Sites `5effc7ab541fb7f6c6973bc71fa853432e2335dc`.
+
+URL: https://edumoney-web.diegoluissantospabon.chatgpt.site
+
+Despliegue `appgdep_6b08a5268d948191aff6bde271c474c9`: `succeeded`; servicios conservados en revisión 4. La comprobación pública confirmó HTML, código actualizado y service worker.
+
+**23 casos distintos verificados; 54 ejecuciones incluidas las repeticiones, dentro del límite de 100.** Pruebas seleccionadas, TypeScript, ESLint, compilación y comprobaciones del paquete correctos. No se usaron datos financieros de usuarios para pruebas. La revisión física en Safari/iPad sigue pendiente por falta de dispositivos/navegador interactivo en este entorno.
+
+Código y evidencia en la rama `fix/budget-controls-and-readability` de `dieliza/edumoney`.
