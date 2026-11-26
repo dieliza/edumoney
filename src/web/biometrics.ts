@@ -1,7 +1,10 @@
 import type {VaultOpenOptions} from './vaultTabLock';
 import {unlockWebVault,verifyWebPassword,webVaultFingerprint} from './vault';
 type Saved={id:string;salt:string;iv:string;ciphertext:string;fingerprint:string};
-const dbName='edumoney-local-biometric-v1';
+function storedWorkspace(){try{const p=JSON.parse(localStorage.getItem('edu-active-workspace-v1')??'null');return p&&/^[a-f0-9]{8}-[a-f0-9-]{27}$/.test(p.userId)&&new RegExp('^edumoney-account-web-v1-'+p.userId+'-[a-f0-9-]{36}$').test(p.databaseName)?p:null;}catch{return null;}}
+const savedWorkspace=storedWorkspace();
+let dbName=savedWorkspace?savedWorkspace.databaseName.replace('edumoney-account-web-v1-','edumoney-account-biometric-v1-'):'edumoney-local-biometric-v1';
+export function selectBiometricWorkspace(userId:string,databaseName:string){if(!new RegExp('^edumoney-account-web-v1-'+userId+'-[a-f0-9-]{36}$').test(databaseName))throw Error('Cuenta no válida.');dbName=databaseName.replace('edumoney-account-web-v1-','edumoney-account-biometric-v1-');}
 function changed(){if(typeof window!=='undefined')window.dispatchEvent(new Event('edumoney-biometric-change'));}
 const hex=(a:ArrayBuffer|Uint8Array)=>Array.from(a instanceof Uint8Array?a:new Uint8Array(a),b=>b.toString(16).padStart(2,'0')).join('');
 const bytes=(s:string)=>Uint8Array.from(s.match(/../g)??[],v=>parseInt(v,16));

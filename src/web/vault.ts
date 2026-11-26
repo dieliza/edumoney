@@ -4,7 +4,8 @@ import { migrate } from '../storage/migrate';
 import {acquireVaultTab,type VaultOpenOptions} from './vaultTabLock';
 
 type Envelope = { version: 1; salt: Uint8Array; iv: Uint8Array; ciphertext: ArrayBuffer };
-const DB_NAME = 'edumoney-encrypted-web-v1';
+function storedWorkspace(){try{const p=JSON.parse(localStorage.getItem('edu-active-workspace-v1')??'null');return p&&/^[a-f0-9]{8}-[a-f0-9-]{27}$/.test(p.userId)&&new RegExp('^edumoney-account-web-v1-'+p.userId+'-[a-f0-9-]{36}$').test(p.databaseName)?p:null;}catch{return null;}}
+let DB_NAME = storedWorkspace()?.databaseName??'edumoney-encrypted-web-v1';
 let connection: SqlDb | undefined;
 let sqlEngine: Promise<SqlJsStatic> | undefined;
 let writes: Promise<unknown> = Promise.resolve();
@@ -213,4 +214,14 @@ export async function writeWebAccountBinding(value:WebAccountBinding){
  if(!settingsKey||value.fingerprint!==await webVaultFingerprint())throw Error('Desbloquea los registros que deseas vincular.');
  const old=await readWebAccountBinding();if(old&&old.userId!==value.userId)throw Error('Este espacio pertenece a otra cuenta.');
  await record('readwrite',s=>s.put(value,'account-binding'));
+}
+
+/** Select a separate account workspace after verified recovery; never touch the old database. */
+export async function selectRecoveredWebWorkspace(userId:string){
+ if(!/^[a-f0-9]{8}-[a-f0-9-]{27}$/.test(userId))throw Error('Cuenta no válida.');
+ await vaultWrite(async()=>{if(connection||unlocking)throw Error('El espacio ya está abierto.');DB_NAME='edumoney-account-web-v1-'+userId+'-'+crypto.randomUUID();await import('./biometrics').then(m=>m.selectBiometricWorkspace(userId,DB_NAME));});
+}
+export async function persistRecoveredWebWorkspace(userId:string){
+ if(!connection||!DB_NAME.startsWith('edumoney-account-web-v1-'+userId+'-')||(await readWebAccountBinding())?.userId!==userId)throw Error('El espacio de cuenta todavía no está verificado.');
+ try{localStorage.setItem('edu-active-workspace-v1',JSON.stringify({userId,databaseName:DB_NAME}));}catch{throw Error('No se pudo recordar el espacio de esta cuenta. Permite el almacenamiento de este sitio; los registros anteriores se conservan.');}
 }

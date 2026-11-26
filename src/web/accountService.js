@@ -23,7 +23,7 @@ async function enroll(user,key,password){
  await vault.verifyWebPassword(key);const fingerprint=await vault.webVaultFingerprint(),salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
  const aad=new TextEncoder().encode(`edumoney-offline-account-v1:${user.id}:${fingerprint}`),cipher=await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:aad},await wrappingKey(password,salt),new TextEncoder().encode(key));
  await vault.writeWebAccountBinding({version:1,userId:user.id,emailHash:await emailHash(user.email),fingerprint,offline:{salt:base64(salt),iv:base64(iv),ciphertext:base64(cipher)}});
- try{localStorage.setItem('edu-email-owner',user.id);sessionStorage.removeItem('edu-email-once');}catch{/* Binding in IndexedDB remains authoritative for this client. */}
+ try{localStorage.setItem('edu-email-owner',user.id);localStorage.removeItem('edu-recovery-unlinked-v1');sessionStorage.removeItem('edu-email-once');}catch{/* Binding in IndexedDB remains authoritative for this client. */}
  identity={id:user.id,email:user.email,admin:user.app_metadata?.edumoney_admin===true};localOnly=false;
 }
 async function ensureOwner(user){const binding=await vault.readWebAccountBinding();if(binding&&binding.userId!==user.id)throw Error('Este navegador contiene registros vinculados a otra cuenta. No se cambiaron los datos.');
@@ -36,17 +36,34 @@ async function signinAccountFlow(email,password){
   const aad=new TextEncoder().encode(`edumoney-offline-account-v1:${binding.userId}:${binding.fingerprint}`);let plain;try{plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:bytes(binding.offline.iv),additionalData:aad},await wrappingKey(password,bytes(binding.offline.salt)),bytes(binding.offline.ciphertext));}catch{throw Error('No pudimos abrir el acceso sin conexión. Revisa la contraseña o conéctate para recuperar la cuenta.');}
   await vault.unlockWebVault(new TextDecoder().decode(plain));identity={id:binding.userId,email};localOnly=true;return {ready:true,localOnly:true};
  }
- await checked((await client()).auth.signInWithPassword({email,password}));const user=await verified();await ensureOwner(user);const scoped=await workspaceKey();if(scoped.user.id!==user.id)throw Error('La sesión cambió. Vuelve a iniciar sesión.');const key=scoped.key;
+ await checked((await client()).auth.signInWithPassword({email,password}));const user=await verified();return openAccountRecords(user,password);
+}
+async function openAccountRecords(user,password,{recovering=false}={}){
+ try{const pending=JSON.parse(localStorage.getItem('edu-recovery-unlinked-v1')??'null');if(pending?.userId===user.id&&pending.fingerprint===await vault.webVaultFingerprint())recovering=true;}catch{/* This marker only prevents a repeated prompt; it cannot unlock data. */}
+ try{await ensureOwner(user);}catch(error){if(recovering)return newRecoveredWorkspace(user,password);throw error;}const scoped=await workspaceKey();if(scoped.user.id!==user.id)throw Error('La sesión cambió. Vuelve a iniciar sesión.');const key=scoped.key;
  if(!await vault.hasWebVault()){await vault.unlockWebVault(key);await enroll(user,key,password);return {ready:true};}
  if(vault.isWebVaultUnlocked()){
   try{await vault.verifyWebPassword(key);}catch{await vault.changeUnlockedWebPassword(key);}await enroll(user,key,password);return {ready:true};
  }
  try{await vault.unlockWebVault(key);}catch(error){
   if(!(error instanceof Error)||!error.message.startsWith('Contraseña incorrecta'))throw error;
+  if(recovering){
+   try{if(await hasBiometric()){await unlockBiometric();await vault.changeUnlockedWebPassword(key);await enroll(user,key,password);return {ready:true};}}catch{/* Preserve the old encrypted copy if device verification is canceled or unavailable. */}
+   identity={id:user.id,email:user.email,admin:user.app_metadata?.edumoney_admin===true};localOnly=false;
+   try{localStorage.setItem('edu-recovery-unlinked-v1',JSON.stringify({userId:user.id,fingerprint:await vault.webVaultFingerprint()}));}catch{/* The copy remains protected even if the prompt preference cannot persist. */}
+   return newRecoveredWorkspace(user,password);
+  }
   try{await vault.unlockWebVault(password);}catch(legacyError){if(legacyError instanceof Error&&legacyError.message.startsWith('Contraseña incorrecta'))return {ready:false,needsLegacy:true};throw legacyError;}
   await vault.changeUnlockedWebPassword(key);
  }
  await enroll(user,key,password);return {ready:true};
+}
+async function newRecoveredWorkspace(user,password){
+ await vault.selectRecoveredWebWorkspace(user.id);
+ const scoped=await workspaceKey();if(scoped.user.id!==user.id)throw Error('La sesión cambió. Vuelve a entrar con tu contraseña nueva.');
+ if(!vault.isWebVaultUnlocked())await vault.unlockWebVault(scoped.key);
+ await enroll(user,scoped.key,password);await vault.persistRecoveredWebWorkspace(user.id);
+ return {ready:true,previousRecordsPreserved:true};
 }
 async function linkLegacyAccountFlow(previous,password){const {user,key}=await workspaceKey();await ensureOwner(user);if(!vault.isWebVaultUnlocked())await vault.unlockWebVault(previous);await vault.changeUnlockedWebPassword(key);await enroll(user,key,password);return {ready:true};}
 async function linkLegacyWithBiometricFlow(password){const {user,key}=await workspaceKey();await ensureOwner(user);if(!vault.isWebVaultUnlocked())await unlockBiometric();await vault.changeUnlockedWebPassword(key);await enroll(user,key,password);return {ready:true};}
@@ -92,13 +109,21 @@ export function adminAction(action,payload={}){return exclusiveAccount(async()=>
  let data;try{data=await result.json();}catch{throw Error('No pudimos cargar la administración.');}if(!result.ok)throw Error(data.error??'No se pudo completar la administración.');return data;
 });}
 
-let accountLinkPromise,recoveryVerified=false;
+let accountLinkPromise,lastCapturedLink='',recoveryVerified=false;
 export function beginAccountLink(){
+ let hash='',pending=null;
+ if(typeof location!=='undefined'){
+  hash=location.hash;
+  if(hash)history.replaceState(null,'',location.pathname+location.search);
+  try{const raw=sessionStorage.getItem('edu-account-link-v2');sessionStorage.removeItem('edu-account-link-v2');if(raw&&raw.length<4096)pending=JSON.parse(raw);}catch{/* Invalid transport state never authorizes a session. */}
+  if(!hash&&pending){if(!Number.isFinite(pending.until)||pending.until<Date.now()||pending.until>Date.now()+600000)hash='#invalid';else hash=typeof pending.hash==='string'?pending.hash:'#invalid';}
+ }
+ if(hash&&hash!==lastCapturedLink){accountLinkPromise=undefined;lastCapturedLink=hash;}
  if(accountLinkPromise)return accountLinkPromise;
- let hash='';if(typeof location!=='undefined'){hash=location.hash;if(hash)history.replaceState(null,'',location.pathname+location.search);}
  accountLinkPromise=exclusiveAccount(async()=>{
   if(!hash)return null;const q=new URLSearchParams(hash.slice(1));const type=q.get('type'),token=q.get('token_hash');
-  if([...q.keys()].length!==2||!['email','signup','recovery'].includes(type)||!/^[A-Za-z0-9_-]{20,512}$/.test(token??''))throw Error('Este enlace no es válido. Solicita uno nuevo desde «Olvidé mi contraseña».');
+  if([...q.keys()].length!==2||!['email','signup','recovery'].includes(type)||!/^[A-Za-z0-9_-]{20,512}$/.test(token??''))throw Error('El enlace está incompleto o venció. Solicita uno nuevo.');
+  recoveryVerified=false;
   const data=await checked((await client()).auth.verifyOtp({token_hash:token,type}));if(!data?.user?.id||!data.user.email_confirmed_at)throw Error('El enlace venció. Solicita uno nuevo.');
   recoveryVerified=type==='recovery';return{recovery:recoveryVerified,email:data.user.email??''};
  });return accountLinkPromise;
@@ -107,5 +132,5 @@ export function finishAccountRecovery(password,repeat){return exclusiveAccount(a
  if(!recoveryVerified)throw Error('Abre el enlace de recuperación que recibiste.');
  if(password!==repeat||password.length<12||password.length>128)throw Error('Las contraseñas deben coincidir y tener entre 12 y 128 caracteres.');
  const user=await verified();await checked((await client()).auth.updateUser({password}));recoveryVerified=false;
- return signinAccountFlow(user.email,password);
+ return openAccountRecords(user,password,{recovering:true});
 });}

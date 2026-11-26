@@ -18,4 +18,4 @@ export type AdminResult={users:ManagedUser[];counts:{total:number;active:number;
 export function adminAction(action:string,payload?:Record<string,unknown>):Promise<AdminResult>;
 
 export function beginAccountLink():Promise<{recovery:boolean;email:string}|null>;
-export function finishAccountRecovery(password:string,repeat:string):Promise<{ready:boolean;needsLegacy?:boolean;localOnly?:boolean}>;
+export function finishAccountRecovery(password:string,repeat:string):Promise<{ready:boolean;previousRecordsPreserved?:boolean;localOnly?:boolean}>;

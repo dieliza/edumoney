@@ -1,0 +1,1 @@
+function __workspacePointer(){try{const p=JSON.parse(localStorage.getItem('edu-active-workspace-v1')??'null');return p&&/^[a-f0-9]{8}-[a-f0-9-]{27}$/.test(p.userId)&&new RegExp('^edumoney-account-web-v1-'+p.userId+'-[a-f0-9-]{36}$').test(p.databaseName)?p:null;}catch{return null;}}
