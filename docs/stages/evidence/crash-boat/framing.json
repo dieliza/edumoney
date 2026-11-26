@@ -1,0 +1,24 @@
+{
+  "cases": 1,
+  "checks": [
+    {
+      "viewport": "iPhone",
+      "width": 390,
+      "height": 844,
+      "pier_point_visible": true
+    },
+    {
+      "viewport": "iPad",
+      "width": 834,
+      "height": 1194,
+      "pier_point_visible": true
+    },
+    {
+      "viewport": "desktop",
+      "width": 1440,
+      "height": 900,
+      "pier_point_visible": true
+    }
+  ],
+  "scope": "Image-cover geometry only; not browser screenshots"
+}

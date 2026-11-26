@@ -1,0 +1,15 @@
+{
+  "id": "appgdep_6b07c8e2374c81919e0b242778b9aef6",
+  "project_id": "appgprj_6af65a2177c48191b95b917e1ca2a2f0",
+  "title": "EduMoney Web",
+  "version_id": "appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_98a58bc98bb48191b8d1277706c3b6f9",
+  "type": "publish",
+  "status": "succeeded",
+  "url": "https://edumoney-web.diegoluissantospabon.chatgpt.site",
+  "has_mcp": true,
+  "screenshot_asset_pointer": null,
+  "provider_deployment_id": "site---6af65a2177c48191b95b917e1ca2a2f0",
+  "failure_message": null,
+  "env_set_revision": 4,
+  "updated_at": "2026-11-26T05:52:18.603116+00:00"
+}

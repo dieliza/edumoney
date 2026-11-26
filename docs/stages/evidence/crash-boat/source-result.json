@@ -3,6 +3,7 @@
   "commit_sha": "3fa724d8a981525dc57570fcedbf8843d2cb8e86",
   "base_commit": "e4b5d9691c9ae28dc6d083fbc4e8d148816170e3",
   "local_build": "passed",
-  "published": false,
-  "pushed": true
+  "published": true,
+  "pushed": true,
+  "version": 122
 }

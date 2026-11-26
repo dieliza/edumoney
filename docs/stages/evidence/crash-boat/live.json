@@ -1,0 +1,9 @@
+{
+  "origin": "https://edumoney-web.diegoluissantospabon.chatgpt.site",
+  "build": "crash-boat-d6648470a1d2",
+  "html_and_common": true,
+  "three_webp_files_identical": true,
+  "canonical_service_worker": true,
+  "browser_tested": false,
+  "passed": true
+}

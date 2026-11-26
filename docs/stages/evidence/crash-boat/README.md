@@ -11,3 +11,5 @@ Verificación inicial: 10 pruebas de preferencia/persistencia/resolución/contra
 Limitación: no está disponible cua_repl.js ni el navegador de pruebas de la infraestructura. Conforme al skill Sites no se inició un servidor ni se improvisó un navegador alternativo. No se obtuvieron capturas reales de Mi dinero/Apariencia ni se realizó una comprobación visual en dispositivos. El usuario fue informado y aprobó continuar y publicar. No se presentan imágenes simuladas como capturas de la aplicación.
 
 Las seis comprobaciones del artefacto pasan. El empaquetado conserva 1,411 módulos ajenos al tema, incluidos acceso, formularios, premios y cálculos. Se aprobó expresamente publicar después del rechazo automático inicial; la versión definitiva se registra en source-result.json y deployment.json.
+
+Publicada la versión122, fuente3fa724d8a981525dc57570fcedbf8843d2cb8e86, build crash-boat-d6648470a1d2. Despliegue confirmado como succeeded; revisión de entorno4 preservada. La comprobación geométrica sitúa la punta del muelle dentro del encuadre de390×844,834×1194 y1440×900; no equivale a revisar pantallas reales.
