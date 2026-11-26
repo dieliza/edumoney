@@ -1,0 +1,7 @@
+import {useRef} from 'react';
+import {useTheme} from '../design/ThemeProvider';
+export function MonthPicker({value,onChange}:{value:string;onChange(value:string):void}){
+ const {colors,name}=useTheme();const input=useRef<HTMLInputElement>(null);
+ function open(){const node=input.current;if(!node)return;try{node.showPicker();}catch{node.focus();node.click();}}
+ return <div style={{display:'grid',gap:8,padding:12}}><label htmlFor="progress-month-picker" style={{color:colors.text,fontWeight:600}}>Mes para revisar</label><div style={{display:'flex',gap:8,alignItems:'center'}}><input ref={input} id="progress-month-picker" data-testid="progress-month" type="month" value={value} min="1900-01" max="9999-12" onChange={e=>{if(/^\d{4}-(0[1-9]|1[0-2])$/.test(e.target.value))onChange(e.target.value);}} style={{minWidth:0,width:'100%',boxSizing:'border-box',minHeight:52,padding:12,borderRadius:12,border:`1px solid ${colors.line}`,background:colors.surfaceAlt,color:colors.text,colorScheme:name,font:'inherit'}}/><button type="button" aria-label="Abrir calendario para elegir mes y año" onClick={open} style={{minWidth:48,minHeight:52,border:`1px solid ${colors.line}`,borderRadius:12,background:colors.surfaceAlt,color:colors.primary,cursor:'pointer'}}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6m10-6v6M3 11h18m-13 4h3m2 0h3m-8 3h3"/></svg></button></div></div>;
+}

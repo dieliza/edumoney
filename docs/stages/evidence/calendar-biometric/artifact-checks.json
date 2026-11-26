@@ -1,0 +1,6 @@
+{
+  "cases": 6,
+  "passed": true,
+  "realDeviceVerified": false,
+  "biometricBoundary": "simulated WebAuthn, actual WebCrypto and IndexedDB"
+}

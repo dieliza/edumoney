@@ -1,0 +1,7 @@
+# Progress month selector and biometric activation repair
+
+Reported Safari error precisely identifies the build issue: the appended enableBiometric wrapper used `r(32010)` but module877 declares `const r='edumoney-local-biometric-v1'`; its Metro loader parameter is `_r`. Correct the call to the actual factory loader and fix the original packaging recipe to read its parameter name. Preserve WebAuthn user verification, PRF support checks, AES-GCM, IndexedDB envelope, account key verification and all fallback/error handling. No biometrics or password data is collected by EduMoney.
+
+Replace only the progress-month text field with a themed native HTML month input and an explicit calendar icon button. Direct user interaction invokes showPicker, with focus/click fallback when unavailable. Keep YYYY-MM internally and reject empty/invalid selections; preserve all progress calculations. Native source fallback reuses existing MonthControl. No Expo/React Native API changes.
+
+Verification: TypeScript and targeted ESLint passed. Six packaged artifact scenarios planned: canceled activation reaches WebAuthn, PRF/AES/IndexedDB full roundtrip, no PRF cannot enable, wrong credentials cannot create authenticator, valid month selection, unsupported showPicker fallback. WebAuthn is simulated; real iPhone Face ID unavailable in this environment. No actual personal financial data, biometric key or credential modified in tests.

@@ -7,7 +7,8 @@ import { useIsFocused } from 'expo-router';
 import { useTheme } from '../../design/ThemeProvider';
 import { userMessage } from '../../core/errors';
 import { Body,Card,ProgressBar,Screen,SectionHeading } from '../../ui/components';
-import { Field,ErrorNotice } from '../money/fields';
+import { MonthPicker } from '../../ui/MonthPicker';
+import { ErrorNotice } from '../money/fields';
 import { formatMoney,localToday } from '../money/domain';
 import { progressSummary,type ProgressData } from './domain';
 import { getProgressStore } from './localStore';
@@ -21,7 +22,7 @@ export default function ProgressScreen(){
  const result=useMemo(()=>{try{return {summary:progressSummary(data,month,today),error:''};}catch(e){return {summary:null,error:userMessage(e)};}},[data,month,today]);const s=result.summary;
  return <Screen title="Mi progreso" demo={false} subtitle="Los pequeños hábitos hacen grandes cambios.">
  <ErrorNotice message={error||result.error}/>{!store?<ActivityIndicator accessibilityLabel="Cargando progreso cifrado"/>:null}
- <Field label="Mes para revisar AAAA-MM" testID="progress-month" value={month} onChangeText={setMonth}/>
+ <MonthPicker value={month} onChange={setMonth}/>
  {store&&s?<>
  <Card row style={{backgroundColor:colors.mint}}><Body style={{fontSize:22,fontWeight:'700'}}>{s.movements?'Cada registro te ayuda a tomar decisiones.':'Tu punto de partida, a tu ritmo.'}</Body><Body>{s.movements?`Has registrado ${s.movements} transacción(es) en el mes consultado hasta hoy.`:'Cuando registres transacciones, aquí verás tus avances. No necesitas compararte con nadie.'}</Body></Card>
  <Card row><SectionHeading title="Gastos frente al presupuesto" onSurface/><Body>Gastos registrados: {formatMoney(s.expenses)}</Body>{s.budget===null?<Body>No hay presupuesto registrado para este mes.</Body>:<><Body>Presupuesto por categorías: {formatMoney(s.budget)} · Gastado en ellas: {formatMoney(s.spent)}</Body><Body>{s.spent<=s.budget?`Margen en categorías presupuestadas: ${formatMoney(s.budget-s.spent)}.`:`Diferencia sobre categorías presupuestadas: ${formatMoney(s.spent-s.budget)}. Puedes revisar y ajustar tu plan.`}</Body></>}<Body>Gastos sin presupuesto de categoría: {formatMoney(s.uncovered)}</Body><Body muted>Incluye compras a crédito; sus pagos posteriores no se cuentan como gastos nuevos. Un margen no confirma ahorro ni saldo bancario.</Body></Card>
