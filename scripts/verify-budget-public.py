@@ -2,7 +2,7 @@
 import gzip,json,pathlib,re,urllib.request
 root=pathlib.Path('/workspace/edumoney');build=json.loads((root/'docs/stages/evidence/monthly-budget/package.json').read_text())['buildName'];origin='https://edumoney-web.diegoluissantospabon.chatgpt.site'
 def read(path):
- request=urllib.request.Request(origin+path,headers={'Cache-Control':'no-cache','Accept-Encoding':'identity'})
+ request=urllib.request.Request(origin+path,headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache','Accept-Encoding':'identity'})
  with urllib.request.urlopen(request,timeout=40) as r:
   assert r.status==200
   raw=r.read()

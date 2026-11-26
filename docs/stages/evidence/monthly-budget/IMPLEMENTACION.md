@@ -48,3 +48,17 @@ Este entorno de Sites no dispone de navegador interactivo ni dispositivos Safari
 Corrección final de proyección: las reservas de gastos anuales se financian dentro de su categoría presupuestada. Su aportación pendiente se resta del consumo ordinario planificado de esa categoría y se presenta como reserva; no se suma dos veces. Si el vencimiento ya está incluido como factura pendiente del mes, no se vuelve a añadir una nueva reserva proyectada. Se probó el ciclo completo antes/después de aportar y al revertir.
 
 Proyección de tarjetas: las facturas pendientes de pago de deuda reducen el efectivo estimado, pero no se suman a los gastos ordinarios estimados. Se verificó una compra a crédito ya registrada junto con su factura de pago pendiente. El panel muestra las salidas de efectivo pendientes por separado.
+
+## Resultado final
+
+Publicado en producción: **versión 131**, commit Sites `b845014f87b41fe3bfa232555eff5f7c8d36f409`, build `monthly-budget-ad667c500eb4`.
+
+URL: https://edumoney-web.diegoluissantospabon.chatgpt.site
+
+Despliegue `appgdep_6b089a7fe7308191a5c14973210bb689`: `succeeded`; configuración de servicios conservada en revisión 4. Se comprobó el HTML público, el módulo con las dos correcciones finales de proyección y el service worker publicado. No se accedió a datos de usuarios.
+
+**50 casos distintos validados; 119 ejecuciones contando repeticiones, dentro de las 120 aprobadas.** TypeScript y ESLint pasan; build local y cinco comprobaciones de integración/entrega pasan. Los fallos iniciales de fixtures y verificadores se corrigieron. Las pruebas financieras relevantes pasaron después de las correcciones; no quedan casos fallidos pendientes. Detalles en `validation.json`, `artifact-check.json` y `public-delivery.json`.
+
+Incidencia de verificación pendiente: no hay navegador interactivo ni dispositivos físicos en este entorno; la revisión visual y los recorridos reales en Safari/iPhone/iPad/Android continúan sin verificar. La entrega es EduMoney Web/PWA; el acceso de la aplicación Expo nativa conserva su comportamiento anterior.
+
+Código e informe guardados en https://github.com/dieliza/edumoney/tree/feat/monthly-budget-center .

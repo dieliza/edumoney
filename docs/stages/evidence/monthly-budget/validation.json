@@ -1,6 +1,6 @@
 {
-  "distinct_cases_validated": 49,
-  "case_executions_including_retries": 112,
+  "distinct_cases_validated": 50,
+  "case_executions_including_retries": 119,
   "case_limit": 120,
   "final_failures": 0,
   "typecheck": "passed",
@@ -11,11 +11,15 @@
   "protected_production_modules": 1415,
   "browser_verified": false,
   "physical_devices_verified": false,
-  "published": false,
+  "published": true,
   "notes": [
     "Initial fixture and artifact-check failures resolved; final targeted checks pass.",
     "No production financial records used for testing.",
-    "Actual interactive Safari/iPhone/iPad/Android review remains unavailable in this environment."
+    "Actual interactive Safari/iPhone/iPad/Android review remains unavailable in this environment.",
+    "Initial public-delivery request was rejected for its default HTTP client; the standard existing browser User-Agent succeeded. No site access policy was changed."
   ],
-  "publication_checks_pending": true
+  "publication_checks_pending": false,
+  "version_number": 131,
+  "public_delivery": "passed",
+  "runtime_revision": 4
 }
