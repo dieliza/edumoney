@@ -14,3 +14,11 @@ No hay cambios en tablas, autenticación, cálculos financieros, motores de tran
 Validación: seis casos nuevos del control y once casos existentes de interfaz del presupuesto. TypeScript y ESLint pasan. La comprobación del paquete exige modificar solo el módulo 33004 y reutilizar el formateador publicado 1128; los demás módulos permanecen idénticos. No se utilizaron datos financieros reales. No se dispone de Safari/dispositivos físicos para revisión visual.
 
 Estado final y pruebas en `source-result.json`, `validation.json`, `artifact-check.json` y `public-delivery.json`.
+
+## Resultado final
+
+Publicado: **versión 133**, build `budget-decimals-28dbbbeb45a4`, commit Sites `330a3d307b0686120cab58cff2594c37ebbab089`. Despliegue `appgdep_6b08a90ab9c88191a0526434ca958241`: `succeeded`, configuración de servicios en revisión 4.
+
+URL: https://edumoney-web.diegoluissantospabon.chatgpt.site
+
+19 casos ejecutados y correctos: 17 de código/interfaz, uno de paquete y uno de entrega pública. TypeScript y ESLint correctos. Se verificó desde la URL pública el código del control que llama al formateador existente y el actualizador. No se realizó revisión física en Safari.

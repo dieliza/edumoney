@@ -1,10 +1,15 @@
 {
-  "distinct_cases": 17,
-  "executions_including_repeats": 17,
+  "distinct_cases": 19,
+  "executions_including_repeats": 19,
   "case_limit": 100,
   "typecheck": "passed",
   "eslint": "passed",
   "tests": "passed",
   "browser_verified": false,
-  "published": false
+  "published": true,
+  "artifact_checks": "passed",
+  "build": "passed",
+  "protected_production_modules": 1434,
+  "version": 133,
+  "public_delivery": "passed"
 }

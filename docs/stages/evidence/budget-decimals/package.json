@@ -1,0 +1,26 @@
+{
+  "buildName": "budget-decimals-28dbbbeb45a4",
+  "baseVersion": 132,
+  "baseHasRefinements": true,
+  "modified": [
+    33004
+  ],
+  "added": [],
+  "protectedModules": 1434,
+  "report": [
+    {
+      "compiled": "src/modules/budget/BudgetControls.web.tsx",
+      "id": 33004,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "./BudgetPresentation.web": 34000,
+        "../../design/ThemeProvider": 792,
+        "../../core/money": 814,
+        "../../ui/moneyInput": 1128,
+        "../money/domain": 813
+      },
+      "source_sha256": "c20330aee0e44a53925e4e67b8ddb06a92e1da9ec09d805a7ac55525f04dd0b5"
+    }
+  ],
+  "browserVerified": false
+}
