@@ -4,7 +4,7 @@ module.exports=function(site){
  let depth=0,q=false,e=false,end=start;
  for(;end<worker.length;end++){const c=worker[end];if(q){if(e)e=false;else if(c==='\\')e=true;else if(c==='"')q=false;}else if(c==='"')q=true;else if(c==='{')depth++;else if(c==='}'&&!--depth){end++;break;}}
  const routes=JSON.parse(worker.slice(start,end)),content={};
- for(const f of fs.readdirSync(site+'/worker').filter(f=>/^content-\d+.js$/.test(f)))Object.assign(content,JSON.parse(fs.readFileSync(site+'/worker/'+f,'utf8').slice(15).replace(/;\s*$/,'')));
+ for(const f of fs.readdirSync(site+'/worker').filter(f=>f.endsWith('.js')&&fs.readFileSync(site+'/worker/'+f,'utf8').startsWith('export default {')))Object.assign(content,JSON.parse(fs.readFileSync(site+'/worker/'+f,'utf8').slice(15).replace(/;\s*$/,'')));
  const read=u=>z.gunzipSync(Buffer.from(content[routes[u][0]],'base64')).toString(),html=read('/index.html');
  const entryAssets=[...html.matchAll(/src="([^"?]+\.js)/g)].map(m=>m[1]).filter(u=>routes[u]&&u.startsWith('/_expo/'));
  const active=new Set(entryAssets),candidates=Object.keys(routes).filter(u=>u.startsWith('/_expo/')&&u.endsWith('.js'));

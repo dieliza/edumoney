@@ -1,0 +1,17 @@
+{
+  "build": "accounts-required-d07dadc516c3",
+  "modified": [
+    868,
+    880,
+    877,
+    985,
+    982
+  ],
+  "added": [
+    32010,
+    32011,
+    32012
+  ],
+  "protectedModules": 1414,
+  "browserVerified": false
+}

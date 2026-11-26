@@ -1,0 +1,88 @@
+{
+  "files": [
+    {
+      "name": "content-0.js",
+      "bytes": 11117060,
+      "prefix": "export default {\"d16e93159df2f1514038e41615705f842aa036489737952b1543722286fe184e\":\"H4sIAAAAAAACA61azW4cR5K+11MEYGAPjWb1WuP1LqjBYGiSHhmWtFxS"
+    },
+    {
+      "name": "content-1.js",
+      "bytes": 11741154,
+      "prefix": "export default {\"66b17df6e20c5329a17ffa9c202a47eaa3e32500b253d4c7f38e7f2bc01457c3\":\"H4sIAAAAAAACA8x9B4AcxZX2q9Bhpqd3uycHfNS0db71nWVzZ5/wgc9W"
+    },
+    {
+      "name": "content-10.js",
+      "bytes": 407634,
+      "prefix": "export default {\"70037875198a1f9c5d080b9b1fb5dd798288265e4bdf5c7b78d22082285b1df1\":\"H4sIAAAAAAACA8VcW3PbSHZ+n18BcTcCmLSxpCRLNBSOSpblGVfstUv0"
+    },
+    {
+      "name": "content-2.js",
+      "bytes": 11791544,
+      "prefix": "export default {\"bd6ad71f38a5ff4c988b2d6714ea7375261df5d22333e71a7cf1549ab2ba6805\":\"H4sIAAAAAAACA+y9a2PbNrIw/P38CkVvjiXWkCLqLjqs1kmcxm0SZ+2k"
+    },
+    {
+      "name": "content-3.js",
+      "bytes": 9618168,
+      "prefix": "export default {\"ed4315149511fbc1be31973b4ca9046aa5243851350de0e54860317e31faa41c\":\"H4sIAAAAAAACA+S9a3vbtrIw+n3/CkUnr0VWsMKbRIouo+U4TuM2sVM7"
+    },
+    {
+      "name": "content-4.js",
+      "bytes": 682852,
+      "prefix": "export default {\"2c7d5b0225ce6b719733d6a153592bd20867afc55a6b4a2ed2e0762a335f6629\":\"H4sIAAAAAAACA+y9+X7jtpIo/H8/Ba2TY4lpmC3Jm0xHres18Yx7uW13"
+    },
+    {
+      "name": "content-5.js",
+      "bytes": 690094,
+      "prefix": "export default {\"b7642b4528f997c4dd17d2e8683f5d4fe18a17154a070402ddafed3f7caabc04\":\"H4sIAAAAAAACA+y9+X7bxpIw+r+fAuLJEYm4BZPURkGhebUmmpGXz1KS"
+    },
+    {
+      "name": "content-6.js",
+      "bytes": 405590,
+      "prefix": "export default {\"c0cea6bdea6c6a16f4842b1bd7bf0d9007946f488aa7da0763ab23e5d5a27e5e\":\"H4sIAAAAAAACA61b3XLbxpK+91NAjDYA4iFEkJRIQkXryIq0cR0rcUXe"
+    },
+    {
+      "name": "content-7.js",
+      "bytes": 683896,
+      "prefix": "export default {\"537468a712ffdd0e7e5bd4c4870e673600d8c9675adb9aa0c462bbb83d3f8a27\":\"H4sIAAAAAAACA+y9+X7bxpIw+r+fAuLJEYm4BZPURkGhebUmmpGXz1KS"
+    },
+    {
+      "name": "content-8.js",
+      "bytes": 683968,
+      "prefix": "export default {\"5575220b3c6d85e6b1b51f39da906dc9311c26189bce9d3e11c9666e758e8a90\":\"H4sIAAAAAAACA+y9+X7bxpIw+r+fAuLJEYm4BZPURkGhebUmmpGXz1KS"
+    },
+    {
+      "name": "content-9.js",
+      "bytes": 407210,
+      "prefix": "export default {\"54c5ae63e7c3ad3183e6bb4e089428aed9b1054245b2e5850076bd9e76e4eaab\":\"H4sIAAAAAAACA9VbzW7byJbe91MwmotQwlTYsvPjRIavYTvOvRm4E8NK"
+    },
+    {
+      "name": "content.js",
+      "bytes": 263,
+      "prefix": "import recovery from './recovery-release.js';\nimport part0 from './content-0.js';\nimport part1 from './content-1.js';\nimport part2 from './c"
+    },
+    {
+      "name": "email-entry.js",
+      "bytes": 1360,
+      "prefix": "export async function emailWorkspaceKey(request, env, config, fetchUser = fetch) {\n  const headers = {'Cache-Control':'no-store', 'Content-T"
+    },
+    {
+      "name": "index.js",
+      "bytes": 4776609,
+      "prefix": "import {emailWorkspaceKey} from './email-entry.js';\nimport {CONTENT} from './content.js';\nexport async function educationOwner(request,env){"
+    },
+    {
+      "name": "recovery-release.js",
+      "bytes": 1104516,
+      "prefix": "export default {\"83a39704da84d3daa21be11520b62023711cc64f49f4495739999ce3df77fe75\":\"H4sIAAAAAAACA9VXS5PcNBC+51eISXFJRWNZfm92lgIqB6jiAoSCUyJL"
+    }
+  ],
+  "first": "import {emailWorkspaceKey} from './email-entry.js';\nimport {CONTENT} from './content.js';\nexport async function educationOwner(request,env){\n if((env.EDUCATION_OWNER_ID&&request.headers.get('oai-authenticated-user-id')===env.EDUCATION_OWNER_ID)||(env.EDUCATION_OWNER_EMAIL&&request.headers.get('oai-a",
+  "last": "URL('/auth/v1/recover',config.url);\n upstream.searchParams.set('redirect_to','https://edumoney-web.diegoluissantospabon.chatgpt.site/account/recovery');\n try{\n  const result=await fetcher(upstream,{method:'POST',headers:{apikey:config.publishableKey,'Content-Type':'application/json'},body:JSON.stringify({email}),signal:AbortSignal.timeout(10000)});\n  if(result.ok)return reply('Solicitud aceptada si existe una cuenta.',202);\n  if(result.status===429)return reply('Demasiadas solicitudes. Inténtalo más tarde.',429);\n }catch{}\n return reply('El servicio de correo no pudo aceptar la solicitud.',502);\n}\nexport default {async fetch(request,env){\n const url=new URL(request.url);\n if(url.pathname==='/api/email-workspace')return emailWorkspaceKey(request,env,recoveryConfig(env));\n if(url.pathname==='/api/admin/account-recovery')return adminAccountRecovery(request,env);\n if(!url.pathname.startsWith('/account/'))return v74Worker.fetch(request,env);\n const headers={'Cache-Control':'no-store','Referrer-Policy':'no-referrer','X-Content-Type-Options':'nosniff','X-Frame-Options':'DENY','Content-Security-Policy':`default-src 'none'; script-src 'self'; style-src 'self'; connect-src https://${RECOVERY_TENANT}.supabase.co; base-uri 'none'; frame-ancestors 'none'; form-action 'none'`,'Permissions-Policy':'camera=(),microphone=(),geolocation=()'};\n if(!['GET','HEAD'].includes(request.method))return new Response(null,{status:405,headers:{...headers,Allow:'GET, HEAD'}});\n if(url.pathname==='/account/recovery' && request.method==='GET' && url.searchParams.size===1 && url.searchParams.has('code'))return new Response(null,{status:303,headers:{...headers,Location:'/account/email-return'+url.search}});\n if(url.search && url.pathname!=='/account/email-return')return new Response('Enlace inválido. Solicita uno nuevo.',{status:400,headers});\n if(url.pathname==='/account/config.mjs')return new Response(request.method==='HEAD'?null:'export default '+JSON.stringify(recoveryConfig(env))+';',{headers:{...headers,'Content-Type':'text/javascript; charset=utf-8'}});\n const asset=recoveryAssets[url.pathname];if(!asset)return new Response(null,{status:404,headers});\n const body=request.method==='HEAD'?null:new Blob([Uint8Array.from(atob(asset[1]),c=>c.charCodeAt(0))]).stream().pipeThrough(new DecompressionStream('gzip'));\n return new Response(body,{headers:{...headers,'Content-Type':asset[0]}});\n}};\n",
+  "routesDeclarations": [
+    {
+      "name": "ROUTES",
+      "at": 121887
+    }
+  ],
+  "contentDeclarations": []
+}

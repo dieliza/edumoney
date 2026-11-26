@@ -1,0 +1,7 @@
+{
+  "conservative_cases": 83,
+  "limit": 100,
+  "includes_repeats_and_research": true,
+  "latest": "5 packaged artifact cases and 1 live unauthorized Edge denial",
+  "full_suite_run": false
+}

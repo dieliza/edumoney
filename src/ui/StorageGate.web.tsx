@@ -1,3 +1,4 @@
+import {RequiredAccountGate} from './RequiredAccountGate';
 import {idleLockMinutes} from '../web/securityPreferences';
 import {hasBiometric,unlockBiometric,biometricMessage} from '../web/biometrics';
 import {recoverySupportLink,recoverySupportEmail} from '../web/recoveryContact';
@@ -9,7 +10,8 @@ import {useTheme} from '../design/ThemeProvider';
 import {Brand} from './Brand';
 import {ActionButton,Body,Card} from './components';
 import {LoginPasswordField} from './LoginPasswordField.web';
-export function StorageGate({children}:PropsWithChildren){
+export function StorageGate({children}:PropsWithChildren){return <RequiredAccountGate><LocalStorageGate>{children}</LocalStorageGate></RequiredAccountGate>;}
+function LocalStorageGate({children}:PropsWithChildren){
  const {colors}=useTheme();const [exists,setExists]=useState<boolean>();const [password,setPassword]=useState(''),[repeat,setRepeat]=useState('');
  const [bio,setBio]=useState(false),[attempts,setAttempts]=useState(0),[waiting,setWaiting]=useState(false);const attemptController=useRef<AbortController|null>(null);
  const [ready,setReady]=useState(isWebVaultUnlocked);const [busy,setBusy]=useState(false),[error,setError]=useState(''),[help,setHelp]=useState(false);const opening=useRef(false);

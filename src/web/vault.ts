@@ -11,7 +11,7 @@ let writes: Promise<unknown> = Promise.resolve();
 function vaultWrite<T>(action: () => Promise<T>): Promise<T> {
   const next = writes.then(action); writes = next.catch(() => undefined); return next;
 }
-let rotatePassword: ((current: string, next: string) => Promise<void>) | undefined;
+let rotatePassword: ((current: string, next: string,fromUnlocked?:boolean) => Promise<void>) | undefined;
 export async function changeWebPassword(current: string, next: string, repeat: string) {
   if (!rotatePassword) throw Error('Desbloquea EduMoney antes de cambiar la contraseña.');
   if (next.length < 12) throw Error('Usa al menos 12 caracteres.');
@@ -19,6 +19,13 @@ export async function changeWebPassword(current: string, next: string, repeat: s
   await vaultWrite(() => rotatePassword!(current, next));
   // La envoltura anterior ya queda invalidada por el cambio de sal; retirarla minimiza secretos antiguos.
   await import('./biometrics').then(module=>module.disableBiometric()).catch(()=>undefined);
+}
+/** One-time account migration after actual password/biometric unlock. */
+export async function changeUnlockedWebPassword(next:string){
+ if(!connection||!rotatePassword)throw Error('Desbloquea primero los registros existentes.');
+ if(next.length<12)throw Error('La clave de vinculación no es válida.');
+ await vaultWrite(()=>rotatePassword!('',next,true));
+ await import('./biometrics').then(m=>m.disableBiometric()).catch(()=>undefined);
 }
 
 function record<T>(mode: IDBTransactionMode, operation: (store: IDBObjectStore) => IDBRequest<T>): Promise<T> {
@@ -97,9 +104,9 @@ async function openWebVault(password: string) {
     async getFirstAsync<T>(sql: string, ...params: (string | number | null)[]) { return query<T>(sql, params)[0] ?? null; },
   };
   await migrate(adapter); if (!saved) await persist(); connection = adapter; settingsKey = key; settingsSalt = salt;
-  rotatePassword = async (current, next) => {
+  rotatePassword = async (current, next,fromUnlocked=false) => {
     const stored = await record<Envelope>('readonly', s => s.get('database'));
-    const oldKey = await keyFor(current, stored.salt);
+    const oldKey = fromUnlocked?key:await keyFor(current, stored.salt);
     let plain: ArrayBuffer;
     try { plain = await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(stored.iv)}, oldKey, stored.ciphertext); }
     catch { throw Error('La contraseña actual no coincide. No se cambiaron los datos.'); }
@@ -198,3 +205,12 @@ export function getOrCreateEducationDevice():Promise<string>{return vaultWrite(a
 /** Verificación local para activar un desbloqueo alternativo; nunca transmite la contraseña. */
 export function verifyWebPassword(password:string){return vaultWrite(async()=>{const saved=await record<Envelope|undefined>('readonly',s=>s.get('database'));if(!saved)throw Error('Primero crea tu espacio de EduMoney.');try{await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(saved.iv)},await keyFor(password,saved.salt),saved.ciphertext);}catch{throw Error('La contraseña actual no coincide.');}});}
 export async function webVaultFingerprint(){const saved=await record<Envelope|undefined>('readonly',s=>s.get('database'));return saved?Array.from(saved.salt,b=>b.toString(16).padStart(2,'0')).join(''):null;}
+
+/** Account metadata is not server authorization; the vault still requires its cryptographic key. */
+export type WebAccountBinding={version:1;userId:string;emailHash:string;fingerprint:string;offline?:{salt:string;iv:string;ciphertext:string}};
+export async function readWebAccountBinding(){return record<WebAccountBinding|undefined>('readonly',s=>s.get('account-binding'));}
+export async function writeWebAccountBinding(value:WebAccountBinding){
+ if(!settingsKey||value.fingerprint!==await webVaultFingerprint())throw Error('Desbloquea los registros que deseas vincular.');
+ const old=await readWebAccountBinding();if(old&&old.userId!==value.userId)throw Error('Este espacio pertenece a otra cuenta.');
+ await record('readwrite',s=>s.put(value,'account-binding'));
+}
