@@ -1,7 +1,7 @@
 {
-  "conservative_cases": 83,
+  "conservative_cases": 88,
   "limit": 100,
   "includes_repeats_and_research": true,
-  "latest": "5 packaged artifact cases and 1 live unauthorized Edge denial",
+  "latest": "4 live publication checks passed after one HTTP client User-Agent failure; live Edge unauthorized rejection passed",
   "full_suite_run": false
 }
