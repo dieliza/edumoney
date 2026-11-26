@@ -1,0 +1,145 @@
+{
+  "buildName": "budget-refinements-56a55c5c7fc2",
+  "baseVersion": 131,
+  "modified": [
+    33000,
+    33004,
+    33007,
+    33005,
+    33006,
+    33008,
+    33002,
+    21027
+  ],
+  "added": [
+    34000
+  ],
+  "protectedModules": 1426,
+  "report": [
+    {
+      "compiled": "src/modules/budget/domain.ts",
+      "id": 33000,
+      "imports": {
+        "../../core/money": 814,
+        "../../core/errors": 799,
+        "../money/domain": 813,
+        "../bills/domain": 850,
+        "../funds/domain": 21010
+      },
+      "source_sha256": "f3f64121b67decdeb09000525914b9b7f00c9d7efb8d50f360c2b0f3283253b9"
+    },
+    {
+      "compiled": "src/modules/budget/BudgetPresentation.web.tsx",
+      "id": 34000,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "../../ui/transactionFormStyle": 20001,
+        "../../design/ThemeProvider": 792
+      },
+      "source_sha256": "6b399e9b5bfe4eb2226b2caa2ad9d0d08a13d74a616476cbd998b2d81c49840d"
+    },
+    {
+      "compiled": "src/modules/budget/BudgetControls.web.tsx",
+      "id": 33004,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "./BudgetPresentation.web": 34000,
+        "react": 13,
+        "../../design/ThemeProvider": 792,
+        "../../core/money": 814
+      },
+      "source_sha256": "f16d98b975bf205d964d6c4a299ca85d68760377c0d8e9fd47468a62c979d3d1"
+    },
+    {
+      "compiled": "src/modules/budget/BudgetDetails.web.tsx",
+      "id": 33007,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "../../design/ThemeProvider": 792,
+        "../money/domain": 813,
+        "./BudgetControls.web": 33004
+      },
+      "source_sha256": "26645bc5dcc22a127a2f49b5421026863c69d7288151b99744fdad484714012c"
+    },
+    {
+      "compiled": "src/modules/budget/BudgetPie.web.tsx",
+      "id": 33005,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "../../design/ThemeProvider": 792,
+        "../money/domain": 813,
+        "./domain": 33000
+      },
+      "source_sha256": "ae1f16fa76f566b0cdfd6a7a70bc494412f1ab56503159fb728de6feed753c23"
+    },
+    {
+      "compiled": "src/modules/budget/CategoryEditor.web.tsx",
+      "id": 33006,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "./domain": 33000,
+        "../../core/errors": 799,
+        "react": 13,
+        "./BudgetPresentation.web": 34000,
+        "../funds/FundSheet": 21020,
+        "./BudgetControls.web": 33004
+      },
+      "source_sha256": "6aec8867134a1191b0363becacae2669dea9b5e703b9505d95f5809f3395105d"
+    },
+    {
+      "compiled": "src/modules/budget/AnnualExpenses.web.tsx",
+      "id": 33008,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "./BudgetPresentation.web": 34000,
+        "react": 13,
+        "../../core/id": 803,
+        "../../core/errors": 799,
+        "../../design/ThemeProvider": 792,
+        "../money/domain": 813,
+        "../funds/FundSheet": 21020,
+        "./BudgetControls.web": 33004,
+        "./domain": 33000
+      },
+      "source_sha256": "99c0f1418ab730ef2b4dd245caa82f79aa4cb96999df5a1d2cbfb3e6669ff6ea"
+    },
+    {
+      "compiled": "src/modules/budget/MonthlyBudgetCenter.web.tsx",
+      "id": 33002,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "./BudgetPresentation.web": 34000,
+        "react": 13,
+        "expo-router": 790,
+        "../../design/ThemeProvider": 792,
+        "../../core/id": 803,
+        "../../core/errors": 799,
+        "../../storage/changeEvents": 871,
+        "../money/localStore": 798,
+        "../money/domain": 813,
+        "../funds/store": 21009,
+        "../funds/domain": 21010,
+        "../funds/FundTransfers": 21027,
+        "../funds/TransferEditor": 21025,
+        "../funds/FundSheet": 21020,
+        "./store": 33003,
+        "./domain": 33000,
+        "./BudgetControls.web": 33004,
+        "./BudgetPie.web": 33005,
+        "./CategoryEditor.web": 33006,
+        "./BudgetDetails.web": 33007,
+        "./AnnualExpenses.web": 33008,
+        "./BudgetHistory.web": 33009
+      },
+      "source_sha256": "bfd024be6cb7448dfa160a1f07a219251d11a94d4064f78e51507064e6e9b67a"
+    }
+  ],
+  "historyPresentation": {
+    "params": 1,
+    "canvas": 3,
+    "heading": 1
+  },
+  "browserVerified": false
+}

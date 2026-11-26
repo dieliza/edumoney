@@ -13,7 +13,7 @@ import {transferHistory,transferEndpoint} from './history';
 import type {FundKind,FundTransfer} from './types';
 import {TransferEditor} from './TransferEditor';
 import {useFunds} from './useFunds';
-export function FundTransfers({scope,kind,fundId,month,allowTransfer=false,openTransfer=false,transferId}:{scope:AccountScope;kind?:FundKind;fundId?:string;month?:string;allowTransfer?:boolean;openTransfer?:boolean;transferId?:string}){
+export function FundTransfers({scope,kind,fundId,month,allowTransfer=false,openTransfer=false,transferId,onSurface=false}:{scope:AccountScope;kind?:FundKind;fundId?:string;month?:string;allowTransfer?:boolean;openTransfer?:boolean;transferId?:string;onSurface?:boolean}){
  const {data,store,error:loadError,reload}=useFunds(),[editing,setEditing]=useState(false),[editor,setEditor]=useState<{initial?:FundTransfer}|null>(null),[error,setError]=useState(''),[notice,setNotice]=useState(''),[busyId,setBusyId]=useState(''),[limit,setLimit]=useState(30);const deleting=useRef(false),opened=useRef('');
  const calculation=useMemo(()=>{try{return {summary:data?fundSummary(data,scope,localToday()):null,error:''};}catch(e){return {summary:null,error:userMessage(e)};}},[data,scope]);
  const rows=useMemo(()=>data?transferHistory(data.transfers,data.funds,scope,{kind,fundId,month}):[],[data,scope,kind,fundId,month]);
@@ -21,11 +21,11 @@ export function FundTransfers({scope,kind,fundId,month,allowTransfer=false,openT
  async function saved(){await reload();setNotice('Transferencia guardada. Tus ingresos y gastos no cambian.');}
  async function remove(t:FundTransfer){if(!store||deleting.current)return;deleting.current=true;setBusyId(t.id);setError('');setNotice('');try{await store.reverse(t.id,t.version,'Eliminada desde Editar historiales');await reload();setNotice('Transferencia eliminada de los balances. Se conserva su historial.');}catch(e){setError(userMessage(e));}finally{deleting.current=false;setBusyId('');}}
  return <View style={{gap:12}}>
- <ErrorNotice message={loadError||calculation.error||error}/>{notice?<View accessibilityLiveRegion="polite"><Body canvas>{notice}</Body></View>:null}
+ <ErrorNotice message={loadError||calculation.error||error}/>{notice?<View accessibilityLiveRegion="polite"><Body canvas={!onSurface}>{notice}</Body></View>:null}
  {allowTransfer?<ActionButton title="Transferir fondos" icon="swap-horizontal" testID="funds-new-transfer" onPress={()=>setEditor({})}/>:null}
- <SectionHeading title="Historial de transferencias"/><MeaningHelp canvas label="Historial de transferencias"/>
+ {!onSurface?<SectionHeading title="Historial de transferencias"/>:null}<MeaningHelp canvas={!onSurface} label="Historial de transferencias"/>
  {!data&&!loadError?<ActivityIndicator accessibilityLabel="Cargando historial de transferencias"/>:null}
- {data&&!rows.length?<Body canvas>No hay transferencias registradas en esta sección{month?' para este mes':''}.</Body>:null}
+ {data&&!rows.length?<Body canvas={!onSurface}>No hay transferencias registradas en esta sección{month?' para este mes':''}.</Body>:null}
  {rows.slice(0,limit).map(t=><Card key={t.id}><Body style={{fontWeight:'700'}}>{transferEndpoint(t.fromId,data?.funds??[])} → {transferEndpoint(t.toId,data?.funds??[])}</Body><Body>{t.date} · {formatMoney(t.amountCents)} · {t.reversedAt?'Eliminada / revertida':'Confirmada'}</Body>{t.description?<Body>{t.description}</Body>:null}{t.reversedAt?<Body muted>{t.reversalReason}</Body>:null}</Card>)}
  {rows.length>limit?<ActionButton title="Ver más transferencias" secondary onPress={()=>setLimit(v=>v+30)}/>:null}
  <View style={{alignItems:'flex-end'}}><TransactionLink title="Editar historiales" testID="fund-history-edit" disabled={!data} onPress={()=>setEditing(true)}/></View>
