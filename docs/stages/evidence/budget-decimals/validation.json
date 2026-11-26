@@ -1,0 +1,10 @@
+{
+  "distinct_cases": 17,
+  "executions_including_repeats": 17,
+  "case_limit": 100,
+  "typecheck": "passed",
+  "eslint": "passed",
+  "tests": "passed",
+  "browser_verified": false,
+  "published": false
+}
