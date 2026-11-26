@@ -1,5 +1,5 @@
 export function signupAccount(email:string,password:string,repeat:string):Promise<string>;
-export function signinAccount(email:string,password:string):Promise<{ready:boolean;needsLegacy?:boolean;localOnly?:boolean}>;
+export function signinAccount(email:string,password:string):Promise<{ready:boolean;previousRecordsPreserved?:boolean;localOnly?:boolean}>;
 export function linkLegacyAccount(previous:string,password:string):Promise<{ready:boolean}>;
 export function linkLegacyWithBiometric(password:string):Promise<{ready:boolean}>;
 export function requestAccountRecovery(email:string):Promise<string>;

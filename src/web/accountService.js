@@ -26,8 +26,9 @@ async function enroll(user,key,password){
  try{localStorage.setItem('edu-email-owner',user.id);localStorage.removeItem('edu-recovery-unlinked-v1');sessionStorage.removeItem('edu-email-once');}catch{/* Binding in IndexedDB remains authoritative for this client. */}
  identity={id:user.id,email:user.email,admin:user.app_metadata?.edumoney_admin===true};localOnly=false;
 }
-async function ensureOwner(user){const binding=await vault.readWebAccountBinding();if(binding&&binding.userId!==user.id)throw Error('Este navegador contiene registros vinculados a otra cuenta. No se cambiaron los datos.');
- let previous;try{previous=localStorage.getItem('edu-email-owner');}catch{}if(previous&&previous!==user.id)throw Error('Este navegador ya tiene registros de otra cuenta. No se cambiaron los datos.');return binding;}
+function workspaceMismatch(message){return Object.assign(Error(message),{code:'ACCOUNT_WORKSPACE_MISMATCH'});}
+async function ensureOwner(user){const binding=await vault.readWebAccountBinding();if(binding&&binding.userId!==user.id)throw workspaceMismatch('Este navegador contiene registros vinculados a otra cuenta. No se cambiaron los datos.');
+ let previous;try{previous=localStorage.getItem('edu-email-owner');}catch{}if(previous&&previous!==user.id)throw workspaceMismatch('Este navegador ya tiene registros de otra cuenta. No se cambiaron los datos.');return binding;}
 async function signupAccountFlow(email,password,repeat){email=safeEmail(email);if(!validEmail(email)||password.length<12||password.length>128||password!==repeat)throw Error('Escribe un correo válido y la misma contraseña dos veces, de 12 a 128 caracteres.');await checked((await client()).auth.signUp({email,password,options:{emailRedirectTo:ORIGIN+'/'}}));await (await client()).auth.signOut({scope:'local'});identity=null;return 'Revisa tu correo para confirmar tu cuenta. Después inicia sesión con ese correo y contraseña.';}
 async function signinAccountFlow(email,password){
  email=safeEmail(email);if(!validEmail(email)||!password)throw Error('Escribe tu correo y contraseña.');const binding=await vault.readWebAccountBinding();
@@ -38,26 +39,23 @@ async function signinAccountFlow(email,password){
  }
  await checked((await client()).auth.signInWithPassword({email,password}));const user=await verified();return openAccountRecords(user,password);
 }
-async function openAccountRecords(user,password,{recovering=false}={}){
- try{const pending=JSON.parse(localStorage.getItem('edu-recovery-unlinked-v1')??'null');if(pending?.userId===user.id&&pending.fingerprint===await vault.webVaultFingerprint())recovering=true;}catch{/* This marker only prevents a repeated prompt; it cannot unlock data. */}
- try{await ensureOwner(user);}catch(error){if(recovering)return newRecoveredWorkspace(user,password);throw error;}const scoped=await workspaceKey();if(scoped.user.id!==user.id)throw Error('La sesión cambió. Vuelve a iniciar sesión.');const key=scoped.key;
+async function openAccountRecords(user,password){
+ try{await ensureOwner(user);}catch(error){if(error?.code==='ACCOUNT_WORKSPACE_MISMATCH')return newRecoveredWorkspace(user,password);throw error;}
+ const scoped=await workspaceKey();if(scoped.user.id!==user.id)throw Error('La sesión cambió. Vuelve a iniciar sesión.');const key=scoped.key;
  if(!await vault.hasWebVault()){await vault.unlockWebVault(key);await enroll(user,key,password);return {ready:true};}
  if(vault.isWebVaultUnlocked()){
   try{await vault.verifyWebPassword(key);}catch{await vault.changeUnlockedWebPassword(key);}await enroll(user,key,password);return {ready:true};
  }
  try{await vault.unlockWebVault(key);}catch(error){
   if(!(error instanceof Error)||!error.message.startsWith('Contraseña incorrecta'))throw error;
-  if(recovering){
-   try{if(await hasBiometric()){await unlockBiometric();await vault.changeUnlockedWebPassword(key);await enroll(user,key,password);return {ready:true};}}catch{/* Preserve the old encrypted copy if device verification is canceled or unavailable. */}
-   identity={id:user.id,email:user.email,admin:user.app_metadata?.edumoney_admin===true};localOnly=false;
-   try{localStorage.setItem('edu-recovery-unlinked-v1',JSON.stringify({userId:user.id,fingerprint:await vault.webVaultFingerprint()}));}catch{/* The copy remains protected even if the prompt preference cannot persist. */}
-   return newRecoveredWorkspace(user,password);
-  }
-  try{await vault.unlockWebVault(password);}catch(legacyError){if(legacyError instanceof Error&&legacyError.message.startsWith('Contraseña incorrecta'))return {ready:false,needsLegacy:true};throw legacyError;}
-  await vault.changeUnlockedWebPassword(key);
+  // The current verified account password may already open older records; try it without another prompt.
+  try{await vault.unlockWebVault(password);await vault.changeUnlockedWebPassword(key);await enroll(user,key,password);return {ready:true};}catch(previous){if(!(previous instanceof Error)||!previous.message.startsWith('Contraseña incorrecta'))throw previous;}
+  try{if(await hasBiometric()){await unlockBiometric();await vault.changeUnlockedWebPassword(key);await enroll(user,key,password);return {ready:true};}}catch{/* Keep the earlier copy intact if device verification cannot open it. */}
+  return newRecoveredWorkspace(user,password);
  }
  await enroll(user,key,password);return {ready:true};
 }
+
 async function newRecoveredWorkspace(user,password){
  await vault.selectRecoveredWebWorkspace(user.id);
  const scoped=await workspaceKey();if(scoped.user.id!==user.id)throw Error('La sesión cambió. Vuelve a entrar con tu contraseña nueva.');
@@ -132,5 +130,5 @@ export function finishAccountRecovery(password,repeat){return exclusiveAccount(a
  if(!recoveryVerified)throw Error('Abre el enlace de recuperación que recibiste.');
  if(password!==repeat||password.length<12||password.length>128)throw Error('Las contraseñas deben coincidir y tener entre 12 y 128 caracteres.');
  const user=await verified();await checked((await client()).auth.updateUser({password}));recoveryVerified=false;
- return openAccountRecords(user,password,{recovering:true});
+ return openAccountRecords(user,password);
 });}
