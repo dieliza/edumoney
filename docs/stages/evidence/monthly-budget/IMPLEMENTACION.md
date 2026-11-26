@@ -46,3 +46,5 @@ Resultados y estado exacto de publicación se completan en `validation.json` y `
 Este entorno de Sites no dispone de navegador interactivo ni dispositivos Safari/iPhone/iPad/Android. Las pruebas de representación HTML/SVG, temas y composición adaptable no equivalen a validación física en esos dispositivos. No se afirmará que se hayan obtenido capturas ni probado dispositivos reales.
 
 Corrección final de proyección: las reservas de gastos anuales se financian dentro de su categoría presupuestada. Su aportación pendiente se resta del consumo ordinario planificado de esa categoría y se presenta como reserva; no se suma dos veces. Si el vencimiento ya está incluido como factura pendiente del mes, no se vuelve a añadir una nueva reserva proyectada. Se probó el ciclo completo antes/después de aportar y al revertir.
+
+Proyección de tarjetas: las facturas pendientes de pago de deuda reducen el efectivo estimado, pero no se suman a los gastos ordinarios estimados. Se verificó una compra a crédito ya registrada junto con su factura de pago pendiente. El panel muestra las salidas de efectivo pendientes por separado.
