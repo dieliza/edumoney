@@ -1,0 +1,19 @@
+{
+  "cleanBuildOutput": true,
+  "workerBytes": 63837659,
+  "workerMiB": 60.88033580780029,
+  "limitMiB": 63.9,
+  "orphanKeysRemoved": 0,
+  "removedUnimportedShards": [
+    "content-10.js",
+    "content-5.js",
+    "content-6.js",
+    "content-7.js",
+    "content-8.js",
+    "content-9.js"
+  ],
+  "retainedRuntimeFilesByteIdentical": true,
+  "totalRoutes": 19561,
+  "preservedApplicationModules": 1439,
+  "allRoutesAndModulesUnchanged": true
+}

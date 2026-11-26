@@ -1,0 +1,72 @@
+{
+  "workerFiles": [
+    {
+      "file": "content-0.js",
+      "bytes": 11117060
+    },
+    {
+      "file": "content-1.js",
+      "bytes": 11741138
+    },
+    {
+      "file": "content-10.js",
+      "bytes": 407634
+    },
+    {
+      "file": "content-2.js",
+      "bytes": 11791544
+    },
+    {
+      "file": "content-3.js",
+      "bytes": 11841432
+    },
+    {
+      "file": "content-4.js",
+      "bytes": 11222588
+    },
+    {
+      "file": "content-5.js",
+      "bytes": 690094
+    },
+    {
+      "file": "content-6.js",
+      "bytes": 405590
+    },
+    {
+      "file": "content-7.js",
+      "bytes": 683896
+    },
+    {
+      "file": "content-8.js",
+      "bytes": 683968
+    },
+    {
+      "file": "content-9.js",
+      "bytes": 407210
+    },
+    {
+      "file": "content.js",
+      "bytes": 250
+    },
+    {
+      "file": "email-entry.js",
+      "bytes": 1750
+    },
+    {
+      "file": "index.js",
+      "bytes": 5017381
+    },
+    {
+      "file": "recovery-release.js",
+      "bytes": 1104516
+    }
+  ],
+  "totalFiles": 67116051,
+  "routes": 19561,
+  "active": 34,
+  "orphanBytes": 253984,
+  "referencedBytes": 57438912,
+  "contentKeys": 296,
+  "routeKeys": 223,
+  "imports": "import {emailWorkspaceKey} from './email-entry.js';\nimport {CONTENT} from './content.js';\nexport async function educationOwner(request,env){\n if((env.EDUCATION_OWNER_ID&&request.headers.get('oai-authenticated-user-id')===env.EDUCATION_OWNER_ID)||(env.EDUCATION_OWNER_EMAIL&&request.headers.get('oai-authenticated-user-email')?.toLowerCase()===env.EDUCATION_OWNER_EMAIL.toLowerCase()))return true;\n co"
+}

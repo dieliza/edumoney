@@ -1,0 +1,8 @@
+{
+  "version": 134,
+  "deployment_id": "appgdep_6b08b2922c408191b2d59e77bfe14dec",
+  "status": "failed",
+  "reason": "Worker exceeded uncompressed size limit of 63.9 MiB",
+  "previous_live_version": 133,
+  "financial_data_changed": false
+}

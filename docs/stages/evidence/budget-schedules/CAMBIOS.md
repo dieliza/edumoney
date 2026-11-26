@@ -33,3 +33,7 @@ Archivos de aplicación: `types.ts`, `domain.ts`, `contributions.ts`, `recommend
 Resultados en `validation.json` y `artifact-check.json`. Pruebas con SQLite en memoria y datos FICTICIOS: calendario, quincenas, bisiestos, redondeo, reserva previa, importes pequeños, cuotas vencidas, fechas inválidas, copia y respaldo, eliminación segura del renglón, clasificación de gastos, frecuencia anual y botones de configuración. Se mantienen las pruebas de decimales y contraste de la versión anterior. TypeScript y ESLint son verificaciones separadas.
 
 No hay navegador interactivo ni dispositivo Safari/iPad físico en este entorno; no se afirma una prueba física ni capturas nuevas. La entrega pública y el actualizador se comprueban separadamente al finalizar.
+
+## Corrección del paquete de publicación
+
+La primera publicación (versión 134) fue rechazada por superar el límite de tamaño del Worker; la versión 133 permaneció disponible. Se identificaron seis archivos de contenido compilado sin importación desde el servidor. Se retiran únicamente esos archivos y se exige que todos los archivos de ejecución retenidos, las 19,561 rutas y los 1,439 módulos de aplicación permanezcan idénticos. No se eliminan recursos de ninguna ruta publicada ni datos. Se limpia el directorio generado `dist/server` antes de compilar para evitar reintroducir archivos sobrantes. Esta corrección afecta al empaquetado, no a la lógica implementada.
