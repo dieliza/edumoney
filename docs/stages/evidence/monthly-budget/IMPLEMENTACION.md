@@ -41,6 +41,8 @@ El semáforo se apaga sin datos; rojo por déficit o gastos superiores al ingres
 
 ## Validación y límites
 
-Resultados y estado exacto de publicación se completan en `validation.json` y `source-result.json`. Se usan únicamente bases SQLite efímeras con datos FICTICIOS. Se cuentan las repeticiones dentro del máximo de 100 casos indicado en AGENTS.md.
+Resultados y estado exacto de publicación se completan en `validation.json` y `source-result.json`. Se usan únicamente bases SQLite efímeras con datos FICTICIOS. Se cuentan las repeticiones dentro del máximo inicial de 100 casos indicado en AGENTS.md, ampliado explícitamente por el usuario a 120 en este bloque.
 
 Este entorno de Sites no dispone de navegador interactivo ni dispositivos Safari/iPhone/iPad/Android. Las pruebas de representación HTML/SVG, temas y composición adaptable no equivalen a validación física en esos dispositivos. No se afirmará que se hayan obtenido capturas ni probado dispositivos reales.
+
+Corrección final de proyección: las reservas de gastos anuales se financian dentro de su categoría presupuestada. Su aportación pendiente se resta del consumo ordinario planificado de esa categoría y se presenta como reserva; no se suma dos veces. Si el vencimiento ya está incluido como factura pendiente del mes, no se vuelve a añadir una nueva reserva proyectada. Se probó el ciclo completo antes/después de aportar y al revertir.

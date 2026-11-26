@@ -1,7 +1,7 @@
 {
-  "distinct_cases_validated": 46,
-  "case_executions_including_retries": 91,
-  "case_limit": 100,
+  "distinct_cases_validated": 48,
+  "case_executions_including_retries": 104,
+  "case_limit": 120,
   "final_failures": 0,
   "typecheck": "passed",
   "eslint": "passed",
@@ -16,5 +16,6 @@
     "Initial fixture and artifact-check failures resolved; final targeted checks pass.",
     "No production financial records used for testing.",
     "Actual interactive Safari/iPhone/iPad/Android review remains unavailable in this environment."
-  ]
+  ],
+  "publication_checks_pending": true
 }
