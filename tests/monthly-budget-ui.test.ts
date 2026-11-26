@@ -1,0 +1,14 @@
+import {it,expect,vi} from 'vitest';
+import {createElement} from 'react';
+import {renderToStaticMarkup} from 'react-dom/server';
+import {BudgetPie} from '../src/modules/budget/BudgetPie.web';
+import {BudgetDetails} from '../src/modules/budget/BudgetDetails.web';
+import {budgetReport,defaultPlan,recommend} from '../src/modules/budget/domain';
+import type {BudgetContext} from '../src/modules/budget/types';
+const palette={surface:'#FFFFFF',surfaceAlt:'#F3F6F8',line:'#CCC',text:'#123',muted:'#456',primary:'#007B59'};
+vi.mock('../src/design/ThemeProvider',()=>({useTheme:()=>({colors:palette,name:'light'})}));
+const c:BudgetContext={today:'2026-11-26',money:{movements:[],categories:[],budgets:[],schedules:[],commitments:[]},funds:{funds:[],transfers:[],locations:[],movements:[],legacy:[],events:[]},bills:{bills:[],series:[],payments:[],categories:[],movements:[]},debts:{debts:[],payments:[],events:[],plans:[],movements:[],bills:[]}};
+it('renderiza círculo sólido con porcentajes internos y leyenda monetaria',()=>{const p=recommend({...defaultPlan('2026-11','personal',c),projectedCents:300000},300000),html=renderToStaticMarkup(createElement(BudgetPie,{report:budgetReport(p,c),mode:'planned'}));expect(html).toContain('<svg');expect(html).toContain('50%');expect(html).toContain('1,500.00');expect(html).not.toContain('stroke-dasharray');expect(html).toContain('width:48%');});
+it('con ingreso cero muestra estado informativo sin valores NaN ni Infinity',()=>{const html=renderToStaticMarkup(createElement(BudgetPie,{report:budgetReport(defaultPlan('2026-11','personal',c),c),mode:'used'}));expect(html).toContain('Añade ingresos');expect(html).not.toMatch(/NaN|Infinity/);});
+it('paneles secundarios son compactos y el semáforo no inventa evaluación sin datos',()=>{const html=renderToStaticMarkup(createElement(BudgetDetails,{r:budgetReport(defaultPlan('2026-11','personal',c),c)}));expect(html.match(/<details/g)).toHaveLength(4);expect(html).toContain('Sin datos suficientes');expect(html).not.toContain('0 0 7px');expect(html).not.toContain('Ver lección');});
+it('los gráficos y paneles consumen los colores del tema en vez de fijar un fondo claro',()=>{palette.surface='#111820';palette.text='#F2FAFF';const html=renderToStaticMarkup(createElement(BudgetDetails,{r:budgetReport(defaultPlan('2026-11','personal',c),c)}));expect(html).toContain('background:#111820');expect(html).toContain('color:#F2FAFF');});

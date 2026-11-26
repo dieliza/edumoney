@@ -4,17 +4,13 @@ import {useState} from 'react';
 import {announceSaved} from '../../ui/saveFeedback';
 import {ActionButton,Body} from '../../ui/components';
 import {Choices,ErrorNotice,Field,Sheet} from '../money/fields';
-import {getMoneyStore} from '../money/localStore';
 import {localToday} from '../money/domain';
 import {parseAmount} from '../../core/money';
 import {userMessage} from '../../core/errors';
 import type {MoneyStore} from '../money/store';
 import type {Snapshot} from '../money/types';
-export function useMonthlyBudget(){
- const [content,setContent]=useState<{store:MoneyStore;data:Snapshot}|null>(null),[error,setError]=useState('');
- async function open(){try{const store=await getMoneyStore();setContent({store,data:await store.snapshot(true)});setError('');}catch(e){setError(userMessage(e));}}
- return{open,editor:<>{error?<ErrorNotice message={error}/>:null}{content?<MonthlyBudgetEditor {...content} close={()=>setContent(null)}/>:null}</>};
-}
+export function useMonthlyBudget(){return{open:()=>router.push({pathname:'/funds',params:{scope:'personal',kind:'budget'}}),editor:null};}
+
 export function MonthlyBudgetEditor({store,data,close}:{store:MoneyStore;data:Snapshot;close():void}){
  const [month,setMonth]=useState(localToday().slice(0,7));const active=data.categories.filter(c=>!c.archived&&c.kind==='expense');const [category,setCategory]=useState(active[0]?.id??'');
  const existing=(id:string,period=month)=>{const value=data.budgets.find(b=>b.month===period&&b.categoryId===id)?.amountCents;return value===undefined?'':`${BigInt(value)/100n}.${String(BigInt(value)%100n).padStart(2,'0')}`;};
