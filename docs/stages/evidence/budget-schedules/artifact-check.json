@@ -1,0 +1,17 @@
+{
+  "cases": 1,
+  "passed": 1,
+  "modified": [
+    33000,
+    33002,
+    33008
+  ],
+  "added": [
+    35000,
+    35001,
+    35002,
+    35003
+  ],
+  "protectedModules": 1432,
+  "browserVerified": false
+}

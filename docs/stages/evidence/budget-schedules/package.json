@@ -1,0 +1,137 @@
+{
+  "buildName": "budget-schedules-ec0806a6ba82",
+  "baseVersion": 133,
+  "baseHasRefinements": true,
+  "modified": [
+    33000,
+    33002,
+    33008
+  ],
+  "added": [
+    35000,
+    35001,
+    35002,
+    35003
+  ],
+  "protectedModules": 1432,
+  "report": [
+    {
+      "compiled": "src/modules/budget/contributions.ts",
+      "id": 35000,
+      "imports": {
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/domain": 813
+      },
+      "source_sha256": "c1b839eb5b242bc928e13f22a056f24152112fb5e25b400ba1269dff4dbcee45"
+    },
+    {
+      "compiled": "src/modules/budget/domain.ts",
+      "id": 33000,
+      "imports": {
+        "./contributions": 35000,
+        "../../core/money": 814,
+        "../../core/errors": 799,
+        "../money/domain": 813,
+        "../bills/domain": 850,
+        "../funds/domain": 21010
+      },
+      "source_sha256": "840e8af40429554bfc86e93309086d90984f48024672d85bb7002adbf6c4f3d0"
+    },
+    {
+      "compiled": "src/modules/budget/recommendations.ts",
+      "id": 35002,
+      "imports": {
+        "../../core/money": 814,
+        "../../core/errors": 799,
+        "../funds/domain": 21010,
+        "./domain": 33000,
+        "./contributions": 35000
+      },
+      "source_sha256": "1de85923ccbf98342e56c13a0ac85e597a84c32467bcd5d7e70491676f3f832d"
+    },
+    {
+      "compiled": "src/modules/budget/ContributionFields.web.tsx",
+      "id": 35003,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "./BudgetPresentation.web": 34000,
+        "./BudgetControls.web": 33004,
+        "./contributions": 35000
+      },
+      "source_sha256": "bbd077e443e8422ff3c6e1addcafe5ddf00cd9c1c79ff5af0c6c6002cf8edd4e"
+    },
+    {
+      "compiled": "src/modules/budget/RecommendationEditor.web.tsx",
+      "id": 35001,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "../../core/errors": 799,
+        "../money/domain": 813,
+        "../funds/FundSheet": 21020,
+        "./domain": 33000,
+        "./contributions": 35000,
+        "./recommendations": 35002,
+        "./ContributionFields.web": 35003,
+        "./BudgetPresentation.web": 34000,
+        "./BudgetControls.web": 33004
+      },
+      "source_sha256": "57faf7bb57b37f35f5f28cab3d95c8e0c22fd386e2ba369d5704bbf64cdfad2d"
+    },
+    {
+      "compiled": "src/modules/budget/AnnualExpenses.web.tsx",
+      "id": 33008,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "./ContributionFields.web": 35003,
+        "./recommendations": 35002,
+        "./contributions": 35000,
+        "./BudgetPresentation.web": 34000,
+        "react": 13,
+        "../../core/id": 803,
+        "../../core/errors": 799,
+        "../../design/ThemeProvider": 792,
+        "../money/domain": 813,
+        "../funds/FundSheet": 21020,
+        "./BudgetControls.web": 33004,
+        "./domain": 33000
+      },
+      "source_sha256": "8c77cfece52a0a683cc7df359323b2540b9a156d93d1b49c011212b7b454bdc1"
+    },
+    {
+      "compiled": "src/modules/budget/MonthlyBudgetCenter.web.tsx",
+      "id": 33002,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "./RecommendationEditor.web": 35001,
+        "./recommendations": 35002,
+        "./contributions": 35000,
+        "./BudgetPresentation.web": 34000,
+        "react": 13,
+        "expo-router": 790,
+        "../../design/ThemeProvider": 792,
+        "../../core/id": 803,
+        "../../core/errors": 799,
+        "../../storage/changeEvents": 871,
+        "../money/localStore": 798,
+        "../money/domain": 813,
+        "../funds/store": 21009,
+        "../funds/domain": 21010,
+        "../funds/FundTransfers": 21027,
+        "../funds/TransferEditor": 21025,
+        "../funds/FundSheet": 21020,
+        "./store": 33003,
+        "./domain": 33000,
+        "./BudgetControls.web": 33004,
+        "./BudgetPie.web": 33005,
+        "./CategoryEditor.web": 33006,
+        "./BudgetDetails.web": 33007,
+        "./AnnualExpenses.web": 33008,
+        "./BudgetHistory.web": 33009
+      },
+      "source_sha256": "2b78bfe95a207edc9765dcc4a7eb2a107e5bf72b98f3744b41a5ccb9ff090846"
+    }
+  ],
+  "browserVerified": false
+}

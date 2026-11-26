@@ -1,0 +1,13 @@
+{
+  "distinct_cases": 75,
+  "executions_including_repeats": 75,
+  "limit": 100,
+  "tests": "passed",
+  "typecheck": "passed",
+  "eslint": "passed",
+  "published": false,
+  "browser_verified": false,
+  "artifact_checks": "passed",
+  "build": "passed",
+  "protected_production_modules": 1432
+}
