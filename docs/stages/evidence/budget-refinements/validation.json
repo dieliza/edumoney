@@ -1,6 +1,6 @@
 {
-  "distinct_cases": 21,
-  "executions_including_repeats": 38,
+  "distinct_cases": 22,
+  "executions_including_repeats": 49,
   "limit": 100,
   "typecheck": "passed",
   "eslint": "passed",

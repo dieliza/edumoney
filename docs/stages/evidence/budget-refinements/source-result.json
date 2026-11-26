@@ -1,0 +1,9 @@
+{
+  "project_id": "appgprj_6af65a2177c48191b95b917e1ca2a2f0",
+  "commit_sha": "d5850a802b5836e3b69c8bb8777b7640b62a1060",
+  "base_commit": "b845014f87b41fe3bfa232555eff5f7c8d36f409",
+  "local_build": "passed",
+  "published": false,
+  "pushed": true,
+  "archive_omitted": "Persistent workspace has insufficient space for the deployment archive; validated build uses isolated memory filesystem; remote build required."
+}

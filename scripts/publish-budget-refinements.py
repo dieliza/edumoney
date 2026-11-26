@@ -1,7 +1,7 @@
 """Scoped EduMoney build runner; credentials remain only in process memory."""
 import base64,json,os,pathlib,subprocess,sys,tempfile,termios
 ROOT=pathlib.Path('/workspace/edumoney')
-target=json.loads((ROOT/'docs/stages/evidence/crash-boat/source-target.json').read_text());target['expected_commit']='b845014f87b41fe3bfa232555eff5f7c8d36f409'
+target=json.loads((ROOT/'docs/stages/evidence/crash-boat/source-target.json').read_text());target['expected_commit']='d5850a802b5836e3b69c8bb8777b7640b62a1060'
 settings=termios.tcgetattr(0);settings[3]&=~(termios.ECHO|termios.ICANON);settings[6][termios.VMIN]=1;settings[6][termios.VTIME]=0;termios.tcsetattr(0,termios.TCSANOW,settings)
 print('Ready for the scoped EduMoney Git credential JSON on stdin (hidden).',flush=True)
 credential=json.loads(sys.stdin.readline())
