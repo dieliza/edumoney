@@ -1,12 +1,8 @@
 {
-  "build": "calendar-biometric-3188abc4a7c1",
+  "build": "calendar-biometric-style-92fcba83d856",
   "modified": [
-    877,
-    856
-  ],
-  "added": [
     32013
   ],
-  "protectedModules": 1420,
+  "protectedModules": 1422,
   "browserVerified": false
 }
