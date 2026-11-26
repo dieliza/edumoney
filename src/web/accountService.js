@@ -28,7 +28,7 @@ async function enroll(user,key,password){
 }
 async function ensureOwner(user){const binding=await vault.readWebAccountBinding();if(binding&&binding.userId!==user.id)throw Error('Este navegador contiene registros vinculados a otra cuenta. No se cambiaron los datos.');
  let previous;try{previous=localStorage.getItem('edu-email-owner');}catch{}if(previous&&previous!==user.id)throw Error('Este navegador ya tiene registros de otra cuenta. No se cambiaron los datos.');return binding;}
-async function signupAccountFlow(email,password,repeat){email=safeEmail(email);if(!validEmail(email)||password.length<12||password.length>128||password!==repeat)throw Error('Escribe un correo válido y la misma contraseña dos veces, de 12 a 128 caracteres.');await checked((await client()).auth.signUp({email,password,options:{emailRedirectTo:ORIGIN+'/account/access'}}));await (await client()).auth.signOut({scope:'local'});identity=null;return 'Revisa tu correo para confirmar tu cuenta. Después inicia sesión con ese correo y contraseña.';}
+async function signupAccountFlow(email,password,repeat){email=safeEmail(email);if(!validEmail(email)||password.length<12||password.length>128||password!==repeat)throw Error('Escribe un correo válido y la misma contraseña dos veces, de 12 a 128 caracteres.');await checked((await client()).auth.signUp({email,password,options:{emailRedirectTo:ORIGIN+'/'}}));await (await client()).auth.signOut({scope:'local'});identity=null;return 'Revisa tu correo para confirmar tu cuenta. Después inicia sesión con ese correo y contraseña.';}
 async function signinAccountFlow(email,password){
  email=safeEmail(email);if(!validEmail(email)||!password)throw Error('Escribe tu correo y contraseña.');const binding=await vault.readWebAccountBinding();
  if(typeof navigator!=='undefined'&&navigator.onLine===false&&binding?.offline){
@@ -50,7 +50,7 @@ async function signinAccountFlow(email,password){
 }
 async function linkLegacyAccountFlow(previous,password){const {user,key}=await workspaceKey();await ensureOwner(user);if(!vault.isWebVaultUnlocked())await vault.unlockWebVault(previous);await vault.changeUnlockedWebPassword(key);await enroll(user,key,password);return {ready:true};}
 async function linkLegacyWithBiometricFlow(password){const {user,key}=await workspaceKey();await ensureOwner(user);if(!vault.isWebVaultUnlocked())await unlockBiometric();await vault.changeUnlockedWebPassword(key);await enroll(user,key,password);return {ready:true};}
-async function requestAccountRecoveryFlow(email){email=safeEmail(email);if(!validEmail(email))throw Error('Escribe el correo de tu cuenta.');await checked((await client()).auth.resetPasswordForEmail(email,{redirectTo:ORIGIN+'/account/recovery'}));return 'Si existe una cuenta con ese correo, recibirás un enlace para crear una contraseña nueva.';}
+async function requestAccountRecoveryFlow(email){email=safeEmail(email);if(!validEmail(email))throw Error('Escribe el correo de tu cuenta.');await checked((await client()).auth.resetPasswordForEmail(email,{redirectTo:ORIGIN+'/'}));return 'Si existe una cuenta con ese correo, recibirás un enlace para crear una contraseña nueva.';}
 export async function biometricAccountAvailable(){const binding=await vault.readWebAccountBinding();return !!binding&&binding.fingerprint===await vault.webVaultFingerprint()&&await hasBiometric();}
 export async function legacyBiometricAvailable(){return hasBiometric();}
 async function signinAccountWithBiometricFlow(){const binding=await vault.readWebAccountBinding();if(!binding||binding.fingerprint!==await vault.webVaultFingerprint())throw Error('Primero vincula tu correo entrando con tu contraseña.');await unlockBiometric();identity={id:binding.userId,email:''};localOnly=true;return {ready:true,localOnly:true};}
@@ -90,4 +90,22 @@ export function adminAction(action,payload={}){return exclusiveAccount(async()=>
  const user=await verified(session.session.access_token);if(user.app_metadata?.edumoney_admin!==true)throw Error('Acceso reservado a la cuenta administradora.');
  const result=await fetch('https://kvjrxcvxwoezajarvtgb.supabase.co/functions/v1/edumoney-admin-users',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+session.session.access_token},body:JSON.stringify({...payload,action}),cache:'no-store'});
  let data;try{data=await result.json();}catch{throw Error('No pudimos cargar la administración.');}if(!result.ok)throw Error(data.error??'No se pudo completar la administración.');return data;
+});}
+
+let accountLinkPromise,recoveryVerified=false;
+export function beginAccountLink(){
+ if(accountLinkPromise)return accountLinkPromise;
+ let hash='';if(typeof location!=='undefined'){hash=location.hash;if(hash)history.replaceState(null,'',location.pathname+location.search);}
+ accountLinkPromise=exclusiveAccount(async()=>{
+  if(!hash)return null;const q=new URLSearchParams(hash.slice(1));const type=q.get('type'),token=q.get('token_hash');
+  if([...q.keys()].length!==2||!['email','signup','recovery'].includes(type)||!/^[A-Za-z0-9_-]{20,512}$/.test(token??''))throw Error('Este enlace no es válido. Solicita uno nuevo desde «Olvidé mi contraseña».');
+  const data=await checked((await client()).auth.verifyOtp({token_hash:token,type}));if(!data?.user?.id||!data.user.email_confirmed_at)throw Error('El enlace venció. Solicita uno nuevo.');
+  recoveryVerified=type==='recovery';return{recovery:recoveryVerified,email:data.user.email??''};
+ });return accountLinkPromise;
+}
+export function finishAccountRecovery(password,repeat){return exclusiveAccount(async()=>{
+ if(!recoveryVerified)throw Error('Abre el enlace de recuperación que recibiste.');
+ if(password!==repeat||password.length<12||password.length>128)throw Error('Las contraseñas deben coincidir y tener entre 12 y 128 caracteres.');
+ const user=await verified();await checked((await client()).auth.updateUser({password}));recoveryVerified=false;
+ return signinAccountFlow(user.email,password);
 });}

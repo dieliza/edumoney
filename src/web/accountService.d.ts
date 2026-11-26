@@ -16,3 +16,6 @@ export function accountEnrollmentKnown():Promise<boolean>;
 export type ManagedUser={id:string;email:string;confirmed:boolean;createdAt:string;lastSignInAt:string|null;isAdmin:boolean;status:'active'|'suspended'};
 export type AdminResult={users:ManagedUser[];counts:{total:number;active:number;pending:number;suspended:number;administrators:number};page:number;hasMore:boolean;message?:string};
 export function adminAction(action:string,payload?:Record<string,unknown>):Promise<AdminResult>;
+
+export function beginAccountLink():Promise<{recovery:boolean;email:string}|null>;
+export function finishAccountRecovery(password:string,repeat:string):Promise<{ready:boolean;needsLegacy?:boolean;localOnly?:boolean}>;
