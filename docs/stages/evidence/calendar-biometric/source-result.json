@@ -3,6 +3,9 @@
   "commit_sha": "cac8609528733e1c03f062ee90cc57db0c40f03b",
   "base_commit": "fcb77449181c0f12483febbda3f01aa7e306d73d",
   "local_build": "passed",
-  "published": false,
-  "pushed": true
+  "published": true,
+  "pushed": true,
+  "version": 128,
+  "deployment_id": "appgdep_6b08508940308191a9358d946d48a426",
+  "runtime_revision": 4
 }

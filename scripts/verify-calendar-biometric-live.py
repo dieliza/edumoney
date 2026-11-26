@@ -8,7 +8,8 @@ html=get('/?verify=calendar-biometric-style-92fcba83d856');assert 'calendar-biom
 common=re.search(r'src="([^"?]*__common-[^"?]+\.js)',html).group(1)
 js=get(common);assert 'await _r(32010).confirmedWorkspaceKey(password)' in js;assert 'await r(32010).confirmedWorkspaceKey(password)' not in js
 print('PASS 1 active biometric module uses the actual Metro loader')
-assert 'Abrir calendario para elegir mes y año' in js and 'showPicker()' in js
+normalized=re.sub(r'\\u([0-9a-fA-F]{4})',lambda m:chr(int(m.group(1),16)),js)
+assert 'Abrir calendario para elegir mes y año' in normalized and 'showPicker()' in js
 print('PASS 2 themed native month/calendar control published')
 sw=get('/sw.js');assert 'edumoney-shell-calendar-biometric-style-92fcba83d856' in sw
 print('PASS 3 canonical service worker serves the new calendar/biometric build')
