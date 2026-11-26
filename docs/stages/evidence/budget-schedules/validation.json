@@ -1,13 +1,18 @@
 {
-  "distinct_cases": 75,
-  "executions_including_repeats": 75,
+  "distinct_cases": 77,
+  "executions_including_repeats": 84,
   "limit": 100,
   "tests": "passed",
   "typecheck": "passed",
   "eslint": "passed",
-  "published": false,
+  "published": true,
   "browser_verified": false,
   "artifact_checks": "passed",
   "build": "passed",
-  "protected_production_modules": 1432
+  "protected_production_modules": 1432,
+  "infrastructure_failed_attempts": 1,
+  "limit_accounting_total": 85,
+  "storage_cleanup": "passed",
+  "version_number": 135,
+  "public_delivery": "passed"
 }

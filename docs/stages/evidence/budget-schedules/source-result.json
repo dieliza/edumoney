@@ -1,0 +1,15 @@
+{
+  "project_id": "appgprj_6af65a2177c48191b95b917e1ca2a2f0",
+  "commit_sha": "346466832375ec71af67703b01badae0bacb828a",
+  "base_commit": "7917b577e59cebfad439dbe8b591aee289a780aa",
+  "local_build": "passed",
+  "published": true,
+  "pushed": true,
+  "archive_omitted": "Persistent workspace has insufficient space for the deployment archive; validated build uses isolated memory filesystem; remote build required.",
+  "version_number": 135,
+  "version_id": "appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_3e5fdec53df48191a3310f8b23d6dd75",
+  "deployment_id": "appgdep_6b08b656f4708191bffaa091ae09acd9",
+  "deployment_status": "succeeded",
+  "env_set_revision": 4,
+  "url": "https://edumoney-web.diegoluissantospabon.chatgpt.site"
+}

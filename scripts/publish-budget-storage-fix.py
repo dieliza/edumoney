@@ -33,6 +33,11 @@ for line in sys.stdin:
   if built:built=command(['npm','run','build'],checkout)
   assert json.loads((checkout/'.openai/hosting.json').read_text())==manifest
   print('BUILD_PASSED' if built else 'BUILD_FAILED',flush=True)
+ elif action=='refresh':
+  credential=json.loads(sys.stdin.readline())
+  assert credential['remote_url']==target['remote_url'] and credential['branch']=='main'
+  if credential.get('token'):env.update(GIT_CONFIG_COUNT='1',GIT_CONFIG_KEY_0='http.extraHeader',GIT_CONFIG_VALUE_0='Authorization: Basic '+base64.b64encode(('x-access-token:'+credential['token']).encode()).decode())
+  print('Credential refreshed.',flush=True)
  elif action=='publish':
   assert built,'Validate before push'
   assert command(['git','config','user.name','Codex'],checkout)

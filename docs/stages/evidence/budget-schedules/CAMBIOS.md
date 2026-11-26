@@ -37,3 +37,9 @@ No hay navegador interactivo ni dispositivo Safari/iPad físico en este entorno;
 ## Corrección del paquete de publicación
 
 La primera publicación (versión 134) fue rechazada por superar el límite de tamaño del Worker; la versión 133 permaneció disponible. Se identificaron seis archivos de contenido compilado sin importación desde el servidor. Se retiran únicamente esos archivos y se exige que todos los archivos de ejecución retenidos, las 19,561 rutas y los 1,439 módulos de aplicación permanezcan idénticos. No se eliminan recursos de ninguna ruta publicada ni datos. Se limpia el directorio generado `dist/server` antes de compilar para evitar reintroducir archivos sobrantes. Esta corrección afecta al empaquetado, no a la lógica implementada.
+
+## Entrega final
+
+Versión 135 publicada correctamente y entrega pública verificada (HTML, módulo de presupuesto y service worker). Fuente Sites: `346466832375ec71af67703b01badae0bacb828a`; revisión de entorno 4 conservada. Paquete: 60.88 MiB frente al límite de 63.9 MiB. La versión 134 fallida se resolvió con limpieza de archivos compilados sin uso.
+
+77 casos distintos aprobados, 84 ejecuciones aprobadas incluidas repeticiones, más 1 intento de publicación fallido por tamaño (85/100). TypeScript, ESLint, compilación y comprobación de entrega pública aprobados. No hubo migraciones SQL ni modificación de registros financieros de usuarios. Queda pendiente la revisión física en Safari/iPhone/iPad; no se dispone de navegador interactivo en este entorno.
