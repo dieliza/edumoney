@@ -13,3 +13,5 @@ Pruebas con datos ficticios: aportaciones parciales de $100/$200, cuotas complet
 Bloque nuevo solicitado por el usuario: goal-progress-delete, máximo 100 ejecuciones. Los bloques anteriores están cerrados. No se usan datos reales en pruebas destructivas. Sin navegador interactivo: React SSR y controlador del paquete publicado, sin afirmar validación física de Safari/iPhone.
 
 El empaquetado preserva las otras 1436 fábricas, las rutas anteriores, los alias coherentes de /sw.js, push y activación segura. Se valida la expansión exacta del contenido, el tamaño del Worker y los hashes de todos los archivos finales. El archivo de publicación no cabe en el disco persistente: compilación en memoria y remota del mismo commit exacto.
+
+Versión 145 publicada correctamente y entrega pública de HTML, paquete y service worker comprobada. 55 casos de código distintos, 57 ejecuciones de código con repeticiones (incluido el fallo inicial del controlador); 2 validaciones de artefacto, 1 controlador del paquete y 1 entrega pública: 61 de 100 ejecuciones. Identificadores y resultados en source-result.json, validation.json y public-delivery.json.

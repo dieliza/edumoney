@@ -11,8 +11,10 @@
   "typescript": "passed",
   "eslint_affected": "passed",
   "runtime": "passed",
-  "public_delivery": "pending",
+  "public_delivery": "passed",
   "browser_verified": false,
   "migration": "none; existing audited goal_events stores logical deletion",
-  "real_user_data_modified_in_tests": false
+  "real_user_data_modified_in_tests": false,
+  "published_version": 145,
+  "total_case_executions": 61
 }
