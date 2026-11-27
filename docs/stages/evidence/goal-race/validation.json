@@ -1,0 +1,19 @@
+{
+  "distinct_code_cases": 67,
+  "code_executions_including_repeats": 73,
+  "code_results_final": "passed",
+  "legacy_schema_fixture_expectations_updated": 2,
+  "initial_no_tests_launch_counted_conservatively": 1,
+  "typescript": "passed",
+  "eslint": "passed",
+  "artifact": "passed",
+  "build": "passed",
+  "migration": "20 to 21 additive columns; rollback and old backup restore verified",
+  "financial_integrity": "existing funds, goal contributions, reversals, totals and archive tests passed",
+  "worker_bytes": 62437821,
+  "worker_mib": 59.5453462600708,
+  "static_prefix_bytes_saved": 5101148,
+  "unchanged_runtime_modules": 1426,
+  "test_limit": 100,
+  "browser_verified": false
+}

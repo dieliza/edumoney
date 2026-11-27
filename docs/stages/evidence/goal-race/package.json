@@ -1,0 +1,282 @@
+{
+  "buildName": "goal-race-3f110220090b",
+  "baseVersion": 141,
+  "baseHasRefinements": true,
+  "modified": [
+    805,
+    809,
+    21007,
+    808,
+    810,
+    807,
+    21009,
+    859,
+    887,
+    1061,
+    20013,
+    21019,
+    883
+  ],
+  "added": [
+    37000,
+    37001,
+    37002,
+    37003
+  ],
+  "protectedModules": 1426,
+  "report": [
+    {
+      "compiled": "src/modules/goals/types.ts",
+      "id": 809,
+      "imports": {},
+      "source_sha256": "5d0116db64bcdde047bebf43f7f0797adc9409e60dff761525f31c9509da2f1f"
+    },
+    {
+      "compiled": "src/modules/goals/race.ts",
+      "id": 37001,
+      "imports": {
+        "../budget/contributions": 35000,
+        "../money/domain": 813
+      },
+      "source_sha256": "0bb6d54d38e381c423d5f357aed7a9c6bb0a2d487749b93e77b800de840867dd"
+    },
+    {
+      "compiled": "src/modules/goals/GoalVictory.web.tsx",
+      "id": 37002,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "../../design/ThemeProvider": 792
+      },
+      "source_sha256": "37d4b5fcb4eb1c726db8440bd936bea5a10147b427b1c9dc35ebcebc7ebed337"
+    },
+    {
+      "compiled": "src/modules/goals/GoalJourney.web.tsx",
+      "id": 37000,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "../../design/ThemeProvider": 792,
+        "../money/domain": 813,
+        "./types": 809,
+        "./race": 37001,
+        "./GoalVictory.web": 37002
+      },
+      "source_sha256": "75e489d0e9f6fc399865b765c36ddc66c943d2b5e1a68a4cad1be4bfcde2e0a9"
+    },
+    {
+      "compiled": "src/modules/funds/read.ts",
+      "id": 21007,
+      "imports": {
+        "../money/store": 21026,
+        "../money/scopedMovements": 21008,
+        "./types": 21011
+      },
+      "source_sha256": "79362bac20ffbd1e7ee4a8b45dd5c79002a5e7bd83e1f998b8098e1033dfd6e2"
+    },
+    {
+      "compiled": "src/modules/goals/domain.ts",
+      "id": 808,
+      "imports": {
+        "../budget/contributions": 35000,
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/domain": 813,
+        "./types": 809
+      },
+      "source_sha256": "1f6206359ac0358fd16319ad4e4e19e2709dc802d0d64a1f1678930e8086ac6a"
+    },
+    {
+      "compiled": "src/modules/goals/GoalForm.tsx",
+      "id": 810,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "../../ui/saveFeedback": 802,
+        "react": 13,
+        "../../core/id": 803,
+        "../../core/money": 814,
+        "../../core/errors": 799,
+        "../../ui/components": 796,
+        "../money/fields": 797,
+        "../money/domain": 813,
+        "./types": 809,
+        "../../ui/DateField": 853
+      },
+      "source_sha256": "e125f9070fd26b3a4f1d72fba0acd2ae6d9051ae6a83c9afa33c354cd5fb194b"
+    },
+    {
+      "compiled": "src/modules/goals/GoalsScreen.tsx",
+      "id": 805,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "./GoalJourney": 37000,
+        "./types": 809,
+        "../../storage/changeEvents": 871,
+        "../funds/read": 21007,
+        "../../ui/NavigationRail": 812,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "expo-router": 790,
+        "../../core/errors": 799,
+        "../../ui/components": 796,
+        "../money/domain": 813,
+        "../money/fields": 797,
+        "./localStore": 806,
+        "./domain": 808,
+        "./GoalForm": 810
+      },
+      "source_sha256": "496e7050f47d4f48300631701675f0ef9dae3d70526452a7e8dcf3a28923c872"
+    },
+    {
+      "compiled": "src/modules/funds/store.ts",
+      "id": 21009,
+      "imports": {
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/domain": 813,
+        "./domain": 21010,
+        "./read": 21007,
+        "./types": 21011
+      },
+      "source_sha256": "b5b0d5dd413c69f15a8cca7810b7a2ad240af03984d79ce927232c858ffa5db6"
+    },
+    {
+      "compiled": "src/modules/goals/store.ts",
+      "id": 807,
+      "imports": {
+        "../funds/store": 21009,
+        "../funds/read": 21007,
+        "../funds/domain": 21010,
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/store": 21026,
+        "../money/repository": 816,
+        "../money/domain": 813,
+        "./domain": 808
+      },
+      "source_sha256": "e09d799e14bc0516fe6e2419a5b3553273c991200bb0c2113f3dbe6a1c25a8d7"
+    },
+    {
+      "compiled": "src/modules/progress/store.ts",
+      "id": 859,
+      "imports": {
+        "../funds/read": 21007,
+        "../money/domain": 813,
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "./domain": 857
+      },
+      "source_sha256": "f52e9e317aebe2947b78a973182771208fc578673c48186c848b2d804a387735"
+    },
+    {
+      "compiled": "src/storage/schemaV21.ts",
+      "id": 37003,
+      "imports": {},
+      "source_sha256": "032a1f1abb474416a6209cb7558f4f30d7b01aabe58b8851b933100e607e09a6"
+    },
+    {
+      "compiled": "src/modules/backup/store.ts",
+      "id": 887,
+      "imports": {
+        "../../storage/schemaV21": 37003,
+        "../budget/domain": 33000,
+        "../funds/read": 21007,
+        "../funds/domain": 21010,
+        "../../core/errors": 799,
+        "../../storage/schema": 1062,
+        "../../storage/schemaV2": 1063,
+        "../../storage/schemaV3": 1064,
+        "../../storage/schemaV4": 1065,
+        "../../storage/schemaV5": 1066,
+        "../../storage/schemaV6": 1067,
+        "../../storage/schemaV7": 1068,
+        "../../storage/schemaV8": 1069,
+        "../../storage/schemaV9": 1070,
+        "../../storage/schemaV10": 1071,
+        "../../storage/schemaV11": 1072,
+        "../../storage/schemaV12": 1073,
+        "../../storage/schemaV13": 1074,
+        "../../storage/schemaV14": 1075,
+        "../../storage/schemaV15": 1076,
+        "../../storage/schemaV16": 1077,
+        "../../storage/schemaV17": 1078,
+        "../../storage/schemaV18": 1079,
+        "../../storage/schemaV20": 33001,
+        "../../storage/schemaV19": 21016
+      },
+      "source_sha256": "1d22d44427ffd8a48f9d5e3547f1d539a78952bbec745bedc1850b0a46923dae"
+    },
+    {
+      "compiled": "src/storage/migrate.ts",
+      "id": 1061,
+      "imports": {
+        "./schemaV21": 37003,
+        "./schema": 1062,
+        "./schemaV2": 1063,
+        "./schemaV3": 1064,
+        "./schemaV4": 1065,
+        "./schemaV5": 1066,
+        "./schemaV6": 1067,
+        "./schemaV7": 1068,
+        "./schemaV8": 1069,
+        "./schemaV9": 1070,
+        "./schemaV10": 1071,
+        "./schemaV11": 1072,
+        "./schemaV12": 1073,
+        "./schemaV13": 1074,
+        "./schemaV14": 1075,
+        "./schemaV15": 1076,
+        "./schemaV16": 1077,
+        "./schemaV17": 1078,
+        "./schemaV18": 1079,
+        "./schemaV20": 33001,
+        "./schemaV19": 21016
+      },
+      "source_sha256": "1b8061d9a11ce3fdc1ecba069b79fa6ee6858cbfdf0149c3c530c33a61c6d05f"
+    },
+    {
+      "compiled": "src/ui/meaningCatalog.ts",
+      "id": 20013,
+      "imports": {},
+      "source_sha256": "2b248ee2cfb90757c7db3a9c67b7cd54cc3164a228606d7bceeaaf156b43d338"
+    },
+    {
+      "compiled": "src/modules/funds/FundEditor.tsx",
+      "id": 21019,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "./FundSheet": 21020,
+        "react": 13,
+        "../../core/id": 803,
+        "../../core/money": 814,
+        "../../core/errors": 799,
+        "../../ui/components": 796,
+        "../money/fields": 797,
+        "../../ui/DateField": 853,
+        "../money/domain": 813,
+        "./read": 21007,
+        "./types": 21011
+      },
+      "source_sha256": "98b768928959736fe1c87c5a9b88eaee05ebbc5bba17d851cb11b9451cffc932"
+    },
+    {
+      "id": 883,
+      "literalPatch": "backup-range-21"
+    }
+  ],
+  "browserVerified": false
+}
