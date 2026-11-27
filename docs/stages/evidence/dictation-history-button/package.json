@@ -1,0 +1,18 @@
+{
+  "buildName": "dictation-history-325ab4897468",
+  "baseVersion": 148,
+  "modified": [
+    821
+  ],
+  "added": [
+    42000
+  ],
+  "protectedModules": 1450,
+  "workerBytes": 66644686,
+  "sourceFiles": {
+    "src/ui/DictationHistoryButton.tsx": "946d9f30e68058a1f24bd43aaeca5700745306d58be7383a6fa97371350643af",
+    "src/ui/HomeVoiceEntry.tsx": "ccb22230e98ce027745f297f759495e082a39ecddf405c3cdb026c2504ce669e",
+    "web-enhancements/goal-race/patch-dictation-history.cjs": "0b3421634be3f2f62ee7815bc5d54bbf95d13b3b0083d29d81becaa5a2588c89"
+  },
+  "browserVerified": false
+}

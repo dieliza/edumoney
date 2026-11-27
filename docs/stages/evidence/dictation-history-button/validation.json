@@ -1,0 +1,21 @@
+{
+  "block": "dictation-history-button",
+  "maximum_test_cases": 100,
+  "conservative_cases": 21,
+  "counts": {
+    "package_attempts": 2,
+    "SSR_variations_two_runs": 16,
+    "build": 1,
+    "legacy_suite_did_not_start": 1,
+    "public_delivery": 1
+  },
+  "typecheck": "passed",
+  "eslint": "passed",
+  "build": "passed",
+  "runtime": "passed in final deployed factory, four widths and two themes",
+  "legacy_test": "did not start: Unexpected token typeof while loading native dependencies",
+  "scope": "only existing home shortcut appearance/title; callback preserved",
+  "migration": "none",
+  "browser_verified": false,
+  "source_archive": "remote packaging fallback; locally built worker exceeds available disk for export archive"
+}

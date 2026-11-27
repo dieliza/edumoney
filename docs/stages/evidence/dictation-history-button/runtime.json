@@ -1,0 +1,18 @@
+{
+  "cases": 1,
+  "passed": 1,
+  "widths": [
+    320,
+    390,
+    820,
+    1440
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "icon": "document microphone clock",
+  "shape": "asymmetric corners",
+  "navigation": "same /dictations",
+  "browserVerified": false
+}

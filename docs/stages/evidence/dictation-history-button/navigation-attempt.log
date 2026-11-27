@@ -1,0 +1,17 @@
+
+ RUN  v5.1.0 /workspace/edumoney
+
+ ❯ tests/approved-home.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/approved-home.test.ts [ tests/approved-home.test.ts ]
+SyntaxError: Unexpected token 'typeof'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  19:19:45
+   Duration  731ms (worker 97%, environment 3%)
+
