@@ -1,0 +1,12 @@
+{
+  "distinct_code_cases": 86,
+  "code_executions_including_repeats": 90,
+  "code_results_final": "passed",
+  "old_expectations_updated": 4,
+  "typescript": "passed",
+  "eslint": "passed",
+  "financial_isolation": "all non-planning tables identical before and after simulated save/copy/delete",
+  "sql_migrations": 0,
+  "test_limit": 100,
+  "browser_verified": false
+}
