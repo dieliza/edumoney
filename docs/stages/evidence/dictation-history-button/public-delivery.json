@@ -1,0 +1,9 @@
+{
+  "cases": 1,
+  "passed": 1,
+  "build": "dictation-history-325ab4897468",
+  "public_html": "passed",
+  "button_asset": "passed",
+  "service_worker": "passed",
+  "browser_verified": false
+}
