@@ -1,0 +1,12 @@
+{
+  "buildName": "goal-race-fix-626c290d2855",
+  "baseVersion": 142,
+  "modified": [
+    805
+  ],
+  "protectedModules": 1442,
+  "routesPreserved": 19739,
+  "workerBytes": 62841076,
+  "source_sha256": "4862f0e0c3aa4126420c66c258ed4ead99fa8a618b5e6ac2505e06f709555a8c",
+  "browserVerified": false
+}

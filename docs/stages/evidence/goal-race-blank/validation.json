@@ -1,0 +1,17 @@
+{
+  "cause": "v142 Metro adapter returned native module namespaces instead of default component exports",
+  "repair": "805 native adapter r(value).default; future goal package corrected",
+  "runtime": "passed: empty goals, AppState subscription, selected goal and completed race/trophy/fireworks",
+  "typescript": "passed",
+  "eslint_scoped": "passed: src, tests and changed CJS files with Node Buffer global",
+  "eslint_repository": "failed on pre-existing unresolved evidence imports and Node/Deno globals in unrelated scripts; no out-of-scope fixes",
+  "runtime_executions": 3,
+  "runtime_fixture_failure": 1,
+  "artifact_scenarios": 1,
+  "public_delivery": "pending",
+  "prior_conservative_execution_count": 76,
+  "current_conservative_execution_count_before_public_check": 80,
+  "limit": 100,
+  "browser_verified": false,
+  "real_user_data_accessed": false
+}
