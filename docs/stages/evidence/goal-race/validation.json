@@ -15,5 +15,10 @@
   "static_prefix_bytes_saved": 5101148,
   "unchanged_runtime_modules": 1426,
   "test_limit": 100,
-  "browser_verified": false
+  "browser_verified": false,
+  "public_delivery": "passed",
+  "actual_case_executions_including_artifact_and_delivery": 75,
+  "conservative_execution_count": 76,
+  "distinct_scenarios_including_artifact_and_delivery": 69,
+  "published_version": 142
 }
