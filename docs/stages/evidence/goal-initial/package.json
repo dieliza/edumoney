@@ -1,0 +1,328 @@
+{
+  "buildName": "goal-initial-f6948df2a7fe",
+  "baseVersion": 147,
+  "modified": [
+    21028,
+    805,
+    39002,
+    809,
+    21007,
+    808,
+    810,
+    807,
+    21009,
+    21014,
+    21019,
+    859,
+    887,
+    1061,
+    20013,
+    821,
+    883
+  ],
+  "added": [
+    41001,
+    41000
+  ],
+  "protectedModules": 1432,
+  "workerBytes": 66647782,
+  "report": [
+    {
+      "compiled": "src/modules/funds/history.ts",
+      "id": 21028,
+      "imports": {},
+      "source_sha256": "50c065987c08a254a0ccfcae4e957105947f625983858c1c90d1e66fc55ca916"
+    },
+    {
+      "compiled": "src/modules/goals/GoalCalendarTools.web.tsx",
+      "id": 39002,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "expo-router": 790,
+        "../../ui/components": 796,
+        "../../web/files": 889,
+        "../money/domain": 813,
+        "./calendar": 39001,
+        "./reminders": 39003
+      },
+      "source_sha256": "6815afe6d0bf186ea1b37f137b5f2d8effd4117ef14acca4edb5e41fcf3694fa"
+    },
+    {
+      "compiled": "src/modules/goals/types.ts",
+      "id": 809,
+      "imports": {},
+      "source_sha256": "8a7c51ab5d79ef67b5931778a3a03929ad8a7755af61ac17d2280d57f5d10acd"
+    },
+    {
+      "compiled": "src/modules/funds/read.ts",
+      "id": 21007,
+      "imports": {
+        "../goals/deletion": 38000,
+        "../money/store": 21026,
+        "../money/scopedMovements": 21008,
+        "./types": 21011
+      },
+      "source_sha256": "c397ccb6e18858ab89c79deb80e4177ce76904755ca26e26faeebd4e275296bc"
+    },
+    {
+      "compiled": "src/modules/goals/domain.ts",
+      "id": 808,
+      "imports": {
+        "../budget/contributions": 35000,
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/domain": 813,
+        "./types": 809
+      },
+      "source_sha256": "9d167224ef6218f3ab39a736546e0cb0b929d606ce32ef0c428694ff7a35ede7"
+    },
+    {
+      "compiled": "src/modules/goals/GoalSchedulePreview.tsx",
+      "id": 41001,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "../../ui/components": 796,
+        "../../core/money": 814,
+        "../money/domain": 813,
+        "./calendar": 39001,
+        "./GoalCalendarTools": 39002
+      },
+      "source_sha256": "40774db95513f500ab4fa962d34fe0805f691348c0f179ef5bad7e9a921b3f9a"
+    },
+    {
+      "compiled": "src/modules/goals/GoalForm.tsx",
+      "id": 810,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "./GoalSchedulePreview": 41001,
+        "./domain": 808,
+        "../../ui/saveFeedback": 802,
+        "react": 13,
+        "../../core/id": 803,
+        "../../core/money": 814,
+        "../../core/errors": 799,
+        "../../ui/components": 796,
+        "../money/fields": 797,
+        "../money/domain": 813,
+        "./types": 809,
+        "../../ui/DateField": 853
+      },
+      "source_sha256": "e0138142d55d3fa3db81930a78c79d2004c4cb451fb998f54a0bdf0c4ad96165"
+    },
+    {
+      "compiled": "src/modules/goals/GoalsScreen.tsx",
+      "id": 805,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "./GoalCalendarTools": 39002,
+        "./GoalJourney": 37000,
+        "./types": 809,
+        "../../storage/changeEvents": 871,
+        "../funds/read": 21007,
+        "../../ui/NavigationRail": 812,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "expo-router": 790,
+        "../../core/errors": 799,
+        "../../ui/components": 796,
+        "../money/domain": 813,
+        "../money/fields": 797,
+        "./localStore": 806,
+        "./domain": 808,
+        "./GoalForm": 810
+      },
+      "source_sha256": "e4b8e0eb999730b41f1cf623d0e446a536507a37dd8d61fc20986422368598e7"
+    },
+    {
+      "compiled": "src/modules/funds/store.ts",
+      "id": 21009,
+      "imports": {
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/domain": 813,
+        "./domain": 21010,
+        "./read": 21007,
+        "./types": 21011
+      },
+      "source_sha256": "0e6a6dcaf2177797e418028476a5b257d936297d9e3ba473a2651518176c766e"
+    },
+    {
+      "compiled": "src/modules/goals/store.ts",
+      "id": 807,
+      "imports": {
+        "./deletion": 38000,
+        "../funds/store": 21009,
+        "../funds/read": 21007,
+        "../funds/domain": 21010,
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/store": 21026,
+        "../money/repository": 816,
+        "../money/domain": 813,
+        "./domain": 808
+      },
+      "source_sha256": "dd7d86105651042d627d2269d07cdd803d438d67fd51138c5d82d9bd4464e9ea"
+    },
+    {
+      "compiled": "src/ui/FundsSummary.tsx",
+      "id": 21014,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "../core/money": 814,
+        "./MeaningHelp": 20014,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "expo-linear-gradient": 836,
+        "expo-router": 790,
+        "./components": 796,
+        "../modules/money/domain": 813
+      },
+      "source_sha256": "ec6156b4affccffae978e97668e0d40db6a093b5cde3ab6b33b9444eab7a86e7"
+    },
+    {
+      "compiled": "src/modules/funds/FundEditor.tsx",
+      "id": 21019,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "./FundSheet": 21020,
+        "react": 13,
+        "../../core/id": 803,
+        "../../core/money": 814,
+        "../../core/errors": 799,
+        "../../ui/components": 796,
+        "../money/fields": 797,
+        "../../ui/DateField": 853,
+        "../money/domain": 813,
+        "./read": 21007,
+        "./types": 21011
+      },
+      "source_sha256": "57b9932cef8f663ce80c5bf88bf5cc90081854c4ab1d95026ac0f75fee9871a6"
+    },
+    {
+      "compiled": "src/modules/progress/store.ts",
+      "id": 859,
+      "imports": {
+        "../goals/deletion": 38000,
+        "../funds/read": 21007,
+        "../money/domain": 813,
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "./domain": 857
+      },
+      "source_sha256": "420a10e8e1c731806e41b57b902a7d8d4be0d402082a3799e19f03db97b1f65d"
+    },
+    {
+      "compiled": "src/modules/backup/store.ts",
+      "id": 887,
+      "imports": {
+        "../../storage/schemaV21": 37003,
+        "../budget/domain": 33000,
+        "../funds/read": 21007,
+        "../funds/domain": 21010,
+        "../../core/errors": 799,
+        "../../storage/schema": 1062,
+        "../../storage/schemaV2": 1063,
+        "../../storage/schemaV3": 1064,
+        "../../storage/schemaV4": 1065,
+        "../../storage/schemaV5": 1066,
+        "../../storage/schemaV6": 1067,
+        "../../storage/schemaV7": 1068,
+        "../../storage/schemaV8": 1069,
+        "../../storage/schemaV9": 1070,
+        "../../storage/schemaV10": 1071,
+        "../../storage/schemaV11": 1072,
+        "../../storage/schemaV12": 1073,
+        "../../storage/schemaV13": 1074,
+        "../../storage/schemaV14": 1075,
+        "../../storage/schemaV15": 1076,
+        "../../storage/schemaV16": 1077,
+        "../../storage/schemaV17": 1078,
+        "../../storage/schemaV18": 1079,
+        "../../storage/schemaV20": 33001,
+        "../../storage/schemaV19": 21016
+      },
+      "source_sha256": "fc745d931f6b147a1d86f3da67c5014407f82854141d1bcfb9629753990092cd"
+    },
+    {
+      "compiled": "src/storage/schemaV22.ts",
+      "id": 41000,
+      "imports": {},
+      "source_sha256": "d969727551f55c0d6ae87225563cde50756c0e2b7b2d6ec8858d0a64c8ea7ce7"
+    },
+    {
+      "compiled": "src/storage/migrate.ts",
+      "id": 1061,
+      "imports": {
+        "./schemaV22": 41000,
+        "./schemaV21": 37003,
+        "./schema": 1062,
+        "./schemaV2": 1063,
+        "./schemaV3": 1064,
+        "./schemaV4": 1065,
+        "./schemaV5": 1066,
+        "./schemaV6": 1067,
+        "./schemaV7": 1068,
+        "./schemaV8": 1069,
+        "./schemaV9": 1070,
+        "./schemaV10": 1071,
+        "./schemaV11": 1072,
+        "./schemaV12": 1073,
+        "./schemaV13": 1074,
+        "./schemaV14": 1075,
+        "./schemaV15": 1076,
+        "./schemaV16": 1077,
+        "./schemaV17": 1078,
+        "./schemaV18": 1079,
+        "./schemaV20": 33001,
+        "./schemaV19": 21016
+      },
+      "source_sha256": "5fae83de99a2d1b69e8d1ac4f5945dc0be3190976229a94832687856ece47111"
+    },
+    {
+      "compiled": "src/ui/meaningCatalog.ts",
+      "id": 20013,
+      "imports": {},
+      "source_sha256": "d072e36d6b3edf0d99ffb8a5147c1f32e98ae701888b6e12a3ed404127b9f1ce"
+    },
+    {
+      "id": 821,
+      "surgicalPatch": "Remove purple transfer; relocate existing dictations; preserve voice logic"
+    },
+    {
+      "id": 883,
+      "surgicalPatch": "Backup version caption only"
+    }
+  ],
+  "browserVerified": false
+}

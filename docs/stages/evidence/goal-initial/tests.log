@@ -1,0 +1,12 @@
+
+ RUN  v5.1.0 /workspace/edumoney
+
+
+ Test Files  4 passed (4)
+      Tests  17 passed (17)
+   Start at  18:59:33
+   Duration  4.11s (tests 52%, import 24%, transform 21%, worker 3%)
+
+    Isolate  4 workers spawned · ~368ms startup each (spawn + environment, per file)
+             at least ~1.10s faster with isolate: false — reuses workers across files instead of one per file
+

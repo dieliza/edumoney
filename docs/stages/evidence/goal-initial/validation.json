@@ -1,0 +1,15 @@
+{
+ "test_execution_limit":100,
+ "conservative_cases_so_far":91,
+ "accounting":{"earlier_launched_results_not_retained":62,"repeated_targeted_suites_passed":17,"final_goal_form_and_calendar_suites_passed":7,"package_validations":2,"runtime_attempts":3},
+ "latest_targeted_tests":"24 passed across two commands (17 + 7)",
+ "typescript":"passed",
+ "eslint":"passed",
+ "build":"passed",
+ "migration":"22, additive goals.cadence_yearly; transactional; restore schemas 9–22",
+ "runtime_harness_corrections":"SSR mock drops testID and ActionButton title; assertions/mocks corrected, product unaffected",
+ "browser_verified":false,
+ "notification_scope":"Existing device permission and shared push scheduler, next 90 days; no automatic financial movements",
+ "financial_invariants":"Initial deposit atomic and idempotent; insufficient funds rolls back goal, fund and transfer; total unchanged; savings/goal display separated",
+ "hosting":"Worker built locally in retained memory filesystem; remote save packaging required because disk space prevents archive export"
+}

@@ -10,7 +10,7 @@ import { localToday,validDate } from '../money/domain';
 import type { LedgerMovement } from '../money/types';
 import { validateGoal } from './domain';
 import type { Contribution,ContributionInput,Goal,GoalInput,GoalSnapshot } from './types';
-const goalSelect=`SELECT g.id,g.name,g.kind,g.target_cents AS targetCents,g.opening_cents AS openingCents,g.desired_date AS desiredDate,COALESCE(g.cadence_detail,g.cadence) AS cadence,g.track_start_date AS trackStartDate,g.celebrated_target_cents AS celebratedTargetCents,g.version,g.archived FROM goals g`;
+const goalSelect=`SELECT g.id,g.name,g.kind,g.target_cents AS targetCents,g.opening_cents AS openingCents,g.desired_date AS desiredDate,COALESCE(g.cadence_yearly,g.cadence_detail,g.cadence) AS cadence,g.track_start_date AS trackStartDate,g.celebrated_target_cents AS celebratedTargetCents,g.version,g.archived FROM goals g`;
 const contributionSelect=`SELECT c.id,c.goal_id AS goalId,c.movement_id AS movementId,c.amount_cents AS amountCents,m.date,c.created_movement AS createdMovement,c.reversed_at AS reversedAt,c.reversal_reason AS reversalReason FROM goal_contributions c JOIN movements m ON m.id=c.movement_id`;
 const canonical=(g:GoalInput)=>JSON.stringify([g.name.trim(),g.kind,g.targetCents,g.openingCents,g.desiredDate,g.cadence]);
 function reasonValid(reason:string){if(!reason.trim()||reason.length>240)throw new UserInputError('Escribe un motivo de hasta 240 caracteres.');}
@@ -24,10 +24,18 @@ export class GoalStore {
  const goals=(await db.getAllAsync<Goal>(goalSelect+' ORDER BY g.rowid DESC')).filter(g=>!deleted.has(g.id)).map(g=>({...g,archived:!!g.archived,savedCents:addAmounts(cents(g.openingCents),...contributions.filter(c=>c.goalId===g.id&&!c.reversedAt&&!movements.find(m=>m.id===c.movementId)?.deletedAt).map(c=>cents(c.amountCents)),...transfers.filter(t=>t.goalId===g.id&&!t.reversedAt).map(t=>cents(t.amount)))}));
  return {goals,contributions,movements,fundTransfers:transfers,events:await db.getAllAsync('SELECT goal_id AS goalId,reason,recorded_at AS recordedAt FROM goal_events ORDER BY id DESC')};
  });}
- async create(g:GoalInput){validateGoal(g);return this.ledger.transaction(async db=>{
- const old=await db.getFirstAsync<Goal>(goalSelect+' WHERE g.id=?',g.id);if(old){if(canonical(old)===canonical(g))return;throw new UserInputError('Este identificador ya pertenece a otra meta.');}
+ async availableBalance(){return (await new FundsStore(this.ledger,this.today).summary('personal')).available;}
+ async create(g:GoalInput){validateGoal(g);return this.ledger.transaction(db=>this.createInTransaction(db,g));}
+ private async createInTransaction(db:SqlDb,g:GoalInput){
+ const old=await db.getFirstAsync<Goal>(goalSelect+' WHERE g.id=?',g.id);if(old){if(old.archived||(await deletedGoalIds(db)).has(g.id))throw new UserInputError('Esta meta ya no está activa. Crea una nueva.');if(canonical(old)===canonical(g))return;throw new UserInputError('Este identificador ya pertenece a otra meta.');}
  if(await db.getFirstAsync('SELECT id FROM goals WHERE lower(trim(name))=lower(?) AND archived=0',g.name.trim()))throw new UserInputError('Ya hay una meta con ese nombre.');
- await db.runAsync('INSERT INTO goals(id,name,kind,target_cents,opening_cents,desired_date,cadence,cadence_detail,track_start_date) VALUES(?,?,?,?,?,?,?,?,?)',g.id,g.name.trim(),g.kind,g.targetCents,g.openingCents,g.desiredDate,g.cadence==='biweekly'?'monthly':g.cadence,g.cadence,this.today());
+ await db.runAsync('INSERT INTO goals(id,name,kind,target_cents,opening_cents,desired_date,cadence,cadence_detail,track_start_date,cadence_yearly) VALUES(?,?,?,?,?,?,?,?,?,?)',g.id,g.name.trim(),g.kind,g.targetCents,g.openingCents,g.desiredDate,g.cadence==='weekly'?'weekly':'monthly',g.cadence==='yearly'?'monthly':g.cadence,this.today(),g.cadence==='yearly'?'yearly':null);
+ }
+ async createWithInitial(g:GoalInput,depositCents:number){validateGoal(g);if(cents(depositCents)<0||g.openingCents!==0)throw new UserInputError('El depósito inicial debe salir del Balance disponible.');return this.ledger.transaction(async db=>{
+ await this.createInTransaction(db,g);
+ const id='goal-initial:'+g.id,previous=await db.getFirstAsync<{amount:number;reversedAt:string|null;scope:string;fromId:string|null;toId:string|null}>('SELECT scope,from_id AS fromId,to_id AS toId,amount_cents AS amount,reversed_at AS reversedAt FROM fund_transfers WHERE id=?',id);
+ if(previous){if(previous.amount===depositCents&&!previous.reversedAt&&previous.scope==='personal'&&previous.fromId===null&&previous.toId===goalFundId(g.id))return;throw new UserInputError('El depósito inicial ya fue registrado. Revisa el historial de la meta.');}
+ if(depositCents>0){await new FundsStore(this.ledger,this.today).transferInTransaction(db,{id,scope:'personal',fromId:null,toId:goalFundId(g.id),amountCents:depositCents,date:this.today(),description:'Depósito inicial: '+g.name.trim()});}
  });}
  private async current(db:SqlDb,id:string,version:number){const g=await db.getFirstAsync<Goal>(goalSelect+' WHERE g.id=?',id);if(!g||g.version!==version||(await deletedGoalIds(db)).has(id))throw new UserInputError('La meta cambió. Cierra y vuelve a abrir su ficha.');return g;}
  async edit(g:GoalInput,version:number,reason:string,archived=false){validateGoal(g);reasonValid(reason);return this.ledger.transaction(async db=>{
@@ -35,7 +43,7 @@ export class GoalStore {
  if(!archived&&await db.getFirstAsync('SELECT id FROM goals WHERE id<>? AND lower(trim(name))=lower(?) AND archived=0',g.id,g.name.trim()))throw new UserInputError('Ya hay una meta con ese nombre.');
  const active=await db.getAllAsync<{amount:number}>('SELECT amount_cents AS amount FROM goal_contributions WHERE goal_id=? AND reversed_at IS NULL',g.id);addAmounts(cents(g.openingCents),...active.map(c=>cents(c.amount)));
  await db.runAsync('INSERT INTO goal_events(goal_id,reason,before_json,recorded_at) VALUES(?,?,?,?)',g.id,reason.trim(),JSON.stringify(old),new Date().toISOString());
- await db.runAsync('UPDATE goals SET name=?,kind=?,target_cents=?,opening_cents=?,desired_date=?,cadence=?,cadence_detail=?,track_start_date=?,archived=?,version=version+1 WHERE id=?',g.name.trim(),g.kind,g.targetCents,g.openingCents,g.desiredDate,g.cadence==='biweekly'?'monthly':g.cadence,g.cadence,old.targetCents===g.targetCents&&old.desiredDate===g.desiredDate&&old.cadence===g.cadence?(old.trackStartDate??this.today()):this.today(),Number(archived),g.id);
+ await db.runAsync('UPDATE goals SET name=?,kind=?,target_cents=?,opening_cents=?,desired_date=?,cadence=?,cadence_detail=?,cadence_yearly=?,track_start_date=?,archived=?,version=version+1 WHERE id=?',g.name.trim(),g.kind,g.targetCents,g.openingCents,g.desiredDate,g.cadence==='weekly'?'weekly':'monthly',g.cadence==='yearly'?'monthly':g.cadence,g.cadence==='yearly'?'yearly':null,old.targetCents===g.targetCents&&old.desiredDate===g.desiredDate&&old.cadence===g.cadence?(old.trackStartDate??this.today()):this.today(),Number(archived),g.id);
  validateAllocationTimeline(await readFundData(db),'personal',undefined,false);
  });}
  async remove(id:string,version:number){return this.ledger.transaction(async db=>{

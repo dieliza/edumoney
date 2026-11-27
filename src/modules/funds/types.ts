@@ -4,7 +4,7 @@ export type FundKind='savings'|'emergency'|'budget';
 export const fundLabels={savings:'Ahorros',emergency:'Fondo de emergencia',budget:'Presupuesto mensual'} as const;
 export const locationKinds=[['bank','Banco'],['cooperative','Cooperativa'],['cash','Efectivo en casa'],['digital','Cuenta digital'],['other','Otra ubicación']] as const;
 export type LocationKind=typeof locationKinds[number][0];
-export type Cadence='weekly'|'biweekly'|'monthly';
+export type Cadence='weekly'|'biweekly'|'monthly'|'yearly';
 export interface MoneyLocation {id:string;name:string;kind:LocationKind;version:number}
 export interface Fund {id:string;scope:AccountScope;kind:FundKind;name:string;goalId:string|null;goalVersion?:number;deletedGoal?:boolean;targetCents:number;contributionCents:number;cadence:Cadence;targetDate:string|null;locationId:string|null;budgetMonth:string|null;categoryId:string|null;archived:boolean;version:number;createdAt:string;openingCents:number;legacyCents:number;balanceCents:number}
 export type FundInput=Pick<Fund,'id'|'scope'|'kind'|'name'|'goalId'|'targetCents'|'contributionCents'|'cadence'|'targetDate'|'locationId'|'budgetMonth'|'categoryId'>;

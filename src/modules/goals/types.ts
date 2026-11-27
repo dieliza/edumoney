@@ -1,7 +1,7 @@
 import type { LedgerMovement } from '../money/types';
 export const goalKinds = [['savings','Ahorro'],['emergency','Fondo de emergencia'],['home','Vivienda'],['vehicle','Vehículo'],['travel','Vacaciones'],['education','Estudios'],['retirement','Retiro'],['other','Otra meta']] as const;
-export type GoalCadence='weekly'|'biweekly'|'monthly';
-export const goalCadences:[GoalCadence,string][]=[['weekly','Semanal'],['biweekly','Quincenal (15 y fin de mes)'],['monthly','Mensual']];
+export type GoalCadence='weekly'|'biweekly'|'monthly'|'yearly';
+export const goalCadences:[GoalCadence,string][]=[['weekly','Semanal'],['biweekly','Quincenal (15 y fin de mes)'],['monthly','Mensual'],['yearly','Anual']];
 export type GoalKind = typeof goalKinds[number][0];
 export interface GoalInput {id:string;name:string;kind:GoalKind;targetCents:number;openingCents:number;desiredDate:string|null;cadence:GoalCadence}
 export interface Goal extends GoalInput {trackStartDate?:string|null;celebratedTargetCents?:number|null;version:number;archived:boolean;savedCents:number}

@@ -7,7 +7,7 @@ export function validateGoal(g:GoalInput){
  if(!g.id||!g.name.trim()||g.name.length>100||!goalKinds.some(([k])=>k===g.kind))throw new UserInputError('Revisa el nombre y tipo de meta.');
  if(cents(g.targetCents)<=0||cents(g.openingCents)<0)throw new UserInputError('Objetivo positivo y ahorro previo de cero o mayor.');
  if(g.desiredDate!==null&&!validDate(g.desiredDate))throw new UserInputError('Fecha deseada: AAAA-MM-DD o vacía.');
- if(!['weekly','biweekly','monthly'].includes(g.cadence))throw new UserInputError('Frecuencia no válida.');
+ if(!['weekly','biweekly','monthly','yearly'].includes(g.cadence))throw new UserInputError('Frecuencia no válida.');
 }
 /** Porcentaje truncado a décimas, barra limitada; el excedente se muestra en dinero. */
 export function goalPercent(saved:number,target:number){if(cents(saved)<0||cents(target)<=0)throw new UserInputError('Importes no válidos.');return Number(BigInt(saved)*1000n/BigInt(target))/10;}

@@ -10,12 +10,12 @@ export const transferSelect=`SELECT sequence,id,scope,from_id AS fromId,to_id AS
 export const goalFundId=(id:string)=>'goal:'+id;
 export const unassignedFundId='legacy-unassigned-savings';
 export const defaultFundId=(scope:AccountScope,kind:FundKind)=>'fund:'+scope+':'+kind;
-type GoalRow={id:string;name:string;kind:string;targetCents:number;openingCents:number;desiredDate:string|null;cadence:'weekly'|'biweekly'|'monthly';archived:number;version:number};
+type GoalRow={id:string;name:string;kind:string;targetCents:number;openingCents:number;desiredDate:string|null;cadence:'weekly'|'biweekly'|'monthly'|'yearly';archived:number;version:number};
 export async function readFundData(db:SqlDb):Promise<FundData>{
  const originals=(await db.getAllAsync<LedgerMovement>(movementSelect+' ORDER BY date,id')).map(readMovement);
  const entries=await db.getAllAsync<{movementId:string;movementVersion:number;kind:'income'|'expense';useKind:'personal'|'business'|'mixed'|'pending';businessBps:number|null}>('SELECT movement_id AS movementId,movement_version AS movementVersion,kind,use_kind AS useKind,business_bps AS businessBps FROM business_entries');
  const movements=scopedMovements(originals,entries);
- const goalRows=await db.getAllAsync<GoalRow>('SELECT id,name,kind,target_cents AS targetCents,opening_cents AS openingCents,desired_date AS desiredDate,COALESCE(cadence_detail,cadence) AS cadence,archived,version FROM goals');
+ const goalRows=await db.getAllAsync<GoalRow>('SELECT id,name,kind,target_cents AS targetCents,opening_cents AS openingCents,desired_date AS desiredDate,COALESCE(cadence_yearly,cadence_detail,cadence) AS cadence,archived,version FROM goals');
  const stored=await db.getAllAsync<Fund>(fundSelect);
  const funds:Fund[]=stored.map(f=>({...f,archived:!!f.archived,openingCents:0,legacyCents:0,balanceCents:0}));
  const budgets=await db.getAllAsync<{month:string;category_id:string;amount_cents:number}>('SELECT month,category_id,amount_cents FROM monthly_budgets');
