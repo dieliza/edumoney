@@ -1,0 +1,16 @@
+{
+  "cases": 8,
+  "passed": 8,
+  "legacyTabs": 2,
+  "tools": 5,
+  "comparisonCalls": 4,
+  "widths": [
+    390,
+    820,
+    1024,
+    1440
+  ],
+  "topicSearch": "one matching column",
+  "learningPrizes": "preserved",
+  "browserVerified": false
+}

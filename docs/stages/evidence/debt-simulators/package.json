@@ -1,0 +1,27 @@
+{
+  "buildName": "debt-simulators-703f3e1fb3d9",
+  "baseVersion": 149,
+  "modified": [
+    842,
+    848,
+    844,
+    818
+  ],
+  "added": [
+    43000,
+    43001
+  ],
+  "protectedModules": 1448,
+  "workerBytes": 66700311,
+  "sourceFiles": {
+    "src/modules/debts/debtViews.ts": "37e648533939eef90cb35f8abf629be75e68ae338f6bb2992f85c39f3e0fe297",
+    "src/modules/debts/DebtSimulators.tsx": "14b24b379f94009ece7d254f26bfe3e6c4b354ac67b6a2a1df73f2869a3ca213",
+    "src/modules/debts/DebtsScreen.tsx": "9f46e5a08bdc00ec98394d0c1feb13c4e1bba4ee7dd045738837df9cd66ee4ac",
+    "src/modules/debts/DebtSimulator.tsx": "b6181ebc54d7b05f24af35626ef40748aa65e82db5280291fbdd9f493fb6e051",
+    "src/modules/learning/LearnHub.tsx": "8620af435fa9d5323fe991f901534d81125b9414244c6ce38cedc819cc19cbc4",
+    "src/modules/learning/LearnScreen.tsx": "8cb6ced0402ce0a46f61f90f93dbdfd0c9044d6e3cbeed9472deb009803b5701",
+    "src/modules/learning/LearningSection.tsx": "21591620c4cd84c6899b1d71cd6425a47ad4f597247dad49746e921121bfc9f7",
+    "web-enhancements/goal-race/patch-debt-simulators.cjs": "87fce910dbcd7f9173d587b6b8c8e22759d254d6407db37859e0dddb16052f00"
+  },
+  "browserVerified": false
+}

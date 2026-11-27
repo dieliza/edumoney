@@ -1,0 +1,23 @@
+{
+  "test_limit": 100,
+  "conservative_executions": 84,
+  "counts": {
+    "selected_cases": 51,
+    "repeat_grammar_assertion": 1,
+    "package_attempts": 3,
+    "runtime_attempts_conservatively_8_each": 24,
+    "builds": 2,
+    "public_delivery": 1,
+    "static_patch_checks": 2
+  },
+  "typecheck": "passed",
+  "eslint": "passed, zero warnings",
+  "selected_test_results": "51 distinct cases pass after one assertion wording correction",
+  "runtime": "8 passed on final package",
+  "build": "passed",
+  "browser_verified": false,
+  "migrations": [],
+  "unrelated_published_factories_preserved": 1448,
+  "education_panel_prizes_and_storage": "unchanged",
+  "scope": "navigation consolidation and responsive layout only"
+}

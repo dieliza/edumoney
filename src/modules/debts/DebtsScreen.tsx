@@ -5,7 +5,6 @@ import {getMoneyStore} from '../money/localStore';
 import type {MoneyStore} from '../money/store';
 import type {Category,IncomeSchedule} from '../money/types';
 import {MovementForm} from '../money/MovementForm';
-import { NavigationRail } from '../../ui/NavigationRail';
 import { useTheme } from '../../design/ThemeProvider';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, AppState, Pressable, View } from 'react-native';
@@ -21,7 +20,7 @@ import { shiftDays } from '../bills/domain';
 import type { Bill } from '../bills/types';
 import { DebtForm } from './DebtForm';
 import { DebtPaymentForm } from './DebtPaymentForm';
-import { DebtSimulator } from './DebtSimulator';
+import { DebtSimulators } from './DebtSimulators';
 import { debtWarnings, minimumRemaining, planSteps } from './domain';
 import { getDebtStore } from './localStore';
 import type { DebtStore } from './store';
@@ -32,7 +31,7 @@ export default function DebtsScreen(){
  const focused=useIsFocused();const params=useLocalSearchParams<{debtId?:string;billId?:string;tab?:string}>();const handled=useRef('');
  const [schedules,setSchedules]=useState<IncomeSchedule[]>([]);
  const [ledger,setLedger]=useState<MoneyStore|null>(null),[categories,setCategories]=useState<Category[]>([]),[otherMovement,setOtherMovement]=useState(false);
- const [store,setStore]=useState<DebtStore|null>(null);const [data,setData]=useState(empty);const [tab,setTab]=useState(params.tab==='simulator'?'simulator':params.tab==='bills'?'bills':params.tab==='scheduled'?'scheduled':'debts');const [archived,setArchived]=useState(false);
+ const [store,setStore]=useState<DebtStore|null>(null);const [data,setData]=useState(empty);const [tab,setTab]=useState((params.tab==='simulator'||params.tab==='tools')?'simulator':params.tab==='bills'?'bills':params.tab==='scheduled'?'scheduled':'debts');const [archived,setArchived]=useState(false);
  const [error,setError]=useState('');const [notice,setNotice]=useState('');const [busy,setBusy]=useState(false);const [form,setForm]=useState<Debt|true|null>(null);
  const [historyLimit,setHistoryLimit]=useState(50);
  const [detailId,setDetailId]=useState<string|null>(null);const [reason,setReason]=useState('');const [payment,setPayment]=useState<{debt:Debt;bill?:Bill}|null>(null);
@@ -61,7 +60,7 @@ export default function DebtsScreen(){
   {tab==='scheduled'&&ledger?<ScheduledCollections store={ledger} schedules={schedules} saved={async()=>{await load();}}/>:null}
   {tab==='bills'?<BillsScreen embedded/>:null}
   {tab==='notices'?<><Card row><Body style={{fontWeight:'700'}}>Avisos de tus deudas</Body><Body>Revisa vencimientos, mínimos y datos pendientes. No son anuncios ni mensajes de cobro externos.</Body></Card>{active.map(d=><Card row key={d.id}><Body style={{fontWeight:'700'}}>{d.name}</Body>{debtWarnings(d,today).map(message=><Body key={message}>{message}</Body>)}{!debtWarnings(d,today).length?<Body>No hay advertencias con los datos registrados.</Body>:null}</Card>)}<ActionButton title="Facturas y recordatorios de deudas" icon="notifications-outline" onPress={()=>router.push({pathname:'/bills',params:{scope:'debts'}})}/></>:null}
-  {tab==='tools'?<><Card row><Body>Para registrar pagos y actualizar el saldo, abre la deuda correspondiente. Otros transacciones registra préstamos recibidos o pagos sin vínculo; no modifica por sí solo el saldo de una deuda.</Body></Card><NavigationRail label="Herramientas de deudas" items={[{title:'Otros transacciones',icon:'cash-outline',run:()=>setOtherMovement(true)},{title:'Facturas vinculadas',icon:'calendar-outline',run:()=>router.push({pathname:'/bills',params:{scope:'debts'}})},{title:'Préstamo',icon:'calculator-outline',run:()=>router.push({pathname:'/decisions',params:{kind:'loan'}})},{title:'Auto',icon:'car-outline',run:()=>router.push({pathname:'/decisions',params:{kind:'vehicle'}})},{title:'Vivienda',icon:'home-outline',run:()=>router.push({pathname:'/decisions',params:{kind:'home'}})},{title:'Aprender sobre deudas',icon:'book-outline',run:()=>router.push('/debt-lessons')}]}/></>:null}
+
   {!store?<ActivityIndicator accessibilityLabel="Cargando deudas cifradas"/>:null}
   {tab==='debts'?<>
    <Card row style={{backgroundColor:colors.mint}}><Body style={{fontWeight:'700'}}>Total de deudas registradas</Body><Body style={{fontSize:30,lineHeight:40,fontWeight:'800'}}>{summary.total===null?'Revisar importes':formatMoney(summary.total)}</Body><Body>Mínimos pendientes conocidos del vencimiento actual: {summary.minimum===null?'Revisar importes':formatMoney(summary.minimum)}</Body>{summary.unknown?<Body>{summary.unknown} deuda(s) necesitan mínimo o vencimiento; el total de mínimos puede estar incompleto.</Body>:null}<Body muted>No es una consulta a tu entidad. Incluye el último saldo base que confirmaste y los pagos que indicaste que lo reducen. Las fechas no avanzan automáticamente.</Body><ErrorNotice message={summary.error}/></Card>
@@ -74,7 +73,7 @@ export default function DebtsScreen(){
    {active.filter(d=>!d.dueDate).map(d=><Card row key={d.id}><Body>{d.name}: falta el vencimiento; no se inventa una fecha.</Body><ActionButton title={`Completar deuda: ${d.name}`} secondary onPress={()=>setForm(d)}/></Card>)}
    {!active.length?<Card row><Body>No hay deudas activas con saldo pendiente.</Body></Card>:null}
   </>:null}
-  {tab==='simulator'?<DebtSimulator debts={data.debts}/>:null}
+  {tab==='simulator'?<DebtSimulators debts={data.debts} onOtherMovement={()=>setOtherMovement(true)}/>:null}
   {tab==='plan'?<>
    <Card row><Body>Organiza revisiones durante 30 días. «Ya lo hice» confirma una tarea; no registra un pago ni modifica saldos. Cada avance cuenta.</Body></Card>
    {store&&!busy?<ActionButton title="Crear mi plan de 30 días" testID="debt-create-plan" onPress={()=>void action(()=>store.createPlan(newId(),today),'Plan guardado en este dispositivo.')}/>:null}

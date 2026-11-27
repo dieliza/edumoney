@@ -1,0 +1,9 @@
+
+ RUN  v5.1.0 /workspace/edumoney
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 22 skipped (23)
+   Start at  19:39:22
+   Duration  392ms (transform 49%, import 28%, tests 19%, worker 4%)
+
