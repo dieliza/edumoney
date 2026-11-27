@@ -6,5 +6,21 @@
   "financial_calculations_changed": false,
   "sql_migrations": 0,
   "test_limit": 100,
-  "browser_verified": false
+  "browser_verified": false,
+  "artifact_attempts": 2,
+  "initial_artifact_block": "Worker size exceeded limit; no publication attempted",
+  "final_artifact": "passed",
+  "route_reconstruction": "passed",
+  "worker_bytes": 65649654,
+  "worker_mib": 62.608388900756836,
+  "modified_runtime_modules": [
+    33002
+  ],
+  "preserved_runtime_modules": 1438,
+  "build": "passed",
+  "executions_before_public_delivery": 5,
+  "public_delivery": "passed",
+  "total_executions_including_repeats": 6,
+  "published": true,
+  "version_number": 140
 }
