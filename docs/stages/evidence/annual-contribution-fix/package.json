@@ -1,0 +1,52 @@
+{
+  "buildName": "annual-contribution-fix-4578a8d0c530",
+  "baseVersion": 138,
+  "baseHasRefinements": true,
+  "modified": [
+    21025,
+    33008
+  ],
+  "added": [],
+  "protectedModules": 1437,
+  "report": [
+    {
+      "compiled": "src/modules/funds/TransferEditor.tsx",
+      "id": 21025,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "../../ui/MeaningHelp": 20014,
+        "./FundSheet": 21020,
+        "react": 13,
+        "../../core/id": 803,
+        "../../core/money": 814,
+        "../../core/errors": 799,
+        "../../ui/components": 796,
+        "../money/fields": 797,
+        "../../ui/DateField": 853,
+        "../money/domain": 813
+      },
+      "source_sha256": "3f6cddcafa15fd9b5ccfbdc7d9888f4dd51025e004c6fa3da8e8ec2fccfbf358"
+    },
+    {
+      "compiled": "src/modules/budget/AnnualExpenses.web.tsx",
+      "id": 33008,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "./ContributionFields.web": 35003,
+        "./recommendations": 35002,
+        "./contributions": 35000,
+        "./BudgetPresentation.web": 34000,
+        "react": 13,
+        "../../core/id": 803,
+        "../../core/errors": 799,
+        "../../design/ThemeProvider": 792,
+        "../money/domain": 813,
+        "../funds/FundSheet": 21020,
+        "./BudgetControls.web": 33004,
+        "./domain": 33000
+      },
+      "source_sha256": "bfa174b48f21cfaf1eb33e0e8a5eb0ddaf0c090a2010718b2706c392e88dedd2"
+    }
+  ],
+  "browserVerified": false
+}

@@ -1,0 +1,16 @@
+{
+  "code_cases": 21,
+  "code_results": "passed",
+  "typescript": "passed",
+  "eslint": "passed",
+  "test_limit": 100,
+  "browser_verified": false,
+  "sql_migrations": 0,
+  "annual_example": {
+    "target_cents": 140000,
+    "weekly_payments": 52,
+    "regular_cents": 2693,
+    "last_cents": 2657
+  },
+  "financial_engine_changed": false
+}

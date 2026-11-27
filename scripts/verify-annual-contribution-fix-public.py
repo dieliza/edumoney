@@ -10,7 +10,7 @@ def read(path):
   return raw.decode()
 html=read('/?budget_delivery='+build);assert build in html,'Public HTML is not the validated budget version'
 common=re.search(r'src="([^"?]*\/_expo/static/js/web/__common-[^"?]+)',html).group(1)
-code=read(common);assert 'Distribución del gasto anual' in code and 'Próximo vencimiento del gasto anual' in code and 'money: true' in code,'Public bundle lacks annual schedule and auto cents fixes';assert 'Quincenal (15 y fin de mes)' in code or 'semimonthly' in code
+code=re.sub(r'\\u([0-9a-fA-F]{4})',lambda m:chr(int(m.group(1),16)),read(common));assert 'Distribución del gasto anual' in code and 'Próximo vencimiento del gasto anual' in code and 'money: true' in code,'Public bundle lacks annual schedule and auto cents fixes';assert 'Quincenal (15 y fin de mes)' in code or 'semimonthly' in code
 sw=read('/sw.js?budget_delivery='+build);assert build in sw and 'skipWaiting' in sw and 'push' in sw
 result={'cases':1,'passed':1,'build':build,'public_html':'passed','final_budget_bundle':'passed','service_worker':'passed','browser_verified':False}
 (root/'docs/stages/evidence/annual-contribution-fix/public-delivery.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result))
