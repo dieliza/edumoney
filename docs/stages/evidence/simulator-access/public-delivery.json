@@ -1,0 +1,9 @@
+{
+  "cases": 1,
+  "passed": 1,
+  "build": "simulator-access-4ad8a019b601",
+  "public_html": "passed",
+  "simulators_and_learning_assets": "passed",
+  "service_worker": "passed",
+  "browser_verified": false
+}
