@@ -1,3 +1,4 @@
+import {MeaningHelp} from '../src/ui/MeaningHelp';
 import {RecommendationEditor} from '../src/modules/budget/RecommendationEditor.web';
 import {ContributionFields} from '../src/modules/budget/ContributionFields.web';
 import {prepareDistribution} from '../src/modules/budget/recommendations';
@@ -13,6 +14,7 @@ import {asAvailableBalance,defaultPlan,validatePlan} from '../src/modules/budget
 import type {BudgetContext,BudgetPlan} from '../src/modules/budget/types';
 import type {BudgetStore} from '../src/modules/budget/store';
 import type {Fund} from '../src/modules/funds/types';
+vi.mock('../src/ui/MeaningHelp',()=>({MeaningHelp:()=>null}));
 const h=vi.hoisted(()=>({values:[] as unknown[],cursor:0}));
 vi.mock('react',async original=>{const actual=await original<typeof import('react')>();const slot=(initial:unknown)=>{const i=h.cursor++;if(!(i in h.values))h.values[i]=typeof initial==='function'?(initial as ()=>unknown)():initial;return[h.values[i],(v:unknown)=>{h.values[i]=typeof v==='function'?(v as (old:unknown)=>unknown)(h.values[i]):v;}];};return{...actual,useState:slot,useEffect:()=>{},useRef:(v:unknown)=>slot({current:v})[0]};});
 vi.mock('../src/design/ThemeProvider',()=>({useTheme:()=>({name:'dark',colors:{text:'#102F42',surface:'#FFFFFF',surfaceAlt:'#F3F7FA',line:'#CFDFE2',muted:'#455E6C',primary:'#006D50'}})}));
@@ -47,3 +49,5 @@ it('aplicar una categoría no guarda borradores incompletos de otras categorías
 it('el formulario anual configura frecuencia y guarda el objetivo con las fechas existentes',async()=>{h.values=[];const commit=vi.fn(async(p:BudgetPlan)=>{void p;}),props={plan,context,disabled:false,commit,reserve:()=>{}};const render=()=>{h.cursor=0;return nodes(AnnualExpenses(props));};press(render(),'Añadir gasto anual');let t=render();const target=t.find(n=>n.props.label==='Cantidad anual')!;(target.props.onChange as (n:number)=>void)(60000);t=render();const date=t.find(n=>n.type==='input'&&n.props.type==='date')!;(date.props.onChange as (e:unknown)=>void)({target:{value:'2027-05-31'}});t=render();const name=t.find(n=>n.type==='input'&&n.props.maxLength===100)!;(name.props.onChange as (e:unknown)=>void)({target:{value:'Seguro FICTICIO'}});t=render();(t.find(n=>n.type===ContributionFields)!.props.change as (g:unknown)=>void)({targetCents:60000,dueDate:'2027-05-31',frequency:'semimonthly',firstDate:'2026-11-30'});press(render(),'Guardar gasto anual');await vi.waitFor(()=>expect(commit).toHaveBeenCalledOnce());expect(commit.mock.calls[0][0].annual[0]).toMatchObject({name:'Seguro FICTICIO',amountCents:60000,dueDate:'2027-05-31',contribution:{frequency:'semimonthly',firstDate:'2026-11-30'}});});
 
 it('los renglones son de solo lectura y abren el editor de transferencias existente',()=>{setup();const t=draw(),outputs=t.filter(n=>n.type==='output'&&String(n.props['aria-label']).startsWith('Dinero reservado para '));expect(outputs).toHaveLength(5);expect(outputs.every(n=>!n.props.onChange)).toBe(true);press(t,'Transferir fondos');const editor=draw().find(n=>n.type===TransferEditor);expect(editor?.props.to).toBe('fund:personal:savings');expect(editor?.props.fromAvailableOnly).toBe(true);expect(editor?.props.plannedDestination).toBeUndefined();expect(editor?.props.availableCents).toBe(100000);});
+
+it('incluye una explicación de Presupuesto mensual mediante la ayuda existente',()=>{setup();const helps=draw().filter(n=>n.type===MeaningHelp&&n.props.label==='Presupuesto mensual');expect(helps).toHaveLength(1);expect(helps[0].props.explanation).toContain('solo cambian al confirmar una transferencia');expect(helps[0].props.explanation).toContain('no crea ingresos ni gastos');expect(helps[0].props.explanation).toContain('no mueve dinero');});
