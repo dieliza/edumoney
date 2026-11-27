@@ -1,0 +1,20 @@
+{
+  "buildName": "learn-count-7e8d0b32d0be",
+  "baseVersion": 146,
+  "modified": [
+    860,
+    1137
+  ],
+  "added": [
+    40000
+  ],
+  "protectedModules": 1446,
+  "workerBytes": 65534078,
+  "sourceFiles": {
+    "src/modules/education/EducationPanel.tsx": "5796dab3b83655649f0c027325929cbdacad5d47dfc27eddedfaf0e0ed24d9e4",
+    "src/modules/education/store.ts": "67f7643d69a4b448cc9d2f3b48760f30c7db142af1609e77d9908ccaccb9d06d",
+    "src/modules/education/progress.ts": "9aa6e0726fb65932bd4957ae8287d77e488c51ff58bd30aa3c49012a69482e06",
+    "web-enhancements/learn-count/patch.cjs": "9534fce4f978de6bdeeedb050d9a9f8e5f619b4598ead8875168123554c13e20"
+  },
+  "browserVerified": false
+}

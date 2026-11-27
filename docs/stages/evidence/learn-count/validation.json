@@ -1,0 +1,21 @@
+{
+  "block": "learn-count",
+  "limit": 100,
+  "distinct_code_cases": 13,
+  "code_executions": 15,
+  "code_final": "passed",
+  "initial_ui_fixture_failure": 1,
+  "artifact_executions": 1,
+  "artifact_final": "passed",
+  "runtime_executions": 2,
+  "runtime_final": "passed",
+  "initial_runtime_fixture_count_failure": 1,
+  "typescript": "passed",
+  "eslint_affected": "passed",
+  "source_hashes": "matched final files",
+  "public_delivery": "pending",
+  "browser_verified": false,
+  "private_user_progress_accessed": false,
+  "migration": "none",
+  "financial_modules": "byte-identical"
+}

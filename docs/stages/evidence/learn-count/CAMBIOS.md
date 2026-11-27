@@ -1,0 +1,15 @@
+# Aprende: contador del ciclo y consejos ocultos
+
+El catálogo público vigente contiene diez consejos. Dos son de deudas (Avalancha y Bola de nieve). La fábrica publicada 860 contaba los diez, pero filtraba ambos de la lista de Aprende y de Continuar. Se reprodujo exactamente la situación: ocho filas visibles aprendidas, ocho de diez en el contador y dos contenidos inaccesibles desde esa secuencia.
+
+Aprende ahora muestra los diez consejos del ciclo y Continuar recorre todos los pendientes. La vista especializada de Deudas conserva su filtro. Se reutilizan los mismos identificadores y registros, sin duplicar lecciones. El texto aclara que el contador corresponde al ciclo actual.
+
+Se reconcilia progreso incompleto únicamente con intentos correctos guardados cuya respuesta coincide con el contenido cacheado de su misma versión y cuyo registro temporal es válido. Leer, fallar o una bandera de acierto incompatible no se convierten en aprendido. La operación es local y atómica, conserva fecha de lectura, historial de intentos y datos financieros. No se marca a nadie 10/10 sin registros que lo sustenten. Reabrir la app o volver a primer plano vuelve a leer el progreso; cargar un catálogo nuevo actualiza el snapshot.
+
+Se modifica quirúrgicamente la fábrica 860 para conservar tema, navegación, premios, animaciones y respuesta automática existentes. La fábrica 1137 recibe la reconciliación antes de leer el progreso: no se reintroducen antiguos premios globales que ya habían sido sustituidos en la web. El helper nuevo es 40000. Las otras 1446 fábricas y rutas anteriores se preservan. Sin migraciones ni cambios de respaldo. No se consulta ni modifica la base privada de la persona desde herramientas: la reparación se ejecuta en su espacio al abrir Aprende.
+
+Pruebas SQLite ficticias: diez aciertos con solo ocho filas de progreso, valores aprendidos nulos, conservación de lectura, apertura repetida, no duplicar intentos, respaldo/restauración y aislamiento entre bases. Intentos incorrectos, versiones desconocidas o contenido inválido no fabrican avances. Prueba del panel publicado: ocho visibles antes; diez accesibles después; responder correctamente los dos restantes lleva a 10/10 y 100%, con dos visibles en Deudas. Prueba del paquete final y clases publicadas confirma lo mismo con el helper realmente empaquetado. Se ajustaron dos controladores de prueba para respetar el bloqueo de respuestas y contar tarjetas sin enlaces de fuentes.
+
+TypeScript y ESLint de archivos afectados aprobados. Documentación Expo 58 y llms.txt devolvieron 403; se reutilizó el patrón existente de AppState sin APIs ni dependencias nuevas. No hay navegador interactivo ni validación física de iPhone: controlador del paquete y SQLite, sin afirmar inspección de registros privados reales. Bloque learn-count con máximo 100 ejecuciones.
+
+Se validan hashes, precarga, rutas, alias coherentes de /sw.js, caché distinta y manejadores push/activación conservados. El archivo de despliegue no cabe en disco persistente: compilación en memoria y compilación remota del mismo commit exacto.
