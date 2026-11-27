@@ -1,0 +1,20 @@
+{
+  "ui_integration_case": "passed",
+  "artifact_case": "passed",
+  "build": "passed",
+  "typescript": "passed",
+  "eslint": "passed",
+  "initial_harness_load_failure": "React Native Flow import; resolved by existing component mock pattern; zero cases started",
+  "executions_before_public_delivery_conservative": 3,
+  "test_limit": 100,
+  "modified_runtime_modules": [
+    33002
+  ],
+  "preserved_runtime_modules": 1438,
+  "sql_migrations": 0,
+  "browser_verified": false,
+  "public_delivery": "passed",
+  "total_executions_conservative": 4,
+  "published": true,
+  "version_number": 137
+}
