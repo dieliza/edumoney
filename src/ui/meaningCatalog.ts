@@ -64,6 +64,7 @@ export function fieldMeaning(label:string,path=''):string|undefined{
 export function sectionMeaning(path:string,title:string):string|undefined{
  if(businessHelpExcluded(path))return undefined;
  if(path.includes('decisions'))return 'Aquí puedes comparar supuestos antes de decidir. Completa los datos que conozcas y abre «¿Qué significa?» junto a un campo si necesitas ayuda. Simular no solicita crédito ni registra pagos.';
+ if(path.includes('funds')&&norm(title)==='presupuesto mensual')return 'Presupuesto mensual permite simular ingresos, distribuir cantidades y comparar el plan con gastos registrados. Guardar conserva la proyección y no modifica los balances reales. Los movimientos de dinero se administran por separado.';
  if(path.includes('funds'))return 'Aquí consultas las transferencias de esta sección. Utiliza Transferir fondos para añadir o retirar dinero y Editar historiales para corregir o eliminar una transferencia. No se convierte en un ingreso o gasto ni se mueve dinero en tu banco.';
  if(path.includes('goals'))return 'Crea una meta, registra tu ahorro y revisa el presupuesto mensual. Las metas no apartan dinero ni hacen transferencias automáticamente.';
  if(path.includes('learn')||path.includes('debt-lessons'))return 'Lee la explicación, contesta la pregunta y comprueba lo aprendido. Después del premio puedes continuar con la próxima lección.';

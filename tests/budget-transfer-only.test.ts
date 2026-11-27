@@ -4,10 +4,11 @@ import {migrate} from '../src/storage/migrate';
 import {MoneyStore,type SqlDb} from '../src/modules/money/store';
 import {BudgetStore} from '../src/modules/budget/store';
 import {FundsStore} from '../src/modules/funds/store';
-import {prepareDistribution,applyAllocationGoal} from '../src/modules/budget/recommendations';
+import {prepareDistribution as prepareScheduled,applyAllocationGoal} from '../src/modules/budget/recommendations';
 import {budgetReport,defaultPlan,recommend,allocationFundId} from '../src/modules/budget/domain';
 import type {FundInput} from '../src/modules/funds/types';
 const today='2026-11-26';
+function prepareDistribution(p:Parameters<typeof prepareScheduled>[0]){return{...prepareScheduled(p),simulation:false,transferOnly:true,incomeBasis:'available' as const};}
 function adapter(db:DatabaseSync):SqlDb{return{execAsync:async sql=>{db.exec(sql);},runAsync:async(sql,...p)=>({changes:Number(db.prepare(sql).run(...p).changes)}),getAllAsync:async<T>(sql:string,...p:(string|number|null)[])=>db.prepare(sql).all(...p) as T[],getFirstAsync:async<T>(sql:string,...p:(string|number|null)[])=>db.prepare(sql).get(...p) as T??null};}
 async function setup(income=300000){const db=new DatabaseSync(':memory:'),sql=adapter(db);await migrate(sql);const ledger=new MoneyStore(sql),store=new BudgetStore(ledger,()=>today),funds=new FundsStore(ledger,()=>today);if(income)movement(db,'income','income',income);const context=await store.context();const plan=recommend(defaultPlan('2026-11','personal',context),income);return{db,sql,ledger,store,funds,context,plan};}
 function movement(db:DatabaseSync,id:string,kind:string,amount:number,category:string|null=null,method='cash',scope='personal',date='2026-11-02'){db.prepare('INSERT INTO movements(id,idempotency_key,kind,amount_cents,date,description,category_id,payment_method,use_kind,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?)').run(id,id,kind,amount,date,'FICTICIO '+id,category,method,scope,'now','now');}
