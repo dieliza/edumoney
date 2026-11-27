@@ -12,5 +12,22 @@
     "regular_cents": 2693,
     "last_cents": 2657
   },
-  "financial_engine_changed": false
+  "financial_engine_changed": false,
+  "artifact_attempts": 2,
+  "artifact_final": "passed",
+  "artifact_initial_failure": "Escaped Unicode in compiled JSX labels; verification normalized Unicode and passed",
+  "build": "passed",
+  "worker_bytes": 66472438,
+  "worker_mib": 63.393056869506836,
+  "modified_runtime_modules": [
+    21025,
+    33008
+  ],
+  "preserved_runtime_modules": 1437,
+  "route_reconstruction": "passed",
+  "executions_before_public_delivery": 23,
+  "public_delivery": "passed",
+  "total_executions_including_repeats": 24,
+  "published": true,
+  "version_number": 139
 }

@@ -7,3 +7,5 @@ AnnualExpenses ya no asigna hoy silenciosamente como vencimiento al crear un gas
 Se reutilizan Field/moneyInput, ContributionFields, contributionRecommendation, AnnualExpenses y TransferEditor. No se modifican cálculos monetarios del motor, fondos, movimientos, autenticación, datos ni SQL. El empaquetado conserva el diccionario compartido de rutas de la publicación anterior y verifica su reconstrucción.
 
 Se ejecutan pruebas de integración, calendario, redondeo, centavos, TypeScript, ESLint, compilación y entrega pública. Sin navegador interactivo ni Safari/iPhone físico; esta validación no sustituye una prueba física.
+
+Versión 139 publicada correctamente desde `9e28402543598b4d94f28d99ddf28cb23eb8977a`, preservando audiencia pública y entorno 4. Entrega de HTML, bundle y service worker verificada. 21 casos de código aprobados; dos verificaciones de artefacto (una esperaba texto Unicode literal en JSX escapado y se corrigió la verificación); una comprobación pública aprobada: 24/100 ejecuciones. TypeScript y ESLint aprobados. No se afirma validación física en Safari/iPhone.
