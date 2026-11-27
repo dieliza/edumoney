@@ -12,10 +12,12 @@
   "typescript": "passed",
   "eslint_affected": "passed",
   "source_hashes": "matched final sources",
-  "public_delivery": "pending",
+  "public_delivery": "passed",
   "physical_push_delivery_verified": false,
   "browser_verified": false,
   "financial_formula_changed": false,
   "migration": "none",
-  "existing_push_limit": "48 notices/90 days preserved"
+  "existing_push_limit": "48 notices/90 days preserved",
+  "published_version": 146,
+  "total_case_executions": 66
 }
