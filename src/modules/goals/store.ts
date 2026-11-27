@@ -9,7 +9,7 @@ import { localToday,validDate } from '../money/domain';
 import type { LedgerMovement } from '../money/types';
 import { validateGoal } from './domain';
 import type { Contribution,ContributionInput,Goal,GoalInput,GoalSnapshot } from './types';
-const goalSelect=`SELECT g.id,g.name,g.kind,g.target_cents AS targetCents,g.opening_cents AS openingCents,g.desired_date AS desiredDate,g.cadence,g.version,g.archived FROM goals g`;
+const goalSelect=`SELECT g.id,g.name,g.kind,g.target_cents AS targetCents,g.opening_cents AS openingCents,g.desired_date AS desiredDate,COALESCE(g.cadence_detail,g.cadence) AS cadence,g.track_start_date AS trackStartDate,g.celebrated_target_cents AS celebratedTargetCents,g.version,g.archived FROM goals g`;
 const contributionSelect=`SELECT c.id,c.goal_id AS goalId,c.movement_id AS movementId,c.amount_cents AS amountCents,m.date,c.created_movement AS createdMovement,c.reversed_at AS reversedAt,c.reversal_reason AS reversalReason FROM goal_contributions c JOIN movements m ON m.id=c.movement_id`;
 const canonical=(g:GoalInput)=>JSON.stringify([g.name.trim(),g.kind,g.targetCents,g.openingCents,g.desiredDate,g.cadence]);
 function reasonValid(reason:string){if(!reason.trim()||reason.length>240)throw new UserInputError('Escribe un motivo de hasta 240 caracteres.');}
@@ -25,7 +25,7 @@ export class GoalStore {
  async create(g:GoalInput){validateGoal(g);return this.ledger.transaction(async db=>{
  const old=await db.getFirstAsync<Goal>(goalSelect+' WHERE g.id=?',g.id);if(old){if(canonical(old)===canonical(g))return;throw new UserInputError('Este identificador ya pertenece a otra meta.');}
  if(await db.getFirstAsync('SELECT id FROM goals WHERE lower(trim(name))=lower(?) AND archived=0',g.name.trim()))throw new UserInputError('Ya hay una meta con ese nombre.');
- await db.runAsync('INSERT INTO goals(id,name,kind,target_cents,opening_cents,desired_date,cadence) VALUES(?,?,?,?,?,?,?)',g.id,g.name.trim(),g.kind,g.targetCents,g.openingCents,g.desiredDate,g.cadence);
+ await db.runAsync('INSERT INTO goals(id,name,kind,target_cents,opening_cents,desired_date,cadence,cadence_detail,track_start_date) VALUES(?,?,?,?,?,?,?,?,?)',g.id,g.name.trim(),g.kind,g.targetCents,g.openingCents,g.desiredDate,g.cadence==='biweekly'?'monthly':g.cadence,g.cadence,this.today());
  });}
  private async current(db:SqlDb,id:string,version:number){const g=await db.getFirstAsync<Goal>(goalSelect+' WHERE g.id=?',id);if(!g||g.version!==version)throw new UserInputError('La meta cambió. Cierra y vuelve a abrir su ficha.');return g;}
  async edit(g:GoalInput,version:number,reason:string,archived=false){validateGoal(g);reasonValid(reason);return this.ledger.transaction(async db=>{
@@ -33,9 +33,10 @@ export class GoalStore {
  if(!archived&&await db.getFirstAsync('SELECT id FROM goals WHERE id<>? AND lower(trim(name))=lower(?) AND archived=0',g.id,g.name.trim()))throw new UserInputError('Ya hay una meta con ese nombre.');
  const active=await db.getAllAsync<{amount:number}>('SELECT amount_cents AS amount FROM goal_contributions WHERE goal_id=? AND reversed_at IS NULL',g.id);addAmounts(cents(g.openingCents),...active.map(c=>cents(c.amount)));
  await db.runAsync('INSERT INTO goal_events(goal_id,reason,before_json,recorded_at) VALUES(?,?,?,?)',g.id,reason.trim(),JSON.stringify(old),new Date().toISOString());
- await db.runAsync('UPDATE goals SET name=?,kind=?,target_cents=?,opening_cents=?,desired_date=?,cadence=?,archived=?,version=version+1 WHERE id=?',g.name.trim(),g.kind,g.targetCents,g.openingCents,g.desiredDate,g.cadence,Number(archived),g.id);
+ await db.runAsync('UPDATE goals SET name=?,kind=?,target_cents=?,opening_cents=?,desired_date=?,cadence=?,cadence_detail=?,track_start_date=?,archived=?,version=version+1 WHERE id=?',g.name.trim(),g.kind,g.targetCents,g.openingCents,g.desiredDate,g.cadence==='biweekly'?'monthly':g.cadence,g.cadence,old.targetCents===g.targetCents&&old.desiredDate===g.desiredDate&&old.cadence===g.cadence?(old.trackStartDate??this.today()):this.today(),Number(archived),g.id);
  validateAllocationTimeline(await readFundData(db),'personal',undefined,false);
  });}
+ async claimCompletion(id:string,target:number){return this.ledger.transaction(async db=>{const g=await db.getFirstAsync<Goal>(goalSelect+' WHERE g.id=?',id);if(!g||g.archived||g.targetCents!==target||g.celebratedTargetCents===target)return false;const contributions=await db.getAllAsync<{amount:number}>('SELECT c.amount_cents AS amount FROM goal_contributions c JOIN movements m ON m.id=c.movement_id WHERE c.goal_id=? AND c.reversed_at IS NULL AND m.deleted_at IS NULL',id);const transfers=await db.getAllAsync<{amount:number}>('SELECT CASE WHEN t.to_id=f.id THEN t.amount_cents ELSE -t.amount_cents END AS amount FROM money_funds f JOIN fund_transfers t ON t.from_id=f.id OR t.to_id=f.id WHERE f.goal_id=? AND t.reversed_at IS NULL AND t.date<=?',id,this.today());const saved=addAmounts(cents(g.openingCents),...contributions.map(c=>cents(c.amount)),...transfers.map(t=>cents(t.amount)));if(saved<target)return false;await db.runAsync('UPDATE goals SET celebrated_target_cents=? WHERE id=?',target,id);return true;});}
  async reserve(p:ContributionInput){return new FundsStore(this.ledger,this.today).transfer({id:'goal-reserve:'+p.id,scope:'personal',fromId:null,toId:goalFundId(p.goalId),amountCents:p.amountCents,date:p.date,description:'Aportación confirmada a la meta'});}
  async contribute(p:ContributionInput){
  if(!p.id||cents(p.amountCents)<=0||!validDate(p.date)||p.date>this.today()||!['cash','check','debit','bank','other'].includes(p.paymentMethod))throw new UserInputError('Revisa importe positivo, fecha no futura y método sin crédito.');

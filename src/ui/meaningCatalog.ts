@@ -12,7 +12,7 @@ const fundMeanings:Record<string,string>={
  'historial de transferencias':'Aquí consultas las distribuciones que confirmaste. Corregir modifica sus datos; revertir anula su efecto en EduMoney y conserva el historial. Ninguna opción cancela operaciones bancarias. Una reserva ya utilizada puede requerir corregir primero las transferencias posteriores.',
  'ahorro proyectado y realizado':'Proyectado es lo que calcula el simulador con tus supuestos. Realizado es el dinero que confirmaste como apartado. Convertir la simulación crea un plan con cero ahorro realizado; las aportaciones se registran cuando las confirmas.',
  'aportacion periodica planificada (usd)':'Es la cantidad que planeas apartar cada vez. No se cobra ni se reserva automáticamente. Cuando la realices, confirma una transferencia para actualizar tu ahorro.',
- 'frecuencia de aportacion':'Indica cada cuánto planeas aportar: semanal o mensual. Es una planificación; no programa cobros ni registra aportaciones automáticamente.',
+ 'frecuencia de aportacion':'Indica cada cuánto planeas aportar: semanal, quincenal (15 y fin de mes) o mensual. Es una planificación; no programa cobros ni registra aportaciones automáticamente.',
  'fecha final para alcanzar la meta':'Es el día en que quieres haber reunido la cantidad objetivo. Elige la fecha de culminación, no la de comienzo. La meta avanza con las aportaciones confirmadas que le asignes.',
  'fecha objetivo (opcional)':'Es la fecha en que te gustaría reunir la cantidad objetivo. No es un vencimiento de pago ni mueve dinero. Puedes dejarla vacía si todavía no la has decidido.',
  'donde guardas el dinero':'Indica dónde conservas el dinero: banco, cooperativa, efectivo en casa, cuenta digital u otra ubicación. Puedes añadir o editar su nombre. Elegirla no conecta una cuenta bancaria ni duplica tu dinero.',
@@ -47,6 +47,7 @@ export function fieldMeaning(label:string,path=''):string|undefined{
  if(s.includes('margen mensual'))return 'Es la cantidad que eliges como referencia para comparar con el costo mensual. No cambia tus balances reales.';
  if(s.includes('ahorro o fondo actual')||s.includes('ahorro previo'))return 'Es el dinero que ya tenías separado antes de registrar nuevas aportaciones. Evita contar el mismo dinero dos veces.';
  if(s.includes('aportacion mensual'))return 'Es lo que planeas añadir a tu ahorro cada mes. Es una propuesta; no hace transferencias automáticas.';
+ if(s==='frecuencia de aportacion sugerida')return 'Elige aportaciones semanales, quincenales (15 y último día del mes) o mensuales. La sugerencia reparte lo pendiente hasta la fecha final; no crea depósitos automáticamente.';
  if(s.includes('frecuencia')||s.includes('cadencia'))return 'Indica cada cuánto ocurre: semanal, mensual o anual. Elige lo que corresponde a ese cobro o pago.';
  if(s.includes('fecha de corte')||s.includes('cierre'))return 'Es el día en que termina el período del estado de cuenta. Es distinto del último día para pagar.';
  if(s.includes('vencimiento')||s.includes('fecha limite'))return 'Es el último día para hacer el pago según la factura o el contrato.';
@@ -66,7 +67,7 @@ export function sectionMeaning(path:string,title:string):string|undefined{
  if(path.includes('decisions'))return 'Aquí puedes comparar supuestos antes de decidir. Completa los datos que conozcas y abre «¿Qué significa?» junto a un campo si necesitas ayuda. Simular no solicita crédito ni registra pagos.';
  if(path.includes('funds')&&norm(title)==='presupuesto mensual')return 'Presupuesto mensual permite simular ingresos, distribuir cantidades y comparar el plan con gastos registrados. Guardar conserva la proyección y no modifica los balances reales. Los movimientos de dinero se administran por separado.';
  if(path.includes('funds'))return 'Aquí consultas las transferencias de esta sección. Utiliza Transferir fondos para añadir o retirar dinero y Editar historiales para corregir o eliminar una transferencia. No se convierte en un ingreso o gasto ni se mueve dinero en tu banco.';
- if(path.includes('goals'))return 'Crea una meta, registra tu ahorro y revisa el presupuesto mensual. Las metas no apartan dinero ni hacen transferencias automáticamente.';
+ if(path.includes('goals'))return 'Define tu objetivo y la fecha final. Al seleccionar una meta verás una pista: verde para cantidades cubiertas y rojo para las pendientes. Las aportaciones confirmadas actualizan el avance; al alcanzar el objetivo aparece la celebración. Puedes planificar aportaciones semanales, quincenales o mensuales. Crear o editar una meta no añade dinero.';
  if(path.includes('learn')||path.includes('debt-lessons'))return 'Lee la explicación, contesta la pregunta y comprueba lo aprendido. Después del premio puedes continuar con la próxima lección.';
  if(path.includes('progress'))return 'Aquí ves lo que has aprendido, las revisiones de tu plan y el avance del dinero reunido para cada meta. Completar una revisión no registra pagos ni transacciones.';
  if(path.includes('debts'))return 'Registra lo que debes, consulta vencimientos y compara formas de pagar. Los cobros programados se confirman cuando recibes el dinero.';

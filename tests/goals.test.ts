@@ -26,7 +26,7 @@ const movement=(patch:Partial<LedgerMovement>={}):LedgerMovement=>({id:'m',idemp
 async function setup(){const db=new DatabaseSync(':memory:');const sql=adapter(db);await migrate(sql);const ledger=new MoneyStore(sql);return{db,sql,ledger,store:new GoalStore(ledger,today),progress:new ProgressStore(ledger,today)};}
 describe('Etapa 6: cálculos de metas',()=>{
  it('porcentaje con décimas, cero, exacto y objetivo superado',()=>{expect(goalPercent(0,10000)).toBe(0);expect(goalPercent(3333,10000)).toBe(33.3);expect(goalPercent(10000,10000)).toBe(100);expect(goalPercent(15000,10000)).toBe(150);expect(()=>goalPercent(1,0)).toThrow();});
- it('sugerencia independiente en períodos explícitos de 30 o 7 días redondeada al centavo',()=>{expect(suggestedContribution(2000,10000,'2027-01-07',today(),'monthly')).toMatchObject({amountCents:4000,periods:2});expect(suggestedContribution(0,100,'2026-11-29',today(),'weekly')).toMatchObject({amountCents:34,periods:3});});
+ it('sugerencia por fechas de calendario y última cuota ajustada',()=>{expect(suggestedContribution(2000,10000,'2027-01-07',today(),'monthly')).toMatchObject({amountCents:8000,periods:1});expect(suggestedContribution(0,100,'2026-11-29',today(),'weekly')).toMatchObject({amountCents:34,periods:3});});
  it('sin fecha no inventa aporte; vencida exige revisión y meta cumplida sugiere cero',()=>{expect(suggestedContribution(0,100,null,today(),'monthly').amountCents).toBeNull();expect(suggestedContribution(0,100,today(),today(),'weekly').status).toBe('due');expect(suggestedContribution(100,100,null,today(),'monthly').amountCents).toBe(0);expect(()=>suggestedContribution(0,100,'2026-02-30',today(),'monthly')).toThrow();});
 });
 describe('Etapa 6: metas en SQLite real',()=>{

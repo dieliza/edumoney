@@ -9,7 +9,7 @@ import { progressSteps,type ProgressData,type ProgressPlan } from './domain';
 export class ProgressStore {
  constructor(private ledger:MoneyStore,private today=localToday){}
  async snapshot():Promise<ProgressData>{return this.ledger.read(async db=>{
- const goals=await db.getAllAsync<Goal>(`SELECT id,name,kind,target_cents AS targetCents,opening_cents AS openingCents,desired_date AS desiredDate,cadence,version,archived FROM goals`);
+ const goals=await db.getAllAsync<Goal>(`SELECT id,name,kind,target_cents AS targetCents,opening_cents AS openingCents,desired_date AS desiredDate,COALESCE(cadence_detail,cadence) AS cadence,version,archived FROM goals`);
  const contributions=await db.getAllAsync<{goalId:string;amount:number}>(`SELECT c.goal_id AS goalId,c.amount_cents AS amount FROM goal_contributions c JOIN movements m ON m.id=c.movement_id WHERE c.reversed_at IS NULL AND m.deleted_at IS NULL`);
  const transfers=await db.getAllAsync<{goalId:string;amount:number}>(`SELECT f.goal_id AS goalId, CASE WHEN t.to_id=f.id THEN t.amount_cents ELSE -t.amount_cents END AS amount FROM money_funds f JOIN fund_transfers t ON t.from_id=f.id OR t.to_id=f.id WHERE f.goal_id IS NOT NULL AND t.reversed_at IS NULL AND t.date<=?`,this.today());
  const plans=await db.getAllAsync<ProgressPlan>('SELECT id,start_date AS startDate FROM progress_plans ORDER BY start_date DESC,rowid DESC');

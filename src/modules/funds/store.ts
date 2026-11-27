@@ -26,11 +26,11 @@ export class FundsStore{
    const data=await readFundData(db),old=data.funds.find(f=>f.id===p.id);
    if((old?.version??0)!==version)fail('El fondo cambió. Vuelve a abrir su ficha.');
    if(old&&(old.scope!==p.scope||old.goalId!==p.goalId))fail('No se puede cambiar la cuenta ni el vínculo de un fondo.');
-   if(p.goalId&&(p.scope!=='personal'||p.targetCents<=0||p.kind==='budget'||p.cadence==='biweekly'))fail('Revisa la meta personal vinculada.');
+   if(p.goalId&&(p.scope!=='personal'||p.targetCents<=0||p.kind==='budget'))fail('Revisa la meta personal vinculada.');
    if(p.locationId&&!data.locations.some(l=>l.id===p.locationId))fail('Selecciona una ubicación guardada.');
    if(p.categoryId&&!await db.getFirstAsync("SELECT id FROM categories WHERE id=? AND kind='expense'",p.categoryId))fail('Selecciona una categoría de gasto.');
    if(p.categoryId&&(p.kind!=='budget'||!p.budgetMonth))fail('Selecciona el mes del presupuesto.');
-   if(p.goalId){const g=await db.getFirstAsync<{version:number;kind:string}>('SELECT version,kind FROM goals WHERE id=?',p.goalId);if(!g||goalVersion!==undefined&&goalVersion!==g.version)fail('La meta cambió. Vuelve a abrirla.');await db.runAsync('UPDATE goals SET name=?,target_cents=?,desired_date=?,cadence=?,kind=?,version=version+1 WHERE id=?',text(p.name),p.targetCents,p.targetDate,p.cadence==='weekly'?'weekly':'monthly',p.kind==='emergency'?'emergency':g.kind==='emergency'?'savings':g.kind,p.goalId);}
+   if(p.goalId){const g=await db.getFirstAsync<{version:number;kind:string;target:number;date:string|null;cadence:string;start:string|null}>('SELECT version,kind,target_cents AS target,desired_date AS date,COALESCE(cadence_detail,cadence) AS cadence,track_start_date AS start FROM goals WHERE id=?',p.goalId);if(!g||goalVersion!==undefined&&goalVersion!==g.version)fail('La meta cambió. Vuelve a abrirla.');await db.runAsync('UPDATE goals SET name=?,target_cents=?,desired_date=?,cadence=?,cadence_detail=?,track_start_date=?,kind=?,version=version+1 WHERE id=?',text(p.name),p.targetCents,p.targetDate,p.cadence==='weekly'?'weekly':'monthly',p.cadence,g.target===p.targetCents&&g.date===p.targetDate&&g.cadence===p.cadence?(g.start??this.today()):this.today(),p.kind==='emergency'?'emergency':g.kind==='emergency'?'savings':g.kind,p.goalId);}
    if(old)await materialize(db,old);
    await event(db,p.id,'configure',old??null,'Configuración del fondo; no mueve dinero');
    await db.runAsync('INSERT INTO money_funds(id,scope,kind,name,goal_id,target_cents,contribution_cents,cadence,target_date,location_id,budget_month,category_id,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET kind=excluded.kind,name=excluded.name,target_cents=excluded.target_cents,contribution_cents=excluded.contribution_cents,cadence=excluded.cadence,target_date=excluded.target_date,location_id=excluded.location_id,budget_month=excluded.budget_month,category_id=excluded.category_id,version=version+1',p.id,p.scope,p.kind,text(p.name),p.goalId,p.targetCents,p.contributionCents,p.cadence,p.targetDate,p.locationId,p.budgetMonth,p.categoryId,new Date().toISOString());
@@ -40,13 +40,13 @@ export class FundsStore{
  /** A simulation is a plan, with zero realized savings regardless of projected opening/interest. */
  async createPlan(p:FundInput){
   if(p.scope!=='personal'||p.kind==='budget'||p.targetCents<=0||p.goalId===null||p.id!==goalFundId(p.goalId))fail('Revisa el identificador y objetivo de la meta.');
-  if(!validName(p.name)||cents(p.targetCents)<=0||cents(p.contributionCents)<0||!['weekly','monthly'].includes(p.cadence)||p.targetDate!==null&&!validDate(p.targetDate))fail('Completa el nombre, objetivo, aportación y fecha del plan.');
+  if(!validName(p.name)||cents(p.targetCents)<=0||cents(p.contributionCents)<0||!['weekly','biweekly','monthly'].includes(p.cadence)||p.targetDate!==null&&!validDate(p.targetDate))fail('Completa el nombre, objetivo, aportación y fecha del plan.');
   return this.ledger.transaction(async db=>{
    const old=await db.getFirstAsync<Fund>(fundSelect+' WHERE id=?',p.id);
    if(old){if(old.goalId===p.goalId&&old.name===text(p.name)&&old.targetCents===p.targetCents&&old.contributionCents===p.contributionCents&&old.scope===p.scope&&old.kind===p.kind&&old.cadence===p.cadence&&old.targetDate===p.targetDate&&old.locationId===p.locationId)return;fail('Esta meta ya se guardó con otros datos.');}
    if(p.locationId&&!await db.getFirstAsync('SELECT id FROM money_locations WHERE id=?',p.locationId))fail('Selecciona una ubicación existente.');
    if(await db.getFirstAsync('SELECT id FROM goals WHERE lower(trim(name))=lower(?) AND archived=0',text(p.name)))fail('Ya tienes una meta con ese nombre.');
-   await db.runAsync('INSERT INTO goals(id,name,kind,target_cents,opening_cents,desired_date,cadence) VALUES(?,?,?,?,0,?,?)',p.goalId,text(p.name),p.kind,p.targetCents,p.targetDate,p.cadence);
+   await db.runAsync('INSERT INTO goals(id,name,kind,target_cents,opening_cents,desired_date,cadence,cadence_detail,track_start_date) VALUES(?,?,?,?,0,?,?,?,?)',p.goalId,text(p.name),p.kind,p.targetCents,p.targetDate,p.cadence==='biweekly'?'monthly':p.cadence,p.cadence,this.today());
    await db.runAsync('INSERT INTO money_funds(id,scope,kind,name,goal_id,target_cents,contribution_cents,cadence,target_date,location_id,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?)',p.id,p.scope,p.kind,text(p.name),p.goalId,p.targetCents,p.contributionCents,p.cadence,p.targetDate,p.locationId,new Date().toISOString());
    await event(db,p.id,'plan',null,'Plan creado desde una simulación; aportaciones sin confirmar');
   });

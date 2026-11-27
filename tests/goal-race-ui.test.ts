@@ -1,0 +1,12 @@
+import {createElement} from 'react';
+import {renderToStaticMarkup} from 'react-dom/server';
+import {expect,it,vi} from 'vitest';
+import {GoalJourney} from '../src/modules/goals/GoalJourney.web';
+import type {Goal} from '../src/modules/goals/types';
+const state=vi.hoisted(()=>({theme:'light'}));
+vi.mock('../src/design/ThemeProvider',()=>({useTheme:()=>({name:state.theme,colors:{text:state.theme==='dark'?'#F6FFFC':'#102F42',muted:state.theme==='dark'?'#C6D8DF':'#455E6C',surface:state.theme==='dark'?'#101A22':'#FFFFFF',line:'#9BAFB8'}})}));
+const goal:Goal={id:'race',name:'Viaje FICTICIO',kind:'savings',targetCents:100000,openingCents:0,savedCents:25000,desiredDate:'2026-11-30',cadence:'weekly',trackStartDate:'2026-11-01',archived:false,version:1};
+it('muestra cuatro etapas, dinero pagado verde y pendiente rojo en los dos temas',()=>{for(const theme of ['light','dark']){state.theme=theme;const html=renderToStaticMarkup(createElement(GoalJourney,{goal}));expect(html).toContain('1 de 4 etapas');expect(html).toContain('Finish');expect((html.match(/fill="#087C48"/g)??[]).length).toBeGreaterThan(0);expect(html).toContain(theme==='dark'?'#FF92AA':'#B12844');expect(html).toContain('Completada');expect(html).toContain('Pendiente');expect(html).not.toContain('¡Lo lograste!');}});
+it('al alcanzar el objetivo muestra ilustración, vítores y los mismos fuegos artificiales de Aprende',()=>{const html=renderToStaticMarkup(createElement(GoalJourney,{goal:{...goal,savedCents:100000},animate:true}));expect(html).toContain('¡Lo lograste!');expect(html).toContain('Trofeo, estrellas y vítores');expect(html).toContain('data-edu-fireworks="true"');expect(html).toContain('edumoney-firework');expect((html.match(/data-edu-spark="true"/g)??[])).toHaveLength(36);});
+it('la meta lograda mantiene el premio sin repetir animación ya celebrada',()=>{const html=renderToStaticMarkup(createElement(GoalJourney,{goal:{...goal,savedCents:100000},animate:false}));expect(html).toContain('¡Lo lograste!');expect(html).not.toContain('data-edu-fireworks="true"');});
+it('acota la pista larga y conserva las etapas pendientes mediante navegación',()=>{const html=renderToStaticMarkup(createElement(GoalJourney,{goal:{...goal,savedCents:0,desiredDate:'2027-11-01'}}));expect(html).toContain('Siguientes');expect(html).toContain('1–12 de');expect((html.match(/<circle/g)??[])).toHaveLength(12);});

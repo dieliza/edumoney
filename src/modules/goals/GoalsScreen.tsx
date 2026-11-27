@@ -1,3 +1,6 @@
+import {GoalJourney} from './GoalJourney';
+import {goalCadences} from './types';
+import {onDataCommitted} from '../../storage/changeEvents';
 import {goalFundId} from '../funds/read';
 import {NavigationRail} from '../../ui/NavigationRail';
 import { useCallback,useEffect,useState,useRef } from 'react';
@@ -16,23 +19,26 @@ const empty:GoalSnapshot={goals:[],contributions:[],movements:[],events:[]};
 export default function GoalsScreen(){
  const {goalId}=useLocalSearchParams<{goalId?:string}>();const searchOpened=useRef('');
  const focused=useIsFocused();const [store,setStore]=useState<GoalStore|null>(null);const [data,setData]=useState(empty);const [error,setError]=useState('');const [busy,setBusy]=useState(false);
+ const [victory,setVictory]=useState('');
  const [form,setForm]=useState<Goal|true|null>(null);const [detailId,setDetailId]=useState<string|null>(null);const [reason,setReason]=useState('');const [archived,setArchived]=useState(false);const [limit,setLimit]=useState(30);
  const load=useCallback(async()=>{const s=await getGoalStore();const d=await s.snapshot();setStore(s);setData(d);},[]);
- useEffect(()=>{if(!focused)return;const refresh=()=>{void load().catch(()=>setError('No pudimos cargar las metas cifradas. Vuelve a abrir esta pestaña.'));};refresh();const sub=AppState.addEventListener('change',state=>{if(state==='active')refresh();});return()=>sub.remove();},[focused,load]);
+ useEffect(()=>{if(!focused)return;const refresh=()=>{void load().catch(()=>setError('No pudimos cargar las metas cifradas. Vuelve a abrir esta pestaña.'));};refresh();const sub=AppState.addEventListener('change',state=>{if(state==='active')refresh();});const unsubscribe=onDataCommitted(refresh);return()=>{sub.remove();unsubscribe();};},[focused,load]);
  useEffect(()=>{if(focused&&goalId&&searchOpened.current!==goalId&&data.goals.some(g=>g.id===goalId)){searchOpened.current=goalId;setDetailId(goalId);}},[focused,goalId,data.goals]);
  async function action(task:()=>Promise<unknown>){if(busy)return;setBusy(true);setError('');try{await task();await load();}catch(e){setError(userMessage(e));}finally{setBusy(false);}}
  const detail=data.goals.find(g=>g.id===detailId);const today=localToday();
+ useEffect(()=>{if(!detail||!store||detail.archived||detail.savedCents<detail.targetCents||detail.celebratedTargetCents===detail.targetCents)return;let alive=true;void store.claimCompletion(detail.id,detail.targetCents).then(claimed=>{if(alive&&claimed)setVictory(detail.id+':'+detail.targetCents);}).catch(e=>{if(alive)setError(userMessage(e));});return()=>{alive=false;};},[store,detail]);
  return <Screen title="Mis metas" demo={false} subtitle="Dale un propósito a cada paso que das.">
  <NavigationRail label="Planificar mis metas" items={[{title:'Simular ahorro',icon:'trending-up-outline',run:()=>router.push({pathname:'/decisions',params:{kind:'saving'}})}]}/>
  <ErrorNotice message={error}/><ActionButton title="Crear nueva meta" testID="goal-create" icon="add-circle-outline" onPress={()=>{setForm(true);setError('');}}/>
  {!store?<ActivityIndicator accessibilityLabel="Cargando metas cifradas"/>:null}
 
  {!data.goals.filter(g=>g.archived===archived).length?<Card row><Body>{archived?'No hay metas archivadas.':'Todavía no has creado metas. Tus cantidades empiezan en blanco.'}</Body></Card>:null}
- {data.goals.filter(g=>g.archived===archived).map(g=>{const percent=goalPercent(g.savedCents,g.targetCents);const suggestion=suggestedContribution(g.savedCents,g.targetCents,g.desiredDate,today,g.cadence);return <Pressable key={g.id} accessibilityRole="button" accessibilityLabel={`Meta ${g.name}, ahorro ${formatMoney(g.savedCents)}, objetivo ${formatMoney(g.targetCents)}, progreso ${percent}%`} onPress={()=>{setDetailId(g.id);setReason('');setLimit(30);setError('');}}><Card row><Body style={{fontWeight:'700',fontSize:17}}>{g.name}</Body><Body>{formatMoney(g.savedCents)} / {formatMoney(g.targetCents)} · {percent}%</Body><View style={{flexGrow:1,minWidth:160}}><ProgressBar value={Math.min(100,percent)} label={`Progreso de ${g.name}: ${percent}%`}/></View><Body>{g.savedCents>=g.targetCents?'¡Objetivo alcanzado! Puedes seguir ahorrando o ajustar tu meta.':suggestion.status==='missing'?'Define la fecha final para estimar aportaciones.':suggestion.status==='due'?'Fecha final alcanzada o vencida. Puedes revisarla a tu ritmo.':`Sugerencia ${g.cadence==='weekly'?'semanal':'mensual'}: ${formatMoney(suggestion.amountCents!)} durante ${suggestion.periods} períodos.`}</Body><Body muted>Fecha final: {g.desiredDate??'Sin definir'}</Body></Card></Pressable>;})}
+ {data.goals.filter(g=>g.archived===archived).map(g=>{const percent=goalPercent(g.savedCents,g.targetCents);const suggestion=suggestedContribution(g.savedCents,g.targetCents,g.desiredDate,today,g.cadence);return <Pressable key={g.id} accessibilityRole="button" accessibilityLabel={`Meta ${g.name}, ahorro ${formatMoney(g.savedCents)}, objetivo ${formatMoney(g.targetCents)}, progreso ${percent}%`} onPress={()=>{setVictory('');setDetailId(g.id);setReason('');setLimit(30);setError('');}}><Card row><Body style={{fontWeight:'700',fontSize:17}}>{g.name}</Body><Body>{formatMoney(g.savedCents)} / {formatMoney(g.targetCents)} · {percent}%</Body><View style={{flexGrow:1,minWidth:160}}><ProgressBar value={Math.min(100,percent)} label={`Progreso de ${g.name}: ${percent}%`}/></View><Body>{g.savedCents>=g.targetCents?'¡Objetivo alcanzado! Puedes seguir ahorrando o ajustar tu meta.':suggestion.status==='missing'?'Define la fecha final para estimar aportaciones.':suggestion.status==='due'?'Fecha final alcanzada o vencida. Puedes revisarla a tu ritmo.':`Sugerencia ${goalCadences.find(([id])=>id===g.cadence)?.[1].toLowerCase()}: ${formatMoney(suggestion.amountCents!)} durante ${suggestion.periods} períodos.`}</Body><Body muted>Fecha final: {g.desiredDate??'Sin definir'}</Body></Card></Pressable>;})}
  <ActionButton title={archived?'Ver metas actuales':'Ver metas archivadas'} secondary onPress={()=>setArchived(!archived)}/>
- <Card row><Body muted>Las sugerencias reparten lo pendiente en períodos de 7 o 30 días y redondean hacia arriba al centavo. No incluyen rendimientos ni débitos automáticos. El ahorro registrado no confirma un saldo bancario.</Body></Card>
+ <Card row><Body muted>Las sugerencias usan fechas de calendario: semanal, quincenal (15 y fin de mes) o mensual. La última aportación se ajusta al centavo. No incluyen rendimientos ni débitos automáticos. El ahorro registrado no confirma un saldo bancario.</Body></Card>
  {form&&store?<GoalForm initial={form===true?undefined:form} store={store} saved={load} close={()=>setForm(null)}/>:null}
- {detail&&store?<Sheet title="Detalle de meta" close={()=>setDetailId(null)} busy={busy}>
+ {detail&&store?<Sheet title="Detalle de meta" close={()=>{setVictory('');setDetailId(null);}} busy={busy}>
+ <GoalJourney key={detail.id} goal={detail} animate={victory===detail.id+':'+detail.targetCents}/>
  <Body style={{fontWeight:'700'}}>{detail.name}</Body><Body>Ahorro registrado: {formatMoney(detail.savedCents)} · Objetivo: {formatMoney(detail.targetCents)}</Body><Body>Ahorro previo: {formatMoney(detail.openingCents)}. Las aportaciones vinculadas se suman por separado.</Body>
  {!busy?<><ActionButton title="Editar meta" testID="goal-edit" secondary onPress={()=>{setForm(detail);setDetailId(null);}}/></>:null}
  <ActionButton title="Editar historiales" secondary onPress={()=>router.push({pathname:'/funds',params:{scope:'personal',fundId:goalFundId(detail.id)}})}/>

@@ -1,0 +1,20 @@
+import {isValidElement,type ReactElement} from 'react';
+import {expect,it,vi} from 'vitest';
+import GoalsScreen from '../src/modules/goals/GoalsScreen';
+import {GoalJourney} from '../src/modules/goals/GoalJourney';
+import type {GoalSnapshot} from '../src/modules/goals/types';
+const h=vi.hoisted(()=>({values:[] as unknown[],cursor:0,deps:new Map<number,unknown[]>(),effects:[] as (()=>unknown)[],listener:null as null|(()=>void),data:{goals:[],contributions:[],movements:[],events:[]} as GoalSnapshot,claim:vi.fn(async(id:string,target:number)=>{const g=h.data.goals.find(g=>g.id===id);if(!g||g.savedCents<target||g.celebratedTargetCents===target)return false;g.celebratedTargetCents=target;h.listener?.();return true;})}));
+vi.mock('react',async original=>{const slot=(initial:unknown)=>{const i=h.cursor++;if(!(i in h.values))h.values[i]=typeof initial==='function'?(initial as ()=>unknown)():initial;return[h.values[i],(v:unknown)=>h.values[i]=typeof v==='function'?(v as (old:unknown)=>unknown)(h.values[i]):v];};const same=(a:unknown[]|undefined,b:unknown[])=>a?.length===b.length&&b.every((v,i)=>Object.is(v,a[i]));return{...await original<typeof import('react')>(),useState:slot,useRef:(v:unknown)=>slot({current:v})[0],useCallback:(f:unknown,d:unknown[])=>{const i=h.cursor++;if(!same(h.deps.get(i),d)){h.deps.set(i,d);h.values[i]=f;}return h.values[i];},useEffect:(f:()=>unknown,d:unknown[])=>{const i=h.cursor++;if(!same(h.deps.get(i),d)){h.deps.set(i,d);h.effects.push(f);}}};});
+vi.mock('react-native',()=>({ActivityIndicator:()=>null,AppState:{addEventListener:()=>({remove(){}})},Pressable:()=>null,View:()=>null}));
+vi.mock('expo-router',()=>({router:{push:vi.fn()},useIsFocused:()=>true,useLocalSearchParams:()=>({})}));
+vi.mock('../src/ui/NavigationRail',()=>({NavigationRail:()=>null}));
+vi.mock('../src/ui/components',()=>({ActionButton:()=>null,Body:()=>null,Card:()=>null,ProgressBar:()=>null,Screen:()=>null,SectionHeading:()=>null}));
+vi.mock('../src/modules/money/fields',()=>({Field:()=>null,Sheet:()=>null,ErrorNotice:()=>null}));
+vi.mock('../src/modules/goals/GoalForm',()=>({GoalForm:()=>null}));
+vi.mock('../src/modules/goals/GoalJourney',()=>({GoalJourney:()=>null}));
+vi.mock('../src/modules/goals/localStore',()=>{const store={snapshot:async()=>structuredClone(h.data),claimCompletion:h.claim};return{getGoalStore:async()=>store};});
+vi.mock('../src/storage/changeEvents',()=>({onDataCommitted:(f:()=>void)=>{h.listener=f;return()=>{};}}));
+type Node=ReactElement<Record<string,unknown>>;
+function nodes(x:unknown):Node[]{if(Array.isArray(x))return x.flatMap(nodes);if(!isValidElement(x))return[];const n=x as Node;return[n,...nodes(n.props.children)];}
+function draw(){h.cursor=0;const t=nodes(GoalsScreen());for(const f of h.effects.splice(0))f();return t;}
+it('seleccionar una meta abre su pista y una aportación confirmada actualiza el avance y celebra una vez',async()=>{h.data.goals=[{id:'g',name:'Meta FICTICIA',kind:'savings',targetCents:100000,openingCents:0,savedCents:25000,desiredDate:'2027-11-30',cadence:'weekly',trackStartDate:'2026-11-01',version:1,archived:false}];draw();await vi.waitFor(()=>expect(draw().some(n=>String(n.props.accessibilityLabel).startsWith('Meta Meta FICTICIA'))).toBe(true));const card=draw().find(n=>String(n.props.accessibilityLabel).startsWith('Meta Meta FICTICIA'))!;(card.props.onPress as ()=>void)();expect((draw().find(n=>n.type===GoalJourney)!.props.goal as {savedCents:number}).savedCents).toBe(25000);expect(h.claim).not.toHaveBeenCalled();h.data.goals[0].savedCents=100000;h.listener!();await vi.waitFor(()=>expect(draw().find(n=>n.type===GoalJourney)?.props.animate).toBe(true));expect(h.claim).toHaveBeenCalledOnce();draw();await Promise.resolve();expect(h.claim).toHaveBeenCalledOnce();});
