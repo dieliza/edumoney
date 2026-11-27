@@ -1,0 +1,154 @@
+{
+  "buildName": "budget-funded-17d69026e458",
+  "baseVersion": 135,
+  "baseHasRefinements": true,
+  "modified": [
+    33000,
+    33002,
+    35001,
+    35002,
+    21009,
+    21025,
+    33003,
+    33007
+  ],
+  "added": [],
+  "protectedModules": 1431,
+  "report": [
+    {
+      "compiled": "src/modules/budget/domain.ts",
+      "id": 33000,
+      "imports": {
+        "./contributions": 35000,
+        "../../core/money": 814,
+        "../../core/errors": 799,
+        "../money/domain": 813,
+        "../bills/domain": 850,
+        "../funds/domain": 21010
+      },
+      "source_sha256": "fe1ca1216e8fd01dacad7e197c1d5211f5d4ac7b50f84ac8ef204ca2a645bbb6"
+    },
+    {
+      "compiled": "src/modules/budget/recommendations.ts",
+      "id": 35002,
+      "imports": {
+        "../../core/money": 814,
+        "../../core/errors": 799,
+        "../funds/domain": 21010,
+        "./domain": 33000,
+        "./contributions": 35000
+      },
+      "source_sha256": "5bbfb1e8d356fb8252927f37dc2a0b3ee43c8dc918407db591b8f9c09382a92a"
+    },
+    {
+      "compiled": "src/modules/budget/RecommendationEditor.web.tsx",
+      "id": 35001,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "../../core/errors": 799,
+        "../money/domain": 813,
+        "../funds/FundSheet": 21020,
+        "./domain": 33000,
+        "./contributions": 35000,
+        "./recommendations": 35002,
+        "./ContributionFields.web": 35003,
+        "./BudgetPresentation.web": 34000,
+        "./BudgetControls.web": 33004
+      },
+      "source_sha256": "69c93514a141a056ccdee83859ab94dded89d68f42dd15621edbb6dc9caa1902"
+    },
+    {
+      "compiled": "src/modules/funds/store.ts",
+      "id": 21009,
+      "imports": {
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/domain": 813,
+        "./domain": 21010,
+        "./read": 21007,
+        "./types": 21011
+      },
+      "source_sha256": "fc945e1d4771fbcf52de18bf876b1ece600f499538b0e56ca2ce66f670b6d28f"
+    },
+    {
+      "compiled": "src/modules/funds/TransferEditor.tsx",
+      "id": 21025,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "../../ui/MeaningHelp": 20014,
+        "./FundSheet": 21020,
+        "react": 13,
+        "../../core/id": 803,
+        "../../core/money": 814,
+        "../../core/errors": 799,
+        "../../ui/components": 796,
+        "../money/fields": 797,
+        "../../ui/DateField": 853,
+        "../money/domain": 813
+      },
+      "source_sha256": "10ba7546a89dddb949f384f4abb39051a62a82fb401192d8b4aa61859c5cc22b"
+    },
+    {
+      "compiled": "src/modules/budget/store.ts",
+      "id": 33003,
+      "imports": {
+        "../funds/domain": 21010,
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/domain": 813,
+        "../funds/store": 21009,
+        "../bills/store": 1118,
+        "../debts/store": 854,
+        "./domain": 33000
+      },
+      "source_sha256": "a472bbbc3da6c5ecbb496e9e1d437e183f4f7c3b056be25c3658cfccc957e2c8"
+    },
+    {
+      "compiled": "src/modules/budget/BudgetDetails.web.tsx",
+      "id": 33007,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "../../design/ThemeProvider": 792,
+        "../money/domain": 813,
+        "./BudgetControls.web": 33004
+      },
+      "source_sha256": "9dda4bbf78b1ab21f089948a5f4796d2dddc3c4d6dca0aa7f0ba269a664038e7"
+    },
+    {
+      "compiled": "src/modules/budget/MonthlyBudgetCenter.web.tsx",
+      "id": 33002,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "./RecommendationEditor.web": 35001,
+        "./recommendations": 35002,
+        "./contributions": 35000,
+        "./BudgetPresentation.web": 34000,
+        "react": 13,
+        "expo-router": 790,
+        "../../design/ThemeProvider": 792,
+        "../../core/id": 803,
+        "../../core/errors": 799,
+        "../../storage/changeEvents": 871,
+        "../money/localStore": 798,
+        "../money/domain": 813,
+        "../funds/store": 21009,
+        "../funds/domain": 21010,
+        "../funds/FundTransfers": 21027,
+        "../funds/TransferEditor": 21025,
+        "../funds/FundSheet": 21020,
+        "./store": 33003,
+        "./domain": 33000,
+        "./BudgetControls.web": 33004,
+        "./BudgetPie.web": 33005,
+        "./CategoryEditor.web": 33006,
+        "./BudgetDetails.web": 33007,
+        "./AnnualExpenses.web": 33008,
+        "./BudgetHistory.web": 33009
+      },
+      "source_sha256": "82d759d6283be4a2fa3fa4a1d94257ff5f0200777d6a516d9842b75f3894d4d4"
+    }
+  ],
+  "browserVerified": false
+}
