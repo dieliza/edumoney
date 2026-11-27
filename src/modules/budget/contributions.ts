@@ -24,3 +24,9 @@ export function contributionRecommendation(g:ContributionGoal,appliedCents:numbe
  const monthly=cents(Number(BigInt(regular)*BigInt(count)-(count&&hi===lastIndex?BigInt(regular-last):0n)));
  return{outstanding,perContribution:regular,lastContribution:last,payments,slots,monthCents:monthly,nextDate:iso(occurrence(g,start)),lastDate:iso(occurrence(g,lastIndex)),overdue};
 }
+
+/** Exact calendar dates for an inclusive window; skips directly to its first occurrence. */
+export function contributionOccurrences(g:ContributionGoal,from:string,to:string){
+ validateContribution(g);if(!validDate(from)||!validDate(to)||from>to)throw new UserInputError('Revisa el intervalo del calendario.');
+ const first=countThrough(g,stamp(from)-day),last=countThrough(g,Math.min(stamp(to),stamp(g.dueDate)));return Array.from({length:Math.max(0,last-first)},(_,i)=>({index:first+i,date:iso(occurrence(g,first+i))}));
+}

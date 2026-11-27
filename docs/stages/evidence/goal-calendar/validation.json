@@ -1,0 +1,21 @@
+{
+  "block": "goal-calendar",
+  "limit": 100,
+  "distinct_code_cases": 57,
+  "code_executions": 60,
+  "code_final": "passed",
+  "initial_parser_fixture_failure": 1,
+  "artifact_executions": 3,
+  "artifact_final": "passed",
+  "runtime_executions": 2,
+  "runtime_final": "passed",
+  "typescript": "passed",
+  "eslint_affected": "passed",
+  "source_hashes": "matched final sources",
+  "public_delivery": "pending",
+  "physical_push_delivery_verified": false,
+  "browser_verified": false,
+  "financial_formula_changed": false,
+  "migration": "none",
+  "existing_push_limit": "48 notices/90 days preserved"
+}

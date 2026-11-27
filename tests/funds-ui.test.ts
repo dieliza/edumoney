@@ -1,3 +1,4 @@
+import type {Fund} from '../src/modules/funds/types';
 import {createElement,type ReactNode} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {expect,it,vi} from 'vitest';
@@ -31,3 +32,5 @@ it('conserva monedas/flecha, recibo enmarcado y micrófono, con flechas opuestas
 it('el saludo de Home usa hora local y primer nombre sin apellidos',()=>{const summary=monthlySummary({movements:[],categories:[],budgets:[],schedules:[],commitments:[]},'2026-11');const html=renderToStaticMarkup(createElement(MoneyOverview,{summary,month:'2026-11',currentMonth:'2026-11',actions:null,onPeriod:()=>{},onBreakdown:()=>{}}));expect(html).toContain('¡Buenas tardes, Ana!');expect(html).not.toContain('Pérez');expect(html).not.toContain('¡Hola!');});
 it('la invitación de ahorro distingue proyección de aportaciones realizadas',()=>{const html=renderToStaticMarkup(createElement(SimulationPlanCTA,{input:{kind:'saving',amount:0,down:0,financedFees:0,upfront:0,extra:0,rateBps:0,months:12,cadence:'monthly',opening:40000,contribution:10000,coverage:0,margin:null}}));expect(html).toContain('¿Deseas convertir esta simulación en un plan de ahorro?');expect(html).toContain('no son aportaciones realizadas');expect(html).toContain('Sí, configurar mi plan');});
 it('los textos de formularios de fondos cambian con el tema',()=>{for(const [theme,color]of [['dark','#F6F9FA'],['light','#102F42']]){h.theme=theme;const html=renderToStaticMarkup(createElement(FundBody,null,'Importe real'));expect(html).toContain(color.toLowerCase()==='#f6f9fa'?'#F6F9FA':'#102F42');}});
+
+it('el total muestra las metas incluidas sin sumar otra vez la transferencia',()=>{const values={...projection,available:190000,total:200000,savings:10000,emergency:0,budget:0,funds:[{goalId:'g',balanceCents:10000} as Fund]};const html=renderToStaticMarkup(createElement(FundsSummary,{summary:values,scope:'personal',asOf:values.asOf}));expect(html).toContain('Reservado en Mis metas: $100.00');expect(html).toContain('Incluido en el Total de fondos.');expect(html).toContain('$2,000.00');expect(html).toContain('$1,900.00');});

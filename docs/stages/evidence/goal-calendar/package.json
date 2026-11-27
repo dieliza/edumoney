@@ -1,0 +1,178 @@
+{
+  "buildName": "goal-calendar-66d42a885fa1",
+  "baseVersion": 145,
+  "modified": [
+    805,
+    35000,
+    810,
+    21014,
+    849,
+    1400
+  ],
+  "added": [
+    39002,
+    39001,
+    39003,
+    39000
+  ],
+  "protectedModules": 1438,
+  "workerBytes": 64850398,
+  "report": [
+    {
+      "compiled": "src/modules/budget/contributions.ts",
+      "id": 35000,
+      "imports": {
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/domain": 813
+      },
+      "source_sha256": "bd29620add8f8faa4f058af03be74cb8b30fb57a4d31931c5dfdde704130be1c"
+    },
+    {
+      "compiled": "src/modules/goals/calendar.ts",
+      "id": 39001,
+      "imports": {
+        "../budget/contributions": 35000,
+        "./race": 37001,
+        "../money/domain": 813
+      },
+      "source_sha256": "a76335fd3a1c73a0f716ac07129370bd91baf28443e2600db022d5df5f2d400f"
+    },
+    {
+      "compiled": "src/modules/goals/reminders.web.ts",
+      "id": 39003,
+      "imports": {},
+      "source_sha256": "2a63a4602a4061dc51949e52cbd5eb5a2e39a61e2a62579a8b14925c8ddaabdf"
+    },
+    {
+      "compiled": "src/modules/goals/GoalCalendarTools.web.tsx",
+      "id": 39002,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "expo-router": 790,
+        "../../ui/components": 796,
+        "../../web/files": 889,
+        "../money/domain": 813,
+        "./calendar": 39001,
+        "./reminders": 39003
+      },
+      "source_sha256": "6da7d658d161893000ad04a4acbdd2ae0f714295b542a5afd223038fc9e0a8b8"
+    },
+    {
+      "compiled": "src/modules/goals/GoalForm.tsx",
+      "id": 810,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "./reminders": 39003,
+        "./domain": 808,
+        "../../ui/saveFeedback": 802,
+        "react": 13,
+        "../../core/id": 803,
+        "../../core/money": 814,
+        "../../core/errors": 799,
+        "../../ui/components": 796,
+        "../money/fields": 797,
+        "../money/domain": 813,
+        "./types": 809,
+        "../../ui/DateField": 853
+      },
+      "source_sha256": "2a336fe75844f3652c1fd7534f2439f735b061bc417c43c7cc176d12cd82f4c9"
+    },
+    {
+      "compiled": "src/modules/goals/GoalsScreen.tsx",
+      "id": 805,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "./GoalCalendarTools": 39002,
+        "./GoalJourney": 37000,
+        "./types": 809,
+        "../../storage/changeEvents": 871,
+        "../funds/read": 21007,
+        "../../ui/NavigationRail": 812,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "expo-router": 790,
+        "../../core/errors": 799,
+        "../../ui/components": 796,
+        "../money/domain": 813,
+        "../money/fields": 797,
+        "./localStore": 806,
+        "./domain": 808,
+        "./GoalForm": 810
+      },
+      "source_sha256": "e3881e8c005375c745b2c8fde0f24b4510332075b522db5341dc2f2ad292d933"
+    },
+    {
+      "compiled": "src/ui/FundsSummary.tsx",
+      "id": 21014,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "../core/money": 814,
+        "./MeaningHelp": 20014,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "expo-linear-gradient": 836,
+        "expo-router": 790,
+        "./components": 796,
+        "../modules/money/domain": 813
+      },
+      "source_sha256": "b6a1f87bc3c20de0f05beafbbecd96b42ed7bf9270d172d0610973a315716e83"
+    },
+    {
+      "compiled": "src/modules/goals/GoalCalendar.tsx",
+      "id": 39000,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "expo-router": 790,
+        "../../storage/changeEvents": 871,
+        "../../ui/components": 796,
+        "../../core/errors": 799,
+        "../money/domain": 813,
+        "../bills/domain": 850,
+        "./localStore": 806,
+        "./calendar": 39001
+      },
+      "source_sha256": "47529c372a00ab5027785ae3551f2fdc75ad053801f8662c6e32357830a85a4b"
+    },
+    {
+      "id": 849,
+      "surgicalPatch": "existing calendar and search/navigation preserved"
+    },
+    {
+      "id": 1400,
+      "surgicalPatch": "existing push lifecycle/permission/identity preserved; goals merged"
+    }
+  ],
+  "browserVerified": false
+}

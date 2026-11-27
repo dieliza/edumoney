@@ -1,3 +1,4 @@
+import {GoalCalendar} from '../goals/GoalCalendar';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { ActivityIndicator, AppState, Pressable, View } from 'react-native';
 import { router, useIsFocused, useLocalSearchParams } from 'expo-router';
@@ -15,11 +16,11 @@ import type { BillsStore } from './store';
 import type { Bill, BillPayment, BillSnapshot } from './types';
 const empty:BillSnapshot={bills:[],series:[],payments:[],categories:[],movements:[]};
 export default function BillsScreen({embedded=false}:{embedded?:boolean}={}){
- const {scope,billId}=useLocalSearchParams<{scope?:string;billId?:string}>();const searched=useRef('');const debtOnly=scope==='debts';
+ const {scope,billId,view}=useLocalSearchParams<{scope?:string;billId?:string;view?:string}>();const searched=useRef('');const debtOnly=scope==='debts';
  const {colors}=useTheme();const focused=useIsFocused();
  const [store,setStore]=useState<BillsStore|null>(null);const [data,setData]=useState(empty);const [reminders,setReminders]=useState('Comprobando avisos locales…');
  const [error,setError]=useState('');const [notice,setNotice]=useState('');const [busy,setBusy]=useState(false);
- const [tab,setTab]=useState('upcoming');const [month,setMonth]=useState(localToday().slice(0,7));const [limit,setLimit]=useState(50);const [showVoided,setShowVoided]=useState(false);
+ const [tab,setTab]=useState(view==='calendar'?'calendar':'upcoming');const [month,setMonth]=useState(localToday().slice(0,7));const [limit,setLimit]=useState(50);const [showVoided,setShowVoided]=useState(false);
  const [form,setForm]=useState<Bill|true|null>(null);const [pay,setPay]=useState<Bill|null>(null);const [detailId,setDetailId]=useState<string|null>(null);const [reason,setReason]=useState('');
  const [revisions,setRevisions]=useState<{reason:string;recordedAt:string;beforeJson:string}[]>([]);
  const load=useCallback(async()=>{const result=await refreshBills();setStore(result.store);setData(result.data);setReminders(result.reminderMessage);},[]);
@@ -38,6 +39,7 @@ export default function BillsScreen({embedded=false}:{embedded?:boolean}={}){
   <Choices presentation="tabs" label="Vista de facturas" value={tab} options={[[ 'upcoming','Próximas'],['paid','Pagadas'],['calendar','Calendario']]} onChange={v=>{setTab(v);setLimit(50);}}/>
   {!store?<ActivityIndicator color={colors.accent} accessibilityLabel="Cargando facturas"/>:null}
   {tab==='calendar'?<><Field label="Mes del calendario (AAAA-MM)" value={month} onChangeText={setMonth}/><Body muted>Agenda mensual por vencimiento. Incluye facturas pendientes, pagadas y anuladas; un atraso conserva su fecha original.</Body>{!validMonth(month)?<ErrorNotice message="Escribe un mes válido en formato AAAA-MM."/>:null}</>:null}
+  {!debtOnly&&(tab==='calendar'||tab==='upcoming')?<GoalCalendar month={tab==='calendar'?month:undefined} upcoming={tab==='upcoming'}/>:null}
   {tab==='upcoming'?<><Card row><Body>Una factura programada no es un pago. Los atrasos conservan su vencimiento hasta que registres un cambio con motivo.</Body></Card><ActionButton title={showVoided?'Ver facturas pendientes':'Ver historial de anuladas'} secondary onPress={()=>{setShowVoided(!showVoided);setLimit(50);}}/></>:null}
   {rows.slice(0,limit).map((b,index)=><View key={b.id} style={{gap:12}}>{tab==='calendar'&&(index===0||rows[index-1].dueDate!==b.dueDate)?<SectionHeading title={b.dueDate}/>:null}{row(b)}</View>)}
   {store&&!rows.length?<Card row><Body>{tab==='paid'?'Aún no hay facturas completamente pagadas.':tab==='calendar'?'Sin facturas para este mes.':showVoided?'No hay facturas anuladas.':'No hay facturas pendientes.'}</Body></Card>:null}

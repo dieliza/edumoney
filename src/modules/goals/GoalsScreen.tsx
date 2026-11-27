@@ -1,3 +1,4 @@
+import {GoalReminderStatus,GoalDateTools} from './GoalCalendarTools';
 import {GoalJourney} from './GoalJourney';
 import {goalCadences} from './types';
 import {onDataCommitted} from '../../storage/changeEvents';
@@ -30,6 +31,7 @@ export default function GoalsScreen(){
  useEffect(()=>{if(!detail||!store||detail.archived||detail.savedCents<detail.targetCents||detail.celebratedTargetCents===detail.targetCents)return;let alive=true;void store.claimCompletion(detail.id,detail.targetCents).then(claimed=>{if(alive&&claimed)setVictory(detail.id+':'+detail.targetCents);}).catch(e=>{if(alive)setError(userMessage(e));});return()=>{alive=false;};},[store,detail]);
  return <Screen title="Mis metas" demo={false} subtitle="Dale un propósito a cada paso que das.">
  <NavigationRail label="Planificar mis metas" items={[{title:'Simular ahorro',icon:'trending-up-outline',run:()=>router.push({pathname:'/decisions',params:{kind:'saving'}})}]}/>
+ {data.goals.some(g=>!g.archived)?<GoalReminderStatus/>:null}
  <ErrorNotice message={error}/><ActionButton title="Crear nueva meta" testID="goal-create" icon="add-circle-outline" onPress={()=>{setForm(true);setError('');}}/>
  {!store?<ActivityIndicator accessibilityLabel="Cargando metas cifradas"/>:null}
 
@@ -39,6 +41,7 @@ export default function GoalsScreen(){
  <Card row><Body muted>Las sugerencias usan fechas de calendario: semanal, quincenal (15 y fin de mes) o mensual. La última aportación se ajusta al centavo. No incluyen rendimientos ni débitos automáticos. El ahorro registrado no confirma un saldo bancario.</Body></Card>
  {form&&store?<GoalForm initial={form===true?undefined:form} store={store} saved={load} close={()=>setForm(null)}/>:null}
  {detail&&store?<Sheet title="Detalle de meta" close={()=>{setVictory('');setDetailId(null);}} busy={busy}>
+ <GoalDateTools goal={detail}/>
  <GoalJourney key={detail.id} goal={detail} animate={victory===detail.id+':'+detail.targetCents}/>
  <Body style={{fontWeight:'700'}}>{detail.name}</Body><Body>Ahorro registrado: {formatMoney(detail.savedCents)} · Objetivo: {formatMoney(detail.targetCents)}</Body><Body>Ahorro previo: {formatMoney(detail.openingCents)}. Las aportaciones vinculadas se suman por separado.</Body>
  {!busy?<><ActionButton title="Editar meta" testID="goal-edit" secondary onPress={()=>{setForm(detail);setDetailId(null);}}/></>:null}
