@@ -1,0 +1,22 @@
+{
+  "code_distinct_cases": 80,
+  "code_executions_including_repeats": 82,
+  "code_failed_then_corrected": 1,
+  "final_code_results": "passed",
+  "artifact_executions": 2,
+  "artifact_failed_then_corrected": 1,
+  "artifact_results": "passed",
+  "execution_limit": 100,
+  "executions_before_public_delivery": 84,
+  "typecheck": "passed",
+  "eslint": "passed",
+  "build": "passed",
+  "sql_migrations": 0,
+  "browser_verified": false,
+  "review": "React hook order, themes, accessible output labels, existing change notifications and confirmed-transfer idempotency checked",
+  "public_delivery": "passed",
+  "total_executions_including_repeats": 85,
+  "distinct_cases": 82,
+  "version_number": 136,
+  "published": true
+}

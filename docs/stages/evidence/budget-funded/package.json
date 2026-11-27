@@ -1,5 +1,5 @@
 {
-  "buildName": "budget-funded-17d69026e458",
+  "buildName": "budget-funded-f8e32ed2ff7c",
   "baseVersion": 135,
   "baseHasRefinements": true,
   "modified": [
@@ -69,7 +69,7 @@
         "./read": 21007,
         "./types": 21011
       },
-      "source_sha256": "fc945e1d4771fbcf52de18bf876b1ece600f499538b0e56ca2ce66f670b6d28f"
+      "source_sha256": "8482bde2a3d565872e85be23c358285297837ad3ba0b84c1606d5f653e1d0aa4"
     },
     {
       "compiled": "src/modules/funds/TransferEditor.tsx",
@@ -147,7 +147,7 @@
         "./AnnualExpenses.web": 33008,
         "./BudgetHistory.web": 33009
       },
-      "source_sha256": "82d759d6283be4a2fa3fa4a1d94257ff5f0200777d6a516d9842b75f3894d4d4"
+      "source_sha256": "1064895bea9d4afea3f1688f26165b754b43390c96067aa5945c112b7e979483"
     }
   ],
   "browserVerified": false
