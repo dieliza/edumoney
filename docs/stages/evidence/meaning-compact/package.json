@@ -1,0 +1,17 @@
+{
+  "buildName": "meaning-compact-566e95e4d8eb",
+  "baseVersion": 151,
+  "modified": [
+    20014
+  ],
+  "added": [],
+  "protectedModules": 1454,
+  "workerBytes": 66962933,
+  "sourceFiles": {
+    "src/ui/MeaningHelp.tsx": "9272cbbe6704d7bb9c8988cfc11faecdb0d91786f845078e8707841d908f5ce0",
+    "web-enhancements/goal-race/patch-meaning-compact.cjs": "cc79c38bc4f7c7137d83280dde4766cbf8803d6c05a9315dce8e5df51f32bbf6",
+    "web-enhancements/goal-race/prefix-pool-codec.cjs": "315a078ae442742381be78e86ffbfa9c49fbab1c8e07594a867c950ff2d98b32",
+    "web-enhancements/funds-trial/host-graph.cjs": "714ece80cb63afd6bee319151ebcf8f8ef038ba18cb7262401f53122a00f8c8f"
+  },
+  "browserVerified": false
+}

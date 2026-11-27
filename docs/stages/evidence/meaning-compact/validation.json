@@ -1,0 +1,21 @@
+{
+  "test_limit": 100,
+  "conservative_executions": 22,
+  "counts": {
+    "existing_test": 1,
+    "runtime_scenarios": 16,
+    "package_attempts": 2,
+    "build": 1,
+    "public_delivery": 1,
+    "static_patch_check": 1
+  },
+  "typecheck": "passed",
+  "eslint": "passed",
+  "runtime": "16 grouped scenarios passed",
+  "build": "passed",
+  "browser_verified": false,
+  "migrations": [],
+  "scope": "shared MeaningHelp styles only",
+  "messages_callbacks_and_business_exclusions": "unchanged",
+  "unrelated_published_factories_preserved": 1454
+}

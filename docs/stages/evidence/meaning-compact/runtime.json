@@ -1,0 +1,13 @@
+{
+  "cases": 16,
+  "passed": 16,
+  "fieldContexts": 6,
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "button": "content width, 44px minimum height",
+  "explanation": "unchanged; opens and closes",
+  "businessRules": "preserved",
+  "browserVerified": false
+}
