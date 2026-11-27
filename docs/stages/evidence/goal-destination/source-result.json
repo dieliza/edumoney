@@ -3,6 +3,12 @@
   "commit_sha": "02e229c26d10992a148511b479f82e25b0acc3c4",
   "base_commit": "a4ec726984011d45cd687fb7bacc8ae94a2f3fae",
   "build": "passed",
-  "published": false,
-  "pushed": false
+  "published": true,
+  "pushed": true,
+  "version_number": 144,
+  "version_id": "appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_f267c33bb95c8191a6fdeed8c9f6c4db",
+  "deployment_id": "appgdep_6b08fd58605881919e13f47bc5d7a0ef",
+  "status": "succeeded",
+  "env_set_revision": 4,
+  "url": "https://edumoney-web.diegoluissantospabon.chatgpt.site"
 }

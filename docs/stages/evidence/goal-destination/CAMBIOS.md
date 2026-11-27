@@ -7,3 +7,5 @@ Las pruebas verifican la selección de una meta, su identificador real, importe,
 TypeScript y ESLint de archivos afectados aprobados. Paquete limitado a la fábrica 21025; todas las otras 1442 fábricas se conservan byte por byte. Se reutiliza el empaquetado de rutas y contenido ya publicado, con nueva caché, alias coherentes y manejadores push/activación conservados. No hay migraciones. No se utilizaron datos financieros reales. Sin navegador interactivo: no se afirma prueba física.
 
 El archivo de despliegue excede el espacio persistente disponible. Se compila y valida en memoria, se envía el commit exacto y se usa compilación remota para publicar.
+
+Versión 144 publicada y entrega pública comprobada: HTML, paquete con Mis metas y service worker. Diez ejecuciones de código, una comprobación de artefacto, una del controlador empaquetado y una de entrega; total conservador acumulado con bloques previos: 94 de 100.

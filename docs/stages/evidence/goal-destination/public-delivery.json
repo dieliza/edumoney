@@ -1,0 +1,9 @@
+{
+  "cases": 1,
+  "passed": 1,
+  "build": "goal-destination-46b289c4f0f0",
+  "public_html": "passed",
+  "final_budget_bundle": "passed",
+  "service_worker": "passed",
+  "browser_verified": false
+}

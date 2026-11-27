@@ -7,8 +7,10 @@
   "runtime": "passed",
   "typescript": "passed",
   "eslint_affected": "passed",
-  "public_delivery": "pending",
+  "public_delivery": "passed",
   "planned_total_conservative_count": 94,
   "limit": 100,
-  "browser_verified": false
+  "browser_verified": false,
+  "conservative_execution_count": 94,
+  "published_version": 144
 }
