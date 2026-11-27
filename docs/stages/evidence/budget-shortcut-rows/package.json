@@ -1,0 +1,47 @@
+{
+  "buildName": "budget-shortcut-rows-6dec8e2ba8d5",
+  "baseVersion": 139,
+  "baseHasRefinements": true,
+  "modified": [
+    33002
+  ],
+  "added": [],
+  "protectedModules": 1438,
+  "report": [
+    {
+      "compiled": "src/modules/budget/MonthlyBudgetCenter.web.tsx",
+      "id": 33002,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "../../ui/MeaningHelp": 20014,
+        "./RecommendationEditor.web": 35001,
+        "./recommendations": 35002,
+        "./contributions": 35000,
+        "./BudgetPresentation.web": 34000,
+        "react": 13,
+        "expo-router": 790,
+        "../../design/ThemeProvider": 792,
+        "../../core/id": 803,
+        "../../core/errors": 799,
+        "../../storage/changeEvents": 871,
+        "../money/localStore": 798,
+        "../money/domain": 813,
+        "../funds/store": 21009,
+        "../funds/domain": 21010,
+        "../funds/FundTransfers": 21027,
+        "../funds/TransferEditor": 21025,
+        "../funds/FundSheet": 21020,
+        "./store": 33003,
+        "./domain": 33000,
+        "./BudgetControls.web": 33004,
+        "./BudgetPie.web": 33005,
+        "./CategoryEditor.web": 33006,
+        "./BudgetDetails.web": 33007,
+        "./AnnualExpenses.web": 33008,
+        "./BudgetHistory.web": 33009
+      },
+      "source_sha256": "50ef948c39b4ebcbcb3e814f40ab3f7d3db1e7394a8322c0b0f59ea2dd1fe706"
+    }
+  ],
+  "browserVerified": false
+}
