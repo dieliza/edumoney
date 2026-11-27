@@ -1,0 +1,9 @@
+{
+  "cases": 1,
+  "passed": 1,
+  "build": "debt-simulators-703f3e1fb3d9",
+  "public_html": "passed",
+  "simulators_and_learning_assets": "passed",
+  "service_worker": "passed",
+  "browser_verified": false
+}

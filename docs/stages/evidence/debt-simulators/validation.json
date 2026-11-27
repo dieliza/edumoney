@@ -1,13 +1,13 @@
 {
   "test_limit": 100,
-  "conservative_executions": 84,
+  "conservative_executions": 85,
   "counts": {
     "selected_cases": 51,
     "repeat_grammar_assertion": 1,
     "package_attempts": 3,
     "runtime_attempts_conservatively_8_each": 24,
     "builds": 2,
-    "public_delivery": 1,
+    "public_delivery": 2,
     "static_patch_checks": 2
   },
   "typecheck": "passed",
@@ -19,5 +19,6 @@
   "migrations": [],
   "unrelated_published_factories_preserved": 1448,
   "education_panel_prizes_and_storage": "unchanged",
-  "scope": "navigation consolidation and responsive layout only"
+  "scope": "navigation consolidation and responsive layout only",
+  "public_harness_adjustment": "JSX compiler escapes accented characters; marker uses stable ASCII substring"
 }

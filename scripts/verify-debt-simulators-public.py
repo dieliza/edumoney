@@ -8,6 +8,6 @@ def read(path):
   return (gzip.decompress(raw) if r.headers.get('Content-Encoding')=='gzip' else raw).decode()
 html=read('/?delivery='+build);assert build in html
 code=''.join(read(path) for path in json.loads((e/'public-assets.json').read_text()))
-for marker in ['LearnHub','learn-topic-columns','learn-debt-column','DebtSimulators','Simuladores','¿Para qué sirven los simuladores?','return __eduEmbedded','LessonCelebration','TIP_PRIZES','repairEducationProgress']:assert marker in code,marker
+for marker in ['LearnHub','learn-topic-columns','learn-debt-column','DebtSimulators','Simuladores','sirven los simuladores','return __eduEmbedded','LessonCelebration','TIP_PRIZES','repairEducationProgress']:assert marker in code,marker
 sw=read('/sw.js?delivery='+build);assert build in sw and 'skipWaiting' in sw and 'push' in sw
 result={'cases':1,'passed':1,'build':build,'public_html':'passed','simulators_and_learning_assets':'passed','service_worker':'passed','browser_verified':False};(e/'public-delivery.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result))
