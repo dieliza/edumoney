@@ -1,0 +1,10 @@
+{
+  "code_cases": 2,
+  "code_results": "passed",
+  "typescript": "passed",
+  "eslint": "passed",
+  "test_limit": 100,
+  "browser_verified": false,
+  "financial_calculations_changed": false,
+  "sql_migrations": 0
+}

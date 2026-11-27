@@ -4,6 +4,7 @@ module.exports=function(site){
  let depth=0,q=false,e=false,end=start;
  for(;end<worker.length;end++){const c=worker[end];if(q){if(e)e=false;else if(c==='\\')e=true;else if(c==='"')q=false;}else if(c==='"')q=true;else if(c==='{')depth++;else if(c==='}'&&!--depth){end++;break;}}
  const routes=JSON.parse(worker.slice(start,end)),content={};
+ const valuesMatch=/const __EDU_ROUTE_VALUES=(\[.*?\]);const ROUTES=/.exec(worker);if(valuesMatch){const values=JSON.parse(valuesMatch[1]);for(const key of Object.keys(routes))if(typeof routes[key]==='number'){assert(values[routes[key]],'Unknown packed route');routes[key]=values[routes[key]];}}
  for(const f of fs.readdirSync(site+'/worker').filter(f=>f.endsWith('.js')&&fs.readFileSync(site+'/worker/'+f,'utf8').startsWith('export default {')))Object.assign(content,JSON.parse(fs.readFileSync(site+'/worker/'+f,'utf8').slice(15).replace(/;\s*$/,'')));
  const read=u=>z.gunzipSync(Buffer.from(content[routes[u][0]],'base64')).toString(),html=read('/index.html');
  const entryAssets=[...html.matchAll(/src="([^"?]+\.js)/g)].map(m=>m[1]).filter(u=>routes[u]&&u.startsWith('/_expo/'));

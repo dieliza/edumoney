@@ -1,0 +1,31 @@
+{
+  "buildName": "transfer-destination-b8d08e9f75c1",
+  "baseVersion": 137,
+  "baseHasRefinements": true,
+  "modified": [
+    21025
+  ],
+  "added": [],
+  "protectedModules": 1438,
+  "report": [
+    {
+      "compiled": "src/modules/funds/TransferEditor.tsx",
+      "id": 21025,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "../../ui/MeaningHelp": 20014,
+        "./FundSheet": 21020,
+        "react": 13,
+        "../../core/id": 803,
+        "../../core/money": 814,
+        "../../core/errors": 799,
+        "../../ui/components": 796,
+        "../money/fields": 797,
+        "../../ui/DateField": 853,
+        "../money/domain": 813
+      },
+      "source_sha256": "698103a42249dd7d1828328cc25e09431ce4f30b926c7ba5418baebccbad0442"
+    }
+  ],
+  "browserVerified": false
+}
