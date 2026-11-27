@@ -1,0 +1,15 @@
+# Aportaciones parciales verdes y eliminación de metas con devolución
+
+Una etapa con cualquier cantidad aportada se muestra en verde. La etiqueta muestra el dinero realmente aportado; el importe restante continúa rojo. Un aporte inicial de $100 para una cuota de $250 muestra $100 verdes y $150 pendientes. No se cambia el calendario, el objetivo, el número de etapas ni se generan aportaciones ficticias. La celebración sigue reservada al objetivo alcanzado.
+
+Mis metas → seleccionar una meta → Editar historiales muestra las metas y la acción Eliminar meta. Se conserva el acceso a Editar transferencias. La eliminación pide confirmación con el nombre y saldo; permite cancelar y eliminar las metas una a una.
+
+La decisión del usuario es devolver el saldo al Balance disponible mediante una transferencia registrada. GoalStore.remove utiliza el mismo motor de transferencias de FundsStore dentro de una sola transacción: calcula el saldo actual, devuelve el importe positivo, registra la baja en el historial auditado existente y retira la meta de las listas. No se generan transferencias de cero. Una repetición no devuelve dos veces el dinero. Cualquier fallo revierte tanto la devolución como la baja. Una versión antigua no mueve dinero.
+
+Los registros de la meta, sus aportaciones, recibos y movimientos se conservan para mantener referencias e historial. La baja lógica se registra en goal_events con operación delete-goal; no se altera el esquema ni el formato 21 de respaldo. Las metas eliminadas se excluyen de Mis metas, Mi progreso y los selectores de transferencia; el fondo histórico se conserva con saldo cero. Se protegen sus transferencias de correcciones o reversiones que dejarían saldo en un destino eliminado. La devolución no es un ingreso o gasto nuevo y no modifica el balance total. Presupuesto mensual mantiene su simulación intacta.
+
+Pruebas con datos ficticios: aportaciones parciales de $100/$200, cuotas completas y parciales posteriores, cero aportado, ambos temas y premio; fondos y metas existentes; devolución de ahorro previo y aportes por transferencia o antiguos; dos metas, aislamiento de Negocio, doble pulsación, versión antigua, fallo/rollback, restauración de respaldo y claves foráneas; recorrido de cancelar y confirmar dos bajas. Una espera insuficiente en el nuevo controlador de interfaz se corrigió para aguardar al fin del guardado. TypeScript y ESLint de los archivos afectados aprobados.
+
+Bloque nuevo solicitado por el usuario: goal-progress-delete, máximo 100 ejecuciones. Los bloques anteriores están cerrados. No se usan datos reales en pruebas destructivas. Sin navegador interactivo: React SSR y controlador del paquete publicado, sin afirmar validación física de Safari/iPhone.
+
+El empaquetado preserva las otras 1436 fábricas, las rutas anteriores, los alias coherentes de /sw.js, push y activación segura. Se valida la expansión exacta del contenido, el tamaño del Worker y los hashes de todos los archivos finales. El archivo de publicación no cabe en el disco persistente: compilación en memoria y remota del mismo commit exacto.

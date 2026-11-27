@@ -19,12 +19,13 @@ const empty:GoalSnapshot={goals:[],contributions:[],movements:[],events:[]};
 export default function GoalsScreen(){
  const {goalId}=useLocalSearchParams<{goalId?:string}>();const searchOpened=useRef('');
  const focused=useIsFocused();const [store,setStore]=useState<GoalStore|null>(null);const [data,setData]=useState(empty);const [error,setError]=useState('');const [busy,setBusy]=useState(false);
- const [victory,setVictory]=useState('');
+ const [victory,setVictory]=useState('');const [history,setHistory]=useState(false),[deleteId,setDeleteId]=useState<string|null>(null);
  const [form,setForm]=useState<Goal|true|null>(null);const [detailId,setDetailId]=useState<string|null>(null);const [reason,setReason]=useState('');const [archived,setArchived]=useState(false);const [limit,setLimit]=useState(30);
  const load=useCallback(async()=>{const s=await getGoalStore();const d=await s.snapshot();setStore(s);setData(d);},[]);
  useEffect(()=>{if(!focused)return;const refresh=()=>{void load().catch(()=>setError('No pudimos cargar las metas cifradas. Vuelve a abrir esta pestaña.'));};refresh();const sub=AppState.addEventListener('change',state=>{if(state==='active')refresh();});const unsubscribe=onDataCommitted(refresh);return()=>{sub.remove();unsubscribe();};},[focused,load]);
  useEffect(()=>{if(focused&&goalId&&searchOpened.current!==goalId&&data.goals.some(g=>g.id===goalId)){searchOpened.current=goalId;setDetailId(goalId);}},[focused,goalId,data.goals]);
  async function action(task:()=>Promise<unknown>){if(busy)return;setBusy(true);setError('');try{await task();await load();}catch(e){setError(userMessage(e));}finally{setBusy(false);}}
+ const deletingGoal=data.goals.find(g=>g.id===deleteId);
  const detail=data.goals.find(g=>g.id===detailId);const today=localToday();
  useEffect(()=>{if(!detail||!store||detail.archived||detail.savedCents<detail.targetCents||detail.celebratedTargetCents===detail.targetCents)return;let alive=true;void store.claimCompletion(detail.id,detail.targetCents).then(claimed=>{if(alive&&claimed)setVictory(detail.id+':'+detail.targetCents);}).catch(e=>{if(alive)setError(userMessage(e));});return()=>{alive=false;};},[store,detail]);
  return <Screen title="Mis metas" demo={false} subtitle="Dale un propósito a cada paso que das.">
@@ -41,7 +42,7 @@ export default function GoalsScreen(){
  <GoalJourney key={detail.id} goal={detail} animate={victory===detail.id+':'+detail.targetCents}/>
  <Body style={{fontWeight:'700'}}>{detail.name}</Body><Body>Ahorro registrado: {formatMoney(detail.savedCents)} · Objetivo: {formatMoney(detail.targetCents)}</Body><Body>Ahorro previo: {formatMoney(detail.openingCents)}. Las aportaciones vinculadas se suman por separado.</Body>
  {!busy?<><ActionButton title="Editar meta" testID="goal-edit" secondary onPress={()=>{setForm(detail);setDetailId(null);}}/></>:null}
- <ActionButton title="Editar historiales" secondary onPress={()=>router.push({pathname:'/funds',params:{scope:'personal',fundId:goalFundId(detail.id)}})}/>
+ <ActionButton title="Editar historiales" secondary onPress={()=>{setDetailId(null);setDeleteId(null);setHistory(true);}}/>
  <SectionHeading title="Historial de aportaciones" onSurface/>
  {data.contributions.filter(c=>c.goalId===detail.id).slice(0,limit).map(c=><Card row key={c.id}><Body>{c.date} · {formatMoney(c.amountCents)} · {c.reversedAt?'Revertida':'Vigente'}</Body>{c.reversedAt?<Body>{c.reversalReason}</Body>:!busy?<ActionButton title={`Revertir aportación de ${formatMoney(c.amountCents)}`} secondary onPress={()=>void action(()=>store.reverse(c.id,reason))}/>:null}</Card>)}
  {data.contributions.filter(c=>c.goalId===detail.id).length>limit?<ActionButton title="Ver más aportaciones" secondary onPress={()=>setLimit(limit+30)}/>:null}
@@ -49,6 +50,13 @@ export default function GoalsScreen(){
  <SectionHeading title="Cambios de la meta" onSurface/>{data.events.filter(e=>e.goalId===detail.id).slice(0,limit).map((e,i)=><Body key={i}>{e.recordedAt.slice(0,10)} · {e.reason}</Body>)}
  <Field label="Motivo para revertir o archivar" value={reason} onChangeText={setReason} multiline/><Body muted>Revertir conserva el historial. Si se creó la transacción aquí, retira ese flujo; si ya existía, solo quita su vínculo. Para corregir importe o fecha, revierte y vuelve a registrar.</Body><ErrorNotice message={error}/>
  {!busy?<ActionButton title={detail.archived?'Reactivar meta':'Archivar meta'} secondary onPress={()=>void action(async()=>{await store.edit(detail,detail.version,reason,!detail.archived);setDetailId(null);})}/>:null}
+ </Sheet>:null}
+ {history&&store?<Sheet title={deletingGoal?'Eliminar meta':'Editar historiales'} close={()=>{setDeleteId(null);setHistory(false);}} busy={busy}>
+ <ErrorNotice message={error}/>
+ {deletingGoal?<><Body style={{fontWeight:'700'}}>¿Eliminar la meta «{deletingGoal.name}»?</Body><Body>Se devolverán {formatMoney(deletingGoal.savedCents)} al Balance disponible mediante una transferencia registrada. La meta se quitará de Mis metas; sus movimientos e historial se conservarán.</Body><ActionButton title={busy?'Eliminando…':'Confirmar eliminación'} testID="goal-delete-confirm" onPress={()=>void action(async()=>{await store.remove(deletingGoal.id,deletingGoal.version);setDeleteId(null);})}/><ActionButton title="Cancelar" secondary onPress={()=>setDeleteId(null)}/></>:<>
+ {!data.goals.length?<Body>No hay metas en este historial.</Body>:null}
+ {data.goals.map(g=><Card row key={g.id}><Body style={{fontWeight:'700'}}>{g.name}</Body><Body>Ahorro registrado: {formatMoney(g.savedCents)}</Body><ActionButton title="Editar transferencias" secondary onPress={()=>{setHistory(false);router.push({pathname:'/funds',params:{scope:'personal',fundId:goalFundId(g.id)}});}}/><ActionButton title="Eliminar meta" testID={'goal-delete-'+g.id} secondary onPress={()=>{if(!busy)setDeleteId(g.id);}}/></Card>)}
+ </>}
  </Sheet>:null}
  </Screen>;
 }

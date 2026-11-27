@@ -1,0 +1,151 @@
+{
+  "buildName": "goal-progress-delete-6369104c45e8",
+  "baseVersion": 144,
+  "modified": [
+    805,
+    37000,
+    21007,
+    807,
+    21009,
+    859,
+    21025
+  ],
+  "added": [
+    38000
+  ],
+  "protectedModules": 1436,
+  "workerBytes": 63746137,
+  "report": [
+    {
+      "compiled": "src/modules/goals/GoalJourney.web.tsx",
+      "id": 37000,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "../../design/ThemeProvider": 792,
+        "../money/domain": 813,
+        "./types": 809,
+        "./race": 37001,
+        "./GoalVictory.web": 37002
+      },
+      "source_sha256": "75775e40f8d842d6dd79ff8844eb6b55567eae52d0edc7b0a13057d81998f0b8"
+    },
+    {
+      "compiled": "src/modules/goals/deletion.ts",
+      "id": 38000,
+      "imports": {},
+      "source_sha256": "bb31169fae020320f90305095f45d11266d3efaa949b4b244e3ec63c1aa8cc38"
+    },
+    {
+      "compiled": "src/modules/funds/read.ts",
+      "id": 21007,
+      "imports": {
+        "../goals/deletion": 38000,
+        "../money/store": 21026,
+        "../money/scopedMovements": 21008,
+        "./types": 21011
+      },
+      "source_sha256": "90d81f07e4023be07e8ace2045fde164dbbe1ad47f951d2cbb9b4001e2428c79"
+    },
+    {
+      "compiled": "src/modules/goals/GoalsScreen.tsx",
+      "id": 805,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "./GoalJourney": 37000,
+        "./types": 809,
+        "../../storage/changeEvents": 871,
+        "../funds/read": 21007,
+        "../../ui/NavigationRail": 812,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "expo-router": 790,
+        "../../core/errors": 799,
+        "../../ui/components": 796,
+        "../money/domain": 813,
+        "../money/fields": 797,
+        "./localStore": 806,
+        "./domain": 808,
+        "./GoalForm": 810
+      },
+      "source_sha256": "427b45dff0f64a6e5cc47998d987450c25e499dcf5f8a462776f280146cc9f00"
+    },
+    {
+      "compiled": "src/modules/funds/store.ts",
+      "id": 21009,
+      "imports": {
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/domain": 813,
+        "./domain": 21010,
+        "./read": 21007,
+        "./types": 21011
+      },
+      "source_sha256": "7080ff825ec2dd49f21593c62bca96bca345ae7f556473bae027146452e0f7a2"
+    },
+    {
+      "compiled": "src/modules/goals/store.ts",
+      "id": 807,
+      "imports": {
+        "./deletion": 38000,
+        "../funds/store": 21009,
+        "../funds/read": 21007,
+        "../funds/domain": 21010,
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/store": 21026,
+        "../money/repository": 816,
+        "../money/domain": 813,
+        "./domain": 808
+      },
+      "source_sha256": "2216033d945014fce1a0e2dd1beb8d1c4afe52b2662011903ad1898bfebac125"
+    },
+    {
+      "compiled": "src/modules/progress/store.ts",
+      "id": 859,
+      "imports": {
+        "../goals/deletion": 38000,
+        "../funds/read": 21007,
+        "../money/domain": 813,
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "./domain": 857
+      },
+      "source_sha256": "82a356cb49e4a571bb07818f2815b124a14186100dad4a2ef2b12dff2e0b4a0f"
+    },
+    {
+      "compiled": "src/modules/funds/TransferEditor.tsx",
+      "id": 21025,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "../../ui/MeaningHelp": 20014,
+        "./FundSheet": 21020,
+        "react": 13,
+        "../../core/id": 803,
+        "../../core/money": 814,
+        "../../core/errors": 799,
+        "../../ui/components": 796,
+        "../money/fields": 797,
+        "../../ui/DateField": 853,
+        "../money/domain": 813
+      },
+      "source_sha256": "d09eb6e3738c8a2ba7ed713f4158a7466323f896e0a7156b481ed9cd58ac725d"
+    }
+  ],
+  "browserVerified": false
+}

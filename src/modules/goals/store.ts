@@ -1,6 +1,7 @@
+import {deletedGoalIds,deletedGoalReason} from './deletion';
 import {FundsStore} from '../funds/store';
 import {goalFundId,readFundData} from '../funds/read';
-import {validateAllocationTimeline} from '../funds/domain';
+import {fundSummary,validateAllocationTimeline} from '../funds/domain';
 import { UserInputError } from '../../core/errors';
 import { cents,addAmounts } from '../../core/money';
 import { MoneyStore,movementSelect,readMovement,type SqlDb } from '../money/store';
@@ -19,7 +20,8 @@ export class GoalStore {
  const contributions=(await db.getAllAsync<Contribution>(contributionSelect+' ORDER BY m.date DESC,c.id')).map(c=>({...c,createdMovement:!!c.createdMovement}));
  const movements=(await db.getAllAsync<LedgerMovement>(movementSelect+' ORDER BY date DESC')).map(readMovement);
  const transfers=await db.getAllAsync<{id:string;goalId:string;amount:number;date:string;description:string;reversedAt:string|null}>(`SELECT t.id,t.date,t.description,t.reversed_at AS reversedAt,f.goal_id AS goalId, CASE WHEN t.to_id=f.id THEN t.amount_cents ELSE -t.amount_cents END AS amount FROM money_funds f JOIN fund_transfers t ON t.from_id=f.id OR t.to_id=f.id WHERE f.goal_id IS NOT NULL AND t.date<=?`,this.today());
- const goals=(await db.getAllAsync<Goal>(goalSelect+' ORDER BY g.rowid DESC')).map(g=>({...g,archived:!!g.archived,savedCents:addAmounts(cents(g.openingCents),...contributions.filter(c=>c.goalId===g.id&&!c.reversedAt&&!movements.find(m=>m.id===c.movementId)?.deletedAt).map(c=>cents(c.amountCents)),...transfers.filter(t=>t.goalId===g.id&&!t.reversedAt).map(t=>cents(t.amount)))}));
+ const deleted=await deletedGoalIds(db);
+ const goals=(await db.getAllAsync<Goal>(goalSelect+' ORDER BY g.rowid DESC')).filter(g=>!deleted.has(g.id)).map(g=>({...g,archived:!!g.archived,savedCents:addAmounts(cents(g.openingCents),...contributions.filter(c=>c.goalId===g.id&&!c.reversedAt&&!movements.find(m=>m.id===c.movementId)?.deletedAt).map(c=>cents(c.amountCents)),...transfers.filter(t=>t.goalId===g.id&&!t.reversedAt).map(t=>cents(t.amount)))}));
  return {goals,contributions,movements,fundTransfers:transfers,events:await db.getAllAsync('SELECT goal_id AS goalId,reason,recorded_at AS recordedAt FROM goal_events ORDER BY id DESC')};
  });}
  async create(g:GoalInput){validateGoal(g);return this.ledger.transaction(async db=>{
@@ -27,7 +29,7 @@ export class GoalStore {
  if(await db.getFirstAsync('SELECT id FROM goals WHERE lower(trim(name))=lower(?) AND archived=0',g.name.trim()))throw new UserInputError('Ya hay una meta con ese nombre.');
  await db.runAsync('INSERT INTO goals(id,name,kind,target_cents,opening_cents,desired_date,cadence,cadence_detail,track_start_date) VALUES(?,?,?,?,?,?,?,?,?)',g.id,g.name.trim(),g.kind,g.targetCents,g.openingCents,g.desiredDate,g.cadence==='biweekly'?'monthly':g.cadence,g.cadence,this.today());
  });}
- private async current(db:SqlDb,id:string,version:number){const g=await db.getFirstAsync<Goal>(goalSelect+' WHERE g.id=?',id);if(!g||g.version!==version)throw new UserInputError('La meta cambió. Cierra y vuelve a abrir su ficha.');return g;}
+ private async current(db:SqlDb,id:string,version:number){const g=await db.getFirstAsync<Goal>(goalSelect+' WHERE g.id=?',id);if(!g||g.version!==version||(await deletedGoalIds(db)).has(id))throw new UserInputError('La meta cambió. Cierra y vuelve a abrir su ficha.');return g;}
  async edit(g:GoalInput,version:number,reason:string,archived=false){validateGoal(g);reasonValid(reason);return this.ledger.transaction(async db=>{
  const old=await this.current(db,g.id,version);
  if(!archived&&await db.getFirstAsync('SELECT id FROM goals WHERE id<>? AND lower(trim(name))=lower(?) AND archived=0',g.id,g.name.trim()))throw new UserInputError('Ya hay una meta con ese nombre.');
@@ -35,6 +37,17 @@ export class GoalStore {
  await db.runAsync('INSERT INTO goal_events(goal_id,reason,before_json,recorded_at) VALUES(?,?,?,?)',g.id,reason.trim(),JSON.stringify(old),new Date().toISOString());
  await db.runAsync('UPDATE goals SET name=?,kind=?,target_cents=?,opening_cents=?,desired_date=?,cadence=?,cadence_detail=?,track_start_date=?,archived=?,version=version+1 WHERE id=?',g.name.trim(),g.kind,g.targetCents,g.openingCents,g.desiredDate,g.cadence==='biweekly'?'monthly':g.cadence,g.cadence,old.targetCents===g.targetCents&&old.desiredDate===g.desiredDate&&old.cadence===g.cadence?(old.trackStartDate??this.today()):this.today(),Number(archived),g.id);
  validateAllocationTimeline(await readFundData(db),'personal',undefined,false);
+ });}
+ async remove(id:string,version:number){return this.ledger.transaction(async db=>{
+ if((await deletedGoalIds(db)).has(id))return;
+ const old=await this.current(db,id,version),data=await readFundData(db),fund=fundSummary(data,'personal',this.today()).funds.find(f=>f.goalId===id);
+ if(!fund)throw new UserInputError('No encontramos el fondo de esta meta. Vuelve a abrirla.');
+ if(fund.balanceCents<0)throw new UserInputError('Revisa el saldo de la meta antes de eliminarla.');
+ const refundId='goal-delete:'+id;
+ if(fund.balanceCents>0)await new FundsStore(this.ledger,this.today).transferInTransaction(db,{id:refundId,scope:'personal',fromId:fund.id,toId:null,amountCents:fund.balanceCents,date:this.today(),description:'Saldo devuelto al eliminar la meta: '+old.name});
+ await db.runAsync('INSERT INTO goal_events(goal_id,reason,before_json,recorded_at) VALUES(?,?,?,?)',id,deletedGoalReason,JSON.stringify({operation:'delete-goal',goal:old,refundId:fund.balanceCents>0?refundId:null}),new Date().toISOString());
+ await db.runAsync('UPDATE goals SET archived=1,version=version+1 WHERE id=?',id);
+ await db.runAsync('UPDATE money_funds SET archived=1,version=version+1 WHERE goal_id=?',id);
  });}
  async claimCompletion(id:string,target:number){return this.ledger.transaction(async db=>{const g=await db.getFirstAsync<Goal>(goalSelect+' WHERE g.id=?',id);if(!g||g.archived||g.targetCents!==target||g.celebratedTargetCents===target)return false;const contributions=await db.getAllAsync<{amount:number}>('SELECT c.amount_cents AS amount FROM goal_contributions c JOIN movements m ON m.id=c.movement_id WHERE c.goal_id=? AND c.reversed_at IS NULL AND m.deleted_at IS NULL',id);const transfers=await db.getAllAsync<{amount:number}>('SELECT CASE WHEN t.to_id=f.id THEN t.amount_cents ELSE -t.amount_cents END AS amount FROM money_funds f JOIN fund_transfers t ON t.from_id=f.id OR t.to_id=f.id WHERE f.goal_id=? AND t.reversed_at IS NULL AND t.date<=?',id,this.today());const saved=addAmounts(cents(g.openingCents),...contributions.map(c=>cents(c.amount)),...transfers.map(t=>cents(t.amount)));if(saved<target)return false;await db.runAsync('UPDATE goals SET celebrated_target_cents=? WHERE id=?',target,id);return true;});}
  async reserve(p:ContributionInput){return new FundsStore(this.ledger,this.today).transfer({id:'goal-reserve:'+p.id,scope:'personal',fromId:null,toId:goalFundId(p.goalId),amountCents:p.amountCents,date:p.date,description:'Aportación confirmada a la meta'});}

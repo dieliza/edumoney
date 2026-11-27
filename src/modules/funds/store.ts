@@ -52,21 +52,24 @@ export class FundsStore{
   });
  }
  async transfer(input:TransferInput,expectedVersion?:number,plannedDestination?:FundInput){
+  return this.ledger.transaction(db=>this.transferInTransaction(db,input,expectedVersion,plannedDestination));
+ }
+ /** Reuse the same transfer checks inside an existing atomic ledger operation. */
+ async transferInTransaction(db:SqlDb,input:TransferInput,expectedVersion?:number,plannedDestination?:FundInput){
   validateTransfer(input,this.today());
   if(plannedDestination&&(plannedDestination.id!==input.toId||plannedDestination.scope!==input.scope||(plannedDestination.kind!=='budget'&&!(plannedDestination.kind==='savings'&&plannedDestination.id.startsWith('allocation:'+input.scope+':')))||!['annual:','allocation:'].some(prefix=>plannedDestination.id.startsWith(prefix+input.scope+':'))||plannedDestination.id.length>160||plannedDestination.contributionCents!==0||plannedDestination.cadence!=='monthly'||plannedDestination.locationId!==null||plannedDestination.categoryId!==null||!plannedDestination.budgetMonth||!validMonth(plannedDestination.budgetMonth)||plannedDestination.goalId!==null||!validName(plannedDestination.name)||!Number.isSafeInteger(plannedDestination.targetCents)||plannedDestination.targetCents<0||plannedDestination.targetDate!==null&&!validDate(plannedDestination.targetDate)))fail('Revisa el destino de la reserva.');
-  return this.ledger.transaction(async db=>{
    if(plannedDestination&&!await db.getFirstAsync('SELECT id FROM money_funds WHERE id=?',plannedDestination.id)){const p=plannedDestination;await db.runAsync('INSERT INTO money_funds(id,scope,kind,name,target_cents,contribution_cents,cadence,target_date,location_id,budget_month,category_id,created_at) VALUES(?,?,?,?,?,0,?,?,?,?,?,?)',p.id,p.scope,p.kind,text(p.name),p.targetCents,p.cadence,p.targetDate,p.locationId,p.budgetMonth,p.categoryId,new Date().toISOString());await event(db,p.id,'plan',null,'Reserva creada al confirmar su primera transferencia');}
    let data=await readFundData(db);const old=data.transfers.find(t=>t.id===input.id);
    if(old&&!old.reversedAt&&transferKey(old)===transferKey(input))return;
    if(old?.reversedAt)fail('Esta transferencia está revertida. Crea una nueva si corresponde.');
+   if(old&&data.funds.some(f=>f.deletedGoal&&(f.id===old.fromId||f.id===old.toId)))fail('Esta transferencia pertenece a una meta eliminada y conserva su devolución.');
    if(old?(old.version!==expectedVersion||old.scope!==input.scope):expectedVersion!==undefined)fail('La transferencia cambió. Abre de nuevo su historial.');
-   for(const id of [input.fromId,input.toId])if(id!==null){const f=data.funds.find(f=>f.id===id);if(!f||f.scope!==input.scope)fail('Origen y destino deben pertenecer a la misma cuenta.');if(id===input.toId&&f.archived)fail('Reactiva la meta antes de añadirle dinero.');await materialize(db,f);}
+   for(const id of [input.fromId,input.toId])if(id!==null){const f=data.funds.find(f=>f.id===id);if(!f||f.scope!==input.scope)fail('Origen y destino deben pertenecer a la misma cuenta.');if(f.deletedGoal)fail('Esta meta fue eliminada. Su devolución y sus movimientos se conservan sin modificar.');if(id===input.toId&&f.archived)fail('Reactiva la meta antes de añadirle dinero.');await materialize(db,f);}
    await event(db,input.id,old?'edit':'transfer',old??null,old?'Corrección de transferencia':'Transferencia interna confirmada');
    if(old)await db.runAsync('UPDATE fund_transfers SET from_id=?,to_id=?,amount_cents=?,date=?,description=?,version=version+1 WHERE id=?',input.fromId,input.toId,input.amountCents,input.date,input.description.trim(),input.id);
    else await db.runAsync('INSERT INTO fund_transfers(id,scope,from_id,to_id,amount_cents,date,description,created_at) VALUES(?,?,?,?,?,?,?,?)',input.id,input.scope,input.fromId,input.toId,input.amountCents,input.date,input.description.trim(),new Date().toISOString());
    const affected=[input.fromId,input.toId,old?.fromId??null,old?.toId??null];await db.runAsync('UPDATE goals SET version=version+1 WHERE id IN (SELECT goal_id FROM money_funds WHERE id IN (?,?,?,?))',...affected);
    data=await readFundData(db);const changed=data.transfers.find(t=>t.id===input.id)!;validateAllocationTimeline(data,input.scope,{...changed,date:old&&old.date<input.date?old.date:input.date});
-  });
  }
  /** Correct an eliminated record without reactivating it or changing any balances. */
  async editReversed(input:TransferInput,expectedVersion:number){
@@ -85,6 +88,6 @@ export class FundsStore{
  async removeFromHistory(id:string,version:number){return this.changeTransferHistory(id,version,'Eliminada del historial de transferencias',true);}
  private async changeTransferHistory(id:string,version:number,reason:string,remove:boolean){
   if(!reason.trim()||reason.trim().length>240)fail('Escribe el motivo para revertir (hasta 240 caracteres).');
-  return this.ledger.transaction(async db=>{const transfer=await db.getFirstAsync<FundTransfer>(transferSelect+' WHERE id=?',id);if(!transfer){if(remove)return;fail('Transferencia no encontrada.');}if(transfer.reversedAt&&!remove)return;if(transfer.version!==version)fail('La transferencia cambió. Vuelve a abrirla.');if(!transfer.reversedAt){await event(db,id,'reverse',transfer,reason);await db.runAsync('UPDATE fund_transfers SET reversed_at=?,reversal_reason=?,version=version+1 WHERE id=?',new Date().toISOString(),reason.trim(),id);await db.runAsync('UPDATE goals SET version=version+1 WHERE id IN (SELECT goal_id FROM money_funds WHERE id IN (?,?))',transfer.fromId,transfer.toId);validateAllocationTimeline(await readFundData(db),transfer.scope,transfer);}if(remove){await event(db,id,'remove-history',transfer,reason);await db.runAsync('DELETE FROM fund_transfers WHERE id=? AND reversed_at IS NOT NULL',id);}});
+  return this.ledger.transaction(async db=>{const transfer=await db.getFirstAsync<FundTransfer>(transferSelect+' WHERE id=?',id);if(!transfer){if(remove)return;fail('Transferencia no encontrada.');}if(transfer.reversedAt&&!remove)return;if(transfer.version!==version)fail('La transferencia cambió. Vuelve a abrirla.');const deletionData=await readFundData(db);if(deletionData.funds.some(f=>f.deletedGoal&&(f.id===transfer.fromId||f.id===transfer.toId)))fail('Esta transferencia pertenece a una meta eliminada. Se conserva su historial y la devolución registrada.');if(!transfer.reversedAt){await event(db,id,'reverse',transfer,reason);await db.runAsync('UPDATE fund_transfers SET reversed_at=?,reversal_reason=?,version=version+1 WHERE id=?',new Date().toISOString(),reason.trim(),id);await db.runAsync('UPDATE goals SET version=version+1 WHERE id IN (SELECT goal_id FROM money_funds WHERE id IN (?,?))',transfer.fromId,transfer.toId);validateAllocationTimeline(await readFundData(db),transfer.scope,transfer);}if(remove){await event(db,id,'remove-history',transfer,reason);await db.runAsync('DELETE FROM fund_transfers WHERE id=? AND reversed_at IS NOT NULL',id);}});
  }
 }

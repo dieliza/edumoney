@@ -1,0 +1,18 @@
+{
+  "block": "goal-progress-delete",
+  "limit": 100,
+  "code_executions": 57,
+  "distinct_code_cases": 55,
+  "initial_ui_fixture_wait_failure": 1,
+  "code_final": "passed",
+  "artifact_executions": 2,
+  "artifact_final": "passed",
+  "source_hashes": "matched final sources",
+  "typescript": "passed",
+  "eslint_affected": "passed",
+  "runtime": "passed",
+  "public_delivery": "pending",
+  "browser_verified": false,
+  "migration": "none; existing audited goal_events stores logical deletion",
+  "real_user_data_modified_in_tests": false
+}

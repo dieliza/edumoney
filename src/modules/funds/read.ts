@@ -1,3 +1,4 @@
+import {deletedGoalIds} from '../goals/deletion';
 import type {SqlDb} from '../money/store';
 import {movementSelect,readMovement} from '../money/store';
 import type {LedgerMovement} from '../money/types';
@@ -19,9 +20,10 @@ export async function readFundData(db:SqlDb):Promise<FundData>{
  const funds:Fund[]=stored.map(f=>({...f,archived:!!f.archived,openingCents:0,legacyCents:0,balanceCents:0}));
  const budgets=await db.getAllAsync<{month:string;category_id:string;amount_cents:number}>('SELECT month,category_id,amount_cents FROM monthly_budgets');
  for(const f of funds)if(f.scope==='personal'&&f.kind==='budget'&&f.categoryId&&f.budgetMonth)f.targetCents=budgets.find(b=>b.month===f.budgetMonth&&b.category_id===f.categoryId)?.amount_cents??0;
+ const deleted=await deletedGoalIds(db);
  for(const g of goalRows){
   const existing=funds.find(f=>f.goalId===g.id);
-  const base={name:g.name,kind:g.kind==='emergency'?'emergency' as const:'savings' as const,targetCents:g.targetCents,openingCents:g.openingCents,goalVersion:g.version,targetDate:g.desiredDate,cadence:g.cadence,archived:!!g.archived};
+  const base={deletedGoal:deleted.has(g.id),name:g.name,kind:g.kind==='emergency'?'emergency' as const:'savings' as const,targetCents:g.targetCents,openingCents:g.openingCents,goalVersion:g.version,targetDate:g.desiredDate,cadence:g.cadence,archived:!!g.archived};
   if(existing)Object.assign(existing,base);
   else funds.push({id:goalFundId(g.id),scope:'personal',goalId:g.id,...base,contributionCents:0,cadence:g.cadence,targetDate:g.desiredDate,locationId:null,budgetMonth:null,categoryId:null,version:0,createdAt:'',legacyCents:0,balanceCents:0});
  }
