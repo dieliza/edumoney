@@ -13,3 +13,5 @@ Pruebas SQLite ficticias: diez aciertos con solo ocho filas de progreso, valores
 TypeScript y ESLint de archivos afectados aprobados. Documentación Expo 58 y llms.txt devolvieron 403; se reutilizó el patrón existente de AppState sin APIs ni dependencias nuevas. No hay navegador interactivo ni validación física de iPhone: controlador del paquete y SQLite, sin afirmar inspección de registros privados reales. Bloque learn-count con máximo 100 ejecuciones.
 
 Se validan hashes, precarga, rutas, alias coherentes de /sw.js, caché distinta y manejadores push/activación conservados. El archivo de despliegue no cabe en disco persistente: compilación en memoria y compilación remota del mismo commit exacto.
+
+Versión 147 publicada y entrega pública de HTML, paquete y service worker comprobada. 13 casos de código distintos, 15 ejecuciones de código con repeticiones (incluido el controlador inicial corregido), 1 validación de artefacto, 2 controladores de paquete y 1 entrega pública: 19 de 100 ejecuciones. Ver source-result.json, validation.json y public-delivery.json.

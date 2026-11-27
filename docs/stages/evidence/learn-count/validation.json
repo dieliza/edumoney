@@ -13,9 +13,11 @@
   "typescript": "passed",
   "eslint_affected": "passed",
   "source_hashes": "matched final files",
-  "public_delivery": "pending",
+  "public_delivery": "passed",
   "browser_verified": false,
   "private_user_progress_accessed": false,
   "migration": "none",
-  "financial_modules": "byte-identical"
+  "financial_modules": "byte-identical",
+  "published_version": 147,
+  "total_case_executions": 19
 }

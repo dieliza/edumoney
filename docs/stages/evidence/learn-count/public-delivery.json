@@ -1,0 +1,9 @@
+{
+  "cases": 1,
+  "passed": 1,
+  "build": "learn-count-7e8d0b32d0be",
+  "public_html": "passed",
+  "final_budget_bundle": "passed",
+  "service_worker": "passed",
+  "browser_verified": false
+}
