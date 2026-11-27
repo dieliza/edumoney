@@ -1,0 +1,23 @@
+{
+  "cases": 12,
+  "passed": 12,
+  "lessonCounts": {
+    "left": 0,
+    "rightDebt": 5,
+    "rightMovedGeneral": 5
+  },
+  "debtButtons": 6,
+  "planRemoved": true,
+  "widths": [
+    320,
+    390,
+    820,
+    1440
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "search": "moved lesson handled only on right",
+  "browserVerified": false
+}

@@ -1,0 +1,26 @@
+{
+  "test_limit": 100,
+  "conservative_executions": 22,
+  "counts": {
+    "existing_tests": 5,
+    "runtime_scenarios": 12,
+    "package": 1,
+    "build": 1,
+    "public_delivery": 1,
+    "static_patch_checks": 2
+  },
+  "typecheck": "passed",
+  "eslint": "passed, zero warnings",
+  "runtime": "12 passed",
+  "build": "passed",
+  "browser_verified": false,
+  "migrations": [],
+  "lesson_distribution": {
+    "left": 0,
+    "right_debt": 5,
+    "right_moved_general": 5
+  },
+  "debt_buttons": 6,
+  "plan_removed_from_UI": true,
+  "original_records_preserved": true
+}

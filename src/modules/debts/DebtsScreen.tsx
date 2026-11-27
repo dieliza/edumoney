@@ -1,5 +1,5 @@
+import {DebtViewButtons} from './DebtViewButtons';
 import {ScheduledCollections} from './ScheduledCollections';
-import {debtViewColors,debtViewOptions} from './debtViews';
 import BillsScreen from '../bills/BillsScreen';
 import {getMoneyStore} from '../money/localStore';
 import type {MoneyStore} from '../money/store';
@@ -9,19 +9,17 @@ import { useTheme } from '../../design/ThemeProvider';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, AppState, Pressable, View } from 'react-native';
 import { router, useIsFocused, useLocalSearchParams } from 'expo-router';
-import { newId } from '../../core/id';
 import { userMessage } from '../../core/errors';
 import { addAmounts } from '../../core/money';
 import { ActionButton, Body, Card, Screen, SectionHeading } from '../../ui/components';
 import { formatMoney, localToday } from '../money/domain';
-import { Choices, ErrorNotice, Field, Sheet } from '../money/fields';
+import { ErrorNotice, Field, Sheet } from '../money/fields';
 import { refreshBills } from '../bills/runtime';
-import { shiftDays } from '../bills/domain';
 import type { Bill } from '../bills/types';
 import { DebtForm } from './DebtForm';
 import { DebtPaymentForm } from './DebtPaymentForm';
 import { DebtSimulators } from './DebtSimulators';
-import { debtWarnings, minimumRemaining, planSteps } from './domain';
+import { debtWarnings, minimumRemaining } from './domain';
 import { getDebtStore } from './localStore';
 import type { DebtStore } from './store';
 import { debtLabels, type Debt, type DebtPayment, type DebtSnapshot } from './types';
@@ -50,13 +48,13 @@ export default function DebtsScreen(){
  async function refreshed(){await load();const result=await refreshBills();return result.reminderMessage.startsWith('No se pudieron')?result.reminderMessage:'';}
  async function action(task:()=>Promise<unknown>,message:string){if(busy)return;setBusy(true);setError('');try{await task();const warning=await refreshed();setNotice([message,warning].filter(Boolean).join(' '));}catch(e){setError(userMessage(e));}finally{setBusy(false);}}
  const summary=useMemo(()=>{try{const active=data.debts.filter(d=>!d.archived);return {total:addAmounts(...active.map(d=>d.balanceCents)),minimum:addAmounts(...active.map(d=>minimumRemaining(d)).filter(v=>v!==null)),unknown:active.filter(d=>d.balanceCents>0&&(d.minimumCents===null||!d.dueDate)).length,error:''};}catch{return {total:null,minimum:null,unknown:0,error:'El total excede el rango monetario. Revisa los saldos.'};}},[data.debts]);
- const detail=data.debts.find(d=>d.id===detailId);const today=localToday();const active=data.debts.filter(d=>!d.archived&&d.balanceCents>0);const plan=data.plans[0];
+ const detail=data.debts.find(d=>d.id===detailId);const today=localToday();const active=data.debts.filter(d=>!d.archived&&d.balanceCents>0);
  function row(d:Debt){return <Pressable key={d.id} accessibilityRole="button" accessibilityLabel={`Deuda ${d.name}, saldo ${formatMoney(d.balanceCents)}, mínimo ${d.minimumCents===null?'desconocido':formatMoney(d.minimumCents)}, vencimiento ${d.dueDate??'desconocido'}`} onPress={()=>{setDetailId(d.id);setReason('');setError('');}}><Card row><Body style={{fontWeight:'800'}}>{d.name}</Body><Body muted>{debtLabels[d.kind]}</Body><Body>Saldo registrado: {formatMoney(d.balanceCents)}</Body><Body>APR base: {d.annualRateBps===null?'Sin confirmar':`${(d.annualRateBps/100).toFixed(2)}%`} · Mínimo: {d.minimumCents===null?'Sin confirmar':formatMoney(d.minimumCents)}</Body><Body>Vencimiento: {d.dueDate??'Sin confirmar'}</Body>{debtWarnings(d,today).map(message=><Body key={message} muted>{message}</Body>)}</Card></Pressable>;}
  return <Screen back title="Mis deudas" demo={false} subtitle="Deudas registradas y alternativas para organizarlas.">
   {otherMovement&&ledger?<MovementForm kind="loan" allowedKinds={['loan','debt_payment']} categories={categories} store={ledger} close={()=>setOtherMovement(false)} saved={async()=>{await load();setNotice('Transacción guardada. Si corresponde a una deuda, revisa y vincula el pago desde su ficha.');}}/>:null}
   <ErrorNotice message={error}/>{notice?<Card row><Body>{notice}</Body></Card>:null}
   <View style={{alignSelf:'flex-start'}}><ActionButton title="Añadir deuda" icon="add-outline" testID="add-debt" onPress={()=>setForm(true)}/></View>
-  <Choices tabColors={debtViewColors} presentation="tabs" label="Vista de deudas" value={tab} options={debtViewOptions} onChange={setTab}/>
+  <DebtViewButtons value={tab} onChange={setTab}/>
   {tab==='scheduled'&&ledger?<ScheduledCollections store={ledger} schedules={schedules} saved={async()=>{await load();}}/>:null}
   {tab==='bills'?<BillsScreen embedded/>:null}
   {tab==='notices'?<><Card row><Body style={{fontWeight:'700'}}>Avisos de tus deudas</Body><Body>Revisa vencimientos, mínimos y datos pendientes. No son anuncios ni mensajes de cobro externos.</Body></Card>{active.map(d=><Card row key={d.id}><Body style={{fontWeight:'700'}}>{d.name}</Body>{debtWarnings(d,today).map(message=><Body key={message}>{message}</Body>)}{!debtWarnings(d,today).length?<Body>No hay advertencias con los datos registrados.</Body>:null}</Card>)}<ActionButton title="Facturas y recordatorios de deudas" icon="notifications-outline" onPress={()=>router.push({pathname:'/bills',params:{scope:'debts'}})}/></>:null}
@@ -74,12 +72,6 @@ export default function DebtsScreen(){
    {!active.length?<Card row><Body>No hay deudas activas con saldo pendiente.</Body></Card>:null}
   </>:null}
   {tab==='simulator'?<DebtSimulators debts={data.debts} onOtherMovement={()=>setOtherMovement(true)}/>:null}
-  {tab==='plan'?<>
-   <Card row><Body>Organiza revisiones durante 30 días. «Ya lo hice» confirma una tarea; no registra un pago ni modifica saldos. Cada avance cuenta.</Body></Card>
-   {store&&!busy?<ActionButton title="Crear mi plan de 30 días" testID="debt-create-plan" onPress={()=>void action(()=>store.createPlan(newId(),today),'Plan guardado en este dispositivo.')}/>:null}
-   {plan?<><Card row><Body style={{fontWeight:'700'}}>Plan iniciado {plan.startDate}</Body><Body>{plan.actions.filter(a=>a.completedAt).length} de {planSteps.length} tareas revisadas. Vas construyendo tu organización paso a paso.</Body></Card>{planSteps.map(step=>{const done=plan.actions.find(a=>a.key===step.key)?.completedAt;return <Card row key={step.key}><Body style={{fontWeight:'700'}}>Día {step.day} · {step.title}</Body><Body>Fecha sugerida: {shiftDays(plan.startDate,step.day-1)} · {done?'Revisada':'Pendiente de revisar'}</Body>{!busy&&store?<ActionButton title={done?`Volver a pendiente: ${step.title}`:`Ya lo hice: ${step.title}`} secondary onPress={()=>void action(()=>store.checkAction(plan.id,step.key,!done),done?'Tarea pendiente de nuevo.':'Revisión guardada. Buen paso para organizarte.')}/>:null}</Card>;})}</>:null}
-   {data.plans.length>1?<Card row><Body>Planes anteriores conservados: {data.plans.slice(1).map(p=>`${p.startDate} (${p.actions.filter(a=>a.completedAt).length}/${planSteps.length})`).join(' · ')}</Body></Card>:null}
-  </>:null}
   {form&&store?<DebtForm initial={form===true?undefined:form} store={store} saved={async()=>{const warning=await refreshed();setNotice(['Deuda guardada. Los pagos y cambios anteriores se conservan.',warning].filter(Boolean).join(' '));}} close={()=>setForm(null)}/>:null}
   {payment&&store?<DebtPaymentForm debt={payment.debt} initialBill={payment.bill} store={store} movements={data.movements} bills={data.bills} saved={async()=>{const warning=await refreshed();setNotice(['Pago asignado sin añadir otro gasto de compra. Revisa el saldo y el estado de avisos en Mis facturas.',warning].filter(Boolean).join(' '));}} close={()=>setPayment(null)}/>:null}
   {detail&&store?<Sheet title="Detalle de deuda" busy={busy} close={()=>setDetailId(null)}>

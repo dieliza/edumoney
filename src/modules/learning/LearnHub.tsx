@@ -1,4 +1,4 @@
 import {View,useWindowDimensions} from 'react-native';
-import {Screen,SectionHeading} from '../../ui/components';
+import {Screen} from '../../ui/components';
 import {LearningSection} from './LearningSection';
-export function LearnHub(){const{width}=useWindowDimensions();return <Screen title="Aprende" demo={false} subtitle="Un poco de conocimiento, más confianza para decidir."><View testID="learn-topic-columns" style={{flexDirection:width>=900?'row':'column',gap:16,alignItems:'stretch'}}><View testID="learn-financial-column" style={{flex:1,minWidth:0}}><LearningSection embedded/></View><View testID="learn-debt-column" style={{flex:1,minWidth:0}}><SectionHeading title="Aprende sobre deudas"/><LearningSection debtOnly embedded/></View></View></Screen>;}
+export function LearnHub(){const{width}=useWindowDimensions();return <Screen title="Aprende" demo={false} subtitle="Un poco de conocimiento, más confianza para decidir."><View testID="learn-topic-columns" style={{flexDirection:width>=900?'row':'column',gap:16,alignItems:'stretch'}}><View testID="learn-financial-column" style={{flex:1,minWidth:0}}><LearningSection embedded tipsOnly/></View><View testID="learn-debt-column" style={{flex:1,minWidth:0}}><LearningSection debtOnly embedded/><LearningSection embedded lessonsOnly/></View></View></Screen>;}

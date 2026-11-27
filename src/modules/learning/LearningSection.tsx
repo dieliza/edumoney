@@ -13,7 +13,7 @@ import { getLearningStore } from './localStore';
 import type { LearningSnapshot,LearningStore } from './store';
 import { readLesson,stopReading } from './speech';
 const empty:LearningSnapshot={completed:[],attempts:[],scenarios:[]};
-export function LearningSection({debtOnly=false,embedded=false}:{debtOnly?:boolean;embedded?:boolean}){
+export function LearningSection({debtOnly=false,embedded=false,tipsOnly=false,lessonsOnly=false}:{debtOnly?:boolean;embedded?:boolean;tipsOnly?:boolean;lessonsOnly?:boolean}){
  const {lessonId:searchedLesson}=useLocalSearchParams<{lessonId?:string}>();const searchOpened=useRef('');
  const visibleLessons=lessons.filter(l=>debtOnly?debtLessonIds.has(l.id):!debtLessonIds.has(l.id));
  const {colors}=useTheme();
@@ -22,12 +22,13 @@ export function LearningSection({debtOnly=false,embedded=false}:{debtOnly?:boole
  const stop=useCallback(()=>{voiceRequest.current++;void stopReading().catch(()=>undefined);},[]);
  useEffect(()=>{if(!focused){stop();return;}const refresh=()=>void load().catch(()=>setError('No pudimos cargar el avance cifrado. Vuelve a abrir Aprende.'));refresh();const sub=AppState.addEventListener('change',s=>{if(s==='active')refresh();else stop();});return()=>{sub.remove();stop();};},[focused,load,stop]);
  const lesson=lessonId?findLesson(lessonId):null;const completed=visibleLessons.filter(l=>data.completed.some(c=>c.lessonId===l.id&&c.version===l.version)).length;
- useEffect(()=>{if(focused&&searchedLesson&&searchOpened.current!==searchedLesson&&findLesson(searchedLesson)&&debtLessonIds.has(searchedLesson)===debtOnly){searchOpened.current=searchedLesson;setLessonId(searchedLesson);setAnswer('');setFeedback('');}},[focused,searchedLesson,debtOnly]);
+ useEffect(()=>{if(!tipsOnly&&focused&&searchedLesson&&searchOpened.current!==searchedLesson&&findLesson(searchedLesson)&&debtLessonIds.has(searchedLesson)===debtOnly){searchOpened.current=searchedLesson;setLessonId(searchedLesson);setAnswer('');setFeedback('');}},[focused,searchedLesson,debtOnly,tipsOnly]);
  async function check(){if(!store||!lesson||busy)return;setBusy(true);setError('');try{if(answer==='')throw new Error('Selecciona una respuesta antes de comprobar.');const correct=await store.answer(newId(),lesson.id,Number(answer));await load();setFeedback(`${correct?'¡Buen paso! Lección completada.':'Puedes intentarlo de nuevo; el avance se guarda al resolver el ejercicio.'} ${lesson.explanation}`);}catch(e){setError(answer===''?'Selecciona una respuesta antes de comprobar.':userMessage(e));}finally{setBusy(false);}}
  async function read(){if(!lesson)return;const request=++voiceRequest.current;setVoiceMessage('Buscando una voz local disponible…');try{const message=await readLesson(`${lesson.title}. ${lesson.paragraphs.join(' ')} Ejercicio: ${lesson.question}. ${lesson.options.map((o,i)=>`${i+1}: ${o}`).join('. ')}`,()=>undefined,()=>setVoiceMessage('No se pudo completar la lectura. El texto sigue disponible.'));if(request===voiceRequest.current)setVoiceMessage(message);else await stopReading();}catch{setVoiceMessage('No se pudo iniciar la lectura local. El texto sigue disponible.');}}
  const content=<>
 
- <EducationPanel debtOnly={debtOnly}/>
+ {!lessonsOnly?<EducationPanel debtOnly={debtOnly}/>:null}
+ {!tipsOnly?<>
  <ErrorNotice message={error}/>{!store?<ActivityIndicator accessibilityLabel="Cargando lecciones locales"/>:null}
  <Card row><Body style={{fontWeight:'700'}}>{completed} de {visibleLessons.length} lecciones completadas</Body><ProgressBar value={completed/visibleLessons.length*100} label={`Lecciones completadas: ${completed} de ${visibleLessons.length}`}/><Body muted>Contenido educativo general. Los ejemplos están identificados como ficticios y no sustituyen una revisión de tus condiciones reales.</Body></Card>
  {visibleLessons.map((l,index)=>{const done=data.completed.some(c=>c.lessonId===l.id&&c.version===l.version);return <Pressable key={l.id} testID={`lesson-${l.id}`} accessibilityRole="button" accessibilityLabel={`${l.title}, ${done?'completada':'por aprender'}`} onPress={()=>{setLessonId(l.id);setAnswer('');setFeedback('');setVoiceMessage('');setError('');}}><Card row style={{backgroundColor:[colors.mint,colors.blue,colors.violet,colors.surfaceAlt][index%4]}}><View style={[ui.row,{minWidth:240,flexGrow:1}]}><IconBadge tone={(['mint','blue','violet','coral'] as const)[index%4]} icon={done?'checkmark-circle-outline':'book-outline'}/><View style={{flex:1,gap:6}}><Body style={{fontWeight:'700',fontSize:18}}>{l.title}</Body><Body>{l.summary}</Body><Body muted>{done?'Completada':'Por aprender'} · Lección breve</Body></View></View></Card></Pressable>;})}
@@ -37,6 +38,7 @@ export function LearningSection({debtOnly=false,embedded=false}:{debtOnly?:boole
  {!busy?<ActionButton title="Comprobar respuesta" testID="lesson-check" onPress={()=>void check()}/>:null}{feedback?<Body>{feedback}</Body>:null}
  {data.completed.some(c=>c.lessonId===lesson.id&&c.version===lesson.version)&&!busy?<ActionButton title="Volver a pendiente" secondary onPress={()=>{setBusy(true);void store.setPending(lesson.id).then(load).then(()=>{setAnswer('');setFeedback('Lección pendiente de nuevo; el historial de ejercicios se conserva.');}).catch(e=>setError(userMessage(e))).finally(()=>setBusy(false));}}/>:null}<ErrorNotice message={error}/>
  </Sheet>:null}
+ </>:null}
  </>;
  return embedded?<View style={{gap:12}}>{content}</View>:<Screen title={debtOnly?"Aprende sobre deudas":"Aprende"} demo={false} subtitle="Un poco de conocimiento, más confianza para decidir.">{content}</Screen>;
 }

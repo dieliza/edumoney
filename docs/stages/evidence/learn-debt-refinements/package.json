@@ -1,0 +1,27 @@
+{
+  "buildName": "learn-debt-refinements-4753f0fa0311",
+  "baseVersion": 150,
+  "modified": [
+    842,
+    818,
+    860,
+    844,
+    43000
+  ],
+  "added": [
+    44000
+  ],
+  "protectedModules": 1449,
+  "workerBytes": 66917347,
+  "sourceFiles": {
+    "src/modules/debts/debtViews.ts": "06ad0d491650ef368a30961b57f1d0a3d1ca5f1501dabfdb98b3e223da9ee39d",
+    "src/modules/debts/DebtViewButtons.tsx": "df38675ef1fd56fa968e5e285e21808e47e60dfaf23ada81d83c3a13a3223ed1",
+    "src/modules/debts/DebtsScreen.tsx": "63a94d8f1e32442897c27619fe558cf7158917e156f6f1158f37b3230db01d2d",
+    "src/modules/learning/LearnHub.tsx": "19d2de36cf99b7cb8a09a5df3645318ab3e7c0147bd5e7bfdafc607a6f794c76",
+    "src/modules/learning/LearningSection.tsx": "60230cdda06f4993e7ab8ea0240c1e0daaf356312ffd7f4e409d8443ec878cdd",
+    "src/modules/education/EducationPanel.tsx": "c1c73216a847edf0a8d06016f65677901abf30e538f02a1d22e070912b6273a2",
+    "web-enhancements/goal-race/patch-learn-debt-refinements.cjs": "6bf4c749b75fb29f4ea2ff616943bb85cdf891f95d36c7490e90630207b9cfa5",
+    "web-enhancements/goal-race/prefix-pool-codec.cjs": "6ff749fe12cb1458a42f78cfc1736de9d37bbaa26dab598d683239ea91e42a4f"
+  },
+  "browserVerified": false
+}
