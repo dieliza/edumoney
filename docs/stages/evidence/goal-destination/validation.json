@@ -1,0 +1,14 @@
+{
+  "prior_conservative_count": 81,
+  "code_executions": 10,
+  "code_final": "passed",
+  "old_test_expectation_fixed": 1,
+  "artifact": "passed",
+  "runtime": "passed",
+  "typescript": "passed",
+  "eslint_affected": "passed",
+  "public_delivery": "pending",
+  "planned_total_conservative_count": 94,
+  "limit": 100,
+  "browser_verified": false
+}

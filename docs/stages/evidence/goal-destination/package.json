@@ -1,0 +1,12 @@
+{
+  "buildName": "goal-destination-46b289c4f0f0",
+  "baseVersion": 143,
+  "modified": [
+    21025
+  ],
+  "protectedModules": 1442,
+  "routesPreserved": 19740,
+  "workerBytes": 63116793,
+  "source_sha256": "9b39582ae2aecb9aa32f66e2ba4e6a450005d05bc1579e3fef49329841ea2848",
+  "browserVerified": false
+}
