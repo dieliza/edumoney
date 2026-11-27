@@ -9,3 +9,5 @@ Se conservan byte por byte las otras 1442 fábricas, los fondos, las migraciones
 TypeScript, ESLint de src/tests y ESLint de los CJS modificados aprobados. ESLint general detecta errores previos en evidencias importadas y scripts Node/Deno ajenos; no se modifican esos archivos. No hay navegador interactivo disponible: se verifica renderizado mediante el paquete real y React SSR, sin afirmar prueba física de Safari.
 
 El archivo de publicación no cabe en el almacenamiento persistente (menos de 4 MB libres); se validó la compilación en memoria y se utiliza la compilación remota del mismo commit exacto.
+
+Versión 143 publicada correctamente. HTML, paquete servido y service worker públicos verificados con el adaptador corregido. Total conservador acumulado con el bloque anterior: 81 de 100 ejecuciones; 80 casos realmente ejecutados. Identificadores y resultados en source-result.json y public-delivery.json.

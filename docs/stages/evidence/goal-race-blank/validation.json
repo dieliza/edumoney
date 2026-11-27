@@ -8,10 +8,13 @@
   "runtime_executions": 3,
   "runtime_fixture_failure": 1,
   "artifact_scenarios": 1,
-  "public_delivery": "pending",
+  "public_delivery": "passed",
   "prior_conservative_execution_count": 76,
   "current_conservative_execution_count_before_public_check": 80,
   "limit": 100,
   "browser_verified": false,
-  "real_user_data_accessed": false
+  "real_user_data_accessed": false,
+  "conservative_execution_count": 81,
+  "actual_case_execution_count_including_prior_block": 80,
+  "published_version": 143
 }
