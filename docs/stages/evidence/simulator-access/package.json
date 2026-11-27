@@ -1,0 +1,21 @@
+{
+  "buildName": "simulator-access-4ad8a019b601",
+  "baseVersion": 152,
+  "modified": [
+    939,
+    43001
+  ],
+  "added": [],
+  "protectedModules": 1453,
+  "workerBytes": 66894772,
+  "sourceFiles": {
+    "src/modules/debts/DebtSimulators.tsx": "8e6c21b3cfdb89188c19e631e4b12ab8db31f22db933671882095e9384bdc910",
+    "src/modules/decisions/DecisionsScreen.tsx": "69b47683d829535e107164a679d4cd6c739f86184cfa31a76d17883d530d299c",
+    "web-enhancements/goal-race/patch-simulator-selector.cjs": "eba1735737324eb1820cba629960be5bc54ce0325b1062b8a9dcc3444d96d880",
+    "web-enhancements/goal-race/prefix-pool-codec.cjs": "8c6ea1e6b53e0b6103350ab95c24bacb6d1a3d829473b73474c8086b0328c360",
+    "web-enhancements/goal-race/z85-pool-codec.cjs": "0b6547fea2f3fdad61a507749b2d3519ac083ed9679eb4d605c9795733fafd31",
+    "web-enhancements/goal-race/route-suffix-codec.cjs": "2e39c24097e26875eeeffecf5a7a084169c563ec8d755714df7b9ecc81f6fd72",
+    "web-enhancements/funds-trial/host-graph.cjs": "238f9daf75d4de9ec423b57d75fd33fcf7c8abc18136e06f737767655c192a1f"
+  },
+  "browserVerified": false
+}

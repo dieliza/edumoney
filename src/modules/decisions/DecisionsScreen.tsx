@@ -29,7 +29,7 @@ export default function DecisionsScreen(){
  return <Screen back title="Antes de decidir" demo={false} subtitle="Compara opciones y revisa cómo cambian tus cantidades.">
  <ErrorNotice message={error}/>{notice?<Card row><Body>{notice}</Body></Card>:null}
  <Card row><Body>Introduce tus propios supuestos. Los campos empiezan en blanco: confirma 0 cuando una tasa o un costo sea realmente cero. Los cálculos son locales y no generan transacciones. No ofrecen aprobación ni recomendación de compra.</Body></Card>
- <Choices<SimulationKind> label="Simulador" options={displayedKinds} value={draft.kind} onChange={kind=>{setDraft(blankDraft(kind));setResult(null);setError('');setNotice('');setName('');setSaveId(newId());}}/>
+ <Choices<SimulationKind> label={debtContext?"Elige tu simulador":"Simulador"} presentation={debtContext?"tabs":undefined} tabColors={debtContext?{loan:'#175DAC',vehicle:'#006E55',home:'#6944AC'}:undefined} options={displayedKinds} value={draft.kind} onChange={kind=>{setDraft(blankDraft(kind));setResult(null);setError('');setNotice('');setName('');setSaveId(newId());}}/>
  {!saving?field('amount',loan?(draft.kind==='loan'?'Principal solicitado':'Precio de compra'):emergency?'Gastos esenciales mensuales':'Importe de cada cobro recurrente'):null}
  {saving?null:!loan&&!emergency?<Choices<Draft['cadence']> label="Frecuencia de cobro" value={draft.cadence} options={[[ 'monthly','Mensual'],['weekly','Semanal'],['annual','Anual']]} onChange={v=>update('cadence',v)}/>:null}
  {loan&&draft.kind!=='loan'?field('down','Pronto o pago inicial'):null}

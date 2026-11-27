@@ -1,0 +1,11 @@
+{
+  "cases": 8,
+  "passed": 8,
+  "accesses": 2,
+  "combinedButtonWidth": 220,
+  "removed": "Auto/Vivienda/Otros tiles and entire extra-payment block",
+  "selector": "three visible colored tabs",
+  "kindSwitches": 9,
+  "otherSimulatorKinds": "unchanged",
+  "browserVerified": false
+}

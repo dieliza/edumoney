@@ -1,0 +1,27 @@
+{
+  "test_limit": 100,
+  "conservative_executions": 37,
+  "counts": {
+    "calculation_tests": 3,
+    "runtime_scenarios": 8,
+    "codec_roundtrips": 20,
+    "package_attempts": 2,
+    "build": 1,
+    "worker_smoke": 1,
+    "static_patch_check": 1,
+    "public_delivery": 1
+  },
+  "typecheck": "passed",
+  "eslint": "passed",
+  "runtime": "8 passed",
+  "build": "passed",
+  "worker_smoke": "root and common bundle 200",
+  "browser_verified": false,
+  "migrations": [],
+  "product_scope": [
+    "DebtSimulators view",
+    "credit simulator selector presentation"
+  ],
+  "saved_scenarios_and_financial_calculations": "unchanged",
+  "unrelated_published_factories_preserved": 1453
+}

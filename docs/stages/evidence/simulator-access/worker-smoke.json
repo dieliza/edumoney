@@ -1,0 +1,9 @@
+{
+  "cases": 1,
+  "passed": 1,
+  "initialization_ms": 1137,
+  "heap_used_MB": 106,
+  "root_html": 200,
+  "common_bundle": 200,
+  "userDataAccessed": false
+}
