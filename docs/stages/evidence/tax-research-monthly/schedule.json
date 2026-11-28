@@ -1,0 +1,26 @@
+{
+  "id": "Automation_531fcdaad71c819181c49512b283142f",
+  "team_id": null,
+  "title": "Revisar reglas contributivas de EduMoney",
+  "prompt": "Investiga y revisa exclusivamente fuentes gubernamentales oficiales para las jurisdicciones contributivas ya activadas en EduMoney Web mediante tax_rules_refresh y confirma el resultado con tax_rules_status. Conserva las fuentes, los años y el historial; deja toda regla nueva o modificada pendiente de aprobación exclusiva del propietario. No actives jurisdicciones nuevas, no apruebes reglas, no uses datos financieros personales y no modifiques la automatización educativa. Si el acceso o las herramientas no permiten completar la revisión, informa el bloqueo sin afirmar que se actualizó.",
+  "schedule": "BEGIN:VEVENT
+DTSTART:20261201T080000
+RRULE:FREQ=MONTHLY;BYMONTHDAY=1;BYHOUR=8;BYMINUTE=0;BYSECOND=0
+END:VEVENT",
+  "timing_mode": "exact_schedule",
+  "display_schedule": null,
+  "is_enabled": true,
+  "conversation_id": null,
+  "is_self_owned_automation": false,
+  "default_timezone": "America/Puerto_Rico",
+  "next_run_time": "2026-12-01T08:00:00-04:00",
+  "last_run_time": null,
+  "updated_at": "2026-11-28T02:50:20.978278+00:00",
+  "run_details": {
+    "last_run": null,
+    "latest_result": null,
+    "delivery_status": "unknown"
+  },
+  "environment_selection": "inherited",
+  "environments": null
+}

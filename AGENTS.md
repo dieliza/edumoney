@@ -70,3 +70,7 @@ Antes de publicar, comprobar las rutas reales que registra el HTML de la versió
 
 ## Apariencia de todas las pantallas
 Todas las páginas, formularios y modales deben responder al tema seleccionado (Claro, Oscuro o Automático) mediante ThemeProvider/useTheme. No fijar una pantalla completa en un tema por una imagen de referencia. Mantener contraste de textos, iconos, campos, enlaces, estados y selección en ambos temas; conservar colores semánticos como gasto/ingreso/guardar cuando sean legibles. Cambiar el tema no debe desmontar el formulario ni borrar el borrador.
+
+## Investigación contributiva mensual
+
+La investigación y revisión de fuentes gubernamentales oficiales será **mensual, no semanal**, para las jurisdicciones ya activadas. La programación vigente es el día 1 de cada mes a las 8:00 a. m. de Puerto Rico. La regla del servidor debe reutilizar la investigación durante ese mismo mes calendario de Puerto Rico, sin volver a investigar a los siete días. Se conserva la investigación inicial bajo demanda de una jurisdicción nueva. Toda regla nueva o modificada requiere aprobación exclusiva del propietario antes de utilizarse en cálculos; no enviar datos financieros personales a las fuentes de investigación.

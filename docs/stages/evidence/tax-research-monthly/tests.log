@@ -1,0 +1,13 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/tax-rules-server.test.ts
+
+
+ RUN  v5.1.0 /workspace/edumoney
+
+
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+   Start at  02:51:22
+   Duration  392ms (tests 40%, transform 36%, import 21%, worker 3%)
+

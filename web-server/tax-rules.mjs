@@ -1,6 +1,8 @@
 import {educationOwner} from './owner-security.mjs';
 const codes=new Set('PR AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY'.split(' '));
-const prefix='tax-rules/v1/',week=7*86400000;
+const prefix='tax-rules/v1/';
+const researchMonth=new Intl.DateTimeFormat('en-US',{timeZone:'America/Puerto_Rico',year:'numeric',month:'2-digit'});
+export function monthlyReviewDue(checkedAt,now=Date.now()){const previous=Date.parse(checkedAt);return !Number.isFinite(previous)||researchMonth.format(new Date(previous))!==researchMonth.format(new Date(now));}
 const json=(value,status=200)=>new Response(JSON.stringify(value),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 const valid=(code,year)=>codes.has(code)&&Number.isInteger(year)&&year>=1900&&year<=9999;
 const hash=async text=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text))),v=>v.toString(16).padStart(2,'0')).join('');
@@ -24,7 +26,7 @@ async function save(env,key,value,etag){return !!await env.BUCKET.put(prefix+key
 function seeds(code){return code==='PR'?['https://hacienda.pr.gov/individuos','https://hacienda.pr.gov/publicaciones']:['https://www.irs.gov/retirement-plans/traditional-and-roth-iras','https://www.irs.gov/retirement-plans/ira-year-end-reminders','https://www.irs.gov/businesses/small-businesses-self-employed/state-government-websites',`https://${code.toLowerCase()}.gov/`];}
 export async function research(env,code,year,fetcher=fetch,force=false){
  if(!valid(code,year))throw Error('invalid_jurisdiction');const key=code+'/'+year,old=await load(env,key+'/state.json'),now=Date.now();
- if(!force&&old.value&&now-Date.parse(old.value.checkedAt)<week)return old.value;
+ if(!force&&old.value&&!monthlyReviewDue(old.value.checkedAt,now))return old.value;
  const evidence=[],failures=[];for(const url of seeds(code)){try{evidence.push(await source(url,fetcher));}catch(e){failures.push({url,reason:String(e.message)});}}
  const domains=new Set([code.toLowerCase()+'.gov',...(code==='PR'?['pr.gov']:['irs.gov']),...evidence.map(e=>new URL(e.url).hostname.split('.').slice(-2).join('.'))]);
  const relevant=[...new Set(evidence.flatMap(e=>e.links??[]))].filter(url=>{const host=new URL(url).hostname;return [...domains].some(domain=>host===domain||host.endsWith('.'+domain))&&!evidence.some(e=>e.url===url)&&!seeds(code).includes(url);}).slice(0,4);for(const url of relevant){try{evidence.push(await source(url,fetcher));}catch(e){failures.push({url,reason:String(e.message)});}}
