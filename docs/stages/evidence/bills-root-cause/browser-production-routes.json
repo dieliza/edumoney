@@ -1,0 +1,10 @@
+{
+  "checks": [
+    {
+      "name": "cold Bills before Goals",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "body": "\nMis facturas\n\n\n\n\n\nVencimientos y pagos que tú confirmas.\n¿Qué significa?\n\nAñadir factura\nVista de facturas\nPróximas\nPagadas\nCalendario\nAportaciones de Mis metas\nFechas según tu plan. Los recordatorios no registran gastos ni aportaciones.\nNo hay aportaciones programadas para este período.\nUna factura programada no es un pago. Los atrasos conservan su vencimiento hasta que registres un cambio con motivo.\nVer historial de anuladas\nNo hay facturas pendientes.\nRecordatorios locales\nEn la web, revisa Próximas y Calendario al abrir la app. Los avisos con la app cerrada no están disponibles; puedes descargar la fecha para tu calendario.\nNo incluyen proveedor ni importe. Se revisan al abrir la app y al volver a ella. Para recibir avisos elige los días de anticipación dentro de cada factura. No se envían a servidores.\nActivar avisos locales\nRevisar avisos y próximas fechas\nSeries recurrentes\nPuedes elegir frecuencia al añadir una factura."
+}

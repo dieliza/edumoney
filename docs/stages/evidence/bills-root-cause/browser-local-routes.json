@@ -1,0 +1,38 @@
+{
+  "checks": [
+    {
+      "name": "cold Bills before Goals",
+      "passed": true
+    },
+    {
+      "name": "Mis deudas",
+      "passed": true
+    },
+    {
+      "name": "Proyección de fin de mes",
+      "passed": true
+    },
+    {
+      "name": "Mis metas",
+      "passed": true
+    },
+    {
+      "name": "Aprende",
+      "passed": true
+    },
+    {
+      "name": "Mi progreso",
+      "passed": true
+    },
+    {
+      "name": "Mi dinero",
+      "passed": true
+    },
+    {
+      "name": "Negocio",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "body": "\nNegocio\n\n\n\n\n\nOcultar teclado\nOrganiza tu DBA o LLC.\nElige DBA o LLC y registra los ingresos, gastos y empleados de tu negocio.\nAñadir DBA o LLC\nNo hay titulares guardados. No se crean perfiles de ejemplo automáticamente.\n\n\nMi dinero\n\n\nMis metas\n\n\nAprende\n\n\nMi progreso\n\n\nNegocio\n\n\nMis deudas"
+}

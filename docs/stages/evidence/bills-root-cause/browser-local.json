@@ -1,0 +1,31 @@
+{
+  "checks": [
+    {
+      "name": "cold Bills before Goals",
+      "passed": true
+    },
+    {
+      "name": "create invoice",
+      "passed": true
+    },
+    {
+      "name": "edit invoice",
+      "passed": true
+    },
+    {
+      "name": "register invoice payment",
+      "passed": true
+    },
+    {
+      "name": "calendar",
+      "passed": true
+    },
+    {
+      "name": "reload persistence without visiting Goals",
+      "passed": false,
+      "error": "TimeoutError: locator.waitFor: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('add-bill') to be visible\u001b[22m\n"
+    }
+  ],
+  "errors": [],
+  "body": "Entrar a EduMoney\n\nEntra con tu correo y contraseña.\n\nCorreo electrónico\nContraseña\nEntrar\nOlvidé mi contraseña\nCrear cuenta"
+}

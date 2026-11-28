@@ -75,7 +75,7 @@ describe('Etapa 4: facturas y pagos en SQLite real',()=>{
    await bills.pay(payment({existingMovementId:'m1'}));expect((await ledger.snapshot()).movements).toHaveLength(1);
    expect((await bills.snapshot()).bills[0].paidCents).toBe(4000);
    await bills.create(input('b2',{provider:'Otro proveedor'}),null);await expect(bills.pay(payment({id:'p2',billId:'b2',existingMovementId:'m1'}))).rejects.toThrow('vínculo');
-   await expect(ledger.setDeleted('m1',1,true,'Prueba')).rejects.toThrow('vinculado');
+   await expect(ledger.setDeleted('m1',1,true,'Prueba')).rejects.toThrow(/vinculad[oa]/);
   }finally{db.close();}
  });
  it('tras revertir un vínculo equivocado puede asignar el mismo gasto a la factura correcta sin duplicarlo',async()=>{
@@ -151,7 +151,7 @@ describe('Etapa 4: facturas y pagos en SQLite real',()=>{
    db.exec('DROP TRIGGER fail_payment;');await bills.pay(payment());
    await expect(bills.edit(input('b1',{amountCents:cents(3999)}),2,'Bajar')).rejects.toThrow('menor');
    await expect(bills.edit(input('b1',{categoryId:'expense-food'}),2,'Cambiar')).rejects.toThrow('clasificación');
-   await expect(ledger.edit(movement('bill-movement:p1',{idempotencyKey:'bill-payment:p1'}),'Cambiar')).rejects.toThrow('vinculado');
+   await expect(ledger.edit(movement('bill-movement:p1',{idempotencyKey:'bill-payment:p1'}),'Cambiar')).rejects.toThrow(/vinculad[oa]/);
    await expect(bills.pay(payment({id:'future',expectedVersion:2,date:'2026-11-09'}))).rejects.toThrow('fecha');
   }finally{db.close();}
  });

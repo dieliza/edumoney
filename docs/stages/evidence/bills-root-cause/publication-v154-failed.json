@@ -1,0 +1,2 @@
+{"id":"appgdep_6b0a3023735c8191bfb03b02380fb80f","project_id":"appgprj_6af65a2177c48191b95b917e1ca2a2f0","title":"EduMoney Web","version_id":"appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_063bc8fd4d0081918bea5cb9e421ddf4","type":"publish","status":"failed","url":null,"has_mcp":true,"screenshot_asset_pointer":null,"provider_deployment_id":"site---6af65a2177c48191b95b917e1ca2a2f0","failure_message":"Error: Script startup exceeded CPU time limit.
+","env_set_revision":4,"updated_at":"2026-11-28T01:37:49.127982+00:00"}

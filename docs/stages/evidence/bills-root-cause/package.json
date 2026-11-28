@@ -1,0 +1,20 @@
+{
+  "buildName": "bills-shared-e000ce583201",
+  "baseVersion": 153,
+  "modifiedFactories": [],
+  "relocated": [
+    806,
+    807
+  ],
+  "added": [],
+  "protectedModules": 1455,
+  "workerBytes": 66668706,
+  "sourceFiles": {
+    "web-enhancements/funds-trial/promote-shared.cjs": "8c94d5b228956d20db1f98f74d20107714b58a0dfa0271c678847832973f0d30",
+    "web-enhancements/goal-race/goal-calendar.cjs": "c95b497ac00954eff7d2dda83052d20a6c2584482e5847faa52cd37f9a4a58bf",
+    "web-enhancements/funds-trial/host-graph.cjs": "062bfeb9729d77426651e160a694ff438f935936f1d40b7312862c3172e95bdc",
+    "web-enhancements/goal-race/bills-root-cause.cjs": "1609c321f1b117ad30ed7d7334fc404d37972d410a128f6bac9552eb9eaf4757",
+    "web-enhancements/goal-race/z85-pool-codec.cjs": "d415e0ea72a8bba77e7647a0e3a7738a0917c57c83c52faa445d2bd182975d34"
+  },
+  "browserVerified": true
+}

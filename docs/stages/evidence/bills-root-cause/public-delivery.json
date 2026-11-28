@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "build": "bills-shared-e000ce583201",
+  "relocated": [
+    806,
+    807
+  ],
+  "factoriesUnchanged": true,
+  "canonicalSW": true,
+  "registrationCache": "no-cache",
+  "swCache": "no-cache"
+}

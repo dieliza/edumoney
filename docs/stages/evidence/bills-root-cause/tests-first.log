@@ -1,0 +1,85 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/shared-calendar-packaging.test.ts tests/bills.test.ts tests/debts.test.ts tests/budget-simulation.test.ts
+
+
+ RUN  v5.1.0 /workspace/edumoney
+
+ ❯ tests/bills.test.ts (18 tests | 2 failed) 582ms
+   ❯ Etapa 4: facturas y pagos en SQLite real (14)
+     × vincula gasto existente sin duplicarlo y exige coincidencia exacta 47ms
+     × falla atómicamente al insertar vínculo, y protege pagos contra borrado y cambios incoherentes 28ms
+ ❯ tests/shared-calendar-packaging.test.ts (3 tests | 2 failed) 39ms
+   ❯ shared calendar packaging (3)
+     × registers the complete lazy store closure before the first Bills render without changing factories 28ms
+     × rejects a missing transitive dependency at packaging time 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/bills.test.ts > Etapa 4: facturas y pagos en SQLite real > vincula gasto existente sin duplicarlo y exige coincidencia exacta
+AssertionError: expected [Function] to throw error including 'vinculado' but got 'Esta transacción está vinculada a otr…'
+
+Expected: "vinculado"
+Received: "Esta transacción está vinculada a otra sección. Debe corregirse junto con su registro de origen."
+
+ ❯ tests/bills.test.ts:78:57
+     76|    expect((await bills.snapshot()).bills[0].paidCents).toBe(4000);
+     77|    await bills.create(input('b2',{provider:'Otro proveedor'}),null);aw…
+     78|    await expect(ledger.setDeleted('m1',1,true,'Prueba')).rejects.toThr…
+       |                                                         ^
+     79|   }finally{db.close();}
+     80|  });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/bills.test.ts > Etapa 4: facturas y pagos en SQLite real > falla atómicamente al insertar vínculo, y protege pagos contra borrado y cambios incoherentes
+AssertionError: expected [Function] to throw error including 'vinculado' but got 'Esta transacción está vinculada a otr…'
+
+Expected: "vinculado"
+Received: "Esta transacción está vinculada a otra sección. Debe corregirse junto con su registro de origen."
+
+ ❯ tests/bills.test.ts:154:104
+    152|    await expect(bills.edit(input('b1',{amountCents:cents(3999)}),2,'Ba…
+    153|    await expect(bills.edit(input('b1',{categoryId:'expense-food'}),2,'…
+    154|    await expect(ledger.edit(movement('bill-movement:p1',{idempotencyKe…
+       |                                                                                                        ^
+    155|    await expect(bills.pay(payment({id:'future',expectedVersion:2,date:…
+    156|   }finally{db.close();}
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/shared-calendar-packaging.test.ts > shared calendar packaging > registers the complete lazy store closure before the first Bills render without changing factories
+Error: Unrecognized dependency map
+ ❯ visit web-enhancements/funds-trial/promote-shared.cjs:4:327
+ ❯ visitNodes node_modules/typescript/lib/typescript.js:32559:22
+ ❯ forEachChildInVariableDeclarationList node_modules/typescript/lib/typescript.js:32778:12
+ ❯ Object.forEachChild node_modules/typescript/lib/typescript.js:33072:35
+ ❯ visit web-enhancements/funds-trial/promote-shared.cjs:4:369
+ ❯ visitNode2 node_modules/typescript/lib/typescript.js:32551:18
+ ❯ forEachChildInVariableStatement node_modules/typescript/lib/typescript.js:32775:59
+ ❯ Object.forEachChild node_modules/typescript/lib/typescript.js:33072:35
+ ❯ visit web-enhancements/funds-trial/promote-shared.cjs:4:369
+ ❯ visitNodes node_modules/typescript/lib/typescript.js:32559:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/shared-calendar-packaging.test.ts > shared calendar packaging > rejects a missing transitive dependency at packaging time
+AssertionError: expected [Function] to throw error including 'Missing shared dependency 807' but got 'Unrecognized dependency map'
+
+Expected: "Missing shared dependency 807"
+Received: "Unrecognized dependency map"
+
+ ❯ tests/shared-calendar-packaging.test.ts:21:150
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed | 2 passed (4)
+      Tests  4 failed | 47 passed (51)
+   Start at  01:30:49
+   Duration  3.15s (tests 57%, transform 23%, import 19%, worker 2%)
+
+    Isolate  4 workers spawned · ~134ms startup each (spawn + environment, per file)
+             at least ~403ms faster with isolate: false — reuses workers across files instead of one per file
+
