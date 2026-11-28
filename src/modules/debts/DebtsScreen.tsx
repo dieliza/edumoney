@@ -1,3 +1,4 @@
+import {DebtDeleteAction} from './DebtDeleteAction';
 import {DebtViewButtons} from './DebtViewButtons';
 import {ScheduledCollections} from './ScheduledCollections';
 import BillsScreen from '../bills/BillsScreen';
@@ -79,7 +80,8 @@ export default function DebtsScreen(){
    {detail.futureRateBps!==null?<Body>Nueva APR conocida: {(detail.futureRateBps/100).toFixed(2)}% desde {detail.rateChangeDate}</Body>:null}
    {detail.archived&&!busy?<ActionButton title="Actualizar estado de deuda archivada" secondary onPress={()=>{setForm(detail);setDetailId(null);}}/>:null}
    {!detail.archived&&!busy?<><ActionButton title="Ya lo hice: registrar pago" testID="debt-pay" onPress={()=>{setPayment({debt:detail});setDetailId(null);}}/><ActionButton title="Actualizar estado o condiciones" secondary onPress={()=>{setForm(detail);setDetailId(null);}}/>
-    <ActionButton title="Preparar factura del mínimo pendiente" secondary onPress={()=>void action(async()=>{await store.scheduleMinimum(detail.id,detail.version);},'Factura preparada o ya existente para ese vencimiento. Revísala en Mis facturas; aún no se ha pagado.')}/><Body muted>Los mínimos no se descuentan por sí solos del disponible de Mi dinero. Preparar una factura permite registrar el compromiso una sola vez para ese vencimiento.</Body><ActionButton title="Abrir Mis facturas" secondary onPress={()=>{setDetailId(null);router.push('/bills');}}/></>:null}
+    <ActionButton title="Abrir Mis facturas" secondary onPress={()=>{setDetailId(null);router.push('/bills');}}/></>:null}
+   <DebtDeleteAction key={detail.id} debt={detail} busy={busy} remove={()=>void action(async()=>{await store.remove(detail.id,detail.version,true);setDetailId(null);},'Deuda eliminada. Pagos conservados y facturas pendientes vinculadas anuladas.')}/>
    <SectionHeading title="Historial de saldos" onSurface/><Body muted>Variación de saldos registrados, incluidos pagos y conciliaciones. No equivale a principal amortizado si falta el desglose. Los intereses nuevos solo se incorporan al confirmar un nuevo estado.</Body>
    {data.events.filter(e=>e.debtId===detail.id).slice(0,historyLimit).map(e=><Body key={e.id}>{e.effectiveDate??'Fecha desconocida'} · {e.kind==='opening'?'Saldo inicial':e.kind==='payment'?'Pago':e.kind==='reconcile'?'Conciliación':e.kind==='reversal'?'Reversión':e.kind==='archive'?'Archivada':'Condiciones'}: {formatMoney(e.balanceBefore)} → {formatMoney(e.balanceAfter)} · {e.reason}</Body>)}
    <SectionHeading title="Pagos vinculados" onSurface/>{data.payments.filter(p=>p.debtId===detail.id).slice(0,historyLimit).map(p=><PaymentHistory key={p.id} payment={p} debt={detail} busy={busy} reverse={()=>void action(()=>store.reverse(p.id,reason),'Vínculo revertido con historial conservado. Revisa saldo y facturas.')}/>)}

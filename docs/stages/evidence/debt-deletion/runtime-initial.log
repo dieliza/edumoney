@@ -1,0 +1,7 @@
+A props object containing a "key" prop is being spread into JSX:
+  let props = {key: someKey, debt: ..., busy: ..., remove: ...};
+  <DebtDeleteAction {...props} />
+React keys must be passed directly to JSX without using spread:
+  let props = {debt: ..., busy: ..., remove: ...};
+  <DebtDeleteAction key={someKey} {...props} />
+{"cases":4,"passed":4}

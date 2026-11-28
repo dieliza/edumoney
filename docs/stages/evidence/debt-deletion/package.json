@@ -1,0 +1,63 @@
+{
+  "buildName": "debt-delete-5920a2598011",
+  "baseVersion": 160,
+  "modifiedFactories": [
+    854,
+    1118,
+    842
+  ],
+  "added": [
+    49100
+  ],
+  "protectedModules": 1464,
+  "workerBytes": 66614176,
+  "report": [
+    {
+      "compiled": "src/modules/debts/store.ts",
+      "id": 854,
+      "imports": {
+        "../bills/store": 1118,
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/domain": 813,
+        "../money/store": 21026,
+        "../money/repository": 816,
+        "./domain": 851
+      },
+      "source_sha256": "25f1afd5cc0e6c07bdce8b46a4cd985b17f2ae977d7387a1b6333619867cf12a"
+    },
+    {
+      "compiled": "src/modules/debts/DebtDeleteAction.tsx",
+      "id": 49100,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "../../ui/components": 796,
+        "../money/domain": 813
+      },
+      "source_sha256": "4f4aec694a139429c6ebf4e9dfc0c2a3c675c56a59bfb92052976543b22a130c"
+    },
+    {
+      "compiled": "src/modules/bills/store.ts",
+      "id": 1118,
+      "patch": "Only requested methods and detail controls; preserve remaining Web code",
+      "imports": {
+        "domain": 850,
+        "errors": 799
+      },
+      "source_sha256": "24d8bbc7500e10a721fae9d3a7f8e4384d3de2e5154c0710eda5d829d50fde1a"
+    },
+    {
+      "compiled": "src/modules/debts/DebtsScreen.tsx",
+      "id": 842,
+      "patch": "Only requested methods and detail controls; preserve remaining Web code",
+      "imports": {
+        "DebtDeleteAction": 49100
+      },
+      "source_sha256": "69c223a9eb014da13b361aa05b4422571c1982306f19887bdd89f424e0946b47"
+    },
+    {
+      "sharedDependencyRelocation": []
+    }
+  ]
+}

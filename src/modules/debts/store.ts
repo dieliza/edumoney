@@ -1,3 +1,4 @@
+import {BillsStore} from '../bills/store';
 import { UserInputError } from '../../core/errors';
 import { cents } from '../../core/money';
 import { localToday, validDate, validateMovement } from '../money/domain';
@@ -24,12 +25,12 @@ export class SimilarDebtPaymentError extends UserInputError{constructor(){super(
 export class DebtStore{
  constructor(private ledger:MoneyStore,private today:()=>string=localToday){}
  private reason(reason:string){if(!reason.trim()||reason.length>240)throw new UserInputError('Escribe un motivo de hasta 240 caracteres.');}
- private async debt(db:SqlDb,id:string,version?:number){const d=await db.getFirstAsync<Debt>(debtSelect+' WHERE d.id=?',id);if(!d||version!==undefined&&d.version!==version)throw new UserInputError('La deuda cambió. Cierra la ficha y vuelve a abrirla.');return {...d,archived:!!d.archived};}
+ private async debt(db:SqlDb,id:string,version?:number){const d=await db.getFirstAsync<Debt>(debtSelect+' WHERE d.id=?',id);if(await db.getFirstAsync("SELECT id FROM debt_events WHERE debt_id=? AND kind='delete' LIMIT 1",id))throw new UserInputError('Esta deuda fue eliminada. Sus pagos se conservan.');if(!d||version!==undefined&&d.version!==version)throw new UserInputError('La deuda cambió. Cierra la ficha y vuelve a abrirla.');return {...d,archived:!!d.archived};}
  private async event(db:SqlDb,d:DebtInput,kind:string,before:number,after:number,date:string|null,reason:string,beforeJson:string|null=null){
   await db.runAsync('INSERT INTO debt_events(debt_id,kind,effective_date,balance_before,balance_after,reason,before_json,recorded_at) VALUES(?,?,?,?,?,?,?,?)',d.id,kind,date,before,after,reason.trim(),beforeJson,new Date().toISOString());
  }
  async create(d:DebtInput){validateDebt(d,this.today());if(!d.balanceAsOf)throw new UserInputError('Indica la fecha del saldo base.');return this.ledger.transaction(async db=>{
-  const old=await db.getFirstAsync<Debt>(debtSelect+' WHERE d.id=?',d.id);if(old){if(canonical(old)!==canonical(d))throw new UserInputError('Este identificador ya corresponde a otra deuda.');return;}
+  const old=await db.getFirstAsync<Debt>(debtSelect+' WHERE d.id=?',d.id);if(old){if(await db.getFirstAsync("SELECT id FROM debt_events WHERE debt_id=? AND kind='delete' LIMIT 1",d.id))throw new UserInputError('Esta deuda fue eliminada. Crea otra con un identificador nuevo.');if(canonical(old)!==canonical(d))throw new UserInputError('Este identificador ya corresponde a otra deuda.');return;}
   const similar=await db.getFirstAsync<{id:string}>('SELECT id FROM debts WHERE archived=0 AND lower(trim(name))=lower(?)',d.name.trim());if(similar)throw new UserInputError('Ya existe una deuda con ese nombre. Usa un nombre que distinga cada obligación.');
   await db.runAsync(`INSERT INTO debts(id,name,kind,balance_cents,balance_as_of,annual_rate_bps,minimum_cents,due_date,closing_date,fees_cents,future_rate_bps,rate_change_date) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)`,d.id,d.name.trim(),d.kind,d.balanceCents,d.balanceAsOf,d.annualRateBps,d.minimumCents,d.dueDate,d.closingDate,d.feesCents,d.futureRateBps,d.rateChangeDate);
   await this.event(db,d,'opening',d.balanceCents,d.balanceCents,d.balanceAsOf,'Saldo base confirmado por el usuario');
@@ -47,6 +48,17 @@ export class DebtStore{
   await db.runAsync(`UPDATE debts SET name=?,kind=?,balance_cents=?,balance_as_of=?,annual_rate_bps=?,minimum_cents=?,due_date=?,closing_date=?,fees_cents=?,future_rate_bps=?,rate_change_date=?,balance_revision=balance_revision+?,version=version+1 WHERE id=?`,d.name.trim(),d.kind,d.balanceCents,d.balanceAsOf,d.annualRateBps,d.minimumCents,d.dueDate,d.closingDate,d.feesCents,d.futureRateBps,d.rateChangeDate,Number(reconcile),d.id);
   if(old.archived&&d.balanceCents>0)await db.runAsync('UPDATE debts SET archived=0 WHERE id=?',d.id);
  });}
+ async remove(id:string,version:number,confirmed:boolean){
+  if(!confirmed)throw new UserInputError('Confirma la eliminación de la deuda.');
+  return this.ledger.transaction(async db=>{
+   if(await db.getFirstAsync("SELECT id FROM debt_events WHERE debt_id=? AND kind='delete' LIMIT 1",id))return;
+   const d=await this.debt(db,id,version),reason='Deuda eliminada por el usuario',bills=new BillsStore(this.ledger,this.today);
+   const linked=await db.getAllAsync<Bill>(billSelect+' WHERE b.debt_id=?',id);
+   for(const bill of linked)if(!bill.voidedAt&&bill.amountCents>bill.paidCents)await bills.voidInTransaction(db,bill.id,bill.version,reason+'; pendiente cancelado, pagos conservados');
+   await this.event(db,d,'delete',d.balanceCents,0,this.today(),reason,JSON.stringify(d));
+   await db.runAsync('UPDATE debts SET balance_cents=0,archived=1,version=version+1 WHERE id=?',id);
+  });
+ }
  async archive(id:string,version:number,reason:string){this.reason(reason);return this.ledger.transaction(async db=>{const d=await this.debt(db,id,version);if(d.balanceCents!==0)throw new UserInputError('Solo se archivan deudas con saldo registrado cero.');const pending=await db.getFirstAsync<{id:string}>(`SELECT b.id FROM bills b WHERE b.debt_id=? AND b.voided_at IS NULL AND b.amount_cents>COALESCE((SELECT SUM(p.amount_cents) FROM bill_payments p WHERE p.bill_id=b.id AND p.reversed_at IS NULL),0) LIMIT 1`,id);if(pending)throw new UserInputError('Revisa las facturas pendientes de esta deuda antes de archivarla.');await this.event(db,d,'archive',0,0,this.today(),reason,JSON.stringify(d));await db.runAsync('UPDATE debts SET archived=1,version=version+1 WHERE id=?',id);});}
  async pay(p:DebtPaymentInput){validateDebtPayment(p,this.today());return this.ledger.transaction(async db=>{
   const old=await db.getFirstAsync<DebtPayment>(paymentSelect+' WHERE p.id=?',p.id);
@@ -114,6 +126,6 @@ export class DebtStore{
  async snapshot():Promise<DebtSnapshot>{return this.ledger.read(async db=>{
   const plans=await db.getAllAsync<{id:string;startDate:string}>('SELECT id,start_date AS startDate FROM debt_plans ORDER BY start_date DESC,id');const result:DebtPlan[]=[];
   for(const p of plans)result.push({...p,actions:await db.getAllAsync('SELECT action_key AS key,completed_at AS completedAt FROM debt_plan_actions WHERE plan_id=?',p.id)});
-  return {debts:(await db.getAllAsync<Debt>(debtSelect+' ORDER BY d.archived,d.name')).map(d=>({...d,archived:!!d.archived})),payments:(await db.getAllAsync<DebtPayment>(paymentSelect+' ORDER BY m.date DESC,p.id')).map(p=>({...p,createdMovement:!!p.createdMovement})),events:await db.getAllAsync<DebtEvent>('SELECT id,debt_id AS debtId,kind,effective_date AS effectiveDate,balance_before AS balanceBefore,balance_after AS balanceAfter,reason,recorded_at AS recordedAt FROM debt_events ORDER BY id DESC'),plans:result,movements:(await db.getAllAsync<LedgerMovement>(movementSelect+' ORDER BY date DESC,created_at DESC')).map(readMovement),bills:await db.getAllAsync<Bill>(billSelect+' ORDER BY b.due_date,b.id')};
+  return {debts:(await db.getAllAsync<Debt>(debtSelect+" WHERE NOT EXISTS(SELECT 1 FROM debt_events e WHERE e.debt_id=d.id AND e.kind='delete') ORDER BY d.archived,d.name")).map(d=>({...d,archived:!!d.archived})),payments:(await db.getAllAsync<DebtPayment>(paymentSelect+' ORDER BY m.date DESC,p.id')).map(p=>({...p,createdMovement:!!p.createdMovement})),events:await db.getAllAsync<DebtEvent>('SELECT id,debt_id AS debtId,kind,effective_date AS effectiveDate,balance_before AS balanceBefore,balance_after AS balanceAfter,reason,recorded_at AS recordedAt FROM debt_events ORDER BY id DESC'),plans:result,movements:(await db.getAllAsync<LedgerMovement>(movementSelect+' ORDER BY date DESC,created_at DESC')).map(readMovement),bills:await db.getAllAsync<Bill>(billSelect+' ORDER BY b.due_date,b.id')};
  });}
 }

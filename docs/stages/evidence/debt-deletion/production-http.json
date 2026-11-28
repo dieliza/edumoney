@@ -1,0 +1,12 @@
+[
+  {
+    "path": "/debts",
+    "status": 200,
+    "currentBuild": true
+  },
+  {
+    "path": "/sw.js",
+    "status": 200,
+    "currentBuild": true
+  }
+]

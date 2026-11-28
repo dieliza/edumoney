@@ -1,0 +1,13 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/debts.test.ts tests/bills.test.ts
+
+
+ RUN  v5.1.0 /workspace/edumoney
+
+
+ Test Files  2 passed (2)
+      Tests  47 passed (47)
+   Start at  04:14:05
+   Duration  1.93s (tests 76%, transform 16%, import 8%, worker 1%)
+

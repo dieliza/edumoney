@@ -100,10 +100,14 @@ export class BillsStore {
  private async audit(db:SqlDb,b:Bill,reason:string){await db.runAsync('INSERT INTO bill_revisions(bill_id,reason,before_json,recorded_at) VALUES(?,?,?,?)',b.id,reason.trim(),JSON.stringify(b),new Date().toISOString());}
  async voidBill(id:string,version:number,reason:string){
   this.reason(reason);return this.ledger.transaction(async db=>{
-   const b=await this.bill(db,id,version);if(b.voidedAt)return;
-   if(!outstanding(b))throw new UserInputError('La factura ya está pagada. Conserva su historial.');
-   await this.audit(db,b,reason);await db.runAsync('UPDATE bills SET voided_at=?,updated_at=?,version=version+1 WHERE id=?',new Date().toISOString(),new Date().toISOString(),id);
+   await this.voidInTransaction(db,id,version,reason);
   });
+ }
+ /** Reuse bill cancellation inside another atomic financial operation. */
+ async voidInTransaction(db:SqlDb,id:string,version:number,reason:string){
+  this.reason(reason);const b=await this.bill(db,id,version);if(b.voidedAt)return;
+  if(!outstanding(b))throw new UserInputError('La factura ya está pagada. Conserva su historial.');
+  await this.audit(db,b,reason);const now=new Date().toISOString();await db.runAsync('UPDATE bills SET voided_at=?,updated_at=?,version=version+1 WHERE id=?',now,now,id);
  }
  async toggleSeries(id:string,active:boolean){return this.ledger.transaction(async db=>{await db.runAsync('UPDATE bill_series SET active=? WHERE id=?',Number(active),id);});}
  async pay(p:PaymentInput){

@@ -1,0 +1,21 @@
+{
+  "checks": [
+    {
+      "name": "debt detail replaces preparation action with deletion and retains payment, bills and history controls",
+      "passed": true
+    },
+    {
+      "name": "archived debt details also offer deletion",
+      "passed": true
+    },
+    {
+      "name": "delete confirmation shows outstanding balance and cancellation never deletes",
+      "passed": true
+    },
+    {
+      "name": "compiled bill cancellation helper reuses version checks, audit and one atomic wrapper",
+      "passed": true
+    }
+  ],
+  "browserVerified": false
+}
