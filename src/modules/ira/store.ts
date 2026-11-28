@@ -10,7 +10,7 @@ import {FundsStore} from '../funds/store';
 import {readFundData} from '../funds/read';
 import {fundSummary,validateAllocationTimeline} from '../funds/domain';
 import {iraTypes,type IraAccount,type IraSchedule,type IraEvent} from './types';
-export const iraSelect='SELECT id,institution,type,opened,initial_cents AS initialCents,version FROM ira_accounts';
+export const iraSelect='SELECT id,institution,type,opened,initial_cents AS initialCents,version,COALESCE((SELECT archived FROM money_funds WHERE id=ira_accounts.id),0) AS archived FROM ira_accounts';
 const fail=(message:string):never=>{throw new UserInputError(message);};
 export interface IraTaxInputs{year:number;jurisdiction:string;age:number;earnedCents:number;taxableCents:number|null;eligibility:number}
 export class IraStore{
@@ -21,6 +21,7 @@ export class IraStore{
   if(!/^ira:[a-zA-Z0-9-]{1,100}$/.test(p.id)||!p.institution.trim()||p.institution.length>100||!iraTypes.some(([type])=>type===p.type)||!validDate(p.opened)||p.opened>this.today()||cents(p.initialCents)<0)fail('Revisa institución, tipo, apertura y balance inicial.');
   return this.ledger.transaction(async db=>{
    const old=await db.getFirstAsync<IraAccount>(iraSelect+' WHERE id=?',p.id);
+   if(old?.archived)fail('Esta cuenta IRA fue eliminada. Su historial se conserva.');
    if((old?.version??0)!==p.version)fail('La cuenta cambió. Vuelve a abrirla.');
    if(old&&(old.initialCents!==p.initialCents||old.type!==p.type))fail('El balance inicial y el tipo conservan su historial. Usa una corrección o crea la cuenta del tipo correcto.');
    if(old&&old.opened!==p.opened&&(await db.getFirstAsync('SELECT id FROM fund_transfers WHERE (from_id=? OR to_id=?) AND date<? UNION ALL SELECT id FROM ira_events WHERE account_id=? AND date<? LIMIT 1',p.id,p.id,p.opened,p.id,p.opened)))fail('La apertura no puede ser posterior a movimientos ya registrados.');
@@ -31,7 +32,22 @@ export class IraStore{
    await db.runAsync('UPDATE money_funds SET name=? WHERE id=?','IRA · '+p.institution.trim(),p.id);
   });
  }
- private async account(db:SqlDb,id:string){const a=await db.getFirstAsync<IraAccount>(iraSelect+' WHERE id=?',id);if(!a)fail('Cuenta IRA no encontrada.');return a!;}
+ async remove(id:string,version:number,confirmed:boolean){
+  if(!confirmed)fail('Confirma la eliminación de la cuenta IRA.');
+  return this.ledger.transaction(async db=>{
+   const a=await db.getFirstAsync<IraAccount>(iraSelect+' WHERE id=?',id);
+   if(!a)fail('Cuenta IRA no encontrada.');
+   if(a!.archived)return;
+   if(a!.version!==version)fail('La cuenta cambió. Vuelve a abrirla.');
+   const summary=fundSummary(await readFundData(db),'personal',this.today());
+   if((summary.funds.find(f=>f.id===id)?.balanceCents??0)!==0)fail('La cuenta tiene saldo. Corrige los registros equivocados o registra un retiro solo si realmente ocurrió antes de eliminarla. Eliminar no mueve dinero.');
+   await db.runAsync('INSERT INTO ira_audit(account_id,before_json,reason,created_at) VALUES(?,?,?,?)',id,JSON.stringify(a),'Eliminación confirmada de cuenta IRA sin saldo',new Date().toISOString());
+   await db.runAsync('UPDATE ira_schedules SET active=0 WHERE account_id=?',id);
+   await db.runAsync('UPDATE money_funds SET archived=1,version=version+1 WHERE id=?',id);
+   await db.runAsync('UPDATE ira_accounts SET version=version+1 WHERE id=?',id);
+  });
+ }
+ private async account(db:SqlDb,id:string){const a=await db.getFirstAsync<IraAccount>(iraSelect+' WHERE id=?',id);if(!a||a.archived)fail('Cuenta IRA no encontrada o eliminada.');return a!;}
  async available(db:SqlDb,date=this.today()){
   const summary=fundSummary(await readFundData(db),'personal',date);
   const bills=await db.getAllAsync<{pending:number}>(`SELECT MAX(0,b.amount_cents-COALESCE((SELECT SUM(p.amount_cents) FROM bill_payments p WHERE p.bill_id=b.id AND NOT EXISTS(SELECT 1 FROM bill_payment_reversals r WHERE r.payment_id=p.id)),0)) AS pending FROM bills b WHERE b.voided_at IS NULL AND b.due_date<=?`,date.slice(0,7)+'-31');

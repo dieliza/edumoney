@@ -1,0 +1,45 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/ira.test.ts tests/funds.test.ts tests/jurisdiction.test.ts
+
+
+ RUN  v5.1.0 /workspace/edumoney
+
+ ❯ tests/funds.test.ts (21 tests | 2 failed) 647ms
+   × respalda y restaura fondos, ubicaciones e historial; acepta formatos 18 conservando metas 36ms
+   × la migración desde 18 preserva registros y es idempotente 40ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/funds.test.ts > respalda y restaura fondos, ubicaciones e historial; acepta formatos 18 conservando metas
+AssertionError: expected 23 to be 22 // Object.is equality
+
+- Expected
++ Received
+
+- 22
++ 23
+
+ ❯ tests/funds.test.ts:31:430
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/funds.test.ts > la migración desde 18 preserva registros y es idempotente
+Error: table ira_accounts already exists
+ ❯ Object.execAsync tests/funds.test.ts:14:73
+
+ ❯ migrate src/storage/migrate.ts:58:14
+ ❯ tests/funds.test.ts:43:635
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  2 failed | 48 passed (50)
+   Start at  03:23:28
+   Duration  2.10s (tests 80%, transform 12%, import 7%, worker 1%)
+
+    Isolate  3 workers spawned · ~126ms startup each (spawn + environment, per file)
+             at least ~252ms faster with isolate: false — reuses workers across files instead of one per file
+

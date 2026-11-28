@@ -1,0 +1,13 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/funds.test.ts -t respalda y restaura|la migración desde 18
+
+
+ RUN  v5.1.0 /workspace/edumoney
+
+
+ Test Files  1 passed (1)
+      Tests  2 passed | 19 skipped (21)
+   Start at  03:24:09
+   Duration  703ms (transform 53%, tests 31%, import 15%, worker 1%)
+

@@ -1,0 +1,13 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/ira.test.ts
+
+
+ RUN  v5.1.0 /workspace/edumoney
+
+
+ Test Files  1 passed (1)
+      Tests  19 passed (19)
+   Start at  03:22:19
+   Duration  1.44s (tests 71%, transform 22%, import 6%)
+
