@@ -1,3 +1,4 @@
+import {withoutDeletedIra} from './domain';
 import {deletedGoalIds} from '../goals/deletion';
 import type {SqlDb} from '../money/store';
 import {movementSelect,readMovement} from '../money/store';
@@ -39,5 +40,5 @@ export async function readFundData(db:SqlDb):Promise<FundData>{
  if(legacy.some(p=>p.fundId===unassignedFundId)&&!funds.some(f=>f.id===unassignedFundId))funds.push({id:unassignedFundId,scope:'personal',kind:'savings',name:'Ahorros sin meta',goalId:null,targetCents:0,contributionCents:0,cadence:'monthly',targetDate:null,locationId:null,budgetMonth:null,categoryId:null,archived:false,version:0,createdAt:'',openingCents:0,legacyCents:0,balanceCents:0});
  // Choices remain virtual until a confirmed transfer materializes its endpoints atomically.
  for(const scope of ['personal','business'] as const)for(const kind of ['savings','emergency','budget'] as const){const id=defaultFundId(scope,kind);if(!funds.some(f=>f.id===id))funds.push({id,scope,kind,name:fundLabels[kind],goalId:null,targetCents:0,contributionCents:0,cadence:'monthly',targetDate:null,locationId:null,budgetMonth:null,categoryId:null,archived:false,version:0,createdAt:'',openingCents:0,legacyCents:0,balanceCents:0});}
- return {funds,movements,legacy,transfers:await db.getAllAsync<FundTransfer>(transferSelect+' ORDER BY date,sequence'),locations:await db.getAllAsync<MoneyLocation>('SELECT id,name,kind,version FROM money_locations ORDER BY name'),events:await db.getAllAsync('SELECT entity_id AS entityId,action,before_json AS beforeJson,reason,recorded_at AS recordedAt FROM fund_events ORDER BY id DESC')};
+ return withoutDeletedIra({funds,movements,legacy,transfers:await db.getAllAsync<FundTransfer>(transferSelect+' ORDER BY date,sequence'),locations:await db.getAllAsync<MoneyLocation>('SELECT id,name,kind,version FROM money_locations ORDER BY name'),events:await db.getAllAsync('SELECT entity_id AS entityId,action,before_json AS beforeJson,reason,recorded_at AS recordedAt FROM fund_events ORDER BY id DESC')});
 }

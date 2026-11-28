@@ -1,0 +1,114 @@
+{
+  "buildName": "ira-delete-08a31eb0f784",
+  "baseVersion": 158,
+  "modifiedFactories": [
+    21010,
+    21007,
+    21009,
+    60013,
+    60010
+  ],
+  "added": [],
+  "protectedModules": 1462,
+  "workerBytes": 64859667,
+  "report": [
+    {
+      "compiled": "src/modules/funds/domain.ts",
+      "id": 21010,
+      "imports": {
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/domain": 813
+      },
+      "source_sha256": "968fb42558db468a269722d9665fcf4df0d4dece0dacf4564394203d57b72f91"
+    },
+    {
+      "compiled": "src/modules/funds/read.ts",
+      "id": 21007,
+      "imports": {
+        "./domain": 21010,
+        "../goals/deletion": 38000,
+        "../money/store": 21026,
+        "../money/scopedMovements": 21008,
+        "./types": 21011
+      },
+      "source_sha256": "10851a13e5c2de7b1f41aaa104e6c48cb327259f7e6b1745531af716cb0674e7"
+    },
+    {
+      "compiled": "src/modules/funds/store.ts",
+      "id": 21009,
+      "imports": {
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/domain": 813,
+        "./domain": 21010,
+        "./read": 21007,
+        "./types": 21011
+      },
+      "source_sha256": "4f7370f087f8fb2f5a4b106e53f09121c0b62724f60b0a6256e5b980d7b5be91"
+    },
+    {
+      "compiled": "src/modules/ira/store.ts",
+      "id": 60013,
+      "imports": {
+        "../budget/store": 33003,
+        "../budget/domain": 33000,
+        "../jurisdiction/domain": 60017,
+        "./cadence": 60012,
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/domain": 813,
+        "../funds/store": 21009,
+        "../funds/read": 21007,
+        "../funds/domain": 21010,
+        "./types": 60014
+      },
+      "source_sha256": "bd523580ae89b3a76132b1c9c80b9befd56077b15f74909d8358f4b2b2237d0c"
+    },
+    {
+      "compiled": "src/modules/ira/IRAScreen.tsx",
+      "id": 60010,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "../../storage/changeEvents": 871,
+        "../../ui/components": 796,
+        "../../ui/MeaningHelp": 20014,
+        "../money/fields": 797,
+        "../money/localStore": 798,
+        "../money/domain": 813,
+        "../../core/money": 814,
+        "../../core/id": 803,
+        "../../core/errors": 799,
+        "../funds/domain": 21010,
+        "./store": 60013,
+        "./types": 60014,
+        "./IRAOverview": 60009,
+        "../jurisdiction/JurisdictionPanel": 60015,
+        "../jurisdiction/store": 60019,
+        "../jurisdiction/domain": 60017,
+        "../jurisdiction/service": 60018
+      },
+      "source_sha256": "6416f1a17e1c55d52af035c128f01d600a4daeeac74930db5790e98c4cabb3ba"
+    },
+    {
+      "sharedDependencyRelocation": []
+    }
+  ]
+}

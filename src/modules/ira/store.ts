@@ -32,16 +32,16 @@ export class IraStore{
    await db.runAsync('UPDATE money_funds SET name=? WHERE id=?','IRA · '+p.institution.trim(),p.id);
   });
  }
- async remove(id:string,version:number,confirmed:boolean){
+ async remove(id:string,version:number,confirmed:boolean,expected?:{balanceCents:number;availableAfter:number;totalAfter:number}){
   if(!confirmed)fail('Confirma la eliminación de la cuenta IRA.');
   return this.ledger.transaction(async db=>{
    const a=await db.getFirstAsync<IraAccount>(iraSelect+' WHERE id=?',id);
    if(!a)fail('Cuenta IRA no encontrada.');
    if(a!.archived)return;
    if(a!.version!==version)fail('La cuenta cambió. Vuelve a abrirla.');
-   const summary=fundSummary(await readFundData(db),'personal',this.today());
-   if((summary.funds.find(f=>f.id===id)?.balanceCents??0)!==0)fail('La cuenta tiene saldo. Corrige los registros equivocados o registra un retiro solo si realmente ocurrió antes de eliminarla. Eliminar no mueve dinero.');
-   await db.runAsync('INSERT INTO ira_audit(account_id,before_json,reason,created_at) VALUES(?,?,?,?)',id,JSON.stringify(a),'Eliminación confirmada de cuenta IRA sin saldo',new Date().toISOString());
+   const data=await readFundData(db),summary=fundSummary(data,'personal',this.today()),after=fundSummary({...data,funds:data.funds.map(f=>f.id===id?{...f,archived:true}:f)},'personal',this.today()),balanceCents=summary.funds.find(f=>f.id===id)?.balanceCents??0;
+   if(expected&&(expected.balanceCents!==balanceCents||expected.availableAfter!==after.available||expected.totalAfter!==after.total))fail('Los balances cambiaron. Revisa de nuevo la advertencia antes de eliminar.');
+   await db.runAsync('INSERT INTO ira_audit(account_id,before_json,reason,created_at) VALUES(?,?,?,?)',id,JSON.stringify({account:a,balanceCents,availableBefore:summary.available,availableAfter:after.available,totalBefore:summary.total,totalAfter:after.total}),'Eliminación confirmada de cuenta IRA y anulación de todos sus efectos',new Date().toISOString());
    await db.runAsync('UPDATE ira_schedules SET active=0 WHERE account_id=?',id);
    await db.runAsync('UPDATE money_funds SET archived=1,version=version+1 WHERE id=?',id);
    await db.runAsync('UPDATE ira_accounts SET version=version+1 WHERE id=?',id);

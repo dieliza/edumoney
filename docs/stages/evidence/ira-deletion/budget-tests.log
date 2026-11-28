@@ -1,0 +1,13 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/budget-simulation.test.ts
+
+
+ RUN  v5.1.0 /workspace/edumoney
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  03:40:41
+   Duration  550ms (tests 65%, transform 20%, import 14%, worker 1%)
+

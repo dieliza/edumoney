@@ -1,0 +1,12 @@
+[
+  {
+    "path": "/funds?kind=ira&scope=personal",
+    "status": 200,
+    "currentBuild": true
+  },
+  {
+    "path": "/sw.js",
+    "status": 200,
+    "currentBuild": true
+  }
+]

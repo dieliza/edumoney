@@ -6,14 +6,23 @@ import type {LedgerMovement} from '../money/types';
 import type {FundData,FundsSummary,FundTransfer,TransferInput} from './types';
 const sum=(values:number[])=>addAmounts(...values.map(cents));
 export function cashDelta(m:LedgerMovement){if(m.deletedAt)return 0;if(m.kind==='income'||m.kind==='loan')return m.amountCents;if(m.kind==='expense')return m.paymentMethod==='credit'?0:-m.amountCents;if(m.kind==='debt_payment'||m.kind==='goal_contribution')return -m.amountCents;return 0;}
+/** An IRA deletion cancels its complete ledger effect, including withdrawals funded by opening assets.
+ * Keep source rows for audit/idempotency, but never treat them as active money or tax contributions. */
+export function withoutDeletedIra(data:FundData):FundData{
+ const ids=new Set(data.funds.filter(f=>f.restricted&&f.archived).map(f=>f.id));
+ if(!ids.size)return data;
+ return {...data,funds:data.funds.map(f=>ids.has(f.id)?{...f,openingCents:0,legacyCents:0,balanceCents:0}:f),legacy:data.legacy.filter(p=>!ids.has(p.fundId)),transfers:data.transfers.filter(t=>!ids.has(t.fromId??'')&&!ids.has(t.toId??''))};
+}
 export function fundSummary(data:FundData,scope:AccountScope,asOf:string):FundsSummary{
+ data=withoutDeletedIra(data);
  if(!validDate(asOf))throw new UserInputError('Fecha de consulta no válida.');
  const transfers=data.transfers.filter(t=>t.scope===scope&&!t.reversedAt&&t.date<=asOf);
  const funds=data.funds.filter(f=>f.scope===scope).map(f=>{const legacyCents=sum(data.legacy.filter(p=>p.fundId===f.id&&p.date<=asOf).map(p=>p.amountCents));return {...f,legacyCents,balanceCents:sum([f.openingCents,legacyCents,...transfers.flatMap(t=>[...(t.toId===f.id?[t.amountCents]:[]),...(t.fromId===f.id?[-t.amountCents]:[])])])};});
  const available=sum([...data.movements.filter(m=>(scope==='business'?m.useKind==='business':m.useKind!=='business')&&m.date<=asOf).map(cashDelta),...transfers.flatMap(t=>[...(t.toId===null?[t.amountCents]:[]),...(t.fromId===null?[-t.amountCents]:[])])]);
  const savings=sum(funds.filter(f=>f.kind==='savings'&&!f.restricted).map(f=>f.balanceCents)),emergency=sum(funds.filter(f=>f.kind==='emergency'&&!f.restricted).map(f=>f.balanceCents)),budget=sum(funds.filter(f=>f.kind==='budget'&&!f.restricted).map(f=>f.balanceCents));
  const restricted=sum(funds.filter(f=>f.restricted).map(f=>f.balanceCents));
- const ira=sum(transfers.filter(t=>funds.some(f=>f.restricted&&(f.id===t.toId||f.id===t.fromId))).flatMap(t=>[...(funds.some(f=>f.restricted&&f.id===t.toId)?[t.amountCents]:[]),...(funds.some(f=>f.restricted&&f.id===t.fromId)?[-t.amountCents]:[])]));
+ // The IRA card is the current restricted asset, not net transfers (which can be negative after withdrawing opening assets).
+ const ira=restricted;
  return {ira,restricted,available,total:sum([available,savings,emergency,budget,restricted]),savings,emergency,budget,funds,scope,asOf};
 }
 export function validateTransfer(p:TransferInput,today:string){
@@ -21,6 +30,7 @@ export function validateTransfer(p:TransferInput,today:string){
 }
 /** A backdated correction cannot spend a fund that later transfers already consumed. */
 export function validateAllocationTimeline(data:FundData,scope:AccountScope,changed?:FundTransfer,checkAvailable=true){
+ data=withoutDeletedIra(data);
  const rows=data.transfers.filter(t=>t.scope===scope&&!t.reversedAt).sort((a,b)=>a.date.localeCompare(b.date)||a.sequence-b.sequence);
  const rolling=new Map(data.funds.filter(f=>f.scope===scope).map(f=>[f.id,f.openingCents]));
  let day='';let liquid=0;
