@@ -1,0 +1,10 @@
+{
+  "version": 164,
+  "status": "succeeded",
+  "version_id": "appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_d147aa78ad3c8191abf4488614e8bbe0",
+  "deployment_id": "appgdep_6b0ad5933378819196f2e7e3ac2bdc96",
+  "source_commit": "df2ef733c9ea300e030cf301e5a0d3020db55156",
+  "url": "https://edumoney-web.diegoluissantospabon.chatgpt.site",
+  "env_revision": 4,
+  "production_checks": 5
+}

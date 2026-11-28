@@ -1,0 +1,8 @@
+PASS 1 Original produces identical presentation tree and values
+PASS 2 All Original access destinations unchanged
+PASS 3 Futuristic receives same balances; goal allocations stay separate
+PASS 4 Every Futuristic button dispatches same destination as Original
+PASS 5 Switching layouts does not mutate financial projection
+PASS 6 Optimized landscape bytes, precache and existing push/activation preserved
+PASS 7 Both design choices activate the requested layout through the existing picker
+PASS 8 Commercial scope remains separate with identical balances and existing fund destinations

@@ -1,0 +1,24 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/futuristic-dashboard.test.ts tests/theme.test.ts tests/approved-home.test.ts
+
+
+ RUN  v5.1.0 /workspace/edumoney
+
+ ❯ tests/approved-home.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/approved-home.test.ts [ tests/approved-home.test.ts ]
+SyntaxError: Unexpected token 'typeof'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  17 passed (17)
+   Start at  13:12:50
+   Duration  1.15s (transform 42%, import 27%, tests 26%, worker 5%)
+
+    Isolate  3 workers spawned · ~184ms startup each (spawn + environment, per file)
+             at least ~368ms faster with isolate: false — reuses workers across files instead of one per file
+

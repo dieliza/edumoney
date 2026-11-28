@@ -1,3 +1,4 @@
+import {DashboardChoice} from './dashboard/DashboardChoice';
 import {SceneThemeChoice} from './SceneThemeChoice';
 import { useState } from 'react';
 import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
@@ -13,7 +14,7 @@ export function ThemePicker({ color,compact=false }: { color: string;compact?:bo
   const { name, preference, colors, setPreference } = useTheme();
   const [open, setOpen] = useState(false);
   return <>
-    <Pressable testID="theme-picker-open" accessibilityRole="button" accessibilityLabel="Cambiar tema" accessibilityHint="Elegir Claro, Oscuro o Automático"
+    <Pressable testID="theme-picker-open" accessibilityRole="button" accessibilityLabel="Cambiar tema" accessibilityHint="Elegir tema y diseño del dashboard"
       onPress={() => setOpen(true)} style={({ pressed }) => ({ padding: compact?8:12, minWidth: compact?44:48, minHeight: compact?44:48, borderRadius: 24, opacity: pressed ? 0.65 : 1 })}>
       <Ionicons name={name === 'dark' ? 'moon-outline' : 'sunny-outline'} size={25} color={color} />
     </Pressable>
@@ -37,6 +38,7 @@ export function ThemePicker({ color,compact=false }: { color: string;compact?:bo
             {preference === choice.value ? <Ionicons name="checkmark-circle" size={24} color={colors.primary} /> : null}
           </Pressable>)}
           <SceneThemeChoice/>
+          <DashboardChoice/>
         </View>
         </ScrollView>
       </View>

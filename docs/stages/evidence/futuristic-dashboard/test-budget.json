@@ -1,0 +1,15 @@
+{
+  "limit": 100,
+  "executions_before_production": 34,
+  "breakdown": {
+    "targeted_unit_tests": 17,
+    "historical_suite_failed_to_load": 1,
+    "package_build_checks": 2,
+    "first_runtime_checks": 6,
+    "final_runtime_checks": 8
+  },
+  "production_checks_planned": 5,
+  "production_checks_passed": 5,
+  "total_executions": 39,
+  "remaining": 61
+}

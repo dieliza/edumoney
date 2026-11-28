@@ -1,0 +1,13 @@
+{
+  "passed": [
+    "Original produces identical presentation tree and values",
+    "All Original access destinations unchanged",
+    "Futuristic receives same balances; goal allocations stay separate",
+    "Every Futuristic button dispatches same destination as Original",
+    "Switching layouts does not mutate financial projection",
+    "Optimized landscape bytes, precache and existing push/activation preserved",
+    "Both design choices activate the requested layout through the existing picker",
+    "Commercial scope remains separate with identical balances and existing fund destinations"
+  ],
+  "total": 8
+}

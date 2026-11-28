@@ -1,0 +1,156 @@
+{
+  "buildName": "futuristic-e65675390a31",
+  "baseVersion": 163,
+  "modifiedFactories": [
+    21014,
+    50001,
+    50004,
+    50002,
+    50005,
+    1109,
+    50003
+  ],
+  "added": [],
+  "protectedModules": 1466,
+  "workerBytes": 66867081,
+  "report": [
+    {
+      "compiled": "src/design/dashboard/preference.ts",
+      "id": 50001,
+      "imports": {
+        "@react-native-async-storage/async-storage": 1054,
+        "react": 13
+      },
+      "source_sha256": "2c4c32ab190cf407c1b5a92bf5d5ca4577a8ce9fc1237231d448545599eb7380"
+    },
+    {
+      "compiled": "src/design/dashboard/solar.ts",
+      "id": 50002,
+      "imports": {},
+      "source_sha256": "55afb7fb98f771e1a9ce636563dea7b4f1480100afc6880ea23c61824d18d748"
+    },
+    {
+      "compiled": "src/ui/dashboard/styles.ts",
+      "id": 50005,
+      "imports": {},
+      "source_sha256": "ed862fcd16a43da98d16ec866d1cff9009e02430c17491db983d52e99640a2ac"
+    },
+    {
+      "compiled": "src/ui/dashboard/FuturisticFunds.web.tsx",
+      "id": 50004,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "../../design/ThemeProvider": 792,
+        "../../design/dashboard/solar": 50002,
+        "../../modules/money/domain": 813,
+        "../MeaningHelp": 20014,
+        "./styles": 50005
+      },
+      "source_sha256": "e734192b4d1e50ec1cdd18b3eaa54dd7ccaef317ca3f5cab4188d1e4b970f5ff"
+    },
+    {
+      "compiled": "src/ui/FundsSummary.tsx",
+      "id": 21014,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "../design/dashboard/preference": 50001,
+        "./dashboard/FuturisticFunds": 50004,
+        "../core/money": 814,
+        "./MeaningHelp": 20014,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "expo-linear-gradient": 836,
+        "expo-router": 790,
+        "./components": 796,
+        "../modules/money/domain": 813
+      },
+      "source_sha256": "f8c1aaf804f843e4ed29c057d6e89fb5a4b1cc0e6977b4dedd564f5d0c66ef02"
+    },
+    {
+      "compiled": "src/ui/dashboard/DashboardChoice.tsx",
+      "id": 50003,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "@expo/vector-icons/Ionicons": 791,
+        "../../design/ThemeProvider": 792,
+        "../../design/dashboard/preference": 50001
+      },
+      "source_sha256": "6a6c59928b143459468d74e181b2595ff12d4d4dc1058befce4b8533ac9d1b91"
+    },
+    {
+      "compiled": "src/ui/ThemePicker.tsx",
+      "id": 1109,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "./dashboard/DashboardChoice": 50003,
+        "./SceneThemeChoice": 32001,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "@expo/vector-icons/Ionicons": 791,
+        "../design/ThemeProvider": 792,
+        "../design/tokens": 789
+      },
+      "source_sha256": "e1888f9360bcf309e63fdf67a768269e85c6fefc092af3bdab81a606534151af"
+    },
+    {
+      "sharedDependencyRelocation": []
+    }
+  ],
+  "changedComparedWithVersion163": [
+    21014,
+    1109
+  ],
+  "introducedComparedWithVersion163": [
+    50001,
+    50002,
+    50003,
+    50004,
+    50005
+  ]
+}
