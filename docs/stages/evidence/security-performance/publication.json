@@ -1,0 +1,9 @@
+{
+  "version": 162,
+  "deployment_id": "appgdep_6b0a5e89d888819182cb31b4a76a9348",
+  "status": "failed",
+  "reason": "Worker exceeded uncompressed size limit of63.9MiB",
+  "production_unchanged_version": 161,
+  "source_commit": "e42350fbccc46ff4721799c6016e3530d5e7f416",
+  "pending": "Further lossless packing optimization and approval to extend test budget100 to120"
+}

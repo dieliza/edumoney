@@ -1,0 +1,5 @@
+{
+  "cases": 8,
+  "passed": true,
+  "scope": "Patched access-controlled key endpoint with simulated Auth and R2 boundaries"
+}

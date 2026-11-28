@@ -1,0 +1,5 @@
+{
+  "cases": 9,
+  "passed": true,
+  "scope": "Real Edge handler with simulated Auth, database, mail boundaries; no real user mutation or mail"
+}

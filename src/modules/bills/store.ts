@@ -56,6 +56,9 @@ export class BillsStore {
  async materialize(today:string){
   if(!validDate(today))throw new UserInputError('Fecha del dispositivo no válida.');
   const horizon=today>'9999-10-01'?'9999-12-31':shiftDays(today,90);
+  // A consultation without due series must not export/encrypt the entire vault or trigger a backup.
+  const pending=await this.ledger.read(db=>db.getFirstAsync('SELECT id FROM bill_series WHERE active=1 AND (next_date<=? OR (end_date IS NOT NULL AND next_date>end_date)) LIMIT 1',horizon));
+  if(!pending)return;
   return this.ledger.transaction(async db=>{
    const series=await db.getAllAsync<BillSeries>(selectSeries+' WHERE active=1 ORDER BY next_date');
    for(const s of series){

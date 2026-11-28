@@ -1,0 +1,16 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/bills.test.ts tests/web-account-recovery.test.ts tests/web-sync-server.test.ts tests/auto-sync-controller.test.ts tests/security-http-review.test.ts
+
+
+ RUN  v5.1.0 /workspace/edumoney
+
+
+ Test Files  5 passed (5)
+      Tests  45 passed (45)
+   Start at  04:44:17
+   Duration  3.34s (tests 83%, transform 10%, import 6%, worker 1%)
+
+    Isolate  5 workers spawned · ~128ms startup each (spawn + environment, per file)
+             at least ~512ms faster with isolate: false — reuses workers across files instead of one per file
+

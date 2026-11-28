@@ -1,0 +1,51 @@
+[
+  {
+    "name": "main HTML headers",
+    "status": 200,
+    "ms": 1268,
+    "ownerReturned": false,
+    "headers": {
+      "content-security-policy": null,
+      "x-frame-options": null,
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "no-referrer",
+      "cache-control": "no-cache"
+    }
+  },
+  {
+    "name": "admin absent identity",
+    "status": 403,
+    "ms": 56,
+    "ownerReturned": false
+  },
+  {
+    "name": "admin forged email",
+    "status": 403,
+    "ms": 75,
+    "ownerReturned": false
+  },
+  {
+    "name": "admin forged id",
+    "status": 403,
+    "ms": 887,
+    "ownerReturned": false
+  },
+  {
+    "name": "workspace absent session",
+    "status": 401,
+    "ms": 942,
+    "ownerReturned": false
+  },
+  {
+    "name": "workspace fabricated JWT",
+    "status": 401,
+    "ms": 798,
+    "ownerReturned": false
+  },
+  {
+    "name": "workspace foreign origin",
+    "status": 403,
+    "ms": 56,
+    "ownerReturned": false
+  }
+]

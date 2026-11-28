@@ -1,0 +1,30 @@
+{
+  "entry": [
+    {
+      "file": "__expo-metro-runtime-8c088df87a31e4e6accd81c554ec290d-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-",
+      "url": "/_expo/static/js/web/__expo-metro-runtime-8c088df87a31e4e6accd81c554ec290d-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde-crash-boat-d6648470a1d2-recovery2-accounts-required-d07dadc516c3-account-simple-dcb32d7a8a26-calendar-biometric-3188abc4a7c1-calendar-biometric-style-92fcba83d856-recovery-direct-e44b5966e331-login-no-legacy-b2043405259a-monthly-budget-ad667c500eb4-budget-refinements-6128d8fe143b-budget-refinements-9a11afcaea92-budget-decimals-28dbbbeb45a4-budget-schedules-ec0806a6ba82-budget-funded-f8e32ed2ff7c-budget-help-32028f863293-transfer-destination-b8d08e9f75c1-annual-contribution-fix-4578a8d0c530-budget-shortcut-rows-6dec8e2ba8d5.js",
+      "raw": 3751,
+      "gzip": 1551,
+      "modules": 0
+    },
+    {
+      "file": "__common-c274283e4f06f201946822c54e057719-transaction-theme-99-20261124-aprende-prizes-c8d090a2fc72-aprende-premio-texto",
+      "url": "/_expo/static/js/web/__common-c274283e4f06f201946822c54e057719-transaction-theme-99-20261124-aprende-prizes-c8d090a2fc72-aprende-premio-texto-10a49acfa403-aprende-visible-4b44c73564f2-history-delete-0cbce3f7e262-methods-read-next-3f70bd203c49-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde-fund-history-delete-2c7d5b0225ce-transactions-funds-learn-120f4569f755-learn-escoge-537468a712ff-learn-celebracion-5575220b3c6d-crash-boat-d6648470a1d2-recovery2-accounts-required-d07dadc516c3-account-simple-dcb32d7a8a26-calendar-biometric-3188abc4a7c1-calendar-biometric-style-92fcba83d856-recovery-direct-e44b5966e331-login-no-legacy-b2043405259a-monthly-budget-ad667c500eb4-budget-refinements-6128d8fe143b-budget-refinements-9a11afcaea92-budget-decimals-28dbbbeb45a4-budget-schedules-ec0806a6ba82-budget-funded-f8e32ed2ff7c-budget-help-32028f863293-transfer-destination-b8d08e9f75c1-annual-contribution-fix-4578a8d0c530-budget-shortcut-rows-6dec8e2ba8d5-budget-simulation-95a384e6d949-goal-race-3f110220090b-goal-destination-46b289c4f0f0-goal-progress-delete-6369104c45e8-goal-calendar-66d42a885fa1-learn-count-7e8d0b32d0be-goal-initial-f6948df2a7fe-dictation-history-325ab4897468-debt-simulators-703f3e1fb3d9-learn-debt-refinements-4753f0fa0311-meaning-compact-566e95e4d8eb-simulator-access-4ad8a019b601-bills-shared-e000ce583201-ira-025956bb5970-ira-edit-d8c38a519d63-ira-delete-08a31eb0f784-debt-calendar-026254761a70-debt-delete-5920a2598011.js",
+      "raw": 2031787,
+      "gzip": 585073,
+      "modules": 569
+    },
+    {
+      "file": "index-576f39d629bf3fa4dd6968c3d8670f3c-business20261122-commercial20261122r2-homesplit20261122-contrast20261122-switch88",
+      "url": "/_expo/static/js/web/index-576f39d629bf3fa4dd6968c3d8670f3c-business20261122-commercial20261122r2-homesplit20261122-contrast20261122-switch88-capture89-graphics90-controls91-scope92-payroll96-history97-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-trial-facc5058306d-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde-transactions-route-cache-v2-admin-recovery-54c5ae63e7c3-registro-correo-7003787519-crash-boat-d6648470a1d2-recovery2-accounts-required-d07dadc516c3-account-simple-dcb32d7a8a26-calendar-biometric-3188abc4a7c1-calendar-biometric-style-92fcba83d856-recovery-direct-e44b5966e331-login-no-legacy-b2043405259a-monthly-budget-ad667c500eb4-budget-refinements-6128d8fe143b-budget-refinements-9a11afcaea92-budget-decimals-28dbbbeb45a4-budget-schedules-ec0806a6ba82-budget-funded-f8e32ed2ff7c-budget-help-32028f863293-transfer-destination-b8d08e9f75c1-annual-contribution-fix-4578a8d0c530-budget-shortcut-rows-6dec8e2ba8d5-goal-race-3f110220090b-goal-race-fix-626c290d2855-goal-progress-delete-6369104c45e8-goal-calendar-66d42a885fa1-goal-initial-f6948df2a7fe-dictation-history-325ab4897468-debt-simulators-703f3e1fb3d9-learn-debt-refinements-4753f0fa0311-simulator-access-4ad8a019b601-bills-shared-e000ce583201-ira-025956bb5970-debt-delete-5920a2598011.js",
+      "raw": 1143095,
+      "gzip": 295381,
+      "modules": 760
+    }
+  ],
+  "activeChunks": 34,
+  "totalRoutes": 19780,
+  "htmlBytes": 5777,
+  "swBytes": 40056,
+  "sw": "const CACHE='edumoney-shell-debt-delete-5920a2598011';const ASSETS=[\"/Guia-EduMoney-dominio-y-correo.txt\",\"/_expo/static/js/web/__common-ce2c8053c5646040179063a4fb8e8873.js\",\"/_expo/static/js/web/__expo-metro-runtime-8c088df87a31e4e6accd81c554ec290d-transaction-theme-99-20261124-universal-search-a0e20e746e99-funds-help-3fb59bc0002f-funds-transfer-only-d4e27f8ba308-history-footer-7c4c4885086d-goal-details-68782b16c5cb-progress-mount-24eeb29cab82-progress-route-288175f34fde-crash-boat-d6648470a1d2-recovery2-accounts-required-d07dadc516c3-account-simple-dcb32d7a8a26-calendar-biometric-3188abc4a7c1-calendar-biometric-style-92fcba83d856-recovery-direct-e44b5966e331-login-no-legacy-b2043405259a-monthly-budget-ad667c500eb4-budget-refinements-6128d8fe143b-budget-refinements-9a11afcaea92-budget-decimals-28dbbbeb45a4-budget-schedules-ec0806a6ba82-budget-funded-f8e32ed2ff7c-budget-help-32028f863293-transfer-destination-b8d08e9f75c1-annual-contribution-fix-4578a8d0c530-budget-shortcut-rows-6dec8e2"
+}

@@ -1,0 +1,12 @@
+{
+  "buildName": "security-perf-347d24f7521c",
+  "baseVersion": 161,
+  "modifiedFactories": [
+    1118
+  ],
+  "added": [],
+  "workerBytes": 67078575,
+  "report": [],
+  "source_sha256": "7620fcbb264a02407823bab00d7b521393e2884febea93344d58dd1228489461",
+  "packing": "Every reconstructed static payload and URL compared byte-for-byte; only factory1118 modified; existing service worker handlers and aliases preserved."
+}

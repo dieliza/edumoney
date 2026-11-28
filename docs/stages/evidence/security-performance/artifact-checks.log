@@ -1,0 +1,3 @@
+PASS artifact no-op consultation
+PASS active client assets no secret-key pattern
+PASS only Bills factory changed; all other factories/URLs and SW validated by package build

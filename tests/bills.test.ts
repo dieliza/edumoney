@@ -2,7 +2,8 @@ import { DatabaseSync } from 'node:sqlite';
 import { mkdtempSync,rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { describe,it,expect } from 'vitest';
+import { describe,it,expect,vi } from 'vitest';
+import {onDataCommitted} from '../src/storage/changeEvents';
 import { migrate } from '../src/storage/migrate';
 import { schemaV1 } from '../src/storage/schema';
 import { schemaV2 } from '../src/storage/schemaV2';
@@ -189,4 +190,9 @@ describe('Fechas y recordatorios locales',()=>{
   expect(await new ReminderScheduler(port).sync([view()],new Date())).toContain('sin permiso');expect(cancelled).toBe(true);
   await expect(new ReminderScheduler({...port,permission:async()=>true,list:async()=>[],schedule:async()=>{throw Error('OS unavailable');}}).sync([view()],new Date('2026-11-08T00:00:00'))).rejects.toThrow('OS unavailable');
  });
+});
+describe('consultas ligeras de recurrencias',()=>{
+ it('consulta sin series pendientes no abre transacciones ni dispara respaldos',async()=>{const {db,ledger,bills}=await setup();const tx=vi.spyOn(ledger,'transaction'),committed=vi.fn(),off=onDataCommitted(committed);try{await bills.materialize(today());await bills.materialize(today());expect(tx).not.toHaveBeenCalled();expect(committed).not.toHaveBeenCalled();}finally{off();db.close();}});
+ it('genera lo necesario una vez y la siguiente consulta conserva exactamente los registros sin guardados',async()=>{const {db,ledger,bills}=await setup();try{await bills.create(input(),{id:'light',cadence:'monthly',intervalCount:1,endDate:null});const tx=vi.spyOn(ledger,'transaction');await bills.materialize(today());expect(tx).toHaveBeenCalledOnce();const before=await bills.snapshot(),changes=db.prepare('SELECT total_changes() AS n').get()?.n;tx.mockClear();await bills.materialize(today());expect(tx).not.toHaveBeenCalled();expect(await bills.snapshot()).toEqual(before);expect(db.prepare('SELECT total_changes() AS n').get()?.n).toBe(changes);}finally{db.close();}});
+ it('desactiva una serie terminada aunque su próxima fecha quede fuera del horizonte',async()=>{const {db,bills}=await setup();try{await bills.create(input(),{id:'ended',cadence:'monthly',intervalCount:1,endDate:'2026-11-16'});db.exec("UPDATE bill_series SET next_date='2027-08-15' WHERE id='ended'");await bills.materialize(today());expect((await bills.snapshot()).series[0].active).toBe(false);}finally{db.close();}});
 });
