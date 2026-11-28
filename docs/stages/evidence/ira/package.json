@@ -1,0 +1,386 @@
+{
+  "buildName": "ira-025956bb5970",
+  "baseVersion": 155,
+  "modifiedFactories": [
+    21010,
+    21007,
+    21011,
+    21009,
+    21024,
+    21014,
+    887,
+    1061,
+    32012,
+    32010,
+    990,
+    971
+  ],
+  "added": [
+    60010,
+    60013,
+    60017,
+    60012,
+    60014,
+    60009,
+    60015,
+    60019,
+    60018,
+    60900,
+    60016,
+    60011
+  ],
+  "protectedModules": 1443,
+  "workerBytes": 64620108,
+  "report": [
+    {
+      "compiled": "src/modules/funds/domain.ts",
+      "id": 21010,
+      "imports": {
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/domain": 813
+      },
+      "source_sha256": "2e26ecfc12ad1e636c1d764d46133754b88cbf02e31db540ed57e576a9173d92"
+    },
+    {
+      "compiled": "src/modules/funds/types.ts",
+      "id": 21011,
+      "imports": {},
+      "source_sha256": "4cca72173bd6370cb6148ab23f2aaf94c02f605cd124d1e2f18e51de2f12a8aa"
+    },
+    {
+      "compiled": "src/modules/funds/read.ts",
+      "id": 21007,
+      "imports": {
+        "../goals/deletion": 38000,
+        "../money/store": 21026,
+        "../money/scopedMovements": 21008,
+        "./types": 21011
+      },
+      "source_sha256": "29dc030a2255fdac77543d9409679030b8ff71d48cf8bcfab38ed68c3c8c738a"
+    },
+    {
+      "compiled": "src/modules/funds/store.ts",
+      "id": 21009,
+      "imports": {
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/domain": 813,
+        "./domain": 21010,
+        "./read": 21007,
+        "./types": 21011
+      },
+      "source_sha256": "24c3062fd930c7980d67cbb7a2440b824cfb914c23fc2f4373d4e689dd867a42"
+    },
+    {
+      "compiled": "src/modules/jurisdiction/domain.ts",
+      "id": 60017,
+      "imports": {
+        "../../core/errors": 799,
+        "../../core/money": 814
+      },
+      "source_sha256": "8c9572069409e4bb565e641951d70acae842bb6665b1799f96b99979a20cc6d8"
+    },
+    {
+      "compiled": "src/modules/ira/cadence.ts",
+      "id": 60012,
+      "imports": {
+        "../money/domain": 813
+      },
+      "source_sha256": "784c716aa89522a7e4f1efca334baeec07ecbada691a24c1acc28b9623cfadbf"
+    },
+    {
+      "compiled": "src/modules/ira/types.ts",
+      "id": 60014,
+      "imports": {},
+      "source_sha256": "1cb34adb4f709f88e5d95c7006e3049543b1a08e92f88d8510fc4ac37f9f6d21"
+    },
+    {
+      "compiled": "src/modules/ira/store.ts",
+      "id": 60013,
+      "imports": {
+        "../budget/store": 33003,
+        "../budget/domain": 33000,
+        "../jurisdiction/domain": 60017,
+        "./cadence": 60012,
+        "../../core/errors": 799,
+        "../../core/money": 814,
+        "../money/domain": 813,
+        "../funds/store": 21009,
+        "../funds/read": 21007,
+        "../funds/domain": 21010,
+        "./types": 60014
+      },
+      "source_sha256": "5f232d31a029943f2cbc3c0722a56dd81fccfe188b824b95a52ccace7e9af313"
+    },
+    {
+      "compiled": "src/modules/ira/IRAOverview.tsx",
+      "id": 60009,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "../../design/ThemeProvider": 792,
+        "../../ui/components": 796,
+        "../money/domain": 813
+      },
+      "source_sha256": "3bfe982d8236d8d7c8e4d32e5de0186f7e00cc12c4af9b4d2eb0a016331a1e8e"
+    },
+    {
+      "compiled": "src/modules/jurisdiction/store.ts",
+      "id": 60019,
+      "imports": {
+        "./domain": 60017
+      },
+      "source_sha256": "a19e5d80305b8c862c2a1eb1eec003b77580409a1906fcb3ec0b1b2e48ba6f88"
+    },
+    {
+      "compiled": "src/modules/jurisdiction/service.ts",
+      "id": 60018,
+      "imports": {
+        "../../web/accountService": 32010
+      },
+      "source_sha256": "4719e18d5eb2481aa69ae37205c05066ec76fa13b9beb865d40ad83b62f57437"
+    },
+    {
+      "compiled": "src/modules/jurisdiction/JurisdictionPanel.tsx",
+      "id": 60015,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "../../ui/components": 796,
+        "../money/fields": 797,
+        "../money/localStore": 798,
+        "./store": 60019,
+        "./domain": 60017,
+        "./service": 60018
+      },
+      "source_sha256": "ad638d58815d1f69ae672df2fffc2ff164e2b92d00a6ccbb550401d6d80cb95f"
+    },
+    {
+      "compiled": "src/modules/ira/IRAScreen.tsx",
+      "id": 60010,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "../../storage/changeEvents": 871,
+        "../../ui/components": 796,
+        "../../ui/MeaningHelp": 20014,
+        "../money/fields": 797,
+        "../money/localStore": 798,
+        "../money/domain": 813,
+        "../../core/money": 814,
+        "../../core/id": 803,
+        "../../core/errors": 799,
+        "../funds/domain": 21010,
+        "./store": 60013,
+        "./types": 60014,
+        "./IRAOverview": 60009,
+        "../jurisdiction/JurisdictionPanel": 60015,
+        "../jurisdiction/store": 60019,
+        "../jurisdiction/domain": 60017,
+        "../jurisdiction/service": 60018
+      },
+      "source_sha256": "374afc924d628f0f7dcec5f1415fc4b37bf363ffc1d063cccab503e1b4e4bfa7"
+    },
+    {
+      "compiled": "src/modules/funds/FundsScreen.tsx",
+      "id": 21024,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "../ira/IRAScreen": 60010,
+        "expo-router": 790,
+        "../../ui/components": 796,
+        "../money/accountScope": 20004,
+        "./types": 21011,
+        "../budget/MonthlyBudgetCenter": 33002,
+        "./FundTransfers": 21027
+      },
+      "source_sha256": "3e89fcbd0ce03760dff2387dd313e7d5dc755a26236fa8fd302a1fce24c7488d"
+    },
+    {
+      "compiled": "src/ui/FundsSummary.tsx",
+      "id": 21014,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "../core/money": 814,
+        "./MeaningHelp": 20014,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "expo-linear-gradient": 836,
+        "expo-router": 790,
+        "./components": 796,
+        "../modules/money/domain": 813
+      },
+      "source_sha256": "9b9847d49b438e29188f60c7cc55bf42a60230afdb9bda8d4046ea279ac14c71"
+    },
+    {
+      "compiled": "src/storage/schemaV23.ts",
+      "id": 60900,
+      "imports": {},
+      "source_sha256": "0b3d5e57bbf8df1114222acc875246e94bc6484b607f63fcb41a0b796b1554e2"
+    },
+    {
+      "compiled": "src/modules/backup/store.ts",
+      "id": 887,
+      "imports": {
+        "../../storage/schemaV23": 60900,
+        "../../storage/schemaV21": 37003,
+        "../budget/domain": 33000,
+        "../funds/read": 21007,
+        "../funds/domain": 21010,
+        "../../core/errors": 799,
+        "../../storage/schema": 1062,
+        "../../storage/schemaV2": 1063,
+        "../../storage/schemaV3": 1064,
+        "../../storage/schemaV4": 1065,
+        "../../storage/schemaV5": 1066,
+        "../../storage/schemaV6": 1067,
+        "../../storage/schemaV7": 1068,
+        "../../storage/schemaV8": 1069,
+        "../../storage/schemaV9": 1070,
+        "../../storage/schemaV10": 1071,
+        "../../storage/schemaV11": 1072,
+        "../../storage/schemaV12": 1073,
+        "../../storage/schemaV13": 1074,
+        "../../storage/schemaV14": 1075,
+        "../../storage/schemaV15": 1076,
+        "../../storage/schemaV16": 1077,
+        "../../storage/schemaV17": 1078,
+        "../../storage/schemaV18": 1079,
+        "../../storage/schemaV20": 33001,
+        "../../storage/schemaV19": 21016
+      },
+      "source_sha256": "35a677f981f37c53168a311a87e5ebf1a553c7880d28c9bd108db4af93e583f4"
+    },
+    {
+      "compiled": "src/storage/migrate.ts",
+      "id": 1061,
+      "imports": {
+        "./schemaV23": 60900,
+        "./schemaV22": 41000,
+        "./schemaV21": 37003,
+        "./schema": 1062,
+        "./schemaV2": 1063,
+        "./schemaV3": 1064,
+        "./schemaV4": 1065,
+        "./schemaV5": 1066,
+        "./schemaV6": 1067,
+        "./schemaV7": 1068,
+        "./schemaV8": 1069,
+        "./schemaV9": 1070,
+        "./schemaV10": 1071,
+        "./schemaV11": 1072,
+        "./schemaV12": 1073,
+        "./schemaV13": 1074,
+        "./schemaV14": 1075,
+        "./schemaV15": 1076,
+        "./schemaV16": 1077,
+        "./schemaV17": 1078,
+        "./schemaV18": 1079,
+        "./schemaV20": 33001,
+        "./schemaV19": 21016
+      },
+      "source_sha256": "1adb29c65d7cf11a8b8a320643dc048defa69cc97f76fd8664f57594d07799f2"
+    },
+    {
+      "compiled": "src/modules/jurisdiction/TaxRulesAdmin.web.tsx",
+      "id": 60016,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "../../web/vault": 880,
+        "../../ui/components": 796,
+        "../money/fields": 797,
+        "./domain": 60017
+      },
+      "source_sha256": "3f13f32357fbfdf8ea682bc1f3969f441c723bd28a39f75bdd92f93fb31dceca"
+    },
+    {
+      "compiled": "src/modules/admin/AdminSection.web.tsx",
+      "id": 32012,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "../jurisdiction/TaxRulesAdmin": 60016,
+        "react": 13,
+        "../../design/ThemeProvider": 792,
+        "../../web/accountService": 32010,
+        "../money/fields": 797
+      },
+      "source_sha256": "dde586de19a49e739c81515456c934b79ea0b8ec80655a19ba95a2512b32789d"
+    },
+    {
+      "compiled": "src/modules/ira/IRATaxPanel.tsx",
+      "id": 60011,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "react": 13,
+        "expo-router": 790,
+        "../../storage/changeEvents": 871,
+        "../../ui/components": 796,
+        "../money/localStore": 798,
+        "../money/domain": 813,
+        "./store": 60013,
+        "../jurisdiction/store": 60019,
+        "../jurisdiction/domain": 60017,
+        "../jurisdiction/service": 60018
+      },
+      "source_sha256": "fb7e24a49db90e7467f057510cb39576e0e1a769e35ec64d99c1085dc64e3ec4"
+    },
+    {
+      "id": 990,
+      "patch": "Append IRA annual transfer summary without changing existing PR calculations"
+    },
+    {
+      "id": 971,
+      "patch": "Append IRA annual transfer summary without changing existing PR calculations"
+    },
+    {
+      "sharedDependencyRelocation": []
+    }
+  ]
+}

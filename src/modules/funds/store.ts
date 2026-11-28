@@ -25,6 +25,7 @@ export class FundsStore{
   return this.ledger.transaction(async db=>{
    const data=await readFundData(db),old=data.funds.find(f=>f.id===p.id);
    if((old?.version??0)!==version)fail('El fondo cambió. Vuelve a abrir su ficha.');
+   if(old?.restricted)fail('Administra la cuenta restringida desde IRA; no se convierte en un fondo ordinario.');
    if(old&&(old.scope!==p.scope||old.goalId!==p.goalId))fail('No se puede cambiar la cuenta ni el vínculo de un fondo.');
    if(p.cadence==='yearly'&&!p.goalId)fail('La frecuencia anual se configura en una meta.');
    if(p.goalId&&(p.scope!=='personal'||p.targetCents<=0||p.kind==='budget'))fail('Revisa la meta personal vinculada.');
@@ -56,7 +57,7 @@ export class FundsStore{
   return this.ledger.transaction(db=>this.transferInTransaction(db,input,expectedVersion,plannedDestination));
  }
  /** Reuse the same transfer checks inside an existing atomic ledger operation. */
- async transferInTransaction(db:SqlDb,input:TransferInput,expectedVersion?:number,plannedDestination?:FundInput){
+ async transferInTransaction(db:SqlDb,input:TransferInput,expectedVersion?:number,plannedDestination?:FundInput,iraOperation=false){
   validateTransfer(input,this.today());
   if(plannedDestination&&(plannedDestination.id!==input.toId||plannedDestination.scope!==input.scope||(plannedDestination.kind!=='budget'&&!(plannedDestination.kind==='savings'&&plannedDestination.id.startsWith('allocation:'+input.scope+':')))||!['annual:','allocation:'].some(prefix=>plannedDestination.id.startsWith(prefix+input.scope+':'))||plannedDestination.id.length>160||plannedDestination.contributionCents!==0||plannedDestination.cadence!=='monthly'||plannedDestination.locationId!==null||plannedDestination.categoryId!==null||!plannedDestination.budgetMonth||!validMonth(plannedDestination.budgetMonth)||plannedDestination.goalId!==null||!validName(plannedDestination.name)||!Number.isSafeInteger(plannedDestination.targetCents)||plannedDestination.targetCents<0||plannedDestination.targetDate!==null&&!validDate(plannedDestination.targetDate)))fail('Revisa el destino de la reserva.');
    if(plannedDestination&&!await db.getFirstAsync('SELECT id FROM money_funds WHERE id=?',plannedDestination.id)){const p=plannedDestination;await db.runAsync('INSERT INTO money_funds(id,scope,kind,name,target_cents,contribution_cents,cadence,target_date,location_id,budget_month,category_id,created_at) VALUES(?,?,?,?,?,0,?,?,?,?,?,?)',p.id,p.scope,p.kind,text(p.name),p.targetCents,p.cadence,p.targetDate,p.locationId,p.budgetMonth,p.categoryId,new Date().toISOString());await event(db,p.id,'plan',null,'Reserva creada al confirmar su primera transferencia');}
@@ -65,7 +66,7 @@ export class FundsStore{
    if(old?.reversedAt)fail('Esta transferencia está revertida. Crea una nueva si corresponde.');
    if(old&&data.funds.some(f=>f.deletedGoal&&(f.id===old.fromId||f.id===old.toId)))fail('Esta transferencia pertenece a una meta eliminada y conserva su devolución.');
    if(old?(old.version!==expectedVersion||old.scope!==input.scope):expectedVersion!==undefined)fail('La transferencia cambió. Abre de nuevo su historial.');
-   for(const id of [input.fromId,input.toId])if(id!==null){const f=data.funds.find(f=>f.id===id);if(!f||f.scope!==input.scope)fail('Origen y destino deben pertenecer a la misma cuenta.');if(f.deletedGoal)fail('Esta meta fue eliminada. Su devolución y sus movimientos se conservan sin modificar.');if(id===input.toId&&f.archived)fail('Reactiva la meta antes de añadirle dinero.');await materialize(db,f);}
+   for(const id of [input.fromId,input.toId])if(id!==null){const f=data.funds.find(f=>f.id===id);if(!f||f.scope!==input.scope)fail('Origen y destino deben pertenecer a la misma cuenta.');if(f.restricted&&!iraOperation)fail('Registra las aportaciones y retiros desde IRA para conservar su año contributivo.');if(f.deletedGoal)fail('Esta meta fue eliminada. Su devolución y sus movimientos se conservan sin modificar.');if(id===input.toId&&f.archived)fail('Reactiva la meta antes de añadirle dinero.');await materialize(db,f);}
    await event(db,input.id,old?'edit':'transfer',old??null,old?'Corrección de transferencia':'Transferencia interna confirmada');
    if(old)await db.runAsync('UPDATE fund_transfers SET from_id=?,to_id=?,amount_cents=?,date=?,description=?,version=version+1 WHERE id=?',input.fromId,input.toId,input.amountCents,input.date,input.description.trim(),input.id);
    else await db.runAsync('INSERT INTO fund_transfers(id,scope,from_id,to_id,amount_cents,date,description,created_at) VALUES(?,?,?,?,?,?,?,?)',input.id,input.scope,input.fromId,input.toId,input.amountCents,input.date,input.description.trim(),new Date().toISOString());

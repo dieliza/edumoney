@@ -1,0 +1,16 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/ira.test.ts tests/jurisdiction.test.ts tests/tax-rules-server.test.ts tests/bills.test.ts
+
+
+ RUN  v5.1.0 /workspace/edumoney
+
+
+ Test Files  4 passed (4)
+      Tests  47 passed (47)
+   Start at  02:07:11
+   Duration  2.04s (tests 70%, transform 18%, import 11%, worker 1%)
+
+    Isolate  4 workers spawned · ~158ms startup each (spawn + environment, per file)
+             at least ~474ms faster with isolate: false — reuses workers across files instead of one per file
+

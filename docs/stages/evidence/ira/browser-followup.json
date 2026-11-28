@@ -1,0 +1,44 @@
+{
+  "checks": [
+    {
+      "name": "jurisdiction selection automatically requests research without financial data",
+      "passed": true
+    },
+    {
+      "name": "iPhone browser layout",
+      "passed": true
+    },
+    {
+      "name": "Android browser layout",
+      "passed": true
+    },
+    {
+      "name": "dark theme and IRA dashboard balance",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "blocked": [
+    {
+      "path": "/api/payment-push/config",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/api/receipt-service/admin",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/api/tax-rules/research",
+      "method": "POST",
+      "body": "{\"jurisdiction\":\"PR\",\"year\":2026}"
+    },
+    {
+      "path": "/api/tax-rules/research",
+      "method": "POST",
+      "body": "{\"jurisdiction\":\"NY\",\"year\":2026}"
+    }
+  ],
+  "body": "EduMoney\nFINANZAS PERSONALES\n\n\n\n\n\n¿Qué significa?\n¡Buenos días!\nAquí tienes el resumen de tus finanzas.\n\nEste mes\n\nResumen de tu dinero\n¿Qué significa?\nPersonal\nBalance disponible\n$1,375.00\nTotal de fondos\n$1,615.00\nAhorros\n$0.00\nFondo de emergencia\n$0.00\nPresupuesto mensual\n$0.00\nMis metas\n$0.00\nIRA\n$225.00\nEl Total incluye el balance disponible, los fondos, las metas y los activos IRA restringidos.\nBalance estimado según tus registros · No es un balance bancario confirmado. Fondos al 2026-11-28.\nPersonal\nComercial\nTransacciones\nGastos / Ingresos\nEscanear\nrecibo\nDictado por\nvoz\nMi historial\nde dictados\n¿En qué gastaste más?\nNo hay gastos registrados en este período.\n\n\nMi dinero\n\n\nMis metas\n\n\nAprende\n\n\nMi progreso\n\n\nNegocio\n\n\nMis deudas"
+}

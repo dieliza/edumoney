@@ -1,0 +1,13 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/ira.test.ts -t cannot convert an IRA
+
+
+ RUN  v5.1.0 /workspace/edumoney
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 15 skipped (16)
+   Start at  02:22:10
+   Duration  513ms (transform 60%, import 25%, tests 14%, worker 2%)
+

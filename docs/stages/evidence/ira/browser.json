@@ -1,0 +1,39 @@
+{
+  "checks": [
+    {
+      "name": "create IRA with existing form components",
+      "passed": true
+    },
+    {
+      "name": "contribution reduces available once and creates a restricted asset",
+      "passed": true
+    },
+    {
+      "name": "returns do not increase money available",
+      "passed": true
+    },
+    {
+      "name": "scheduled weekly contribution requires confirmation",
+      "passed": true
+    },
+    {
+      "name": "jurisdiction selection automatically requests research without financial data",
+      "passed": false,
+      "error": "Error: []"
+    }
+  ],
+  "errors": [],
+  "blocked": [
+    {
+      "path": "/api/payment-push/config",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/api/receipt-service/admin",
+      "method": "GET",
+      "body": null
+    }
+  ],
+  "body": "\nIRA\n\n\n\n\n\n¿Qué significa?\nRegistro guardado. EduMoney no ejecuta operaciones bancarias.\n¿Qué significa?\nCrear cuenta IRA\nCuenta IRA\nCooperativa FICTICIA QA\nCooperativa FICTICIA QA\nTradicional federal · Apertura: 2026-11-28\nBalance inicial: $0.00\nSaldo de disponibilidad restringida: $240.00\n¿Qué significa?\nAportaciones realizadas en 2026: $225.00\nRendimientos registrados: $15.00\nEditar cuenta IRA\nRealizar aportación\nRegistrar retiro\nRegistrar rendimiento\nRegistrar corrección\nProgramar aportación\nCrecimiento registrado\nAzul: aportaciones acumuladas · Verde: rendimientos · Rojo: pérdidas\n2026-11-28\nAportaciones: $225.00 · Rendimientos: $15.00\nAportaciones programadas\nLas fechas son un plan. Cada aportación debe confirmarse con fondos suficientes; no mueve dinero automáticamente.\n2026-12-05 · weekly · $25.00 · Activa\nPausar aportación\nInformación contributiva · 2026\nLos límites y la deducción corresponden al grupo combinado aplicable.\nLímite anual aplicable: Pendiente de validación\nCantidad adicional que puedes aportar: Pendiente de validación\nAportaciones elegibles: Pendiente de validación\nDeducción contributiva estimada: Pendiente de validación\nAhorro contributivo estimado: Pendiente de validación\nPendiente de validación: reglas oficiales y aprobación del propietario.\n¿Qué significa?\nHistorial de movimientos\n2026-11-28 · Aportación · $200.00 \nCorregir mediante reversión\n2026-11-28 · Aportación · $25.00 \nCorregir mediante reversión\n2026-11-28 · Rendimiento · $15.00 · Rendimiento FICTICIO del estado de cuenta\nResidencia contributiva\nSelecciona tu residencia y dónde trabajas. Si son distintas, las reglas de ambas deben revisarse antes de combinar cálculos.\nDónde resides contributivamente\nPuerto Rico\nAlabama\nAlaska\nArizona\nArkansas\nCalifornia\nColorado\nConnecticut\nDelaware\nWashington D. C.\nFlorida\nGeorgia\nHawái\nIdaho\nIllinois\nIndiana\nIowa\nKansas\nKentucky\nLuisiana\nMaine\nMaryland\nMassachusetts\nMichigan\nMinnesota\nMisisipi\nMisuri\nMontana\nNebraska\nNevada\nNuevo Hampshire\nNueva Jersey\nNuevo México\nNueva York\nCarolina del Norte\nDakota del Norte\nOhio\nOklahoma\nOregón\nPensilvania\nRhode Island\nCarolina del Sur\nDakota del Sur\nTennessee\nTexas\nUtah\nVermont\nVirginia\nWashington\nVirginia Occidental\nWisconsin\nWyoming\nJurisdicción donde trabajas\nPuerto Rico\nAlabama\nAlaska\nArizona\nArkansas\nCalifornia\nColorado\nConnecticut\nDelaware\nWashington D. C.\nFlorida\nGeorgia\nHawái\nIdaho\nIllinois\nIndiana\nIowa\nKansas\nKentucky\nLuisiana\nMaine\nMaryland\nMassachusetts\nMichigan\nMinnesota\nMisisipi\nMisuri\nMontana\nNebraska\nNevada\nNuevo Hampshire\nNueva Jersey\nNuevo México\nNueva York\nCarolina del Norte\nDakota del Norte\nOhio\nOklahoma\nOregón\nPensilvania\nRhode Island\nCarolina del Sur\nDakota del Sur\nTennessee\nTexas\nUtah\nVermont\nVirginia\nWashington\nVirginia Occidental\nWisconsin\nWyoming\nAño contributivo\nMissing IRA dependency ../../web/accountService\nGuardar jurisdicción e investigar"
+}

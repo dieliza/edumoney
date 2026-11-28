@@ -1,0 +1,13 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/ira.test.ts -t backs up and restores
+
+
+ RUN  v5.1.0 /workspace/edumoney
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 12 skipped (13)
+   Start at  01:59:51
+   Duration  439ms (transform 47%, tests 28%, import 23%, worker 2%)
+

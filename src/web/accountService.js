@@ -132,3 +132,5 @@ export function finishAccountRecovery(password,repeat){return exclusiveAccount(a
  const user=await verified();await checked((await client()).auth.updateUser({password}));recoveryVerified=false;
  return openAccountRecords(user,password);
 });}
+
+export async function taxRuleRequest(body){const session=await checked((await client()).auth.getSession());const token=session?.session?.access_token;if(!token)throw Error('Inicia sesión para solicitar la investigación.');const r=await fetch('/api/tax-rules/research',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify(body)});if(!r.ok)throw Error('La investigación está pendiente. Vuelve a intentarlo cuando haya conexión.');return r.json();}

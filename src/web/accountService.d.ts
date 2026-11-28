@@ -19,3 +19,4 @@ export function adminAction(action:string,payload?:Record<string,unknown>):Promi
 
 export function beginAccountLink():Promise<{recovery:boolean;email:string}|null>;
 export function finishAccountRecovery(password:string,repeat:string):Promise<{ready:boolean;previousRecordsPreserved?:boolean;localOnly?:boolean}>;
+export function taxRuleRequest(body:{jurisdiction:string;year:number}):Promise<unknown>;

@@ -1,3 +1,4 @@
+import {TaxRulesAdmin} from '../jurisdiction/TaxRulesAdmin';
 import {useRef,useState} from 'react';
 import {useTheme} from '../../design/ThemeProvider';
 import {accountIdentity,adminAction,type AdminResult,type ManagedUser} from '../../web/accountService';
@@ -11,7 +12,7 @@ export function AdminSection(){
  function show(){setOpen(true);void act(()=>load());}
  function action(user:ManagedUser,type:string){void act(async()=>{const result=await adminAction(type,{userId:user.id,...(type==='delete'?{confirmEmail:email}:{})});setMessage(result.message??'Operación completada.');setConfirm(null);setEmail('');await load(data?.page??1);});}
  const button={minHeight:44,padding:'10px 14px',border:`1px solid ${colors.line}`,borderRadius:10,font:'inherit',fontWeight:700,color:colors.primary,background:colors.surfaceAlt,cursor:'pointer'};
- return <><section style={{background:colors.surface,color:colors.text,border:`1px solid ${colors.line}`,padding:16,borderRadius:18}}><h2 style={{fontSize:21,margin:'0 0 10px'}}>Administración</h2><p style={{lineHeight:1.5}}>Usuarios, recuperación de credenciales y control del acceso a EduMoney.</p><button type="button" style={button} onClick={show}>Administrar usuarios</button></section>
+ return <><TaxRulesAdmin/><section style={{background:colors.surface,color:colors.text,border:`1px solid ${colors.line}`,padding:16,borderRadius:18}}><h2 style={{fontSize:21,margin:'0 0 10px'}}>Administración</h2><p style={{lineHeight:1.5}}>Usuarios, recuperación de credenciales y control del acceso a EduMoney.</p><button type="button" style={button} onClick={show}>Administrar usuarios</button></section>
  {open?<Sheet title="Administración de usuarios" busy={busy} close={()=>{if(!busy)setOpen(false);}}>
  <p style={{color:colors.text,lineHeight:1.5}}>Solo tu cuenta administradora tiene acceso a esta sección. Las contraseñas actuales nunca se muestran.</p>
  {error?<p role="alert" style={{color:'#B22442'}}>{error}</p>:null}{message?<p role="status" aria-live="polite" style={{color:colors.text}}>{message}</p>:null}

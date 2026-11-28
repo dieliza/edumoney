@@ -1,0 +1,13 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/jurisdiction.test.ts
+
+
+ RUN  v5.1.0 /workspace/edumoney
+
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  01:59:08
+   Duration  292ms (transform 44%, tests 29%, import 21%, worker 6%)
+

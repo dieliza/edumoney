@@ -1,0 +1,5 @@
+import {View} from 'react-native';
+import {useTheme} from '../../design/ThemeProvider';
+import {Body,Card} from '../../ui/components';
+import {formatMoney} from '../money/domain';
+export function IRAGrowth({points}:{points:{date:string;contributed:number;returns:number}[]}){const {colors}=useTheme(),scale=Math.max(1,...points.flatMap(p=>[Math.abs(p.contributed),Math.abs(p.returns)]));return <Card><Body style={{fontWeight:'700'}}>Crecimiento registrado</Body><Body>Azul: aportaciones acumuladas · Verde: rendimientos · Rojo: pérdidas</Body>{points.length?points.map(p=><View key={p.date} accessible accessibilityLabel={`${p.date}, aportaciones ${formatMoney(p.contributed)}, rendimientos ${formatMoney(p.returns)}`} style={{gap:4}}><Body>{p.date}</Body><View style={{height:12,width:`${Math.max(0,p.contributed)/scale*100}%`,backgroundColor:colors.primary}}/><View style={{height:12,width:`${Math.abs(p.returns)/scale*100}%`,backgroundColor:p.returns<0?'#C43C55':'#00856A'}}/><Body>Aportaciones: {formatMoney(p.contributed)} · Rendimientos: {formatMoney(p.returns)}</Body></View>):<Body>Registra aportaciones o rendimientos para ver su evolución.</Body>}</Card>;}

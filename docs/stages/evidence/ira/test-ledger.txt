@@ -1,0 +1,14 @@
+Initial IRA: 13 (one fixture assertion failed synchronously), jurisdiction: 8, server: 8, corrected backup case: 1 = 30.
+Regression IRA/jurisdiction/server/Bills: 47 = 77.
+Budget and persisted annual inputs: 4 = 81. Funds regression: 6 = 87. Obligations guard: 1 = 88.
+Browser first run: 5 (4 passed, jurisdiction wiring failed) = 93.
+Native exports: successful builds for iOS/Android, not functional device tests.
+Remaining budget: 7 cases for corrected research, two mobile layouts, dark dashboard, production, delivery, weekly updater.
+
+Follow-up browser: research + iPhone layout + Android layout + dark dashboard all passed = 97.
+Additional restricted-fund conversion guard: 1 passed = 98.
+Two remaining cases reserved: combined production/delivery flow; unattended updater authorization/readback.
+No unfiltered suites or CI triggered. Native export/builds and static packaging invariants are tracked separately.
+Production combined browser/delivery flow passed, including edited account, invalid opening-date guard, available/restricted/total balances and anonymous-owner rejection = 99.
+Unattended updater case: existing authenticated owner read succeeded, weekly schedule saved; immediate-run control returned HTTP 404 before invocation. Writer/readback execution remains blocked/unverified = 100.
+Final ledger: 100 executed cases/checks including repeats and blocked case. 97 passed executions; two earlier failed executions corrected and revalidated; one control-plane verification blocked. No more cases executed.

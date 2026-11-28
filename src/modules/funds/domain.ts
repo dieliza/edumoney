@@ -11,8 +11,10 @@ export function fundSummary(data:FundData,scope:AccountScope,asOf:string):FundsS
  const transfers=data.transfers.filter(t=>t.scope===scope&&!t.reversedAt&&t.date<=asOf);
  const funds=data.funds.filter(f=>f.scope===scope).map(f=>{const legacyCents=sum(data.legacy.filter(p=>p.fundId===f.id&&p.date<=asOf).map(p=>p.amountCents));return {...f,legacyCents,balanceCents:sum([f.openingCents,legacyCents,...transfers.flatMap(t=>[...(t.toId===f.id?[t.amountCents]:[]),...(t.fromId===f.id?[-t.amountCents]:[])])])};});
  const available=sum([...data.movements.filter(m=>(scope==='business'?m.useKind==='business':m.useKind!=='business')&&m.date<=asOf).map(cashDelta),...transfers.flatMap(t=>[...(t.toId===null?[t.amountCents]:[]),...(t.fromId===null?[-t.amountCents]:[])])]);
- const savings=sum(funds.filter(f=>f.kind==='savings').map(f=>f.balanceCents)),emergency=sum(funds.filter(f=>f.kind==='emergency').map(f=>f.balanceCents)),budget=sum(funds.filter(f=>f.kind==='budget').map(f=>f.balanceCents));
- return {available,total:sum([available,savings,emergency,budget]),savings,emergency,budget,funds,scope,asOf};
+ const savings=sum(funds.filter(f=>f.kind==='savings'&&!f.restricted).map(f=>f.balanceCents)),emergency=sum(funds.filter(f=>f.kind==='emergency'&&!f.restricted).map(f=>f.balanceCents)),budget=sum(funds.filter(f=>f.kind==='budget'&&!f.restricted).map(f=>f.balanceCents));
+ const restricted=sum(funds.filter(f=>f.restricted).map(f=>f.balanceCents));
+ const ira=sum(transfers.filter(t=>funds.some(f=>f.restricted&&(f.id===t.toId||f.id===t.fromId))).flatMap(t=>[...(funds.some(f=>f.restricted&&f.id===t.toId)?[t.amountCents]:[]),...(funds.some(f=>f.restricted&&f.id===t.fromId)?[-t.amountCents]:[])]));
+ return {ira,restricted,available,total:sum([available,savings,emergency,budget,restricted]),savings,emergency,budget,funds,scope,asOf};
 }
 export function validateTransfer(p:TransferInput,today:string){
  if(!p.id||p.id.length>160||!['personal','business'].includes(p.scope)||p.fromId===p.toId||!validDate(p.date)||p.date>today||cents(p.amountCents)<=0||p.description.length>240)throw new UserInputError('Revisa origen y destino distintos, importe positivo y fecha no futura.');
@@ -34,6 +36,7 @@ export function validateAllocationTimeline(data:FundData,scope:AccountScope,chan
 }
 
 export function validateFundIntegrity(data:FundData){
+ for(const f of data.funds)if(f.restricted&&(f.scope!=='personal'||f.kind!=='savings'))throw new UserInputError('La cuenta IRA del respaldo no conserva su tipo de activo restringido.');
  for(const transfer of data.transfers){validateTransfer(transfer,'9999-12-31');for(const id of [transfer.fromId,transfer.toId])if(id!==null&&!data.funds.some(f=>f.id===id&&f.scope===transfer.scope))throw new UserInputError('El respaldo mezcla fondos de distintas cuentas.');}
  for(const scope of ['personal','business'] as const)validateAllocationTimeline(data,scope,undefined,false);
 }

@@ -1,0 +1,3 @@
+/** Static transport only: decompress/expand an asset when requested, never every historic alias at startup. */
+exports.shard=(data,unpack85)=>"import prefixes from './content-prefixes.js';\nconst data="+JSON.stringify(data)+";\nfor(const key of Object.keys(data)){const v=data[key];let decoded;Object.defineProperty(data,key,{enumerable:true,get(){return decoded??=(Array.isArray(v)?prefixes[v[0]]+unpack85(v[1]):unpack85(v));}});}\n"+unpack85.toString()+"\nexport default data;\n";
+exports.index=count=>Array.from({length:count},(_,i)=>`import part${i} from './content-${i}.js';`).join('\n')+'\nexport const CONTENT={};\n'+Array.from({length:count},(_,i)=>`Object.defineProperties(CONTENT,Object.getOwnPropertyDescriptors(part${i}));`).join('\n')+'\n';

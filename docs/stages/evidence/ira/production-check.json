@@ -1,0 +1,15 @@
+{
+  "name": "published IRA end-to-end and update delivery",
+  "passed": true,
+  "errors": [],
+  "balances": {
+    "guarded": true,
+    "available": 140000,
+    "ira": 20000,
+    "restricted": 21000,
+    "total": 161000
+  },
+  "build": "ira-025956bb5970",
+  "ownerProtected": true,
+  "deliveryVerified": true
+}

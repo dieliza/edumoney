@@ -1,0 +1,27 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/ira.test.ts
+
+
+ RUN  v5.1.0 /workspace/edumoney
+
+ ❯ tests/ira.test.ts (13 tests | 1 failed) 407ms
+   × backs up and restores IRA metadata, transfers, jurisdiction and yields atomically 50ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ira.test.ts > backs up and restores IRA metadata, transfers, jurisdiction and yields atomically
+Error: Selecciona residencia, lugar de trabajo y año contributivo.
+ ❯ validateJurisdiction src/modules/jurisdiction/domain.ts:6:190
+
+ ❯ JurisdictionStore.save src/modules/jurisdiction/store.ts:6:30
+ ❯ tests/ira.test.ts:26:684
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 12 passed (13)
+   Start at  01:58:36
+   Duration  907ms (tests 58%, transform 32%, import 10%, worker 1%)
+

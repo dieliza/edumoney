@@ -1,0 +1,13 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/funds.test.ts -t conserva los|dos pulsaciones|retirar y transferir|presupuesto planificado|separa cuentas|un disponible negativo
+
+
+ RUN  v5.1.0 /workspace/edumoney
+
+
+ Test Files  1 passed (1)
+      Tests  6 passed | 15 skipped (21)
+   Start at  02:09:39
+   Duration  521ms (tests 58%, transform 23%, import 17%, worker 2%)
+

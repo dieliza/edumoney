@@ -18,6 +18,9 @@ export async function readFundData(db:SqlDb):Promise<FundData>{
  const goalRows=await db.getAllAsync<GoalRow>('SELECT id,name,kind,target_cents AS targetCents,opening_cents AS openingCents,desired_date AS desiredDate,COALESCE(cadence_yearly,cadence_detail,cadence) AS cadence,archived,version FROM goals');
  const stored=await db.getAllAsync<Fund>(fundSelect);
  const funds:Fund[]=stored.map(f=>({...f,archived:!!f.archived,openingCents:0,legacyCents:0,balanceCents:0}));
+ const ira=await db.getAllAsync<{id:string;initial:number;opened:string}>('SELECT id,initial_cents AS initial,opened FROM ira_accounts');
+ const iraEvents=await db.getAllAsync<{id:string;accountId:string;amount:number;date:string}>('SELECT id,account_id AS accountId,amount_cents AS amount,date FROM ira_events');
+ for(const account of ira){const f=funds.find(f=>f.id===account.id);if(f)f.restricted=true;}
  const budgets=await db.getAllAsync<{month:string;category_id:string;amount_cents:number}>('SELECT month,category_id,amount_cents FROM monthly_budgets');
  for(const f of funds)if(f.scope==='personal'&&f.kind==='budget'&&f.categoryId&&f.budgetMonth)f.targetCents=budgets.find(b=>b.month===f.budgetMonth&&b.category_id===f.categoryId)?.amount_cents??0;
  const deleted=await deletedGoalIds(db);
@@ -28,7 +31,7 @@ export async function readFundData(db:SqlDb):Promise<FundData>{
   else funds.push({id:goalFundId(g.id),scope:'personal',goalId:g.id,...base,contributionCents:0,cadence:g.cadence,targetDate:g.desiredDate,locationId:null,budgetMonth:null,categoryId:null,version:0,createdAt:'',legacyCents:0,balanceCents:0});
  }
  const links=await db.getAllAsync<{goalId:string;movementId:string;amountCents:number}>('SELECT goal_id AS goalId,movement_id AS movementId,amount_cents AS amountCents FROM goal_contributions WHERE reversed_at IS NULL');
- const legacy:FundData['legacy']=[];
+ const legacy:FundData['legacy']=[...ira.map(a=>({movementId:'ira:opening:'+a.id,fundId:a.id,amountCents:a.initial,date:a.opened})),...iraEvents.map(e=>({movementId:'ira:event:'+e.id,fundId:e.accountId,amountCents:e.amount,date:e.date}))];
  for(const m of movements.filter(m=>!m.deletedAt&&m.kind==='goal_contribution'&&m.useKind!=='business')){
   const link=links.find(c=>c.movementId===m.id),fund=link?funds.find(f=>f.goalId===link.goalId):null;
   legacy.push({movementId:m.id,fundId:fund?.id??unassignedFundId,amountCents:m.amountCents,date:m.date});

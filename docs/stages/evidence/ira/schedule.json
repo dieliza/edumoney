@@ -1,0 +1,34 @@
+{
+  "success": true,
+  "automation_id": "Automation_531fcdaad71c819181c49512b283142f",
+  "message": "Site schedule saved.",
+  "automation": {
+    "id": "Automation_531fcdaad71c819181c49512b283142f",
+    "team_id": null,
+    "title": "Revisar reglas contributivas de EduMoney",
+    "prompt": "Revisa las jurisdicciones contributivas ya activadas en EduMoney Web mediante tax_rules_refresh y confirma el resultado con tax_rules_status. Consulta las herramientas actuales del Site si cambió su versión. Conserva las fuentes oficiales, los años y el historial; deja toda regla nueva o modificada pendiente de aprobación exclusiva del propietario. No actives jurisdicciones nuevas, no apruebes reglas, no uses datos financieros personales y no modifiques la automatización educativa. Si el acceso o las herramientas no permiten completar la revisión, informa el bloqueo sin afirmar que se actualizó.",
+    "schedule": "BEGIN:VEVENT
+DTSTART:20261130T080000
+RRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=8;BYMINUTE=0;BYSECOND=0
+END:VEVENT",
+    "timing_mode": "exact_schedule",
+    "display_schedule": null,
+    "is_enabled": true,
+    "conversation_id": null,
+    "default_timezone": "America/Puerto_Rico",
+    "next_run_time": "2026-11-30T08:00:00-04:00",
+    "last_run_time": null,
+    "updated_at": "2026-11-28T02:34:49.202504+00:00",
+    "environment_selection": "inherited",
+    "environments": null
+  },
+  "assistant_response_guidance": null,
+  "immediateVerification": {
+    "status": "blocked",
+    "error": {
+      "error": "HTTP error prior to action invocation. HTTPException: 404: Action not found",
+      "error_code": "NOT_FOUND"
+    }
+  },
+  "existingEducationSchedulePreserved": true
+}
