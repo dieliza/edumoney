@@ -5,8 +5,9 @@
     1118
   ],
   "added": [],
-  "workerBytes": 67078575,
+  "workerBytes": 66095569,
   "report": [],
   "source_sha256": "7620fcbb264a02407823bab00d7b521393e2884febea93344d58dd1228489461",
-  "packing": "Every reconstructed static payload and URL compared byte-for-byte; only factory1118 modified; existing service worker handlers and aliases preserved."
+  "packing": "Lossless base91 transport, compatible with prior base85 assets; every decoded asset and public URL preserved.",
+  "test_budget_authorized": 120
 }

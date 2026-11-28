@@ -1,9 +1,14 @@
 {
-  "version": 162,
-  "deployment_id": "appgdep_6b0a5e89d888819182cb31b4a76a9348",
-  "status": "failed",
-  "reason": "Worker exceeded uncompressed size limit of63.9MiB",
-  "production_unchanged_version": 161,
-  "source_commit": "e42350fbccc46ff4721799c6016e3530d5e7f416",
-  "pending": "Further lossless packing optimization and approval to extend test budget100 to120"
+  "version": 163,
+  "deployment_id": "appgdep_6b0a6051f0a08191b2c13aaeb3ed97c9",
+  "version_id": "appgprj_6af65a2177c48191b95b917e1ca2a2f0~appgver_c20e55635eac819191df23415b041b9d",
+  "status": "succeeded",
+  "source_commit": "cb259d244ccdeeb0fef7e59c2729c36232f83ce3",
+  "url": "https://edumoney-web.diegoluissantospabon.chatgpt.site",
+  "env_set_revision": 4,
+  "previous_attempt": {
+    "version": 162,
+    "status": "failed",
+    "reason": "Worker exceeded63.9MiB; resolved by lossless transport"
+  }
 }

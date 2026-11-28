@@ -25,3 +25,11 @@ El primer intento (versión162) fue rechazado por el límite descomprimido de63.
 
 ## Estado al detener validaciones
 La versión161 sigue en producción; la versión162 quedó guardada pero su despliegue falló. No se publicaron estas mejoras. Se completaron100 ejecuciones contando comprobaciones, repeticiones y arranques fallidos;93 aprobadas y7 fallos de fixtures/empaquetado documentados y corregidos parcialmente. Las79 pruebas funcionales dirigidas aprobaron. El paquete aún supera el límite y requiere otro ajuste de empaquetado y validación. Se solicitó ampliar el límite a120, pendiente de respuesta. No se ejecutaron comprobaciones adicionales después de alcanzar100.
+
+## Continuación autorizada
+El usuario autorizó ampliar a120. El transporte estático base91 conservó los payloads y todas las URL; tamaño del Worker66,095,569bytes, por debajo del límite63.9MiB. Ocho casos de bordes y datos aleatorios del códec aprobaron, así como la reconstrucción completa del paquete, el control de tamaño y las tres comprobaciones del artefacto (consulta sin escritura, patrones de secretos en assets activos y alcance exclusivo del módulo1118). TypeScript y ESLint nuevamente sin errores. No se alteró el cifrado ni se cambió ningún dato financiero. Publicación corregida pendiente de la respuesta de la plataforma.
+
+## Resultado final
+Versión163 publicada correctamente (fuente cb259d244ccdeeb0fef7e59c2729c36232f83ce3), conservando acceso público y revisión4 del entorno. Las comprobaciones HTTP en producción aprobaron: HTML200 con CSP/X-Frame-Options, service worker200 con el build esperado y endpoint de claves401 sin sesión con no-store. Total conservador116/120 ejecuciones. El fallo de tamaño de la versión162 quedó resuelto.
+
+Pendientes: habilitar protección de contraseñas filtradas en el panel de Supabase y verificar visualmente/medir navegación en navegadores y dispositivos reales; sin herramienta de navegador en este entorno. No se afirma que toda posible vulnerabilidad haya sido descartada ni se atribuyen porcentajes de aceleración.
