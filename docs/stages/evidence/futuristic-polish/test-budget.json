@@ -1,0 +1,12 @@
+{
+  "limit": 100,
+  "previous_visual_block": 39,
+  "current_unit_executions": 29,
+  "package_builds": 5,
+  "runtime_checks": 8,
+  "source_checks_and_setup_conservative": 5,
+  "production_checks_planned": 5,
+  "conservative_total_with_production": 91,
+  "production_checks_passed": 5,
+  "conservative_total": 91
+}

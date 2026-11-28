@@ -1,0 +1,13 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/futuristic-polish.test.ts -t texto del dictado activo
+
+
+ RUN  v5.1.0 /workspace/edumoney
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 9 skipped (10)
+   Start at  13:43:25
+   Duration  387ms (import 47%, transform 45%, tests 4%, worker 4%)
+

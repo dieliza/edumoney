@@ -1,0 +1,21 @@
+{
+  "buildName": "futuristic-polish-330f6973b685",
+  "baseVersion": 164,
+  "modifiedFactories": [
+    50005
+  ],
+  "added": [],
+  "protectedModules": 1472,
+  "workerBytes": 66988591,
+  "report": [
+    {
+      "compiled": "src/ui/dashboard/styles.ts",
+      "id": 50005,
+      "imports": {},
+      "source_sha256": "28c0e65043cc880ef3a9664d171cf7346d4b1222c1805724e5d71a104b25a68e"
+    },
+    {
+      "sharedDependencyRelocation": []
+    }
+  ]
+}
