@@ -1,0 +1,21 @@
+{
+  "checks": [
+    {
+      "name": "only combined simulator access remains and opens its existing screen",
+      "passed": true
+    },
+    {
+      "name": "Bills calendar uses shared picker and its selection changes bill filtering and goal calendar together",
+      "passed": true
+    },
+    {
+      "name": "reused Web picker opens native month/year picker and accepts only valid calendar months",
+      "passed": true
+    },
+    {
+      "name": "shared picker is registered with the application shell before opening Bills",
+      "passed": true
+    }
+  ],
+  "browserVerified": false
+}

@@ -1,0 +1,16 @@
+
+> edumoney@1.0.0 test
+> vitest run tests/bills.test.ts tests/debts.test.ts tests/month-control.test.ts
+
+
+ RUN  v5.1.0 /workspace/edumoney
+
+
+ Test Files  3 passed (3)
+      Tests  43 passed (43)
+   Start at  03:54:58
+   Duration  3.23s (tests 58%, import 27%, transform 15%, worker 1%)
+
+    Isolate  3 workers spawned · ~187ms startup each (spawn + environment, per file)
+             at least ~374ms faster with isolate: false — reuses workers across files instead of one per file
+

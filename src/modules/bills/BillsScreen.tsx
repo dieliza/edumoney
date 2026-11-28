@@ -1,3 +1,4 @@
+import {MonthPicker} from '../../ui/MonthPicker';
 import {GoalCalendar} from '../goals/GoalCalendar';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { ActivityIndicator, AppState, Pressable, View } from 'react-native';
@@ -38,7 +39,7 @@ export default function BillsScreen({embedded=false}:{embedded?:boolean}={}){
   {!debtOnly?<ActionButton title="Añadir factura" testID="add-bill" icon="add-circle-outline" onPress={()=>{setForm(true);setError('');}}/>:null}
   <Choices presentation="tabs" label="Vista de facturas" value={tab} options={[[ 'upcoming','Próximas'],['paid','Pagadas'],['calendar','Calendario']]} onChange={v=>{setTab(v);setLimit(50);}}/>
   {!store?<ActivityIndicator color={colors.accent} accessibilityLabel="Cargando facturas"/>:null}
-  {tab==='calendar'?<><Field label="Mes del calendario (AAAA-MM)" value={month} onChangeText={setMonth}/><Body muted>Agenda mensual por vencimiento. Incluye facturas pendientes, pagadas y anuladas; un atraso conserva su fecha original.</Body>{!validMonth(month)?<ErrorNotice message="Escribe un mes válido en formato AAAA-MM."/>:null}</>:null}
+  {tab==='calendar'?<><MonthPicker value={month} onChange={setMonth}/><Body muted>Agenda mensual por vencimiento. Incluye facturas pendientes, pagadas y anuladas; un atraso conserva su fecha original.</Body>{!validMonth(month)?<ErrorNotice message="Selecciona un mes válido en el calendario."/>:null}</>:null}
   {!debtOnly&&(tab==='calendar'||tab==='upcoming')?<GoalCalendar month={tab==='calendar'?month:undefined} upcoming={tab==='upcoming'}/>:null}
   {tab==='upcoming'?<><Card row><Body>Una factura programada no es un pago. Los atrasos conservan su vencimiento hasta que registres un cambio con motivo.</Body></Card><ActionButton title={showVoided?'Ver facturas pendientes':'Ver historial de anuladas'} secondary onPress={()=>{setShowVoided(!showVoided);setLimit(50);}}/></>:null}
   {rows.slice(0,limit).map((b,index)=><View key={b.id} style={{gap:12}}>{tab==='calendar'&&(index===0||rows[index-1].dueDate!==b.dueDate)?<SectionHeading title={b.dueDate}/>:null}{row(b)}</View>)}

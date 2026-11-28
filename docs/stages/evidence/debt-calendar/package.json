@@ -1,0 +1,53 @@
+{
+  "buildName": "debt-calendar-026254761a70",
+  "baseVersion": 159,
+  "modifiedFactories": [
+    43001,
+    849
+  ],
+  "added": [],
+  "protectedModules": 1465,
+  "workerBytes": 65529824,
+  "report": [
+    {
+      "compiled": "src/modules/debts/DebtSimulators.tsx",
+      "id": 43001,
+      "imports": {
+        "react/jsx-runtime": 7,
+        "expo-router": 790,
+        "react-native": {
+          "View": 110,
+          "Text": 189,
+          "Pressable": 246,
+          "ActivityIndicator": 229,
+          "useWindowDimensions": 270,
+          "Modal": 239,
+          "ScrollView": 134,
+          "TextInput": 256,
+          "KeyboardAvoidingView": 238,
+          "Keyboard": 219,
+          "Platform": 105,
+          "StyleSheet": 29,
+          "AppState": 214,
+          "Image": 179
+        },
+        "@expo/vector-icons/Ionicons": 791,
+        "../../design/ThemeProvider": 792,
+        "../../ui/components": 796
+      },
+      "source_sha256": "5abe59dbb027b7b36d59f718d16ad7de4d098d8b721438bb92fd32d892fc186f"
+    },
+    {
+      "compiled": "src/modules/bills/BillsScreen.tsx",
+      "id": 849,
+      "patch": "Reuse existing MonthPicker; preserve all other factory code",
+      "imports": {
+        "MonthPicker": 32013
+      },
+      "source_sha256": "3c52fdeca8e5a87633b19ece6e7e245e08fcc7e4a83363d63bf8c50817fedff1"
+    },
+    {
+      "sharedDependencyRelocation": []
+    }
+  ]
+}

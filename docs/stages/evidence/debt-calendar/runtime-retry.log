@@ -1,0 +1,17 @@
+/workspace/edumoney/web-enhancements/goal-race/check-debt-calendar.cjs:19
+check('Bills calendar uses shared picker and its selection changes bill filtering and goal calendar together',()=>{reset();params={view:'calendar'};const Bills=load(849).default;draw(Bills,{embedded:true});values[0]={};values[1]={bills:[{id:'nov',provider:'Noviembre FICTICIO',dueDate:'2026-11-20',amountCents:1000,paidCents:0,debtId:null},{id:'dec',provider:'Diciembre FICTICIO',dueDate:'2026-12-20',amountCents:2000,paidCents:0,debtId:null}],series:[],payments:[],categories:[],movements:[]};let tree=nodes(draw(Bills,{embedded:true}));const picker=tree.find(n=>n.type===load(32013).MonthPicker);assert(picker);assert(!tree.some(n=>n.props.label==='Mes del calendario (AAAA-MM)'));assert(tree.some(n=>n.props.accessibilityLabel?.startsWith('Factura Noviembre')));picker.props.onChange('2026-12');tree=nodes(draw(Bills,{embedded:true}));assert(tree.some(n=>n.props.accessibilityLabel?.startsWith('Factura Diciembre')));assert(!tree.some(n=>n.props.accessibilityLabel?.startsWith('Factura Noviembre')));assert.equal(tree.find(n=>n.type===goalCalendar).props.month,'2026-12');});
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+
+TypeError: Cannot read properties of undefined (reading 'props')
+    at /workspace/edumoney/web-enhancements/goal-race/check-debt-calendar.cjs:19:1052
+    at check (/workspace/edumoney/web-enhancements/goal-race/check-debt-calendar.cjs:17:41)
+    at Object.<anonymous> (/workspace/edumoney/web-enhancements/goal-race/check-debt-calendar.cjs:19:1)
+    at Module._compile (node:internal/modules/cjs/loader:1929:14)
+    at Object..js (node:internal/modules/cjs/loader:2060:10)
+    at Module.load (node:internal/modules/cjs/loader:1651:32)
+    at Module._load (node:internal/modules/cjs/loader:1443:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47
+
+Node.js v24.22.1

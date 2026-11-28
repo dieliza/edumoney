@@ -1,0 +1,12 @@
+[
+  {
+    "path": "/bills?view=calendar",
+    "status": 200,
+    "currentBuild": true
+  },
+  {
+    "path": "/sw.js",
+    "status": 200,
+    "currentBuild": true
+  }
+]
